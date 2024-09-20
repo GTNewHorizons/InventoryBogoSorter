@@ -7,26 +7,26 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
 import org.jetbrains.annotations.NotNull;
 
 public class ConfigReloadCommand extends CommandBase {
 
     @Override
-    public @NotNull String getName() {
+    public @NotNull String getCommandName() {
         return "reload";
     }
 
     @Override
-    public @NotNull String getUsage(@NotNull ICommandSender sender) {
+    public @NotNull String getCommandUsage(@NotNull ICommandSender sender) {
         return "/bogosort reload";
     }
 
     @Override
-    public void execute(@NotNull MinecraftServer server, @NotNull ICommandSender sender, String @NotNull [] args) {
+    public void processCommand(@NotNull ICommandSender sender, String @NotNull [] args) {
         if (sender instanceof EntityPlayerMP) {
             NetworkHandler.sendToPlayer(new SReloadConfig(), (EntityPlayerMP) sender);
-            sender.sendMessage(new TextComponentTranslation("bogosort.command.config_relaod.success"));
+            sender.addChatMessage(new ChatComponentTranslation("bogosort.command.config_relaod.success"));
         }
     }
 

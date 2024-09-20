@@ -10,7 +10,6 @@ import it.unimi.dsi.fastutil.ints.IntArraySet;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
-import ru.socol.expandableinventory.gui.ContainerExpandedInventory;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -163,7 +162,7 @@ public class GuiSortingContext {
     private static void addPlayerInventory(GuiSortingContext.Builder builder, Container container) {
         List<ISlot> slots = new ArrayList<>();
         List<ISlot> hotbar = new ArrayList<>();
-        boolean all = BogoSorter.isExpandableInventoryLoaded() && container instanceof ContainerExpandedInventory;
+        boolean all = BogoSorter.isExpandableInventoryLoaded(); // && container instanceof ContainerExpandedInventory;
         for (Slot slot : container.inventorySlots) {
             if (BogoSortAPI.isPlayerSlot(slot)) {
                 if (slot.getSlotIndex() < 9) hotbar.add(BogoSortAPI.INSTANCE.getSlot(slot));

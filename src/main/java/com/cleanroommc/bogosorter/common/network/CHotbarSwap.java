@@ -21,23 +21,23 @@ public class CHotbarSwap implements IPacket {
 
     @Override
     public void encode(PacketBuffer buf) throws IOException {
-        buf.writeVarInt(hotbarIndex);
-        buf.writeVarInt(swapIndex);
+        buf.writeVarIntToBuffer(hotbarIndex);
+        buf.writeVarIntToBuffer(swapIndex);
     }
 
     @Override
     public void decode(PacketBuffer buf) throws IOException {
-        this.hotbarIndex = buf.readVarInt();
-        this.swapIndex = buf.readVarInt();
+        this.hotbarIndex = buf.readVarIntFromBuffer();
+        this.swapIndex = buf.readVarIntFromBuffer();
     }
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        ItemStack hotbarItem = handler.player.inventory.mainInventory.get(this.hotbarIndex);
-        ItemStack toSwapItem = handler.player.inventory.mainInventory.get(this.swapIndex);
+        ItemStack hotbarItem = handler.playerEntity.inventory.mainInventory[this.hotbarIndex];
+        ItemStack toSwapItem = handler.playerEntity.inventory.mainInventory[this.swapIndex];
         if (hotbarItem.equals(toSwapItem)) return null;
-        handler.player.inventory.mainInventory.set(this.hotbarIndex, toSwapItem);
-        handler.player.inventory.mainInventory.set(this.swapIndex, hotbarItem);
+        handler.playerEntity.inventory.mainInventory[this.hotbarIndex] = toSwapItem;
+        handler.playerEntity.inventory.mainInventory[this.swapIndex] = hotbarItem;
         return null;
     }
 }

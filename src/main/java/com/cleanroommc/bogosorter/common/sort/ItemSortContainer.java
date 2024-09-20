@@ -32,15 +32,15 @@ public class ItemSortContainer {
     }
 
     public void shrink(int amount) {
-        this.itemStack.shrink(amount);
+        this.itemStack.stackSize -= (amount);
     }
 
     public void grow(int amount) {
-        this.itemStack.grow(amount);
+        this.itemStack.stackSize += (amount);
     }
 
     public int getAmount() {
-        return this.itemStack.getCount();
+        return this.itemStack.stackSize;
     }
 
     public boolean canMakeStack() {
@@ -54,7 +54,7 @@ public class ItemSortContainer {
     @Override
     public int hashCode() {
         ItemStack o = itemStack;
-        return Objects.hash(o.getItem(), o.getMetadata(), o.getTagCompound(), BogoSortAPI.getItemAccessor(o).getCapNBT());
+        return Objects.hash(o.getItem(), o.getItemDamage(), o.getTagCompound()); //, BogoSortAPI.getItemAccessor(o).getCapNBT());
     }
 
     @Override
@@ -70,10 +70,9 @@ public class ItemSortContainer {
         } else {
             return false;
         }
-        return (a.isEmpty() && b.isEmpty()) ||
+        return (a == null && b == null) ||
                 (a.getItem() == b.getItem() &&
-                        a.getMetadata() == b.getMetadata() &&
-                        Objects.equals(a.getTagCompound(), b.getTagCompound()) &&
-                        Objects.equals(BogoSortAPI.getItemAccessor(a).getCapNBT(), BogoSortAPI.getItemAccessor(b).getCapNBT()));
+                        a.getItemDamage() == b.getItemDamage() &&
+                        Objects.equals(a.getTagCompound(), b.getTagCompound())); //&& Objects.equals(BogoSortAPI.getItemAccessor(a).getCapNBT(), BogoSortAPI.getItemAccessor(b).getCapNBT()));
     }
 }

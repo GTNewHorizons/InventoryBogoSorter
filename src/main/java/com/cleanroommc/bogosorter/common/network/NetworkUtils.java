@@ -1,6 +1,7 @@
 package com.cleanroommc.bogosorter.common.network;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import cpw.mods.fml.common.FMLCommonHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -8,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -26,28 +26,28 @@ public class NetworkUtils {
 
     public static boolean isClient(EntityPlayer player) {
         if (player == null) throw new NullPointerException("Can't get side of null player!");
-        return player.world == null ? player instanceof EntityPlayerSP : player.world.isRemote;
+        return player.worldObj == null ? player instanceof EntityPlayerSP : player.worldObj.isRemote;
     }
 
     public static void writePacketBuffer(PacketBuffer writeTo, PacketBuffer writeFrom) {
-        writeTo.writeVarInt(writeFrom.readableBytes());
+        writeTo.writeVarIntToBuffer(writeFrom.readableBytes());
         writeTo.writeBytes(writeFrom);
     }
 
     public static PacketBuffer readPacketBuffer(PacketBuffer buf) {
-        ByteBuf directSliceBuffer = buf.readBytes(buf.readVarInt());
+        ByteBuf directSliceBuffer = buf.readBytes(buf.readVarIntFromBuffer());
         ByteBuf copiedDataBuffer = Unpooled.copiedBuffer(directSliceBuffer);
         directSliceBuffer.release();
         return new PacketBuffer(copiedDataBuffer);
     }
 
-    public static void writeFluidStack(PacketBuffer buffer, @Nullable FluidStack fluidStack) {
+    public static void writeFluidStack(PacketBuffer buffer, @Nullable FluidStack fluidStack) throws IOException {
         if (fluidStack == null) {
             buffer.writeBoolean(true);
         } else {
             buffer.writeBoolean(false);
             NBTTagCompound fluidStackTag = fluidStack.writeToNBT(new NBTTagCompound());
-            buffer.writeCompoundTag(fluidStackTag);
+            buffer.writeNBTTagCompoundToBuffer(fluidStackTag);
         }
     }
 
@@ -56,7 +56,7 @@ public class NetworkUtils {
         if (buffer.readBoolean()) {
             return null;
         }
-        return FluidStack.loadFluidStackFromNBT(buffer.readCompoundTag());
+        return FluidStack.loadFluidStackFromNBT(buffer.readNBTTagCompoundFromBuffer());
     }
 
     public static void writeStringSafe(PacketBuffer buffer, String string) {
@@ -70,7 +70,15 @@ public class NetworkUtils {
         } else {
             bytes = bytesTest;
         }
-        buffer.writeVarInt(bytes.length);
+        buffer.writeVarIntToBuffer(bytes.length);
         buffer.writeBytes(bytes);
+    }
+    public static void writeEnumValue(PacketBuffer buffer, Enum<?> value) {
+        buffer.writeVarIntToBuffer(value.ordinal());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Enum<T>> T readEnumValue(PacketBuffer buffer, Class<T> enumClass) {
+        return (T)((Enum<T>[])enumClass.getEnumConstants())[buffer.readVarIntFromBuffer()];
     }
 }

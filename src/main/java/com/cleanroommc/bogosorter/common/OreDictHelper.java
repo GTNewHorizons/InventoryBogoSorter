@@ -3,28 +3,25 @@ package com.cleanroommc.bogosorter.common;
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import gregtech.api.items.toolitem.IGTTool;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import slimeknights.tconstruct.library.tinkering.IMaterialItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = BogoSorter.ID)
+//@Mod.EventBusSubscriber(modid = BogoSorter.ID)
 public class OreDictHelper {
 
     private static final Map<ItemStack, Set<String>> ORE_DICTS = new Object2ObjectOpenCustomHashMap<>(BogoSortAPI.ITEM_META_HASH_STRATEGY);
@@ -35,9 +32,9 @@ public class OreDictHelper {
 
     @SubscribeEvent
     public static void onItemRegistration(OreDictionary.OreRegisterEvent event) {
-        ORE_DICTS.computeIfAbsent(event.getOre(), key -> new ObjectOpenHashSet<>()).add(event.getName());
+        ORE_DICTS.computeIfAbsent(event.Ore, key -> new ObjectOpenHashSet<>()).add(event.Name);
 
-        String oreName = event.getName();
+        String oreName = event.Name;
         //and try to transform registration name into OrePrefix + Material pair
         if (!BogoSorterConfig.ORE_PREFIXES.containsKey(oreName)) {
             String material = null;
@@ -68,8 +65,8 @@ public class OreDictHelper {
                 material = StringUtils.join(splits.subList(i + 1, splits.size()), StringUtils.EMPTY); //BasalticMineralSand
             }
             if (prefix != null && BogoSorterConfig.ORE_PREFIXES.containsKey(prefix)) {
-                MATERIALS.put(event.getOre(), material);
-                PREFIXES.put(event.getOre(), prefix);
+                MATERIALS.put(event.Ore, material);
+                PREFIXES.put(event.Ore, prefix);
             }
         }
     }
@@ -79,19 +76,19 @@ public class OreDictHelper {
     }
 
     public static String getMaterial(ItemStack item) {
-        if (BogoSorter.isGTCEuLoaded() && item.getItem() instanceof IGTTool) {
-            return getGtToolMaterial(item);
-        }
-        if (BogoSorter.isTConstructLoaded() && item.getItem() instanceof IMaterialItem) {
-            return ((IMaterialItem) item.getItem()).getMaterialID(item);
-        }
+//        if (BogoSorter.isGTCEuLoaded() && item.getItem() instanceof IGTTool) {
+//            return getGtToolMaterial(item);
+//        }
+//        if (BogoSorter.isTConstructLoaded() && item.getItem() instanceof IMaterialItem) {
+//            return ((IMaterialItem) item.getItem()).getMaterialID(item);
+//        }
         return MATERIALS.get(item);
     }
 
     @Optional.Method(modid = "gregtech")
     @NotNull
     public static String getGtToolMaterial(ItemStack itemStack) {
-        NBTTagCompound statsTag = itemStack.getSubCompound("GT.Tool");
+        NBTTagCompound statsTag = itemStack.stackTagCompound.getCompoundTag("GT.Tool");
         if (statsTag == null) {
             return "";
         }

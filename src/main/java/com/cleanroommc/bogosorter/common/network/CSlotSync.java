@@ -23,30 +23,30 @@ public class CSlotSync implements IPacket {
     }
 
     @Override
-    public void encode(PacketBuffer buf) {
-        buf.writeVarInt(content.size());
+    public void encode(PacketBuffer buf) throws IOException {
+        buf.writeVarIntToBuffer(content.size());
         for (Pair<ItemStack, Integer> pair : content) {
-            buf.writeItemStack(pair.getKey());
-            buf.writeCompoundTag(pair.getKey().getTagCompound());
-            buf.writeVarInt(pair.getValue());
+            buf.writeItemStackToBuffer(pair.getKey());
+            buf.writeNBTTagCompoundToBuffer(pair.getKey().getTagCompound());
+            buf.writeVarIntToBuffer(pair.getValue());
         }
     }
 
     @Override
     public void decode(PacketBuffer buf) throws IOException {
-        for (int i = 0, n = buf.readVarInt(); i < n; i++) {
-            ItemStack stack = buf.readItemStack();
-            stack.setTagCompound(buf.readCompoundTag());
-            content.add(Pair.of(stack, buf.readVarInt()));
+        for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
+            ItemStack stack = buf.readItemStackFromBuffer();
+            stack.setTagCompound(buf.readNBTTagCompoundFromBuffer());
+            content.add(Pair.of(stack, buf.readVarIntFromBuffer()));
         }
     }
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         for (Pair<ItemStack, Integer> pair : content) {
-            BogoSortAPI.getSlot(handler.player.openContainer, pair.getValue()).bogo$putStack(pair.getKey());
+            BogoSortAPI.getSlot(handler.playerEntity.openContainer, pair.getValue()).bogo$putStack(pair.getKey());
         }
-        handler.player.openContainer.detectAndSendChanges();
+        handler.playerEntity.openContainer.detectAndSendChanges();
         return null;
     }
 }

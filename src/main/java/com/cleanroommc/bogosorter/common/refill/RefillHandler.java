@@ -5,7 +5,7 @@ import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.network.SRefillSound;
-import gregtech.api.items.toolitem.IGTTool;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntListIterator;
@@ -15,9 +15,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -50,26 +48,26 @@ public class RefillHandler {
 
     @SubscribeEvent
     public static void onDestroyItem(PlayerDestroyItemEvent event) {
-        if (event.getEntityPlayer() == null ||
-                event.getEntityPlayer().world == null ||
-                event.getEntityPlayer().world.isRemote ||
-                !PlayerConfig.get(event.getEntityPlayer()).enableAutoRefill)
+        if (event.entityPlayer == null ||
+                event.entityPlayer.worldObj == null ||
+                event.entityPlayer.worldObj.isRemote ||
+                !PlayerConfig.get(event.entityPlayer).enableAutoRefill)
             return;
 
-        if (event.getOriginal().getItem() instanceof ItemBlock && shouldHandleRefill(event.getEntityPlayer(), event.getOriginal())) {
-            int index = event.getHand() == EnumHand.MAIN_HAND ? event.getEntityPlayer().inventory.currentItem : 40;
-            handle(index, event.getOriginal(), event.getEntityPlayer(), false);
+        if (event.original.getItem() instanceof ItemBlock && shouldHandleRefill(event.entityPlayer, event.original)) {
+            int index = event.entityPlayer.getHeldItem() == null ? event.entityPlayer.inventory.currentItem : 40;
+            handle(index, event.original, event.entityPlayer, false);
         }
     }
 
     /**
      * Called via asm
      */
-    public static void onDestroyItem(EntityPlayer player, ItemStack brokenItem, EnumHand hand) {
+    public static void onDestroyItem(EntityPlayer player, ItemStack brokenItem) {
         if (!PlayerConfig.get(player).enableAutoRefill) return;
 
         if (shouldHandleRefill(player, brokenItem)) {
-            int index = hand == EnumHand.MAIN_HAND ? player.inventory.currentItem : 40;
+            int index = player.getHeldItem() != null  ? player.inventory.currentItem : 40;
             handle(index, brokenItem, player, false);
         }
     }
@@ -84,10 +82,10 @@ public class RefillHandler {
 
     public static boolean shouldHandleRefill(EntityPlayer player, ItemStack brokenItem, boolean allowClient) {
         Container container = player.openContainer;
-        return (allowClient || !NetworkUtils.isClient(player)) && (container == null || container == player.inventoryContainer) && !brokenItem.isEmpty();
+        return (allowClient || !NetworkUtils.isClient(player)) && (container == null || container == player.inventoryContainer) && brokenItem != null;
     }
 
-    private BiPredicate<ItemStack, ItemStack> similarItemMatcher = (stack, stack2) -> stack.getItem() == stack2.getItem() && stack.getMetadata() == stack2.getMetadata();
+    private BiPredicate<ItemStack, ItemStack> similarItemMatcher = (stack, stack2) -> stack.getItem() == stack2.getItem() && stack.getItemDamage() == stack2.getItemDamage();
     private BiPredicate<ItemStack, ItemStack> exactItemMatcher = RefillHandler::matchTags;
     private final int hotbarIndex;
     private final IntList slots;
@@ -116,7 +114,7 @@ public class RefillHandler {
         if (brokenItem.getItem() instanceof ItemBlock) {
             return findItem(false);
         } else if (brokenItem.isItemStackDamageable()) {
-            if (gtToolClass != null && isGTCEuTool(brokenItem)) {
+            if (gtToolClass != null ) { // && isGTCEuTool(brokenItem))
                 exactItemMatcher = (stack, stack2) -> {
                     if (stack.hasTagCompound() != stack2.hasTagCompound()) return false;
                     if (!stack.hasTagCompound()) return true;
@@ -132,9 +130,9 @@ public class RefillHandler {
         }
     }
 
-    private static boolean isGTCEuTool(ItemStack itemStack) {
-        return itemStack.getItem() instanceof IGTTool;
-    }
+//    private static boolean isGTCEuTool(ItemStack itemStack) {
+//        return itemStack.getItem() instanceof IGTTool;
+//    }
 
     private boolean findItem(boolean exactOnly) {
         ItemStack firstItemMatch = null;
@@ -142,8 +140,8 @@ public class RefillHandler {
         IntListIterator slotsIterator = slots.iterator();
         while (slotsIterator.hasNext()) {
             int slot = slotsIterator.next();
-            ItemStack found = inventory.mainInventory.get(slot);
-            if (found.isEmpty() || (this.swapItems && this.isDamageable && DamageHelper.getDurability(found) <= playerConfig.autoRefillDamageThreshold)) {
+            ItemStack found = inventory.mainInventory[slot];
+            if (found == null || (this.swapItems && this.isDamageable && DamageHelper.getDurability(found) <= playerConfig.autoRefillDamageThreshold)) {
                 slotsIterator.remove();
                 continue;
             }
@@ -177,7 +175,7 @@ public class RefillHandler {
 
         // try match tool type
         for (int slot : slots) {
-            ItemStack found = inventory.mainInventory.get(slot);
+            ItemStack found = inventory.mainInventory[slot];
             Set<String> toolTypes = found.getItem().getToolClasses(found);
             if (brokenToolClasses.equals(toolTypes)) {
                 refillItem(found, slot);
@@ -187,8 +185,8 @@ public class RefillHandler {
 
         int brokenTools = brokenToolClasses.size();
         for (int slot : slots) {
-            ItemStack found = inventory.mainInventory.get(slot);
-            if (found.isEmpty()) continue;
+            ItemStack found = inventory.mainInventory[slot];
+            if (found == null) continue;
             Set<String> toolTypes = found.getItem().getToolClasses(found);
             int tools = toolTypes.size();
             if (tools == 0 || tools == brokenTools) continue;
@@ -209,11 +207,11 @@ public class RefillHandler {
     }
 
     private void refillItem(ItemStack refill, int refillIndex) {
-        ItemStack current = ItemStack.EMPTY;
+        ItemStack current = null ;
         if (!this.swapItems) current = getItem(this.hotbarIndex);
         setAndSyncSlot(hotbarIndex, refill.copy());
-        setAndSyncSlot(refillIndex, swapItems ? brokenItem.copy() : ItemStack.EMPTY);
-        if (!current.isEmpty()) {
+        setAndSyncSlot(refillIndex, swapItems ? brokenItem.copy() : null);
+        if (current != null) {
             // the broken item replaced itself with something
             // insert the item into another slot to prevent it from being lost
             this.inventory.addItemStackToInventory(current);
@@ -229,32 +227,33 @@ public class RefillHandler {
         if (index < 0 || index > 40) return;
         int slot = index;
         if (index < 36) {
-            inventory.mainInventory.set(index, item);
+            inventory.mainInventory[index] = item;
             if (index < 9) slot += 36;
             else slot += 9;
         } else if (index < 40) {
-            inventory.armorInventory.set(index - 36, item);
+            inventory.armorInventory[index - 36] = item;
             slot += 5;
-        } else {
-            inventory.offHandInventory.set(0, item);
-            slot = 45;
         }
-        if (!item.isEmpty()) {
-            player.inventoryContainer.inventoryItemStacks.set(slot, ItemStack.EMPTY);
+//        else {
+//            inventory.offHandInventory.set(0, item);
+//            slot = 45;
+//        }
+        if (item != null) {
+            player.inventoryContainer.inventoryItemStacks.set(slot, null);
         }
     }
 
     private ItemStack getItem(int index) {
-        if (index < 36) return this.inventory.mainInventory.get(index);
-        if (index < 40) return this.inventory.mainInventory.get(index - 36);
-        return this.inventory.offHandInventory.get(0);
+        if (index < 36) return this.inventory.mainInventory[index];
+        if (index < 40) return this.inventory.mainInventory[index - 36];
+        return null; //this.inventory.offHandInventory.get(0);
     }
 
     private static boolean matchTags(ItemStack stackA, ItemStack stackB) {
         if (stackA.getTagCompound() == null && stackB.getTagCompound() != null) {
             return false;
         } else {
-            return (stackA.getTagCompound() == null || stackA.getTagCompound().equals(stackB.getTagCompound())) && stackA.areCapsCompatible(stackB);
+            return (stackA.getTagCompound() == null || stackA.getTagCompound().equals(stackB.getTagCompound())); // && stackA.areCapsCompatible(stackB);
         }
     }
 }

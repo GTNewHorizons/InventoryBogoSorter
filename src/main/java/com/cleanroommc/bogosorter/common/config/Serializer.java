@@ -5,10 +5,10 @@ import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -48,8 +48,8 @@ public class Serializer {
                 BogoSorter.LOGGER.error("Error loading config!");
             } else {
                 BogoSorterConfig.load(jsonElement.getAsJsonObject());
-                SortHandler.cacheItemSortRules.put(Minecraft.getMinecraft().player, BogoSorterConfig.sortRules);
-                SortHandler.cacheNbtSortRules.put(Minecraft.getMinecraft().player, BogoSorterConfig.nbtSortRules);
+                SortHandler.cacheItemSortRules.put(Minecraft.getMinecraft().thePlayer, BogoSorterConfig.sortRules);
+                SortHandler.cacheNbtSortRules.put(Minecraft.getMinecraft().thePlayer, BogoSorterConfig.nbtSortRules);
             }
         }
 

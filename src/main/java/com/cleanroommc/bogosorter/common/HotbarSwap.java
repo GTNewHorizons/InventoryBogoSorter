@@ -2,19 +2,21 @@ package com.cleanroommc.bogosorter.common;
 
 import com.cleanroommc.bogosorter.common.network.CHotbarSwap;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public class HotbarSwap {
@@ -24,6 +26,9 @@ public class HotbarSwap {
     private static boolean enabled = true;
     private static boolean show;
     private static int verticalIndex = 0;
+    protected static final RenderItem itemRenderer = RenderItem.getInstance();
+    private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    private static final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
     public static boolean doCancelHotbarSwap() {
         return show;
@@ -39,15 +44,15 @@ public class HotbarSwap {
 
     @SubscribeEvent
     public static void render(RenderGameOverlayEvent.Post event) {
-        if (enabled && event.getType() == RenderGameOverlayEvent.ElementType.ALL && show) {
+        if (enabled && event.type == RenderGameOverlayEvent.ElementType.ALL && show) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-            EntityPlayer player = Minecraft.getMinecraft().player;
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             GuiIngame gui = Minecraft.getMinecraft().ingameGUI;
-            int m = event.getResolution().getScaledWidth() / 2;
+            int m = event.resolution.getScaledWidth() / 2;
             if (verticalIndex != 0) {
                 Minecraft.getMinecraft().getTextureManager().bindTexture(WIDGETS_TEX_PATH);
-                gui.drawTexturedModalRect(m - 91 - 1 + player.inventory.currentItem * 20, event.getResolution().getScaledHeight() - 22 - 17 - 18 * verticalIndex, 0, 22, 24, 22);
+                gui.drawTexturedModalRect(m - 91 - 1 + player.inventory.currentItem * 20, event.resolution.getScaledHeight() - 22 - 17 - 18 * verticalIndex, 0, 22, 24, 22);
             }
 
             GlStateManager.enableRescaleNormal();
@@ -56,9 +61,9 @@ public class HotbarSwap {
             RenderHelper.enableGUIStandardItemLighting();
 
             int x = m - 90 + player.inventory.currentItem * 20 + 2;
-            int y = event.getResolution().getScaledHeight() - 16 - 3 - 70;
+            int y = event.resolution.getScaledHeight() - 16 - 3 - 70;
             for (int i = 1; i < 4; i++) {
-                renderHotbarItem(x, y, event.getPartialTicks(), player, player.inventory.getStackInSlot(player.inventory.currentItem + i * 9));
+                renderHotbarItem(x, y, event.partialTicks, player, player.inventory.getStackInSlot(player.inventory.currentItem + i * 9));
                 y += 18;
             }
 
@@ -70,15 +75,15 @@ public class HotbarSwap {
 
     @SubscribeEvent
     public static void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (!enabled || Minecraft.getMinecraft().world == null || Minecraft.getMinecraft().player == null) {
+        if (!enabled || Minecraft.getMinecraft().theWorld == null || Minecraft.getMinecraft().thePlayer == null) {
             return;
         }
         if (show) {
-            if (!GuiScreen.isAltKeyDown()) {
+            if (!Keyboard.isKeyDown(Keyboard.KEY_LMENU) || !Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
                 // swap items on server
                 if (verticalIndex != 0) {
                     int index = 4 - verticalIndex;
-                    int current = Minecraft.getMinecraft().player.inventory.currentItem;
+                    int current = Minecraft.getMinecraft().thePlayer.inventory.currentItem;
                     NetworkHandler.sendToServer(new CHotbarSwap(current, current + index * 9));
                 }
 
@@ -86,7 +91,7 @@ public class HotbarSwap {
                 verticalIndex = 0;
             }
         } else {
-            if (GuiScreen.isAltKeyDown()) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
                 show = true;
                 verticalIndex = 0;
             }
@@ -99,7 +104,7 @@ public class HotbarSwap {
         if (show) {
             int scroll = Mouse.getEventDWheel();
             if (scroll != 0) {
-                scroll = MathHelper.clamp(scroll, -1, 1);
+                scroll = MathHelper.clamp_int(scroll, -1, 1);
                 verticalIndex += scroll;
                 if (verticalIndex > 3) {
                     verticalIndex = 0;
@@ -111,9 +116,8 @@ public class HotbarSwap {
     }
 
     private static void renderHotbarItem(int x, int y, float partialTicks, EntityPlayer player, ItemStack stack) {
-        if (!stack.isEmpty()) {
-            RenderItem renderer = Minecraft.getMinecraft().getRenderItem();
-            float f = (float) stack.getAnimationsToGo() - partialTicks;
+        if (stack != null) {
+            float f = (float) stack.animationsToGo - partialTicks;
 
             if (f > 0.0F) {
                 GlStateManager.pushMatrix();
@@ -123,13 +127,13 @@ public class HotbarSwap {
                 GlStateManager.translate((float) (-(x + 8)), (float) (-(y + 12)), 0.0F);
             }
 
-            renderer.renderItemAndEffectIntoGUI(player, stack, x, y);
+            itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager,stack, x, y);
 
             if (f > 0.0F) {
                 GlStateManager.popMatrix();
             }
 
-            renderer.renderItemOverlays(Minecraft.getMinecraft().fontRenderer, stack, x, y);
+            itemRenderer.renderItemOverlayIntoGUI(fontRenderer, textureManager, stack, x, y);
         }
     }
 }

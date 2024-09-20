@@ -13,21 +13,16 @@ import com.cleanroommc.bogosorter.common.refill.RefillHandler;
 import com.cleanroommc.bogosorter.common.sort.ButtonHandler;
 import com.cleanroommc.bogosorter.common.sort.DefaultRules;
 import com.cleanroommc.bogosorter.compat.DefaultCompat;
-import com.cleanroommc.modularui.keybind.KeyBindAPI;
-import gregtech.GregTechVersion;
-import net.minecraft.client.Minecraft;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,12 +33,11 @@ import java.time.Month;
         name = BogoSorter.NAME,
         version = BogoSorter.VERSION,
         dependencies =
-                "required-after:modularui@[2.4.2,3.0.0);" +
-                "required-after:mixinbooter@[8.0,)")
-@Mod.EventBusSubscriber(modid = BogoSorter.ID)
+                "required-after:modularui2@[2.1.8-1.7.10,);")
+//@Mod.EventBusSubscriber(modid = BogoSorter.ID)
 public class BogoSorter {
 
-    public static final String ID = Tags.MODID;
+    public static final String ID = "bogosorter";
     public static final String NAME = "Inventory Bogo Sorter";
     public static final String VERSION = Tags.VERSION;
 
@@ -61,16 +55,16 @@ public class BogoSorter {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        anyGtLoaded = Loader.isModLoaded("gregtech");
-        tconstructLoaded = Loader.isModLoaded("tconstruct");
-        anyIc2Loaded = Loader.isModLoaded("ic2");
-        quarkLoaded = Loader.isModLoaded("quark");
-        ae2Loaded = Loader.isModLoaded("appliedenergistics2");
-        expandableInventoryLoaded = Loader.isModLoaded("expandableinventory");
-        if (anyIc2Loaded) {
-            ModContainer container = Loader.instance().getIndexedModList().get("ic2");
-            ic2ClassicLoaded = container.getName().endsWith("Classic");
-        }
+//        anyGtLoaded = Loader.isModLoaded("gregtech");
+//        tconstructLoaded = Loader.isModLoaded("tconstruct");
+//        anyIc2Loaded = Loader.isModLoaded("ic2");
+//        quarkLoaded = Loader.isModLoaded("quark");
+//        ae2Loaded = Loader.isModLoaded("appliedenergistics2");
+//        expandableInventoryLoaded = Loader.isModLoaded("expandableinventory");
+//        if (anyIc2Loaded) {
+//            ModContainer container = Loader.instance().getIndexedModList().get("ic2");
+//            ic2ClassicLoaded = container.getName().endsWith("Classic");
+//        }
         NetworkHandler.init();
         OreDictHelper.init();
         BogoSortAPI.INSTANCE.remapSortRule("is_block", "block_type");
@@ -91,9 +85,9 @@ public class BogoSorter {
         if (NetworkUtils.isDedicatedClient()) {
             ClientRegistry.registerKeyBinding(ClientEventHandler.configGuiKey);
             ClientRegistry.registerKeyBinding(ClientEventHandler.sortKey);
-            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.configGuiKey);
-            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.sortKey);
-            KeyBindAPI.setCompatible(ClientEventHandler.sortKey, Minecraft.getMinecraft().gameSettings.keyBindPickBlock);
+//            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.configGuiKey);
+//            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.sortKey);
+//            KeyBindAPI.setCompatible(ClientEventHandler.sortKey, Minecraft.getMinecraft().gameSettings.keyBindPickBlock);
         }
     }
 
@@ -104,7 +98,7 @@ public class BogoSorter {
 
     @SubscribeEvent
     public static void onPlayerJoin(EntityJoinWorldEvent event) {
-        if (event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer) {
+        if (event.world.isRemote && event.entity instanceof EntityPlayer) {
             PlayerConfig.syncToServer();
         }
     }
@@ -122,12 +116,12 @@ public class BogoSorter {
 
     @SuppressWarnings("all")
     public static boolean isGTCELoaded() {
-        return anyGtLoaded && GregTechVersion.MAJOR == 1;
+        return anyGtLoaded;// && GregTechVersion.MAJOR == 1;
     }
 
     @SuppressWarnings("all")
     public static boolean isGTCEuLoaded() {
-        return anyGtLoaded && GregTechVersion.MAJOR >= 2;
+        return anyGtLoaded;// && GregTechVersion.MAJOR >= 2;
     }
 
     public static boolean isTConstructLoaded() {

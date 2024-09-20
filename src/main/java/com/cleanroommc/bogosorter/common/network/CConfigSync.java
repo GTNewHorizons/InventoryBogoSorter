@@ -25,7 +25,7 @@ public class CConfigSync implements IPacket {
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        PlayerConfig.get(handler.player).readPacket(packet);
+        PlayerConfig.get(handler.playerEntity).readPacket(packet);
         return null;
     }
 }

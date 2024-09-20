@@ -1,13 +1,17 @@
 package com.cleanroommc.bogosorter;
 
-import appeng.container.slot.AppEngSlot;
 import com.cleanroommc.bogosorter.api.*;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
 import com.cleanroommc.bogosorter.common.sort.ClientItemSortRule;
 import com.cleanroommc.bogosorter.common.sort.ItemSortContainer;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
-import com.cleanroommc.bogosorter.core.mixin.ItemStackAccessor;
 import com.cleanroommc.modularui.factory.ClientGUI;
+import com.cleanroommc.modularui.utils.item.IItemHandler;
+import com.cleanroommc.modularui.utils.item.PlayerInvWrapper;
+import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
+import com.cleanroommc.modularui.utils.item.SlotItemHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -18,12 +22,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -247,7 +245,7 @@ public class BogoSortAPI implements IBogoSortAPI {
         if (stack.isStackable()) {
             stack = insertable.insert(container, slots, stack, false);
         }
-        if (!stack.isEmpty()) {
+        if (stack != null) {
             stack = insertable.insert(container, slots, stack, true);
         }
         return stack;
@@ -269,8 +267,8 @@ public class BogoSortAPI implements IBogoSortAPI {
     public static boolean isPlayerSlot(ISlot slot) {
         if (slot==null) return false;
         if (slot.bogo$getInventory() instanceof InventoryPlayer ||
-                (slot instanceof SlotItemHandler && isPlayerInventory(((SlotItemHandler) slot).getItemHandler())) ||
-                (BogoSorter.isAe2Loaded() && slot instanceof AppEngSlot && isPlayerInventory(((AppEngSlot) slot).getItemHandler()))) {
+                (slot instanceof SlotItemHandler && isPlayerInventory(((SlotItemHandler) slot).getItemHandler()))) {
+              //   || (BogoSorter.isAe2Loaded() && slot instanceof AppEngSlot && isPlayerInventory(((AppEngSlot) slot).getItemHandler()))) {
             return slot.bogo$getSlotIndex() >= 0 && slot.bogo$getSlotIndex() < 36;
         }
         return false;
@@ -284,18 +282,17 @@ public class BogoSortAPI implements IBogoSortAPI {
 
         @Override
         public int hashCode(ItemStack o) {
-            return Objects.hash(o.getItem(), o.getMetadata(), o.getTagCompound(), getItemAccessor(o).getCapNBT());
+            return Objects.hash(o.getItem(), o.getItemDamage(), o.getTagCompound()); //, getItemAccessor(o).getCapNBT());
         }
 
         @Override
         public boolean equals(ItemStack a, ItemStack b) {
             if (a==b) return true;
             if (a==null || b==null) return false;
-            return (a.isEmpty() && b.isEmpty()) ||
+            return (a == null && b == null) ||
                     (a.getItem()==b.getItem() &&
-                            a.getMetadata()==b.getMetadata() &&
-                            Objects.equals(a.getTagCompound(), b.getTagCompound()) &&
-                            Objects.equals(getItemAccessor(a).getCapNBT(), getItemAccessor(b).getCapNBT()));
+                            a.getItemDamage()==b.getItemDamage() &&
+                            Objects.equals(a.getTagCompound(), b.getTagCompound())); // && Objects.equals(getItemAccessor(a).getCapNBT(), getItemAccessor(b).getCapNBT()));
         }
     };
 
@@ -303,19 +300,19 @@ public class BogoSortAPI implements IBogoSortAPI {
 
         @Override
         public int hashCode(ItemStack o) {
-            return Objects.hash(o.getItem(), o.getMetadata());
+            return Objects.hash(o.getItem(), o.getItemDamage());
         }
 
         @Override
         public boolean equals(ItemStack a, ItemStack b) {
             if (a==b) return true;
             if (a==null || b==null) return false;
-            return (a.isEmpty() && b.isEmpty()) ||
-                    (a.getItem()==b.getItem() && a.getMetadata()==b.getMetadata());
+            return (a == null && b == null) ||
+                    (a.getItem()==b.getItem() && a.getItemDamage()==b.getItemDamage());
         }
     };
 
-    public static ItemStackAccessor getItemAccessor(ItemStack itemStack) {
-        return (ItemStackAccessor) (Object) itemStack;
-    }
+//    public static ItemStackAccessor getItemAccessor(ItemStack itemStack) {
+//        return (ItemStackAccessor) (Object) itemStack;
+//    }
 }

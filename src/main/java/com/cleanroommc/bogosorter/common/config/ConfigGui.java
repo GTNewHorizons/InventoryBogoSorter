@@ -17,6 +17,7 @@ import com.cleanroommc.modularui.screen.CustomModularScreen;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.viewport.GuiContext;
+import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.Theme;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.Color;
@@ -63,7 +64,7 @@ public class ConfigGui extends CustomModularScreen {
     }
 
     @Override
-    public @NotNull ModularPanel buildUI(GuiContext guiContext) {
+    public @NotNull ModularPanel buildUI(ModularGuiContext guiContext) {
         this.availableElements = new Object2ObjectOpenHashMap<>();
         this.availableElementsNbt = new Object2ObjectOpenHashMap<>();
         ModularPanel panel = new ModularPanel("bogo_config") {
@@ -116,7 +117,7 @@ public class ConfigGui extends CustomModularScreen {
                                .margin(0, 2)
                                .child(new CycleButtonWidget()
                                               .value(new BoolValue.Dynamic(() -> PlayerConfig.getClient().enableAutoRefill, val -> PlayerConfig.getClient().enableAutoRefill = val))
-                                              .texture(TOGGLE_BUTTON)
+                                              .stateOverlay(TOGGLE_BUTTON)
                                               .disableHoverBackground()
                                               .size(14, 14)
                                               .margin(8, 0)
@@ -146,11 +147,10 @@ public class ConfigGui extends CustomModularScreen {
                                .margin(0, 2)
                                .child(new CycleButtonWidget()
                                               .value(new BoolValue.Dynamic(HotbarSwap::isEnabled, HotbarSwap::setEnabled))
-                                              .texture(TOGGLE_BUTTON)
+                                              .stateOverlay(TOGGLE_BUTTON)
                                               .disableHoverBackground()
                                               .addTooltipLine(IKey.lang("bogosort.gui.hotbar_scrolling.tooltip"))
                                               .tooltipShowUpTimer(10)
-                                              .excludeTooltipArea(row.getArea())
                                               .size(14, 14)
                                               .margin(8, 0)
                                               .background(IDrawable.EMPTY))
@@ -158,8 +158,7 @@ public class ConfigGui extends CustomModularScreen {
                                               .marginLeft(10)
                                               .height(14)
                                               .addTooltipLine(IKey.lang("bogosort.gui.hotbar_scrolling.tooltip"))
-                                              .tooltipShowUpTimer(10)
-                                              .excludeTooltipArea(row.getArea())));
+                                              .tooltipShowUpTimer(10)));
     }
 
     public IWidget createProfilesConfig(GuiContext context) {
@@ -225,7 +224,7 @@ public class ConfigGui extends CustomModularScreen {
             return new SortListItem<>(s, ruleText
                     .paddingLeft(7)
                     .background(GuiTextures.MC_BUTTON)
-                    .tooltip(tooltip -> tooltip.addLine(IKey.lang(s.getDescriptionLangKey())).showUpTimer(10).excludeArea(ruleText.getArea())));
+                    .tooltip(tooltip -> tooltip.addLine(IKey.lang(s.getDescriptionLangKey())).showUpTimer(10)));
         });
         ref.set(sortableListWidget);
         return new ParentWidget<>()
@@ -245,7 +244,7 @@ public class ConfigGui extends CustomModularScreen {
                                .onMousePressed(mouseButton -> {
                                    if (!isPanelOpen("choose_item_rules")) {
                                        ModularPanel panel1 = ModularPanel.defaultPanel("choose_item_rules", 200, 140);
-                                       openPanel(panel1
+                                       isPanelOpen(panel1
                                                          .child(new ButtonWidget<>()
                                                                         .size(8, 8)
                                                                         .top(4).right(4)
@@ -290,7 +289,7 @@ public class ConfigGui extends CustomModularScreen {
             return new SortListItem<>(s, ruleText
                     .paddingLeft(7)
                     .background(GuiTextures.MC_BUTTON)
-                    .tooltip(tooltip -> tooltip.addLine(IKey.lang(s.getDescriptionLangKey())).showUpTimer(10).excludeArea(ruleText.getArea())));
+                    .tooltip(tooltip -> tooltip.addLine(IKey.lang(s.getDescriptionLangKey())).showUpTimer(10)));
         });
         ref.set(sortableListWidget);
         return new ParentWidget<>()
@@ -310,7 +309,7 @@ public class ConfigGui extends CustomModularScreen {
                                .onMousePressed(mouseButton -> {
                                    if (!isPanelOpen("choose_nbt_rules")) {
                                        ModularPanel panel1 = ModularPanel.defaultPanel("choose_nbt_rules", 200, 140);
-                                       openPanel(panel1
+                                       isPanelOpen(panel1
                                                          .child(new ButtonWidget<>()
                                                                         .size(8, 8)
                                                                         .top(4).right(4)
@@ -349,7 +348,7 @@ public class ConfigGui extends CustomModularScreen {
             super(value, content);
             this.ascendingToggle = new CycleButtonWidget()
                     .value(new BoolValue.Dynamic(getWidgetValue()::isInverted, getWidgetValue()::setInverted))
-                    .texture(ARROW_DOWN_UP)
+                    .stateOverlay(ARROW_DOWN_UP)
                     .addTooltip(0, IKey.lang("bogosort.gui.descending"))
                     .addTooltip(1, IKey.lang("bogosort.gui.ascending"))
                     .heightRel(1f).width(14).pos(0, 0);

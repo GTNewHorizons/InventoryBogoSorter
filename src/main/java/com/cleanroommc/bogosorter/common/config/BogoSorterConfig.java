@@ -10,14 +10,12 @@ import com.cleanroommc.modularui.utils.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,11 +76,11 @@ public class BogoSorterConfig {
             playerConfig.enableAutoRefill = JsonHelper.getBoolean(general, true, "enableAutoRefill");
             playerConfig.autoRefillDamageThreshold = (short) JsonHelper.getInt(general, 1, "refillDmgThreshold");
             HotbarSwap.setEnabled(JsonHelper.getBoolean(general, true, "enableHotbarSwap"));
-            SortHandler.sortSound = JsonHelper.getElement(general, SoundEvents.UI_BUTTON_CLICK, element -> {
-                if (element.isJsonNull()) return null;
-                SoundEvent soundEvent = SoundEvent.REGISTRY.getObject(new ResourceLocation(element.getAsString()));
-                return soundEvent != null ? soundEvent : SoundEvents.UI_BUTTON_CLICK;
-            }, "sortSound");
+//            SortHandler.sortSound = JsonHelper.getElement(general, SoundEvents.UI_BUTTON_CLICK, element -> {
+//                if (element.isJsonNull()) return null;
+//                SoundEvent soundEvent = SoundEvent.REGISTRY.getObject(new ResourceLocation(element.getAsString()));
+//                return soundEvent != null ? soundEvent : SoundEvents.UI_BUTTON_CLICK;
+//            }, "sortSound");
             buttonColor = JsonHelper.getColor(general, 0xFFFFFFFF, "buttonColor");
         }
         sortRules.clear();
@@ -135,7 +133,9 @@ public class BogoSorterConfig {
         JsonArray orePrefixes = new JsonArray();
         json.add("orePrefixes", orePrefixes);
         for (String orePrefix : ORE_PREFIXES_LIST) {
-            orePrefixes.add(orePrefix);
+            // Convert the String to a JsonPrimitive
+            JsonElement jsonElement = new JsonPrimitive(orePrefix);
+            orePrefixes.add(jsonElement);
         }
     }
 

@@ -70,34 +70,34 @@ public class ButtonPos implements IButtonPos {
         boolean h = this.layout == Layout.HORIZONTAL;
         switch (this.alignment) {
             case TOP_LEFT: {
-                sortButton.x = this.x;
-                sortButton.y = this.y;
+                sortButton.xPosition = this.x;
+                sortButton.yPosition = this.y;
                 break;
             }
             case TOP_RIGHT: {
-                sortButton.x = h ? this.x - s - s : this.x - s;
-                sortButton.y = this.y;
+                sortButton.xPosition = h ? this.x - s - s : this.x - s;
+                sortButton.yPosition = this.y;
                 break;
             }
             case BOTTOM_LEFT: {
-                sortButton.x = this.x;
-                sortButton.y = h ? this.y - s : this.y - s - s;
+                sortButton.xPosition = this.x;
+                sortButton.yPosition = h ? this.y - s : this.y - s - s;
                 break;
             }
             case BOTTOM_RIGHT: {
-                sortButton.x = h ? this.x - s - s : this.x - s;
-                sortButton.y = h ? this.y - s : this.y - s - s;
+                sortButton.xPosition = h ? this.x - s - s : this.x - s;
+                sortButton.yPosition = h ? this.y - s : this.y - s - s;
                 break;
             }
         }
-        sortButton.x += guiLeft;
-        sortButton.y += guiTop;
+        sortButton.xPosition += guiLeft;
+        sortButton.yPosition += guiTop;
         if (h) {
-            settingsButton.x = sortButton.x + s;
-            settingsButton.y = sortButton.y;
+            settingsButton.xPosition = sortButton.xPosition + s;
+            settingsButton.yPosition = sortButton.yPosition;
         } else {
-            settingsButton.x = sortButton.x;
-            settingsButton.y = sortButton.y + s;
+            settingsButton.xPosition = sortButton.xPosition;
+            settingsButton.yPosition = sortButton.yPosition + s;
         }
     }
 }

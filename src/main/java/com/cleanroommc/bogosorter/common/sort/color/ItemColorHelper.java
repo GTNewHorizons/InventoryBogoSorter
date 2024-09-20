@@ -3,29 +3,22 @@ package com.cleanroommc.bogosorter.common.sort.color;
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.modularui.utils.Color;
-import gregtech.api.block.machines.BlockMachine;
-import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.util.GTUtility;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemColored;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public class ItemColorHelper {
 
@@ -52,7 +45,7 @@ public class ItemColorHelper {
     }
 
     public static int getItemColorHue(ItemStack item) {
-        if (item.isEmpty()) {
+        if (item == null) {
             return 362;
         }
         if (ITEM_COLORS.containsKey(item)) {
@@ -70,7 +63,7 @@ public class ItemColorHelper {
 
     public static int getAverageItemColor(ItemStack item) {
         if (item.getItem() instanceof ItemBlock) {
-            return getBlockColors(item, ((ItemBlock) item.getItem()).getBlock());
+            return getBlockColors(item, ((ItemBlock) item.getItem()).field_150939_a);
         } else {
             return getItemColors(item);
         }
@@ -78,8 +71,8 @@ public class ItemColorHelper {
 
     private static int getItemColors(ItemStack itemStack) {
         try {
-            final ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
-            final int renderColor = itemColors.colorMultiplier(itemStack, 0);
+            final ItemColored itemColors = new ItemColored(((ItemBlock) Objects.requireNonNull(itemStack.getItem())).field_150939_a, false);
+            final int renderColor = itemColors.getColorFromItemStack(itemStack, 0);
             final TextureAtlasSprite textureAtlasSprite = getTextureAtlasSprite(itemStack);
             return getColors(textureAtlasSprite, renderColor);
         } catch (Exception ignored) {
@@ -89,28 +82,29 @@ public class ItemColorHelper {
     }
 
     private static int getBlockColors(ItemStack itemStack, Block block) {
-        final int meta = itemStack.getMetadata();
-        IBlockState blockState;
+        final int meta = itemStack.getItemDamage();
+        Block State;
         try {
-            blockState = block.getStateFromMeta(meta);
+            State = block.getBlockById(meta);
         } catch (RuntimeException | LinkageError ignored) {
-            blockState = block.getDefaultState();
+            State = block;
         }
 
-        final BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
+//        final BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
         int renderColor = 0xFFFFFFFF;
         try {
-            blockColors.colorMultiplier(blockState, null, null, 0);
+            State.colorMultiplier(null, 0, 0, 0);
         } catch (Exception ignored) {
         }
         final TextureAtlasSprite textureAtlasSprite;
-        if (BogoSorter.isGTCEuLoaded() && blockState.getBlock() instanceof BlockMachine) {
-            MetaTileEntity mte = GTUtility.getMetaTileEntity(itemStack);
-            Pair<TextureAtlasSprite, Integer> pair = mte.getParticleTexture();
-            textureAtlasSprite = pair.getKey();
-            renderColor = pair.getRight();
+        if (BogoSorter.isGTCEuLoaded()) { // && blockState.getBlock() instanceof BlockMachine) {
+//            MetaTileEntity mte = GTUtility.getMetaTileEntity(itemStack);
+//            Pair<TextureAtlasSprite, Integer> pair = mte.getParticleTexture();
+//            textureAtlasSprite = pair.getKey();
+//            renderColor = pair.getRight();
+            return 0;
         } else {
-            textureAtlasSprite = getTextureAtlasSprite(blockState);
+            textureAtlasSprite = getTextureAtlasSprite(block);
         }
         return getColors(textureAtlasSprite, renderColor);
     }
@@ -131,9 +125,9 @@ public class ItemColorHelper {
         int red = (int) ((color[0] - 1) * (float) (renderColor >> 16 & 255) / 255.0F);
         int green = (int) ((color[1] - 1) * (float) (renderColor >> 8 & 255) / 255.0F);
         int blue = (int) ((color[2] - 1) * (float) (renderColor & 255) / 255.0F);
-        red = MathHelper.clamp(red, 0, 255);
-        green = MathHelper.clamp(green, 0, 255);
-        blue = MathHelper.clamp(blue, 0, 255);
+        red = MathHelper.clamp_int(red, 0, 255);
+        green = MathHelper.clamp_int(green, 0, 255);
+        blue = MathHelper.clamp_int(blue, 0, 255);
         return Color.rgb(red, green, blue);
     }
 
@@ -157,21 +151,24 @@ public class ItemColorHelper {
     }
 
     @Nullable
-    private static TextureAtlasSprite getTextureAtlasSprite(IBlockState blockState) {
+    private static TextureAtlasSprite getTextureAtlasSprite(Block block) {
         Minecraft minecraft = Minecraft.getMinecraft();
-        BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRendererDispatcher();
-        BlockModelShapes blockModelShapes = blockRendererDispatcher.getBlockModelShapes();
-        TextureAtlasSprite textureAtlasSprite = blockModelShapes.getTexture(blockState);
-        if (textureAtlasSprite == minecraft.getTextureMapBlocks().getMissingSprite()) {
+        TextureMap textureMap = minecraft.getTextureMapBlocks();
+        IIcon icon = block.getBlockTextureFromSide(0);
+        TextureAtlasSprite textureAtlasSprite = textureMap.getTextureExtry(icon.getIconName());
+//        BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRendererDispatcher();
+//        BlockModelShapes blockModelShapes = blockRendererDispatcher.getBlockModelShapes();
+//        TextureAtlasSprite textureAtlasSprite = blockModelShapes.getTexture(blockState);
+        if (textureAtlasSprite == textureMap.getAtlasSprite("missingno")) {
             return null;
         }
         return textureAtlasSprite;
     }
 
     private static TextureAtlasSprite getTextureAtlasSprite(ItemStack itemStack) {
-        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-        ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
-        IBakedModel itemModel = itemModelMesher.getItemModel(itemStack);
-        return itemModel.getParticleTexture();
+//        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+//        ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
+//        IBakedModel itemModel = itemModelMesher.getItemModel(itemStack);
+        return null ; //itemModel.getParticleTexture();
     }
 }

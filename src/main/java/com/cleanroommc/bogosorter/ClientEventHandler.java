@@ -12,7 +12,15 @@ import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
 import com.cleanroommc.bogosorter.common.sort.SlotGroup;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
 import com.cleanroommc.bogosorter.compat.screen.WarningScreen;
+import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
+import com.cleanroommc.modularui.api.event.MouseInputEvent;
 import com.cleanroommc.modularui.factory.ClientGUI;
+import com.mojang.realmsclient.gui.ChatFormatting;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.minecraft.client.Minecraft;
@@ -24,18 +32,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -45,8 +44,9 @@ import java.util.*;
 public class ClientEventHandler {
 
     public static final List<ItemStack> allItems = new ArrayList<>();
-    public static final KeyBinding configGuiKey = new KeyBinding("key.sort_config", KeyConflictContext.UNIVERSAL, Keyboard.KEY_K, "key.categories.bogosorter");
-    public static final KeyBinding sortKey = new KeyBinding("key.sort", KeyConflictContext.GUI, -98, "key.categories.bogosorter");
+    public static final KeyBinding configGuiKey = new KeyBinding("key.sort_config", Keyboard.KEY_K, "key.categories.bogosorter");
+    public static final KeyBinding sortKey = new KeyBinding("key.sort", -98, "key.categories.bogosorter");
+    public static final boolean isDeobfuscatedEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
     public static final KeyBind moveAllSame = KeyBind.builder("move_all_same")
             .lmb(true).rmb(false)
@@ -103,7 +103,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGuiOpen(GuiOpenEvent event) {
-        if (event.getGui() instanceof GuiMainMenu && !WarningScreen.wasOpened) {
+        if (event.gui instanceof GuiMainMenu && !WarningScreen.wasOpened) {
             WarningScreen.wasOpened = true;
             List<String> warnings = new ArrayList<>();
             if (Loader.isModLoaded("inventorytweaks")) {
@@ -111,9 +111,9 @@ public class ClientEventHandler {
                 warnings.add("Consider removing the mod and reload the game.");
             }
             if (!warnings.isEmpty()) {
-                warnings.add(0, TextFormatting.BOLD + "! Warning from Inventory Bogosorter !");
+                warnings.add(0, ChatFormatting.BOLD + "! Warning from Inventory Bogosorter !");
                 warnings.add(1, "");
-                event.setGui(new WarningScreen(warnings));
+                event.gui = new WarningScreen(warnings);
             }
         }
     }
@@ -139,34 +139,34 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onGuiKeyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
+    public static void onGuiKeyInput(KeyboardInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
-        if (!(event.getGui() instanceof GuiContainer)) return;
-        if (handleInput((GuiContainer) event.getGui())) {
+        if (!(event.gui instanceof GuiContainer)) return;
+        if (handleInput((GuiContainer) event.gui)) {
             event.setCanceled(true);
             return;
         }
 
-        if (FMLLaunchHandler.isDeobfuscatedEnvironment()) {
+        if (isDeobfuscatedEnvironment) {
             // clear
             if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1)) {
-                ISlot slot = getSlot(event.getGui());
-                SortHandler sortHandler = createSortHandler(event.getGui(), slot);
+                ISlot slot = getSlot(event.gui);
+                SortHandler sortHandler = createSortHandler(event.gui, slot);
                 if (sortHandler == null) return;
                 sortHandler.clearAllItems(slot);
                 return;
             }
             // random
             if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2)) {
-                if (allItems.isEmpty()) {
-                    for (Item item : ForgeRegistries.ITEMS) {
-                        NonNullList<ItemStack> subItems = NonNullList.create();
-                        item.getSubItems(CreativeTabs.SEARCH, subItems);
-                        allItems.addAll(subItems);
-                    }
-                }
-                ISlot slot = getSlot(event.getGui());
-                SortHandler sortHandler = createSortHandler(event.getGui(), slot);
+//                if (allItems.isEmpty()) {
+//                    for (Item item : ForgeRegistries.ITEMS) {
+//                        NonNullList<ItemStack> subItems = NonNullList.create();
+//                        item.getSubItems(CreativeTabs.SEARCH, subItems);
+//                        allItems.addAll(subItems);
+//                    }
+//                }
+                ISlot slot = getSlot(event.gui);
+                SortHandler sortHandler = createSortHandler(event.gui, slot);
                 if (sortHandler == null) return;
                 sortHandler.randomizeItems(slot);
             }
@@ -174,16 +174,16 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
+    public static void onMouseInput(MouseInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
-        if (event.getGui() instanceof GuiContainer && handleInput((GuiContainer) event.getGui())) {
+        if (event.gui instanceof GuiContainer && handleInput((GuiContainer) event.gui)) {
             event.setCanceled(true);
         }
     }
 
     // handle all inputs in one method
     public static boolean handleInput(@Nullable GuiContainer container) {
-        if (container != null && container.isFocused()) {
+        if (container != null) {// && container.isFocused()) {
             return false;
         }
         if (container != null && canDoShortcutAction()) {
@@ -238,10 +238,10 @@ public class ClientEventHandler {
     }
 
     private static boolean canSort(@Nullable ISlot slot) {
-        return !Minecraft.getMinecraft().player.isCreative() ||
-                sortKey.getKeyModifier().isActive(null) != Minecraft.getMinecraft().gameSettings.keyBindPickBlock.getKeyModifier().isActive(null) ||
+        return !Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode ||
+//                sortKey.getKeyModifier().isActive(null) != Minecraft.getMinecraft().gameSettings.keyBindPickBlock.getKeyModifier().isActive(null) ||
                 sortKey.getKeyCode() != Minecraft.getMinecraft().gameSettings.keyBindPickBlock.getKeyCode() ||
-                (Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty() && (slot == null || slot.bogo$getStack().isEmpty()));
+                (Minecraft.getMinecraft().thePlayer.inventory.getItemStack() == null && (slot == null || slot.bogo$getStack() == null));
     }
 
     private static boolean isButtonPressed(int button) {
@@ -249,7 +249,7 @@ public class ClientEventHandler {
     }
 
     private static boolean isKeyDown(KeyBinding key) {
-        if (!key.getKeyModifier().isActive(null)) return false;
+//        if (!key.getKeyModifier().isActive(null)) return false;
         if (key.getKeyCode() < 0) {
             return isButtonPressed(key.getKeyCode() + 100);
         }
@@ -267,7 +267,7 @@ public class ClientEventHandler {
     @Nullable
     public static ISlot getSlot(GuiScreen guiScreen) {
         if (guiScreen instanceof GuiContainer) {
-            return (ISlot) ((GuiContainer) guiScreen).getSlotUnderMouse();
+            return (ISlot) ((GuiContainer) guiScreen).theSlot;
         }
         return null;
     }
@@ -295,7 +295,7 @@ public class ClientEventHandler {
             boolean color = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("color"));
             boolean name = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("display_name"));
             NetworkHandler.sendToServer(new CSort(createSortData(slotGroup, color, name), BogoSorterConfig.sortRules, BogoSorterConfig.nbtSortRules, slot.bogo$getSlotNumber(), slotGroup.isPlayerInventory()));
-            SortHandler.playSortSound();
+//            SortHandler.playSortSound();
             return true;
         }
         return false;
@@ -318,7 +318,7 @@ public class ClientEventHandler {
 
             if (!player && !isSortableContainer(guiScreen)) return null;
 
-            return new SortHandler(Minecraft.getMinecraft().player, container, Int2ObjectMaps.emptyMap());
+            return new SortHandler(Minecraft.getMinecraft().thePlayer, container, Int2ObjectMaps.emptyMap());
         }
         return null;
     }

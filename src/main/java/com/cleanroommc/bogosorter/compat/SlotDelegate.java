@@ -4,14 +4,17 @@ import com.cleanroommc.bogosorter.api.ISlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class SlotDelegate implements ISlot {
 
     private final Slot slot;
+    private final Item item;
 
-    public SlotDelegate(Slot slot) {
+    public SlotDelegate(Slot slot, Item item) {
         this.slot = slot;
+        this.item = item;
     }
 
     @Override
@@ -21,12 +24,12 @@ public class SlotDelegate implements ISlot {
 
     @Override
     public int bogo$getX() {
-        return slot.xPos;
+        return slot.xDisplayPosition;
     }
 
     @Override
     public int bogo$getY() {
-        return slot.yPos;
+        return slot.yDisplayPosition;
     }
 
     @Override
@@ -61,12 +64,12 @@ public class SlotDelegate implements ISlot {
 
     @Override
     public int bogo$getItemStackLimit(ItemStack itemStack) {
-        return slot.getItemStackLimit(itemStack);
+        return item.getItemStackLimit(itemStack);
     }
 
     @Override
     public boolean bogo$isEnabled() {
-        return slot.isEnabled();
+        return slot.func_111238_b();
     }
 
     @Override
@@ -90,7 +93,7 @@ public class SlotDelegate implements ISlot {
     }
 
     @Override
-    public ItemStack bogo$onTake(EntityPlayer player, ItemStack itemStack) {
-        return slot.onTake(player, itemStack);
+    public void bogo$onTake(EntityPlayer player, ItemStack itemStack) {
+        slot.onPickupFromSlot(player, itemStack);
     }
 }

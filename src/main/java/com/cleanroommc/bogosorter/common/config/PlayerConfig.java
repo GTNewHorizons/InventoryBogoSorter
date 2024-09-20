@@ -3,12 +3,12 @@ package com.cleanroommc.bogosorter.common.config;
 import com.cleanroommc.bogosorter.common.network.CConfigSync;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -28,11 +28,11 @@ public class PlayerConfig {
         if (player instanceof EntityPlayerMP) {
             return playerConfig.computeIfAbsent((EntityPlayerMP) player, key -> new PlayerConfig());
         }
-        throw new IllegalStateException("Could net get player config for " + player.getName());
+        throw new IllegalStateException("Could net get player config for " + player.getDisplayName());
     }
 
     public static void checkPlayers() {
-        playerConfig.keySet().removeIf(player -> !player.isAddedToWorld());
+        playerConfig.keySet().removeIf(player -> player.worldObj == null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -42,12 +42,12 @@ public class PlayerConfig {
 
     public void writePacket(PacketBuffer buffer) {
         buffer.writeBoolean(enableAutoRefill);
-        buffer.writeVarInt(autoRefillDamageThreshold);
+        buffer.writeVarIntToBuffer(autoRefillDamageThreshold);
     }
 
     public void readPacket(PacketBuffer buffer) {
         enableAutoRefill = buffer.readBoolean();
-        autoRefillDamageThreshold = buffer.readVarInt();
+        autoRefillDamageThreshold = buffer.readVarIntFromBuffer();
     }
 
     @SideOnly(Side.CLIENT)

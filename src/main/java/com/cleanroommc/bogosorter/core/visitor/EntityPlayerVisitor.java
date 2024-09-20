@@ -1,8 +1,8 @@
 package com.cleanroommc.bogosorter.core.visitor;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.core.BogoSorterCore;
 import com.cleanroommc.bogosorter.core.CatServerHelper;
-import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -10,7 +10,7 @@ import org.objectweb.asm.Opcodes;
 public class EntityPlayerVisitor extends ClassVisitor implements Opcodes {
 
     public static final String CLASS_NAME = "net.minecraft.entity.player.EntityPlayer";
-    public static final boolean DEOBF = FMLLaunchHandler.isDeobfuscatedEnvironment();
+    public static final boolean DEOBF = BogoSorterCore.isDevEnv();
     private static final String METHOD_NAME = DEOBF ? "damageShield" : "func_184590_k";
     private static final String INTERACT_ON_FUNC = DEOBF ? "interactOn" : "func_190775_a";
     private static final String ATTACK_ENTITY_FUNC = DEOBF ? "attackTargetEntityWithCurrentItem" : "func_71059_n";

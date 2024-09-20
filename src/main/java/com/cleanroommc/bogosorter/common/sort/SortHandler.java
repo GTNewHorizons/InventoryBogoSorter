@@ -9,20 +9,18 @@ import com.cleanroommc.bogosorter.common.McUtils;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CSlotSync;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,38 +33,38 @@ public class SortHandler {
     public static final Map<EntityPlayer, List<NbtSortRule>> cacheNbtSortRules = new Object2ObjectOpenHashMap<>();
     public static final AtomicReference<List<NbtSortRule>> currentNbtSortRules = new AtomicReference<>(Collections.emptyList());
 
-    @Nullable public static SoundEvent sortSound = SoundEvents.UI_BUTTON_CLICK;
-    private static List<SoundEvent> foolsSounds = null;
+    @Nullable public static ResourceLocation sortSound = new ResourceLocation("gui.button.press");
+    private static List<ResourceLocation> foolsSounds = null;
     private static long foolsBuildTime = 0;
 
     public static String getSortSoundName() {
-        return sortSound == null ? "null" : sortSound.getSoundName().toString();
+        return sortSound == null ? "null" : sortSound.toString();
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void playSortSound() {
-        SoundEvent sound;
-        if (BogoSorter.isAprilFools()) {
-            if (foolsSounds == null || foolsBuildTime - Minecraft.getSystemTime() > 300000) {
-                List<SoundEvent> sounds = new ArrayList<>(256);
-                for (SoundEvent soundEvent : ForgeRegistries.SOUND_EVENTS) {
-                    if (soundEvent != null &&
-                            !soundEvent.getSoundName().getPath().contains("music.") &&
-                            !soundEvent.getSoundName().getPath().contains("record.")) {
-                        sounds.add(soundEvent);
-                    }
-                }
-                foolsSounds = sounds;
-                foolsBuildTime = Minecraft.getSystemTime();
-            }
-            sound = foolsSounds.get(BogoSorter.RND.nextInt(foolsSounds.size()));
-        } else {
-            sound = sortSound;
-        }
-        if (sound != null) {
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(sound, 1f));
-        }
-    }
+//    @SideOnly(Side.CLIENT)
+//    public static void playSortSound() {
+//        SoundEvent sound;
+//        if (BogoSorter.isAprilFools()) {
+//            if (foolsSounds == null || foolsBuildTime - Minecraft.getSystemTime() > 300000) {
+//                List<SoundEvent> sounds = new ArrayList<>(256);
+//                for (SoundEvent soundEvent : ForgeRegistries.SOUND_EVENTS) {
+//                    if (soundEvent != null &&
+//                            !soundEvent.getSoundName().getPath().contains("music.") &&
+//                            !soundEvent.getSoundName().getPath().contains("record.")) {
+//                        sounds.add(soundEvent);
+//                    }
+//                }
+//                foolsSounds = sounds;
+//                foolsBuildTime = Minecraft.getSystemTime();
+//            }
+//            sound = foolsSounds.get(BogoSorter.RND.nextInt(foolsSounds.size()));
+//        } else {
+//            sound = sortSound;
+//        }
+//        if (sound != null) {
+//            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(sound, 1f));
+//        }
+//    }
 
     private final EntityPlayer player;
     private final Container container;
@@ -92,8 +90,8 @@ public class SortHandler {
                          sortRule.compare(container1.getItemStack(), container2.getItemStack());
                 if (result != 0) return result;
             }
-            result = ItemCompareHelper.compareRegistryOrder(container1.getItemStack(), container2.getItemStack());
-            if (result != 0) return result;
+//            result = ItemCompareHelper.compareRegistryOrder(container1.getItemStack(), container2.getItemStack());
+//            if (result != 0) return result;
             result = ItemCompareHelper.compareMeta(container1.getItemStack(), container2.getItemStack());
             return result;
         };
@@ -113,7 +111,7 @@ public class SortHandler {
         if (slotGroup != null) {
             if (BogoSorter.isAprilFools() && BogoSorter.RND.nextFloat() < 0.01f) {
                 sortBogo(slotGroup);
-                this.player.sendMessage(new TextComponentString("Get Bogo'd!"));
+                this.player.addChatMessage(new ChatComponentText("Get Bogo'd!"));
             } else {
                 sortHorizontal(slotGroup);
             }
@@ -135,7 +133,7 @@ public class SortHandler {
         if (itemSortContainer == null) return;
         for (ISlot slot : getSortableSlots(slotGroup)) {
             if (itemSortContainer == null) {
-                slot.bogo$putStack(ItemStack.EMPTY);
+                slot.bogo$putStack(null);
                 continue;
             }
 
@@ -207,14 +205,14 @@ public class SortHandler {
                 BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
         for (ISlot slot : getSortableSlots(slotGroup)) {
             ItemStack stack = slot.bogo$getStack();
-            if (!stack.isEmpty()) {
+            if (stack != null) {
                 ItemSortContainer container1 = items.get(stack);
                 if (container1 == null) {
                     container1 = new ItemSortContainer(stack, clientSortData.get(slot.bogo$getSlotNumber()));
                     items.put(stack, container1);
                     list.add(container1);
                 } else {
-                    container1.grow(stack.getCount());
+                    container1.grow(stack.stackSize);
                 }
             }
         }
@@ -239,8 +237,8 @@ public class SortHandler {
                 result = sortRule.compare(stack1, stack2);
                 if (result != 0) return result;
             }
-            result = ItemCompareHelper.compareRegistryOrder(stack1, stack2);
-            if (result != 0) return result;
+//            result = ItemCompareHelper.compareRegistryOrder(stack1, stack2);
+//            if (result != 0) return result;
             result = ItemCompareHelper.compareMeta(stack1, stack2);
             return result;
         };
@@ -251,9 +249,9 @@ public class SortHandler {
         if (slotGroup != null) {
             List<Pair<ItemStack, Integer>> slots = new ArrayList<>();
             for (ISlot slot : getSortableSlots(slotGroup)) {
-                if (!slot.bogo$getStack().isEmpty()) {
-                    slot.bogo$putStack(ItemStack.EMPTY);
-                    slots.add(Pair.of(ItemStack.EMPTY, slot.bogo$getSlotNumber()));
+                if (slot.bogo$getStack() != null) {
+                    slot.bogo$putStack(null);
+                    slots.add(Pair.of(null , slot.bogo$getSlotNumber()));
                 }
             }
             NetworkHandler.sendToServer(new CSlotSync(slots));
@@ -298,7 +296,7 @@ public class SortHandler {
              */
             boolean canTake = slot.bogo$canTakeStack(player);
             boolean canInsert = slot.bogo$isItemValid(slot.bogo$getStack().copy());
-            boolean isEmpty = slot.bogo$getStack().isEmpty();
+            boolean isEmpty = slot.bogo$getStack() == null;
             if (canTake || canInsert || isEmpty) result.add(slot);
         }
         return result;

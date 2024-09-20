@@ -2,7 +2,6 @@ package com.cleanroommc.bogosorter.common.refill;
 
 import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ISpecialArmor;
@@ -14,12 +13,13 @@ public class DamageHelper {
         if (!playerConfig.enableAutoRefill || playerConfig.autoRefillDamageThreshold <= 0) return false;
 
         if (RefillHandler.shouldHandleRefill(player, itemStack) && isNotArmor(itemStack)) {
-            ItemStack handItem = player.getHeldItemMainhand();
+            ItemStack handItem = player.getHeldItem();
             if (handItem != itemStack) {
-                handItem = player.getHeldItemOffhand();
-                if (handItem != itemStack) {
-                    return false;
-                }
+//                handItem = player.getHeldItemOffhand();
+//                if (handItem != itemStack) {
+//                    return false;
+//                }
+                return false;
             }
 
             int durabilityLeft = itemStack.getMaxDamage() - itemStack.getItemDamage();
@@ -32,12 +32,13 @@ public class DamageHelper {
 
     private static boolean isNotArmor(ItemStack itemStack) {
         if (itemStack.getItem() instanceof ItemArmor || itemStack.getItem() instanceof ISpecialArmor) return false;
-        EntityEquipmentSlot slot = itemStack.getItem().getEquipmentSlot(itemStack);
-        return slot == null || slot == EntityEquipmentSlot.MAINHAND || slot == EntityEquipmentSlot.OFFHAND;
+//        EntityEquipmentSlot slot = itemStack.getItem().getEquipmentSlot(itemStack);
+//        return slot == null || slot == EntityEquipmentSlot.MAINHAND || slot == EntityEquipmentSlot.OFFHAND;
+        return false;
     }
 
     public static int getDurability(ItemStack item) {
-        if (item.isEmpty()) return 0;
+        if (item == null) return 0;
         if (item.getMaxDamage() <= 0) return 0;
         if (isUnbreakable(item)) {
             return item.getMaxDamage() + 1;
@@ -46,6 +47,6 @@ public class DamageHelper {
     }
 
     public static boolean isUnbreakable(ItemStack item) {
-        return !item.isEmpty() && item.hasTagCompound() && item.getTagCompound().getBoolean("Unbreakable");
+        return item != null && item.hasTagCompound() && item.getTagCompound().getBoolean("Unbreakable");
     }
 }

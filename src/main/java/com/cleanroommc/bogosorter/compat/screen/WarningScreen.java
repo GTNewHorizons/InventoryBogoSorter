@@ -1,11 +1,11 @@
 package com.cleanroommc.bogosorter.compat.screen;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -27,8 +27,8 @@ public class WarningScreen extends GuiScreen {
         int i = this.height / 2 - this.textHeight / 2;
         if (this.messages != null) {
             for (String s : this.messages) {
-                this.drawCenteredString(this.fontRenderer, s, this.width / 2, i, 16777215);
-                i += this.fontRenderer.FONT_HEIGHT;
+                this.drawCenteredString(this.fontRendererObj, s, this.width / 2, i, 16777215);
+                i += this.fontRendererObj.FONT_HEIGHT;
             }
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -43,7 +43,7 @@ public class WarningScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        this.textHeight = this.messages.size() * this.fontRenderer.FONT_HEIGHT;
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, Math.min(this.height / 2 + this.textHeight / 2 + this.fontRenderer.FONT_HEIGHT, this.height - 30), I18n.format("gui.toTitle")));
+        this.textHeight = this.messages.size() * this.fontRendererObj.FONT_HEIGHT;
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, Math.min(this.height / 2 + this.textHeight / 2 + this.fontRendererObj.FONT_HEIGHT, this.height - 30), I18n.format("gui.toTitle")));
     }
 }

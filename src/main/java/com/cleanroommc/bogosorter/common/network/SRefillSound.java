@@ -1,12 +1,12 @@
 package com.cleanroommc.bogosorter.common.network;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class SRefillSound implements IPacket {
     @SideOnly(Side.CLIENT)
     @Override
     public IPacket executeClient(NetHandlerPlayClient handler) {
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(SoundEvents.ENTITY_CHICKEN_EGG, 1, 1));
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("mob.chicken.plop")));
         return null;
     }
 }

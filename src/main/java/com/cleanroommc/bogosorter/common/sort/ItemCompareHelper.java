@@ -3,22 +3,22 @@ package com.cleanroommc.bogosorter.common.sort;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
-import gregtech.api.items.metaitem.FoodUseManager;
-import gregtech.api.items.metaitem.MetaItem;
-import gregtech.api.items.metaitem.stats.IFoodBehavior;
-import moze_intel.projecte.utils.EMCHelper;
+//import gregtech.api.items.metaitem.FoodUseManager;
+//import gregtech.api.items.metaitem.MetaItem;
+//import gregtech.api.items.metaitem.stats.IFoodBehavior;
+//import moze_intel.projecte.utils.EMCHelper;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
+
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,19 +35,19 @@ public class ItemCompareHelper {
     private static final Pattern WIRE_PATTERN = Pattern.compile(".*Wire([A-Z].*)?");
 
     public static String getMod(ItemStack item) {
-        ResourceLocation loc = item.getItem().getRegistryName();
+        String loc = item.getItem().delegate.name();
         if (loc == null) throw new IllegalStateException("Item doesn't have a registry name!");
-        return loc.getNamespace();
+        return loc.split(":")[0].toLowerCase();
     }
 
     public static String getId(ItemStack item) {
-        ResourceLocation loc = item.getItem().getRegistryName();
+        String loc = item.getItem().delegate.name();
         if (loc == null) throw new IllegalStateException("Item doesn't have a registry name!");
-        return loc.getPath();
+        return loc.split(":")[1].toLowerCase();
     }
 
     public static int getMeta(ItemStack item) {
-        return item.getMetadata();
+        return item.getItemDamage();
     }
 
     public static NBTTagCompound getNbt(ItemStack item) {
@@ -56,35 +56,35 @@ public class ItemCompareHelper {
 
     public static float getSaturation(ItemStack item) {
         if (item.getItem() instanceof ItemFood) {
-            return ((ItemFood) item.getItem()).getSaturationModifier(item);
+            return ((ItemFood) item.getItem()).func_150906_h(item);
         }
-        if (BogoSorter.isAnyGtLoaded() && item.getItem() instanceof MetaItem) {
-            MetaItem<?>.MetaValueItem valueItem = ((MetaItem<?>) item.getItem()).getItem(item);
-            if (valueItem.getUseManager() instanceof FoodUseManager) {
-                IFoodBehavior stats = ((FoodUseManager) valueItem.getUseManager()).getFoodStats();
-                return stats.getSaturation(item, null);
-            }
-        }
+//        if (BogoSorter.isAnyGtLoaded() && item.getItem() instanceof MetaItem) {
+//            MetaItem<?>.MetaValueItem valueItem = ((MetaItem<?>) item.getItem()).getItem(item);
+//            if (valueItem.getUseManager() instanceof FoodUseManager) {
+//                IFoodBehavior stats = ((FoodUseManager) valueItem.getUseManager()).getFoodStats();
+//                return stats.getSaturation(item, null);
+//            }
+//        }
         return Float.MIN_VALUE;
     }
 
     public static int getHunger(ItemStack item) {
         if (item.getItem() instanceof ItemFood) {
-            return ((ItemFood) item.getItem()).getHealAmount(item);
+            return ((ItemFood) item.getItem()).func_150905_g(item);
         }
-        if (BogoSorter.isAnyGtLoaded() && item.getItem() instanceof MetaItem) {
-            MetaItem<?>.MetaValueItem valueItem = ((MetaItem<?>) item.getItem()).getItem(item);
-            if (valueItem.getUseManager() instanceof FoodUseManager) {
-                IFoodBehavior stats = ((FoodUseManager) valueItem.getUseManager()).getFoodStats();
-                return stats.getFoodLevel(item, null);
-            }
-        }
+//        if (BogoSorter.isAnyGtLoaded() && item.getItem() instanceof MetaItem) {
+//            MetaItem<?>.MetaValueItem valueItem = ((MetaItem<?>) item.getItem()).getItem(item);
+//            if (valueItem.getUseManager() instanceof FoodUseManager) {
+//                IFoodBehavior stats = ((FoodUseManager) valueItem.getUseManager()).getFoodStats();
+//                return stats.getFoodLevel(item, null);
+//            }
+//        }
         return Integer.MIN_VALUE;
     }
 
-    public static long getEmcValue(ItemStack item) {
-        return EMCHelper.getEmcValue(item);
-    }
+//    public static long getEmcValue(ItemStack item) {
+//        return EMCHelper.getEmcValue(item);
+//    }
 
     public static int compareMod(ItemStack stack1, ItemStack stack2) {
         return getMod(stack1).compareTo(getMod(stack2));
@@ -105,7 +105,7 @@ public class ItemCompareHelper {
 
     @SuppressWarnings("all")
     public static int compareFormattedString(String s1, String s2) {
-        return TextFormatting.getTextWithoutFormattingCodes(s1).compareTo(TextFormatting.getTextWithoutFormattingCodes(s2));
+        return EnumChatFormatting.getTextWithoutFormattingCodes(s1).compareTo(EnumChatFormatting.getTextWithoutFormattingCodes(s2));
     }
 
     public static int compareMeta(ItemStack stack1, ItemStack stack2) {
@@ -113,13 +113,13 @@ public class ItemCompareHelper {
     }
 
     public static int compareCount(ItemStack stack1, ItemStack stack2) {
-        return Integer.compare(stack2.getCount(), stack1.getCount());
+        return Integer.compare(stack2.stackSize, stack1.stackSize);
     }
 
-    public static int compareRegistryOrder(ItemStack stack1, ItemStack stack2) {
-        ForgeRegistry<Item> registry = (ForgeRegistry<Item>) ForgeRegistries.ITEMS;
-        return Integer.compare(registry.getID(stack1.getItem()), registry.getID(stack2.getItem()));
-    }
+//    public static int compareRegistryOrder(ItemStack stack1, ItemStack stack2) {
+//        ForgeRegistry<Item> registry = (ForgeRegistry<Item>) ForgeRegistries.ITEMS;
+//        return Integer.compare(registry.getID(stack1.getItem()), registry.getID(stack2.getItem()));
+//    }
 
     public static int compareOreDict(ItemStack stack1, ItemStack stack2) {
         List<String> ores1 = new ArrayList<>(OreDictHelper.getOreDicts(stack1));
@@ -136,7 +136,7 @@ public class ItemCompareHelper {
         for (int i = 0, n = ores1.size(); i < n; i++) {
             val += ores1.get(i).compareTo(ores2.get(i));
         }
-        return MathHelper.clamp(val, -1, 1);
+        return MathHelper.clamp_int(val, -1, 1);
     }
 
     public static int compareHasNbt(ItemStack stack1, ItemStack stack2) {
@@ -176,13 +176,13 @@ public class ItemCompareHelper {
 
     public static int compareNbtAllValues(@NotNull NBTTagCompound nbt1, @NotNull NBTTagCompound nbt2) {
         int total = 0;
-        for (String key : nbt1.getKeySet()) {
+        for (String key : nbt1.func_150296_c()) {
             if (nbt2.hasKey(key)) {
                 int result = compareNbtBase(nbt1.getTag(key), nbt2.getTag(key));
                 total += result;
             }
         }
-        return MathHelper.clamp(total, -1, 1);
+        return MathHelper.clamp_int(total, -1, 1);
     }
 
     public static int compareNbtBase(NBTBase nbt1, NBTBase nbt2) {
@@ -190,12 +190,12 @@ public class ItemCompareHelper {
         if (nbt1.getId() == Constants.NBT.TAG_COMPOUND) {
             return compareNbtAllValues((NBTTagCompound) nbt1, (NBTTagCompound) nbt2);
         }
-        if (nbt1 instanceof NBTPrimitive) {
-            return Double.compare(((NBTPrimitive) nbt1).getDouble(), ((NBTPrimitive) nbt2).getDouble());
+        if (nbt1 instanceof NBTBase.NBTPrimitive) {
+            return Double.compare(((NBTBase.NBTPrimitive) nbt1).func_150286_g(), ((NBTBase.NBTPrimitive) nbt2).func_150286_g());
         }
         if (nbt1.getId() == Constants.NBT.TAG_BYTE_ARRAY) {
-            byte[] array1 = ((NBTTagByteArray) nbt1).getByteArray();
-            byte[] array2 = ((NBTTagByteArray) nbt2).getByteArray();
+            byte[] array1 = ((NBTTagByteArray) nbt1).func_150292_c();
+            byte[] array2 = ((NBTTagByteArray) nbt2).func_150292_c();
             if (array1.length != array2.length) {
                 return array1.length < array2.length ? -1 : 1;
             }
@@ -206,8 +206,8 @@ public class ItemCompareHelper {
             return total;
         }
         if (nbt1.getId() == Constants.NBT.TAG_INT_ARRAY) {
-            int[] array1 = ((NBTTagIntArray) nbt1).getIntArray();
-            int[] array2 = ((NBTTagIntArray) nbt2).getIntArray();
+            int[] array1 = ((NBTTagIntArray) nbt1).func_150302_c();
+            int[] array2 = ((NBTTagIntArray) nbt2).func_150302_c();
             if (array1.length != array2.length) {
                 return array1.length < array2.length ? -1 : 1;
             }
@@ -217,10 +217,10 @@ public class ItemCompareHelper {
             }
             return total;
         }
-        if (nbt1.getId() == Constants.NBT.TAG_LONG_ARRAY) {
-            // TODO for some fucking reason long array tag doesn't have a array getter
-            return 0;
-        }
+//        if (nbt1.getId() == Constants.NBT.TAG_LONG_ARRAY) {
+//            // TODO for some fucking reason long array tag doesn't have a array getter
+//            return 0;
+//        }
         return 0;
     }
 
@@ -231,8 +231,8 @@ public class ItemCompareHelper {
     }
 
     public static int compareNbtSize(@NotNull NBTTagCompound nbt1, @NotNull NBTTagCompound nbt2) {
-        if (nbt1.getSize() < nbt2.getSize()) return -1;
-        if (nbt1.getSize() > nbt2.getSize()) return 1;
+        if (nbt1.tagMap.size() < nbt2.tagMap.size()) return -1;
+        if (nbt1.tagMap.size() > nbt2.tagMap.size()) return 1;
         List<NBTTagCompound> subTags1 = new ArrayList<>();
         List<NBTTagCompound> subTags2 = new ArrayList<>();
         subTags1.add(nbt1);
@@ -262,7 +262,7 @@ public class ItemCompareHelper {
     private static List<NBTTagCompound> getAllSubTags(List<NBTTagCompound> tags) {
         List<NBTTagCompound> subTags = new ArrayList<>();
         for (NBTTagCompound nbt : tags) {
-            for (String key : nbt.getKeySet()) {
+            for (String key : nbt.func_150296_c()) {
                 NBTBase nbtBase = nbt.getTag(key);
                 if (nbt.getTag(key) instanceof NBTTagCompound) {
                     subTags.add((NBTTagCompound) nbtBase);
@@ -275,7 +275,7 @@ public class ItemCompareHelper {
     private static int getTotalSubTags(List<NBTTagCompound> tags) {
         int sum = 0;
         for (NBTTagCompound nbt : tags) {
-            sum += nbt.getSize();
+            sum += nbt.tagMap.size();
         }
         return sum;
     }
@@ -292,31 +292,31 @@ public class ItemCompareHelper {
         return Boolean.compare(potion1.startsWith("long"), potion2.startsWith("long"));
     }
 
-    public static int compareEnchantments(NBTTagList enchantments1, NBTTagList enchantments2) {
-        int total1 = 0;
-        for (NBTBase nbtBase : enchantments1) {
-            NBTTagCompound nbt = (NBTTagCompound) nbtBase;
-            total1 += nbt.getShort("id");
-        }
-        int total2 = 0;
-        for (NBTBase nbtBase : enchantments2) {
-            NBTTagCompound nbt = (NBTTagCompound) nbtBase;
-            total2 += nbt.getShort("id");
-        }
-        int result = Integer.compare(total1, total2);
-        if (result != 0) return result;
-        total1 = 0;
-        for (NBTBase nbtBase : enchantments1) {
-            NBTTagCompound nbt = (NBTTagCompound) nbtBase;
-            total1 += nbt.getShort("lvl");
-        }
-        total2 = 0;
-        for (NBTBase nbtBase : enchantments2) {
-            NBTTagCompound nbt = (NBTTagCompound) nbtBase;
-            total2 += nbt.getShort("lvl");
-        }
-        return Integer.compare(total1, total2);
-    }
+//    public static int compareEnchantments(NBTTagList enchantments1, NBTTagList enchantments2) {
+//        int total1 = 0;
+//        for (NBTBase nbtBase : enchantments1) {
+//            NBTTagCompound nbt = (NBTTagCompound) nbtBase;
+//            total1 += nbt.getShort("id");
+//        }
+//        int total2 = 0;
+//        for (NBTBase nbtBase : enchantments2) {
+//            NBTTagCompound nbt = (NBTTagCompound) nbtBase;
+//            total2 += nbt.getShort("id");
+//        }
+//        int result = Integer.compare(total1, total2);
+//        if (result != 0) return result;
+//        total1 = 0;
+//        for (NBTBase nbtBase : enchantments1) {
+//            NBTTagCompound nbt = (NBTTagCompound) nbtBase;
+//            total1 += nbt.getShort("lvl");
+//        }
+//        total2 = 0;
+//        for (NBTBase nbtBase : enchantments2) {
+//            NBTTagCompound nbt = (NBTTagCompound) nbtBase;
+//            total2 += nbt.getShort("lvl");
+//        }
+//        return Integer.compare(total1, total2);
+//    }
 
     public static int compareEnchantment(NBTTagCompound enchantment1, NBTTagCompound enchantment2) {
         int result = Integer.compare(enchantment1.getShort("id"), enchantment2.getShort("id"));
@@ -341,20 +341,20 @@ public class ItemCompareHelper {
         return Integer.compare(OreDictHelper.getOrePrefixIndex(prefix), OreDictHelper.getOrePrefixIndex(prefix1));
     }
 
-    public static int compareEMC(ItemStack item1, ItemStack item2) {
-        return Long.compare(getEmcValue(item2), getEmcValue(item1));
-    }
+//    public static int compareEMC(ItemStack item1, ItemStack item2) {
+//        return Long.compare(getEmcValue(item2), getEmcValue(item1));
+//    }
 
     public static int compareBlockType(ItemStack item1, ItemStack item2) {
         int c = Boolean.compare(isBlock(item2), isBlock(item1));
         if (c != 0 || !isBlock(item1)) return c;
         Block block1 = getBlock(item1);
         Block block2 = getBlock(item2);
-        IBlockState state1 = getBlockState(block1, item1.getMetadata());
-        IBlockState state2 = getBlockState(block2, item2.getMetadata());
-        c = Boolean.compare(state2.isFullBlock(), state1.isFullBlock());
-        if (c != 0) return c;
-        c = Boolean.compare(state2.isFullCube(), state1.isFullCube());
+        Block state1 = getBlockState(block1, item1.getItemDamage());
+        Block state2 = getBlockState(block2, item2.getItemDamage());
+        c = Boolean.compare(state2.func_149730_j(), state1.func_149730_j());
+//        if (c != 0) return c;
+//        c = Boolean.compare(state2.isFullCube(), state1.isFullCube());
         if (c != 0) return c;
         c = Boolean.compare(state2.isOpaqueCube(), state1.isOpaqueCube());
         if (c != 0) return c;
@@ -364,11 +364,11 @@ public class ItemCompareHelper {
         if (c != 0) return c;
         c = Boolean.compare(isPipe(block2), isPipe(block1));
         if (c != 0) return c;
-        return Boolean.compare(block1.hasTileEntity(state1), block2.hasTileEntity(state2));
+        return Boolean.compare(block1.hasTileEntity(0), block2.hasTileEntity(0));
     }
 
     public static int compareBurnTime(ItemStack item1, ItemStack item2) {
-        return Integer.compare(item2.getItem().getItemBurnTime(item2), item1.getItem().getItemBurnTime(item1));
+        return Integer.compare(TileEntityFurnace.getItemBurnTime(item2), TileEntityFurnace.getItemBurnTime(item1));
     }
 
     public static int compareSaturation(ItemStack item1, ItemStack item2) {
@@ -387,20 +387,20 @@ public class ItemCompareHelper {
         return Integer.compare(ItemColorHelper.getItemColorHue(item1), ItemColorHelper.getItemColorHue(item2));
     }
 
-    public static IBlockState getBlockState(Block block, int meta) {
+    public static Block getBlockState(Block block, int meta) {
         try {
-            return block.getStateFromMeta(meta);
+            return block.getBlockById(meta);
         } catch (Exception e) {
-            return block.getDefaultState();
+            return block;
         }
     }
 
     public static boolean isBlock(ItemStack stack) {
-        return stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial;
+        return stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemReed;
     }
 
     public static Block getBlock(ItemStack stack) {
-        return stack.getItem() instanceof ItemBlock ? ((ItemBlock) stack.getItem()).getBlock() : ((ItemBlockSpecial) stack.getItem()).getBlock();
+        return stack.getItem() instanceof ItemBlock ? ((ItemBlock) stack.getItem()).field_150939_a : ((ItemReed) stack.getItem()).field_150935_a;
     }
 
     public static boolean isSlab(Block block) {

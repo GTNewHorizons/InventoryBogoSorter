@@ -24,42 +24,42 @@ public class CShortcut implements IPacket {
 
     @Override
     public void encode(PacketBuffer buf) throws IOException {
-        buf.writeEnumValue(type);
-        buf.writeVarInt(slotNumber);
+        NetworkUtils.writeEnumValue(buf, type);
+        buf.writeVarIntToBuffer(slotNumber);
     }
 
     @Override
     public void decode(PacketBuffer buf) throws IOException {
-        type = buf.readEnumValue(Type.class);
-        slotNumber = buf.readVarInt();
+        type = NetworkUtils.readEnumValue(buf,Type.class);
+        slotNumber = buf.readVarIntFromBuffer();
     }
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        Container container = handler.player.openContainer;
+        Container container = handler.playerEntity.openContainer;
         if (container == null) throw new IllegalStateException("Expected open container on server");
         ISlot slot = BogoSortAPI.getSlot(container, slotNumber);//container.getSlot(slotNumber);
-        if (!slot.bogo$canTakeStack(handler.player)) {
+        if (!slot.bogo$canTakeStack(handler.playerEntity)) {
             return null;
         }
         switch (type) {
             case MOVE_ALL:
-                ShortcutHandler.moveAllItems(handler.player, container, slot, false);
+                ShortcutHandler.moveAllItems(handler.playerEntity, container, slot, false);
                 break;
             case MOVE_ALL_SAME:
-                ShortcutHandler.moveAllItems(handler.player, container, slot, true);
+                ShortcutHandler.moveAllItems(handler.playerEntity, container, slot, true);
                 break;
             case MOVE_SINGLE:
-                ShortcutHandler.moveSingleItem(handler.player, container, slot, false);
+                ShortcutHandler.moveSingleItem(handler.playerEntity, container, slot, false);
                 break;
             case MOVE_SINGLE_EMPTY:
-                ShortcutHandler.moveSingleItem(handler.player, container, slot, true);
+                ShortcutHandler.moveSingleItem(handler.playerEntity, container, slot, true);
                 break;
             case DROP_ALL:
-                ShortcutHandler.dropItems(handler.player, container, slot, false);
+                ShortcutHandler.dropItems(handler.playerEntity, container, slot, false);
                 break;
             case DROP_ALL_SAME:
-                ShortcutHandler.dropItems(handler.player, container, slot, true);
+                ShortcutHandler.dropItems(handler.playerEntity, container, slot, true);
                 break;
         }
         container.detectAndSendChanges();

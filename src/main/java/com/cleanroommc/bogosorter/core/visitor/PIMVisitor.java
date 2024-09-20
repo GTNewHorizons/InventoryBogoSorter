@@ -1,7 +1,8 @@
 package com.cleanroommc.bogosorter.core.visitor;
 
 import com.cleanroommc.bogosorter.BogoSorter;
-import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
+import com.cleanroommc.bogosorter.core.BogoSorterCore;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -9,7 +10,7 @@ import org.objectweb.asm.Opcodes;
 public class PIMVisitor extends ClassVisitor implements Opcodes {
 
     public static final String CLASS_NAME = "net.minecraft.server.management.PlayerInteractionManager";
-    public static final boolean DEOBF = FMLLaunchHandler.isDeobfuscatedEnvironment();
+    public static final boolean DEOBF = BogoSorterCore.isDevEnv();
     public static final String METHOD_NAME = DEOBF ? "processRightClick" : "func_187250_a";
     public static final String TRY_HARVEST_BLOCK_FUNC = DEOBF ? "tryHarvestBlock" : "func_180237_b";
     public static final String PLAYER_CLASS = "net/minecraft/entity/player/EntityPlayer";

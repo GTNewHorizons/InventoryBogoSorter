@@ -36,41 +36,41 @@ public class CSort implements IPacket {
 
     @Override
     public void encode(PacketBuffer buf) throws IOException {
-        buf.writeVarInt(hover);
+        buf.writeVarIntToBuffer(hover);
         buf.writeBoolean(player);
-        buf.writeVarInt(clientSortDataList.size());
+        buf.writeVarIntToBuffer(clientSortDataList.size());
         for (ClientSortData sortData : clientSortDataList) {
             sortData.writeToPacket(buf);
         }
-        buf.writeVarInt(sortRules.size());
+        buf.writeVarIntToBuffer(sortRules.size());
         for (SortRule<ItemStack> sortRule : sortRules) {
-            buf.writeVarInt(sortRule.getSyncId());
+            buf.writeVarIntToBuffer(sortRule.getSyncId());
             buf.writeBoolean(sortRule.isInverted());
         }
-        buf.writeVarInt(nbtSortRules.size());
+        buf.writeVarIntToBuffer(nbtSortRules.size());
         for (NbtSortRule sortRule : nbtSortRules) {
-            buf.writeVarInt(sortRule.getSyncId());
+            buf.writeVarIntToBuffer(sortRule.getSyncId());
             buf.writeBoolean(sortRule.isInverted());
         }
     }
 
     @Override
-    public void decode(PacketBuffer buf) {
-        hover = buf.readVarInt();
+    public void decode(PacketBuffer buf) throws IOException {
+        hover = buf.readVarIntFromBuffer();
         player = buf.readBoolean();
         clientSortDataList = new ArrayList<>();
-        for (int i = 0, n = buf.readVarInt(); i < n; i++) {
+        for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
             clientSortDataList.add(ClientSortData.readFromPacket(buf));
         }
         sortRules = new ArrayList<>();
-        for (int i = 0, n = buf.readVarInt(); i < n; i++) {
-            SortRule<ItemStack> sortRule = BogoSortAPI.INSTANCE.getItemSortRule(buf.readVarInt());
+        for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
+            SortRule<ItemStack> sortRule = BogoSortAPI.INSTANCE.getItemSortRule(buf.readVarIntFromBuffer());
             sortRule.setInverted(buf.readBoolean());
             sortRules.add(sortRule);
         }
         nbtSortRules = new ArrayList<>();
-        for (int i = 0, n = buf.readVarInt(); i < n; i++) {
-            NbtSortRule sortRule = BogoSortAPI.INSTANCE.getNbtSortRule(buf.readVarInt());
+        for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
+            NbtSortRule sortRule = BogoSortAPI.INSTANCE.getNbtSortRule(buf.readVarIntFromBuffer());
             sortRule.setInverted(buf.readBoolean());
             nbtSortRules.add(sortRule);
         }
@@ -78,15 +78,15 @@ public class CSort implements IPacket {
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        SortHandler.cacheItemSortRules.put(handler.player, sortRules);
-        SortHandler.cacheNbtSortRules.put(handler.player, nbtSortRules);
+        SortHandler.cacheItemSortRules.put(handler.playerEntity, sortRules);
+        SortHandler.cacheNbtSortRules.put(handler.playerEntity, nbtSortRules);
         Int2ObjectOpenHashMap<ClientSortData> map = new Int2ObjectOpenHashMap<>();
         for (ClientSortData sortData : clientSortDataList) {
             for (int i : sortData.getSlotNumbers()) {
                 map.put(i, sortData);
             }
         }
-        SortHandler sortHandler = new SortHandler(handler.player, handler.player.openContainer, map);
+        SortHandler sortHandler = new SortHandler(handler.playerEntity, handler.playerEntity.openContainer, map);
         sortHandler.sort(hover);
         return null;
     }

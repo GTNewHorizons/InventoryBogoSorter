@@ -41,5 +41,5 @@ public interface ISlot {
 
     void bogo$onSlotChanged(ItemStack oldItem, ItemStack newItem);
 
-    ItemStack bogo$onTake(EntityPlayer player, ItemStack itemStack);
+    void bogo$onTake(EntityPlayer player, ItemStack itemStack);
 }

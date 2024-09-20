@@ -139,7 +139,7 @@ public class KeyBind {
         }
 
         public Builder ctrl(boolean press) {
-            if (Minecraft.IS_RUNNING_ON_MAC) {
+            if (Minecraft.isRunningOnMac) {
                 return add(press, 219);
             }
             return add(press, 29);
