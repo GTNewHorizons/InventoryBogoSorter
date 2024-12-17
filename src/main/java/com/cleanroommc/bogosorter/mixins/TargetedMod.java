@@ -1,10 +1,8 @@
-package com.cleanroommc.bogosorter.mixinplugin;
+package com.cleanroommc.bogosorter.mixins;
 
 public enum TargetedMod {
 
-    VANILLA("Minecraft", null),
-    THAUMCRAFT("Thaumcraft", null, "Thaumcraft");
-
+    VANILLA("Minecraft", null);
 
     /** The "name" in the @Mod annotation */
     public final String modName;

@@ -39,10 +39,11 @@
  */
 dependencies {
 
-    api("com.github.GTNewHorizons:ModularUI2:2.1.9-1.7.10:dev")
-    api("com.github.GTNewHorizons:GTNHLib:0.5.11:dev")
+    api("com.github.GTNewHorizons:ModularUI2:2.1.16-1.7.10:dev")
+    api("com.github.GTNewHorizons:ModularUI:1.2.17:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.5.22:dev")
     api("org.jetbrains:annotations:24.0.1")
-    implementation rfg.deobf("curse.maven:modern-keybinding-686846:4034361")
+//    implementation rfg.deobf("curse.maven:modern-keybinding-686846:4034361")
 
 
 

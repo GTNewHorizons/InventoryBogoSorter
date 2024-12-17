@@ -14,8 +14,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -24,7 +22,14 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SortHandler {
@@ -90,8 +95,8 @@ public class SortHandler {
                          sortRule.compare(container1.getItemStack(), container2.getItemStack());
                 if (result != 0) return result;
             }
-//            result = ItemCompareHelper.compareRegistryOrder(container1.getItemStack(), container2.getItemStack());
-//            if (result != 0) return result;
+            result = ItemCompareHelper.compareRegistryOrder(container1.getItemStack(), container2.getItemStack());
+            if (result != 0) return result;
             result = ItemCompareHelper.compareMeta(container1.getItemStack(), container2.getItemStack());
             return result;
         };
@@ -149,6 +154,8 @@ public class SortHandler {
         if (!itemList.isEmpty()) {
             McUtils.giveItemsToPlayer(this.player, prepareDropList(itemList));
         }
+        System.out.println(itemList);
+        System.out.println(itemSortContainer);
     }
 
     // TODO untested
@@ -197,6 +204,8 @@ public class SortHandler {
             ISlot slot = slots.get(i);
             slot.bogo$putStack(items.get(i));
         }
+        System.out.println(items);
+        System.out.println(slots);
     }
 
     public LinkedList<ItemSortContainer> gatherItems(SlotGroup slotGroup) {
@@ -268,7 +277,9 @@ public class SortHandler {
                     ItemStack randomItem = ClientEventHandler.allItems.get(random.nextInt(ClientEventHandler.allItems.size())).copy();
                     slot.bogo$putStack(randomItem.copy());
                     slots.add(Pair.of(randomItem, slot.bogo$getSlotNumber()));
+                    System.out.println(randomItem);
                 }
+
             }
             NetworkHandler.sendToServer(new CSlotSync(slots));
         }
@@ -295,7 +306,7 @@ public class SortHandler {
              * The slot should only be marked as inaccessible if all three conditions return false.
              */
             boolean canTake = slot.bogo$canTakeStack(player);
-            boolean canInsert = slot.bogo$isItemValid(slot.bogo$getStack().copy());
+            boolean canInsert = (slot.bogo$getStack() != null) && slot.bogo$isItemValid(slot.bogo$getStack().copy());
             boolean isEmpty = slot.bogo$getStack() == null;
             if (canTake || canInsert || isEmpty) result.add(slot);
         }

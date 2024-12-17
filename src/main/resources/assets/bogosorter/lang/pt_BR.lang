@@ -1,0 +1,71 @@
+key.categories.bogosorter=Classificador Bogo de Inventário
+key.sort_config=Abrir configuração de classificação
+key.sort=Classificação do Inventário
+
+bogosort.gui.title=Configuração da Classificação
+bogosort.gui.tab.general.name=Geral
+bogosort.gui.tab.item_sort_rules.name=Regras de classificação de itens
+bogosort.gui.tab.nbt_sort_rules.name=regras de classificação NBT
+bogosort.gui.available_sort_rules=Regras de classificação disponíveis
+bogosort.gui.configured_sort_rules=Regras de classificação configuradas
+bogosort.gui.enable_refill=Ativar recarga automática da hotbar
+bogosort.gui.refill_threshold=Limiar de dano de recarga automática
+bogosort.gui.ascending=Ascendente
+bogosort.gui.descending=descendente
+bogosort.gui.hotbar_scrolling=Rolagem da coluna Hotbar
+bogosort.gui.hotbar_scrolling.tooltip=Percorra a coluna de inventário segurando ALT
+bogosort.gui.enabled=Habilitado
+
+bogosort.command.config_relaod.success=Configuração de classificação recarregada
+
+bogosort.sortrules.item.mod.name=Nome do Mod
+bogosort.sortrules.item.id.name=Nome do registro
+bogosort.sortrules.item.meta.name=Metavalor
+bogosort.sortrules.item.registry_order.name=Pedido de registro
+bogosort.sortrules.item.display_name.name=Nome em Exibição
+bogosort.sortrules.item.nbt_size.name=Tamanho da etiqueta NBT
+bogosort.sortrules.item.nbt_has.name=Tem etiqueta NBT
+bogosort.sortrules.item.nbt_rules.name=regras NBT
+bogosort.sortrules.item.nbt_all_values.name=Todos os valores NBT
+bogosort.sortrules.item.count.name=Tamanho da pilha
+bogosort.sortrules.item.ore_dict.name=Ditado de Minério
+bogosort.sortrules.item.material.name=Material
+bogosort.sortrules.item.ore_prefix.name=Prefixo de minério
+bogosort.sortrules.item.burn_time.name=Tempo de queima
+bogosort.sortrules.item.is_block.name=É bloco
+bogosort.sortrules.item.hunger.name=Fome
+bogosort.sortrules.item.saturation.name=Saturação
+bogosort.sortrules.item.emc.name=Valor EMC
+bogosort.sortrules.item.color.name=Cor
+
+bogosort.sortrules.item.mod.description=Classifica os itens em ordem alfabética pelo nome do mod
+bogosort.sortrules.item.id.description=Classifica os itens em ordem alfabética por seu nome de registro (sem mod)
+bogosort.sortrules.item.meta.description=Classifica os itens numericamente por seu valor meta
+bogosort.sortrules.item.registry_order.description=Classifica os itens numericamente por sua ordem de registro
+bogosort.sortrules.item.display_name.description=Classifica os itens em ordem alfabética pelo nome exibido
+bogosort.sortrules.item.nbt_size.description=Classifica os itens numericamente por seu tamanho de tag NBT de meta valor
+bogosort.sortrules.item.nbt_has.description=Classifica os itens com base no fato de terem ou não uma tag NBT
+bogosort.sortrules.item.nbt_rules.description=Classifica itens com base em regras de classificação NBT configuradas
+bogosort.sortrules.item.nbt_all_values.description=Tenta classificar itens comparando todas as tags e subtags nbt
+bogosort.sortrules.item.count.description=Classifica os itens numericamente pelo tamanho da pilha
+bogosort.sortrules.item.ore_dict.description=Classifica os itens numericamente e/ou alfabeticamente por seus ditados de minério
+bogosort.sortrules.item.material.description=Classifica os itens em ordem alfabética pelo nome do material (por exemplo, Ferro, Ouro, Cobre...)
+bogosort.sortrules.item.ore_prefix.description=Classifica os itens por seu prefixo de minério (por exemplo, lingote, pepita, placa, engrenagem...)
+bogosort.sortrules.item.burn_time.description=Classifica os itens numericamente por seu tempo de queima de combustível
+bogosort.sortrules.item.is_block.description=Classifica itens com base em se o item é um bloco ou não
+bogosort.sortrules.item.hunger.description=Classifica os itens numericamente por seu valor de reabastecimento de fome
+bogosort.sortrules.item.saturation.description=Classifica os itens numericamente por seu valor de recarga de saturação
+bogosort.sortrules.item.emc.description==Classifica os itens numericamente por seu valor EMC
+bogosort.sortrules.item.color.description==Classifica os itens numericamente por seu valor de matiz de cor
+
+bogosort.sortrules.nbt.potion.name=Poções
+bogosort.sortrules.nbt.enchantment.name=Encantamentos
+bogosort.sortrules.nbt.enchantment_book.name=Livros de encantamento
+bogosort.sortrules.nbt.gt_circ_config.name=Circuito programável GT
+bogosort.sortrules.nbt.gt_item_damage.name=Dano da ferramenta GT
+
+bogosort.sortrules.nbt.potion.description=Classifica poções por efeito e nível
+bogosort.sortrules.nbt.enchantment.description=Classifica itens encantados por efeito e nível
+bogosort.sortrules.nbt.enchantment_book.description=Classifica livros encantados por efeito e nível
+bogosort.sortrules.nbt.gt_circ_config.description=Classifica os circuitos programáveis GregTech por sua configuração
+bogosort.sortrules.nbt.gt_item_damage.description=Classifica as ferramentas GregTech por seu dano

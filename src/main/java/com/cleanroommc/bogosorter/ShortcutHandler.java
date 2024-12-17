@@ -96,14 +96,23 @@ public class ShortcutHandler {
         if (slots == null || otherSlots == null || slots == otherSlots) return;
         for (ISlot slot1 : slots.getSlots()) {
             ItemStack stackInSlot = slot1.bogo$getStack();
-            ItemStack copy = stackInSlot.copy();
             if (stackInSlot == null || (sameItemOnly && !stackInSlot.isItemEqual(stack)))
                 continue;
-            ItemStack remainder = BogoSortAPI.insert(container, otherSlots.getSlots(), copy);
-            int inserted = stackInSlot.stackSize - remainder.stackSize;
-            if (inserted > 0) {
-                slot1.bogo$putStack(remainder.copy());
-            }
+                ItemStack copy = stackInSlot.copy();
+                ItemStack remainder = BogoSortAPI.insert(container, otherSlots.getSlots(), copy);
+                int inserted = stackInSlot.stackSize - remainder.stackSize;
+                if (inserted > 0) {
+                    slot1.bogo$putStack(remainder.stackSize > 0 ? remainder : null);
+                }
+
+                System.out.println(sortingContext);
+                System.out.println(slots);
+                System.out.println(otherSlots);
+                System.out.println(stackInSlot);
+                System.out.println(remainder);
+                System.out.println(inserted);
+
+
         }
     }
 

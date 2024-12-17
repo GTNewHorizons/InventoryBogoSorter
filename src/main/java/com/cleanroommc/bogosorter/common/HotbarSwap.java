@@ -43,7 +43,7 @@ public class HotbarSwap {
     }
 
     @SubscribeEvent
-    public static void render(RenderGameOverlayEvent.Post event) {
+    public void render(RenderGameOverlayEvent.Post event) {
         if (enabled && event.type == RenderGameOverlayEvent.ElementType.ALL && show) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -74,7 +74,7 @@ public class HotbarSwap {
     }
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.KeyInputEvent event) {
+    public void onKeyInput(InputEvent.KeyInputEvent event) {
         if (!enabled || Minecraft.getMinecraft().theWorld == null || Minecraft.getMinecraft().thePlayer == null) {
             return;
         }
@@ -99,7 +99,7 @@ public class HotbarSwap {
     }
 
     @SubscribeEvent
-    public static void onMouseInput(InputEvent.MouseInputEvent event) {
+    public void onMouseInput(InputEvent.MouseInputEvent event) {
         if (!enabled) return;
         if (show) {
             int scroll = Mouse.getEventDWheel();

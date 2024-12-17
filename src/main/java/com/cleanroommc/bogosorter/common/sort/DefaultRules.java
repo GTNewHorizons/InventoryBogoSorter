@@ -14,7 +14,7 @@ public class DefaultRules {
         api.registerItemSortingRule("mod", ItemCompareHelper::compareMod);
         api.registerItemSortingRule("id", ItemCompareHelper::compareId);
         api.registerItemSortingRule("meta", ItemCompareHelper::compareMeta);
-//        api.registerItemSortingRule("registry_order", ItemCompareHelper::compareRegistryOrder);
+        api.registerItemSortingRule("registry_order", ItemCompareHelper::compareRegistryOrder);
         api.registerClientItemSortingRule("display_name", ItemCompareHelper::compareDisplayName, ItemCompareHelper::compareDisplayName);
         api.registerItemSortingRule("nbt_size", ItemCompareHelper::compareNbtSize);
         api.registerItemSortingRule("nbt_has", ItemCompareHelper::compareHasNbt);

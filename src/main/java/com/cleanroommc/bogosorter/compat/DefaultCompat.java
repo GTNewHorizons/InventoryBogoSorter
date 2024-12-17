@@ -2,19 +2,15 @@ package com.cleanroommc.bogosorter.compat;
 
 
 import com.cleanroommc.bogosorter.BogoSorter;
-import com.cleanroommc.bogosorter.ShortcutHandler;
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.IPosSetter;
-import com.cleanroommc.bogosorter.api.ISlot;
-import com.cleanroommc.bogosorter.compat.gtce.IModularSortable;
 import cpw.mods.fml.common.Loader;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.inventory.*;
-import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.ContainerDispenser;
+import net.minecraft.inventory.ContainerHopper;
+import net.minecraft.inventory.ContainerPlayer;
 
 public class DefaultCompat {
 
@@ -168,10 +164,10 @@ public class DefaultCompat {
 //                    builder.addSlotGroup(0, 54, 9);
 //                }
 //            });
-//            // personal safe server side
-//            api.addCompatSimple(getClass("ic2.core.block.personal.TileEntityPersonalChest$2"), (container, builder) -> {
-//                builder.addSlotGroup(0, 54, 9);
-//            });
+        // personal safe server side
+//        api.addCompatSimple(getClass("ic2.core.block.personal.TileEntityPersonalChest$2"), (container, builder) -> {
+//            builder.addSlotGroup(0, 54, 9);
+//        });
 //            api.addCompat(ContainerToolbox.class, (container, builder) -> {
 //                builder.addSlotGroup(0, 9, 9);
 //            });
@@ -433,11 +429,12 @@ public class DefaultCompat {
 //        return null;
 //    }
 //
-//    private static Class<?> getClass(String name) {
-//        try {
-//            return Class.forName(name, false, DefaultCompat.class.getClassLoader());
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
+//        public static Class<?> getClass1(String name){
+//            try {
+//                return Class.forName(name, false, DefaultCompat.class.getClassLoader());
+//            } catch (ClassNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
 //        }
 //    }
     }

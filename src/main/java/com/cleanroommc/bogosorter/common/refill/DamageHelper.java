@@ -1,14 +1,20 @@
 package com.cleanroommc.bogosorter.common.refill;
 
 import com.cleanroommc.bogosorter.common.config.PlayerConfig;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ISpecialArmor;
 
+import static com.cleanroommc.modularui.api.MCHelper.getPlayer;
+import static com.cleanroommc.modularui.api.MCHelper.hasMc;
+
 public class DamageHelper {
 
-    public static boolean damageItemHook(EntityPlayer player, ItemStack itemStack) {
+    public static boolean damageItemHook(ItemStack itemStack) {
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         PlayerConfig playerConfig = PlayerConfig.get(player);
         if (!playerConfig.enableAutoRefill || playerConfig.autoRefillDamageThreshold <= 0) return false;
 

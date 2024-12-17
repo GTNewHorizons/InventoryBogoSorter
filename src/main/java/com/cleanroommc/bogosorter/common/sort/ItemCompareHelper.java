@@ -11,8 +11,15 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemReed;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagByteArray;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
@@ -116,10 +123,15 @@ public class ItemCompareHelper {
         return Integer.compare(stack2.stackSize, stack1.stackSize);
     }
 
-//    public static int compareRegistryOrder(ItemStack stack1, ItemStack stack2) {
-//        ForgeRegistry<Item> registry = (ForgeRegistry<Item>) ForgeRegistries.ITEMS;
-//        return Integer.compare(registry.getID(stack1.getItem()), registry.getID(stack2.getItem()));
-//    }
+    public static int compareRegistryOrder(ItemStack stack1, ItemStack stack2) {
+        Item item1 = stack1.getItem();
+        Item item2 = stack2.getItem();
+
+        int id1 = Item.itemRegistry.getIDForObject(item1);
+        int id2 = Item.itemRegistry.getIDForObject(item2);
+
+        return Integer.compare(id1, id2);
+    }
 
     public static int compareOreDict(ItemStack stack1, ItemStack stack2) {
         List<String> ores1 = new ArrayList<>(OreDictHelper.getOreDicts(stack1));

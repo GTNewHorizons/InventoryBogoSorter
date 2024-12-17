@@ -14,7 +14,9 @@ import com.cleanroommc.bogosorter.common.sort.ButtonHandler;
 import com.cleanroommc.bogosorter.common.sort.DefaultRules;
 import com.cleanroommc.bogosorter.compat.DefaultCompat;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -34,7 +36,7 @@ import java.time.Month;
         version = BogoSorter.VERSION,
         dependencies =
                 "required-after:modularui2@[2.1.8-1.7.10,);")
-//@Mod.EventBusSubscriber(modid = BogoSorter.ID)
+//@EventBusSubscriber()
 public class BogoSorter {
 
     public static final String ID = "bogosorter";
@@ -65,6 +67,8 @@ public class BogoSorter {
 //            ModContainer container = Loader.instance().getIndexedModList().get("ic2");
 //            ic2ClassicLoaded = container.getName().endsWith("Classic");
 //        }
+        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
         NetworkHandler.init();
         OreDictHelper.init();
         BogoSortAPI.INSTANCE.remapSortRule("is_block", "block_type");
@@ -74,9 +78,9 @@ public class BogoSorter {
         MinecraftForge.EVENT_BUS.register(RefillHandler.class);
         if (NetworkUtils.isDedicatedClient()) {
             MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
-            MinecraftForge.EVENT_BUS.register(ClientEventHandler.class);
-            MinecraftForge.EVENT_BUS.register(ButtonHandler.class);
-            MinecraftForge.EVENT_BUS.register(HotbarSwap.class);
+            MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+            MinecraftForge.EVENT_BUS.register(new ButtonHandler());
+            MinecraftForge.EVENT_BUS.register(new HotbarSwap());
         }
     }
 
@@ -85,10 +89,10 @@ public class BogoSorter {
         if (NetworkUtils.isDedicatedClient()) {
             ClientRegistry.registerKeyBinding(ClientEventHandler.configGuiKey);
             ClientRegistry.registerKeyBinding(ClientEventHandler.sortKey);
+        }
 //            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.configGuiKey);
 //            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.sortKey);
 //            KeyBindAPI.setCompatible(ClientEventHandler.sortKey, Minecraft.getMinecraft().gameSettings.keyBindPickBlock);
-        }
     }
 
     @Mod.EventHandler
@@ -97,14 +101,14 @@ public class BogoSorter {
     }
 
     @SubscribeEvent
-    public static void onPlayerJoin(EntityJoinWorldEvent event) {
+    public void onPlayerJoin(EntityJoinWorldEvent event) {
         if (event.world.isRemote && event.entity instanceof EntityPlayer) {
             PlayerConfig.syncToServer();
         }
     }
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.WorldTickEvent event) {
+    public void onServerTick(TickEvent.WorldTickEvent event) {
         if (event.phase == TickEvent.Phase.END && event.world.getTotalWorldTime() % 100 == 0) {
             PlayerConfig.checkPlayers();
         }

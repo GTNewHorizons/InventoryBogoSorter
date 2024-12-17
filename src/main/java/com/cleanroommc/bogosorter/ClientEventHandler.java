@@ -28,20 +28,24 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 
 public class ClientEventHandler {
+
+    public ClientEventHandler() {}
 
     public static final List<ItemStack> allItems = new ArrayList<>();
     public static final KeyBinding configGuiKey = new KeyBinding("key.sort_config", Keyboard.KEY_K, "key.categories.bogosorter");
@@ -102,7 +106,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onGuiOpen(GuiOpenEvent event) {
+    public void onGuiOpen(GuiOpenEvent event) {
         if (event.gui instanceof GuiMainMenu && !WarningScreen.wasOpened) {
             WarningScreen.wasOpened = true;
             List<String> warnings = new ArrayList<>();
@@ -129,17 +133,17 @@ public class ClientEventHandler {
     // i have to subscribe to 4 events to catch all inputs
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.KeyInputEvent event) {
+    public void onKeyInput(InputEvent.KeyInputEvent event) {
         handleInput(null);
     }
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.MouseInputEvent event) {
+    public void onKeyInput(InputEvent.MouseInputEvent event) {
         handleInput(null);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onGuiKeyInput(KeyboardInputEvent.Pre event) {
+    public void onGuiKeyInput(KeyboardInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
         if (!(event.gui instanceof GuiContainer)) return;
         if (handleInput((GuiContainer) event.gui)) {
@@ -174,7 +178,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onMouseInput(MouseInputEvent.Pre event) {
+    public void onMouseInput(MouseInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
         if (event.gui instanceof GuiContainer && handleInput((GuiContainer) event.gui)) {
             event.setCanceled(true);
@@ -183,9 +187,9 @@ public class ClientEventHandler {
 
     // handle all inputs in one method
     public static boolean handleInput(@Nullable GuiContainer container) {
-        if (container != null) {// && container.isFocused()) {
-            return false;
-        }
+//        if (container != null) {// && container.isFocused()) {
+//            return false;
+//        }
         if (container != null && canDoShortcutAction()) {
             if (moveAll.isFirstPress() && ShortcutHandler.moveAllItems(container, false)) {
                 shortcutAction();
@@ -296,7 +300,16 @@ public class ClientEventHandler {
             boolean name = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("display_name"));
             NetworkHandler.sendToServer(new CSort(createSortData(slotGroup, color, name), BogoSorterConfig.sortRules, BogoSorterConfig.nbtSortRules, slot.bogo$getSlotNumber(), slotGroup.isPlayerInventory()));
 //            SortHandler.playSortSound();
+            System.out.println(container);
+            System.out.println(sortingContext);
+            System.out.println(slotGroup);
+            System.out.println(sortRules);
+            System.out.println(slot.bogo$getSlotNumber());
+            System.out.println(slotGroup.isPlayerInventory());
+            System.out.println(createSortData(slotGroup, color, name));
+
             return true;
+
         }
         return false;
     }
@@ -306,6 +319,8 @@ public class ClientEventHandler {
         Map<ItemStack, ClientSortData> map = new Object2ObjectOpenCustomHashMap<>(BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
         for (ISlot slot1 : slotGroup.getSlots()) {
             map.computeIfAbsent(slot1.bogo$getStack(), stack -> ClientSortData.of(stack, color, name)).getSlotNumbers().add(slot1.bogo$getSlotNumber());
+            System.out.println("Item in slot: " + slot1.bogo$getStack());
+            System.out.println("Item stack size: " + slot1.bogo$getStack().stackSize);
         }
         return map.values();
     }

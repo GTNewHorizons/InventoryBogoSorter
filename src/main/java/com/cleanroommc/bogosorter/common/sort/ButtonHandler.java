@@ -5,8 +5,9 @@ import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.modularui.api.widget.Interactable;
-import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.drawable.UITexture;
+import com.cleanroommc.modularui.mixins.early.minecraft.GuiContainerAccessor;
+import com.cleanroommc.modularui.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.screen.GuiScreenWrapper;
 import com.cleanroommc.modularui.utils.Color;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -35,7 +36,7 @@ public class ButtonHandler {
             .build();
 
     @SubscribeEvent
-    public static void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
+    public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
         if (ClientEventHandler.isSortableContainer(event.gui) && !(event.gui instanceof GuiScreenWrapper)) {
             Container container = ((GuiContainer) event.gui).inventorySlots;
             GuiSortingContext context = GuiSortingContext.getOrCreate(container);
@@ -50,7 +51,7 @@ public class ButtonHandler {
     }
 
     @SubscribeEvent
-    public static void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Pre event) {
+    public  void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Pre event) {
         if (ClientEventHandler.isSortableContainer(event.gui) && !(event.gui instanceof GuiScreenWrapper)) {
             GuiContainer gui = (GuiContainer) event.gui;
             IGuiContainerAccessor guiAccess = (IGuiContainerAccessor) gui;
@@ -82,7 +83,7 @@ public class ButtonHandler {
     }
 
     @SubscribeEvent
-    public static void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
+    public  void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (ClientEventHandler.isSortableContainer(event.gui) && !(event.gui instanceof GuiScreenWrapper)) {
             for (GuiButton guiButton : ((IGuiContainerAccessor) event.gui).getButtons()) {
                 if (guiButton instanceof SortButton) {
@@ -93,7 +94,7 @@ public class ButtonHandler {
     }
 
     @SubscribeEvent
-    public static void onActionPerformed(GuiScreenEvent.ActionPerformedEvent.Pre event) {
+    public  void onActionPerformed(GuiScreenEvent.ActionPerformedEvent.Pre event) {
         if (event.button instanceof SortButton && event.button.enabled) {
             SortButton sortButton = (SortButton) event.button;
             if (sortButton.sort) {
