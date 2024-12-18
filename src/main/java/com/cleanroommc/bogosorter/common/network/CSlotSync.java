@@ -2,6 +2,7 @@ package com.cleanroommc.bogosorter.common.network;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,7 +28,7 @@ public class CSlotSync implements IPacket {
         buf.writeVarIntToBuffer(content.size());
         for (Pair<ItemStack, Integer> pair : content) {
             buf.writeItemStackToBuffer(pair.getKey());
-            buf.writeNBTTagCompoundToBuffer(pair.getKey().getTagCompound());
+            buf.writeNBTTagCompoundToBuffer(pair.getKey() == null ? null : pair.getKey().getTagCompound());
             buf.writeVarIntToBuffer(pair.getValue());
         }
     }
@@ -36,7 +37,10 @@ public class CSlotSync implements IPacket {
     public void decode(PacketBuffer buf) throws IOException {
         for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
             ItemStack stack = buf.readItemStackFromBuffer();
-            stack.setTagCompound(buf.readNBTTagCompoundFromBuffer());
+            NBTTagCompound nbt = buf.readNBTTagCompoundFromBuffer();
+            if (stack != null && nbt != null) {
+                stack.setTagCompound(nbt);
+            }
             content.add(Pair.of(stack, buf.readVarIntFromBuffer()));
         }
     }

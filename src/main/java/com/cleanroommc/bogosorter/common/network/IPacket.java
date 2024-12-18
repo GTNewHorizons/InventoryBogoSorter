@@ -33,6 +33,7 @@ public interface IPacket extends IMessage {
         try {
             encode(new PacketBuffer(buf));
         } catch (IOException e) {
+            System.out.println(e.getCause());
             e.printStackTrace();
         }
     }

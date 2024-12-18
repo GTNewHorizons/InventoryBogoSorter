@@ -15,6 +15,7 @@ import com.cleanroommc.bogosorter.compat.screen.WarningScreen;
 import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
 import com.cleanroommc.modularui.api.event.MouseInputEvent;
 import com.cleanroommc.modularui.factory.ClientGUI;
+import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -28,10 +29,13 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -44,8 +48,6 @@ import java.util.Map;
 
 
 public class ClientEventHandler {
-
-    public ClientEventHandler() {}
 
     public static final List<ItemStack> allItems = new ArrayList<>();
     public static final KeyBinding configGuiKey = new KeyBinding("key.sort_config", Keyboard.KEY_K, "key.categories.bogosorter");
@@ -95,7 +97,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
+    public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             ticks++;
         }
@@ -162,13 +164,14 @@ public class ClientEventHandler {
             }
             // random
             if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2)) {
-//                if (allItems.isEmpty()) {
-//                    for (Item item : ForgeRegistries.ITEMS) {
-//                        NonNullList<ItemStack> subItems = NonNullList.create();
-//                        item.getSubItems(CreativeTabs.SEARCH, subItems);
-//                        allItems.addAll(subItems);
-//                    }
-//                }
+                if (allItems.isEmpty()) {
+                    for (Object key : Item.itemRegistry.getKeys()) {  // Iterate over the registry keys
+                        Item item = (Item) Item.itemRegistry.getObject(key);  // Get the actual Item using the key
+                        List<ItemStack> subItems = Lists.newArrayList();
+                        item.getSubItems(item , CreativeTabs.tabAllSearch, subItems);  // Get sub-items based on the creative tab
+                        allItems.addAll(subItems);
+                    }
+                }
                 ISlot slot = getSlot(event.gui);
                 SortHandler sortHandler = createSortHandler(event.gui, slot);
                 if (sortHandler == null) return;
@@ -300,13 +303,6 @@ public class ClientEventHandler {
             boolean name = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("display_name"));
             NetworkHandler.sendToServer(new CSort(createSortData(slotGroup, color, name), BogoSorterConfig.sortRules, BogoSorterConfig.nbtSortRules, slot.bogo$getSlotNumber(), slotGroup.isPlayerInventory()));
 //            SortHandler.playSortSound();
-            System.out.println(container);
-            System.out.println(sortingContext);
-            System.out.println(slotGroup);
-            System.out.println(sortRules);
-            System.out.println(slot.bogo$getSlotNumber());
-            System.out.println(slotGroup.isPlayerInventory());
-            System.out.println(createSortData(slotGroup, color, name));
 
             return true;
 
@@ -319,8 +315,6 @@ public class ClientEventHandler {
         Map<ItemStack, ClientSortData> map = new Object2ObjectOpenCustomHashMap<>(BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
         for (ISlot slot1 : slotGroup.getSlots()) {
             map.computeIfAbsent(slot1.bogo$getStack(), stack -> ClientSortData.of(stack, color, name)).getSlotNumbers().add(slot1.bogo$getSlotNumber());
-            System.out.println("Item in slot: " + slot1.bogo$getStack());
-            System.out.println("Item stack size: " + slot1.bogo$getStack().stackSize);
         }
         return map.values();
     }
@@ -336,5 +330,9 @@ public class ClientEventHandler {
             return new SortHandler(Minecraft.getMinecraft().thePlayer, container, Int2ObjectMaps.emptyMap());
         }
         return null;
+    }
+
+    private static boolean hasContainer(GuiScreenEvent event) {
+        return event.gui instanceof GuiContainer && handleInput((GuiContainer) event.gui);
     }
 }

@@ -1,13 +1,12 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import com.cleanroommc.bogosorter.BogoSorter;
+
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
-//import gregtech.api.items.metaitem.FoodUseManager;
+//import gregtech.api.items.metaitem.FoodUseManager;p
 //import gregtech.api.items.metaitem.MetaItem;
 //import gregtech.api.items.metaitem.stats.IFoodBehavior;
 //import moze_intel.projecte.utils.EMCHelper;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
@@ -23,7 +22,6 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.NotNull;

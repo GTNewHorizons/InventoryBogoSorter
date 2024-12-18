@@ -145,17 +145,18 @@ public class SortHandler {
             int max = Math.min(slot.bogo$getItemStackLimit(itemSortContainer.getItemStack()),
                                slot.bogo$getMaxStackSize(itemSortContainer.getItemStack()));
             if (max <= 0) continue;
+
             slot.bogo$putStack(itemSortContainer.makeStack(max));
 
             if (!itemSortContainer.canMakeStack()) {
                 itemSortContainer = itemList.pollFirst();
+
             }
         }
         if (!itemList.isEmpty()) {
             McUtils.giveItemsToPlayer(this.player, prepareDropList(itemList));
         }
-        System.out.println(itemList);
-        System.out.println(itemSortContainer);
+
     }
 
     // TODO untested
@@ -246,8 +247,8 @@ public class SortHandler {
                 result = sortRule.compare(stack1, stack2);
                 if (result != 0) return result;
             }
-//            result = ItemCompareHelper.compareRegistryOrder(stack1, stack2);
-//            if (result != 0) return result;
+            result = ItemCompareHelper.compareRegistryOrder(stack1, stack2);
+            if (result != 0) return result;
             result = ItemCompareHelper.compareMeta(stack1, stack2);
             return result;
         };
@@ -260,7 +261,7 @@ public class SortHandler {
             for (ISlot slot : getSortableSlots(slotGroup)) {
                 if (slot.bogo$getStack() != null) {
                     slot.bogo$putStack(null);
-                    slots.add(Pair.of(null , slot.bogo$getSlotNumber()));
+                    slots.add(Pair.of(null, slot.bogo$getSlotNumber()));
                 }
             }
             NetworkHandler.sendToServer(new CSlotSync(slots));
@@ -277,10 +278,10 @@ public class SortHandler {
                     ItemStack randomItem = ClientEventHandler.allItems.get(random.nextInt(ClientEventHandler.allItems.size())).copy();
                     slot.bogo$putStack(randomItem.copy());
                     slots.add(Pair.of(randomItem, slot.bogo$getSlotNumber()));
-                    System.out.println(randomItem);
                 }
 
             }
+            System.out.println(slots);
             NetworkHandler.sendToServer(new CSlotSync(slots));
         }
     }
@@ -306,10 +307,11 @@ public class SortHandler {
              * The slot should only be marked as inaccessible if all three conditions return false.
              */
             boolean canTake = slot.bogo$canTakeStack(player);
-            boolean canInsert = (slot.bogo$getStack() != null) && slot.bogo$isItemValid(slot.bogo$getStack().copy());
+            boolean canInsert = slot.bogo$isItemValid(slot.bogo$getStack());
             boolean isEmpty = slot.bogo$getStack() == null;
             if (canTake || canInsert || isEmpty) result.add(slot);
         }
         return result;
+
     }
 }

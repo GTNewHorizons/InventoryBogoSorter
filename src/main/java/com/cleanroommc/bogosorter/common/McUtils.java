@@ -14,7 +14,7 @@ import java.util.List;
 
 public class McUtils {
 
-    public static void dropItem(ItemStack stack, World world, double x, double y, double z) {
+        public static void dropItem(ItemStack stack, World world, double x, double y, double z) {
         dropItem(stack, world, x, y, z, null, false, 10);
     }
 

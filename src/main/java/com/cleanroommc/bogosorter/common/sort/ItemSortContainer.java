@@ -1,6 +1,6 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import com.cleanroommc.bogosorter.BogoSortAPI;
+
 import net.minecraft.item.ItemStack;
 
 import java.util.Objects;
@@ -47,8 +47,11 @@ public class ItemSortContainer {
         return getAmount() > 0;
     }
 
+
     public ItemStack makeStack(int max) {
-        return this.itemStack.splitStack(max);
+        // Ensure max is not larger than the available stack size
+        int splitAmount = Math.min(max, this.itemStack.stackSize);
+        return this.itemStack.splitStack(splitAmount);
     }
 
     @Override

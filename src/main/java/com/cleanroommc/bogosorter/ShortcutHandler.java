@@ -87,7 +87,7 @@ public class ShortcutHandler {
 
     public static void moveAllItems(EntityPlayer player, Container container, ISlot slot, boolean sameItemOnly) {
         if (slot == null || !BogoSortAPI.isValidSortable(container)) return;
-        ItemStack stack = slot.bogo$getStack().copy();
+        ItemStack stack = slot.bogo$getStack();
         if (sameItemOnly && stack == null) return;
         GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
 
@@ -98,21 +98,12 @@ public class ShortcutHandler {
             ItemStack stackInSlot = slot1.bogo$getStack();
             if (stackInSlot == null || (sameItemOnly && !stackInSlot.isItemEqual(stack)))
                 continue;
-                ItemStack copy = stackInSlot.copy();
-                ItemStack remainder = BogoSortAPI.insert(container, otherSlots.getSlots(), copy);
-                int inserted = stackInSlot.stackSize - remainder.stackSize;
-                if (inserted > 0) {
-                    slot1.bogo$putStack(remainder.stackSize > 0 ? remainder : null);
-                }
-
-                System.out.println(sortingContext);
-                System.out.println(slots);
-                System.out.println(otherSlots);
-                System.out.println(stackInSlot);
-                System.out.println(remainder);
-                System.out.println(inserted);
-
-
+            ItemStack copy = stackInSlot.copy();
+            ItemStack remainder = BogoSortAPI.insert(container, otherSlots.getSlots(), copy);
+            int inserted = stackInSlot.stackSize - remainder.stackSize;
+            if (inserted > 0) {
+                slot1.bogo$putStack(remainder.stackSize > 0 ? remainder : null);
+            }
         }
     }
 

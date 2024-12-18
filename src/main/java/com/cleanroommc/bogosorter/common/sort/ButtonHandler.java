@@ -6,8 +6,6 @@ import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.UITexture;
-import com.cleanroommc.modularui.mixins.early.minecraft.GuiContainerAccessor;
-import com.cleanroommc.modularui.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.screen.GuiScreenWrapper;
 import com.cleanroommc.modularui.utils.Color;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

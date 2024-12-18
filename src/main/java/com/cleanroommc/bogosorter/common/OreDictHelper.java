@@ -1,13 +1,10 @@
 package com.cleanroommc.bogosorter.common;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;

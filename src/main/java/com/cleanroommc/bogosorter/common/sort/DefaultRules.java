@@ -2,9 +2,7 @@ package com.cleanroommc.bogosorter.common.sort;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
-import cpw.mods.fml.common.Loader;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants;
 

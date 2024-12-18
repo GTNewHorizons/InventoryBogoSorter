@@ -14,7 +14,6 @@ import net.minecraft.item.ItemColored;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.image.BufferedImage;
@@ -156,9 +155,6 @@ public class ItemColorHelper {
         TextureMap textureMap = minecraft.getTextureMapBlocks();
         IIcon icon = block.getBlockTextureFromSide(0);
         TextureAtlasSprite textureAtlasSprite = textureMap.getTextureExtry(icon.getIconName());
-//        BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRendererDispatcher();
-//        BlockModelShapes blockModelShapes = blockRendererDispatcher.getBlockModelShapes();
-//        TextureAtlasSprite textureAtlasSprite = blockModelShapes.getTexture(blockState);
         if (textureAtlasSprite == textureMap.getAtlasSprite("missingno")) {
             return null;
         }
