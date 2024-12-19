@@ -14,19 +14,19 @@ import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public enum Mixins {
 
-    Vanilla(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)
+    Vanilla_BOTH(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)
         .setSide(Side.BOTH).setPhase(Phase.EARLY).addMixinClasses(
             "minecraft.ContainerHorseInventoryMixin",
 //            "minecraft.MixinEntityPlayer",
             "minecraft.SlotMixin"
-        )
+        )),
+    Vanilla_CLIENT(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)
         .setSide(Side.CLIENT).setPhase(Phase.EARLY).addMixinClasses(
             "minecraft.CreativeSlotMixin",
-            "minecraft.GuiContainerMixin",
-            "minecraft.GuiEditSignMixin"
+                "minecraft.GuiContainerMixin",
+                "minecraft.GuiEditSignMixin"
 //            "minecraft.MinecraftMixin"
-        )),
-
+    )),
 
     Avaritiaddons( new Builder(" Avaritiaddons").addTargetedMod(TargetedMod.AVARITIADDONS).setSide(Side.BOTH)
         .setPhase(Phase.LATE).addMixinClasses(
