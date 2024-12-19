@@ -64,6 +64,7 @@ public class BogoSorter {
             FMLCommonHandler.instance().bus().register(new ClientEventHandler());
             MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
             MinecraftForge.EVENT_BUS.register(new ButtonHandler());
+            FMLCommonHandler.instance().bus().register(new HotbarSwap());
             MinecraftForge.EVENT_BUS.register(new HotbarSwap());
         }
     }
