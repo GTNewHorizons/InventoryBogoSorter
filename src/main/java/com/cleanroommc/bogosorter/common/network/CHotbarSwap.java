@@ -35,7 +35,7 @@ public class CHotbarSwap implements IPacket {
     public IPacket executeServer(NetHandlerPlayServer handler) {
         ItemStack hotbarItem = handler.playerEntity.inventory.mainInventory[this.hotbarIndex];
         ItemStack toSwapItem = handler.playerEntity.inventory.mainInventory[this.swapIndex];
-        if (hotbarItem.equals(toSwapItem)) return null;
+        if (hotbarItem == null || toSwapItem == null || hotbarItem.equals(toSwapItem)) return null;
         handler.playerEntity.inventory.mainInventory[this.hotbarIndex] = toSwapItem;
         handler.playerEntity.inventory.mainInventory[this.swapIndex] = hotbarItem;
         return null;
