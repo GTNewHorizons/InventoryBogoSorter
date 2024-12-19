@@ -87,24 +87,25 @@ public class ShortcutHandler {
 
     public static void moveAllItems(EntityPlayer player, Container container, ISlot slot, boolean sameItemOnly) {
         if (slot == null || !BogoSortAPI.isValidSortable(container)) return;
-        ItemStack stack = slot.bogo$getStack();
+        if (slot.bogo$getStack() != null) {
+        ItemStack stack = slot.bogo$getStack().copy();
         if (sameItemOnly && stack == null) return;
         GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
 
         SlotGroup slots = sortingContext.getSlotGroup(slot.bogo$getSlotNumber());
-        SlotGroup otherSlots = BogoSortAPI.isPlayerSlot(slot) ? sortingContext.getNonPlayerSlotGroup() : sortingContext.getPlayerSlotGroup();
-        if (slots == null || otherSlots == null || slots == otherSlots) return;
-        for (ISlot slot1 : slots.getSlots()) {
-            ItemStack stackInSlot = slot1.bogo$getStack();
-            if (stackInSlot == null || (sameItemOnly && !stackInSlot.isItemEqual(stack)))
-                continue;
-            ItemStack copy = stackInSlot.copy();
-            ItemStack remainder = BogoSortAPI.insert(container, otherSlots.getSlots(), copy);
-            int inserted = stackInSlot.stackSize - remainder.stackSize;
-            if (inserted > 0) {
-                slot1.bogo$putStack(remainder.stackSize > 0 ? remainder : null);
-            }
-        }
+        SlotGroup otherSlots = BogoSortAPI.isPlayerSlot(slot) ? sortingContext.getNonPlayerSlotGroup() : sortingContext.getPlayerSlotGroup();if (slots == null || otherSlots == null || slots == otherSlots) return;
+           for (ISlot slot1 : slots.getSlots()) {
+               ItemStack stackInSlot = slot1.bogo$getStack();
+               if (stackInSlot == null || (sameItemOnly && !stackInSlot.isItemEqual(stack)))
+                   continue;
+               ItemStack copy = stackInSlot.copy();
+               ItemStack remainder = BogoSortAPI.insert(container, otherSlots.getSlots(), copy);
+               int inserted = stackInSlot.stackSize - remainder.stackSize;
+               if (inserted > 0) {
+                   slot1.bogo$putStack(remainder.stackSize > 0 ? remainder : null);
+               }
+           }
+       }
     }
 
     @SideOnly(Side.CLIENT)

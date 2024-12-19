@@ -1,8 +1,14 @@
-package com.cleanroommc.bogosorter.mixins;
+package com.cleanroommc.bogosorter.mixinplugin;
 
 public enum TargetedMod {
 
-    VANILLA("Minecraft", null);
+    VANILLA("Minecraft", null),
+    AVARITIADDONS("Avaritiaddons", null, "avaritiaddons"),
+    IRONCHEST("Iron Chests", null, "IronChest"),
+    ENDERIO("Ender IO", null, "EnderIO"),
+    GALACTICRAFTCORE("Galacticraft Core", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
+    THERMALEXPANSION("Thermal Expansion", null, "ThermalExpansion"),;
+
 
     /** The "name" in the @Mod annotation */
     public final String modName;

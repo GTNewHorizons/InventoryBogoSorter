@@ -1,16 +1,40 @@
 package com.cleanroommc.bogosorter.compat;
 
 
-import com.cleanroommc.bogosorter.BogoSorter;
+import appeng.container.implementations.ContainerSkyChest;
+import codechicken.enderstorage.storage.item.ContainerEnderItemStorage;
+import com.brandon3055.draconicevolution.common.container.ContainerDraconiumChest;
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.IPosSetter;
+import com.cleanroommc.bogosorter.api.ISlot;
 import cpw.mods.fml.common.Loader;
 
 
+import de.eydamos.backpack.inventory.container.Boundaries;
+import de.eydamos.backpack.inventory.container.ContainerAdvanced;
+import de.eydamos.backpack.item.ItemsBackpack;
+import de.eydamos.backpack.misc.ConfigurationBackpack;
+import forestry.storage.gui.ContainerBackpack;
+import micdoodle8.mods.galacticraft.core.inventory.ContainerParaChest;
+import net.blay09.mods.cookingforblockheads.container.ContainerCounter;
+import net.blay09.mods.cookingforblockheads.container.ContainerFridge;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import wanion.avaritiaddons.block.chest.compressed.ContainerCompressedChest;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.cleanroommc.bogosorter.compat.loader.Mods.*;
+import static de.eydamos.backpack.item.ItemsBackpack.BACKPACK_TIERS;
+import static de.eydamos.backpack.item.ItemsBackpack.backpack;
+
 
 public class DefaultCompat {
 
@@ -20,7 +44,7 @@ public class DefaultCompat {
             // player slots are automatically added
         });
         api.addPlayerSortButtonPosition(ContainerPlayer.class, (slotGroup, buttonPos) -> {
-            if (BogoSorter.isQuarkLoaded() || Loader.isModLoaded("nutrition")) {
+            if (Loader.isModLoaded("nutrition")) {
                 IPosSetter.TOP_RIGHT_VERTICAL.setButtonPos(slotGroup, buttonPos);
             } else {
                 IPosSetter.TOP_RIGHT_HORIZONTAL.setButtonPos(slotGroup, buttonPos);
@@ -28,8 +52,7 @@ public class DefaultCompat {
         });
         api.addCompat(ContainerChest.class, (container, builder) -> {
             // quark adds a search bar
-            builder.addGenericSlotGroup()
-                .buttonPosSetter(BogoSorter.isQuarkLoaded() ? IPosSetter.TOP_RIGHT_VERTICAL : IPosSetter.TOP_RIGHT_HORIZONTAL);
+            builder.addGenericSlotGroup();
         });
         api.addCompat(ContainerDispenser.class, (container, builder) -> {
             builder.addGenericSlotGroup()
@@ -38,55 +61,57 @@ public class DefaultCompat {
         api.addCompat(ContainerHopper.class, (container, builder) -> {
             builder.addGenericSlotGroup();
         });
-//        api.addCompat(ContainerShulkerBox.class, (container, builder) -> {
-//            builder.addGenericSlotGroup()
-//                    .buttonPosSetter(BogoSorter.isQuarkLoaded() ? IPosSetter.TOP_RIGHT_VERTICAL : IPosSetter.TOP_RIGHT_HORIZONTAL);
-//
-//        });
-        // for horse inventory compat see MixinContainerHorseInventory
 
-//        if (Loader.isModLoaded("actuallyadditions")) {
-//            api.addCompat(ContainerGiantChest.class, (container, builder) -> {
-//                builder.addSlotGroup(0, 117, 13);
-//            });
-//            // TODO slightly clashes with page button
-//            api.addPlayerSortButtonPosition(ContainerGiantChest.class, IPosSetter.TOP_RIGHT_VERTICAL);
-//        }
-//
-//        if (Loader.isModLoaded("enderstorage")) {
-//            api.addCompat(ContainerEnderItemStorage.class, (container, builder) -> {
-//                switch (container.chestInv.getSize()) {
-//                    case 0:
-//                        builder.addSlotGroup(0, 9, 3);
-//                        break;
-//                    case 1:
-//                        builder.addSlotGroup(0, 27, 9);
-//                        break;
-//                    case 2:
-//                        builder.addSlotGroup(0, 54, 9);
-//                        break;
-//                }
-//            });
-//        }
-//
-//        if (Loader.isModLoaded("appliedenergistics2")) {
-//            api.addCompat(ContainerSkyChest.class, (container, builder) -> {
-//                builder.addSlotGroup(0, 36, 9);
-//            });
-//        }
-//
-//        if (Loader.isModLoaded("draconicevolution")) {
-//            api.addCompatSimple(ContainerDraconiumChest.class, (container, builder) -> {
-//                builder.addSlotGroup(0, 260, 26);
-//            });
-//            api.addPlayerSortButtonPosition(ContainerDraconiumChest.class, (slotGroup, buttonPos) -> {
-//                ISlot topRight = slotGroup.getSlots().get(slotGroup.getRowSize() - 1);
-//                buttonPos.setVertical();
-//                buttonPos.setTopLeft();
-//                buttonPos.setPos(topRight.bogo$getX() + 17, topRight.bogo$getY() - 1);
-//            });
-//        }
-//
+
+
+        if (EnderStorage.isLoaded()) {
+            api.addCompat(ContainerEnderItemStorage.class, (container, builder) -> {
+                switch (container.chestInv.getSize()) {
+                    case 0:
+                        builder.addSlotGroup(0, 9, 3);
+                        break;
+                    case 1:
+                        builder.addSlotGroup(0, 27, 9);
+                        break;
+                    case 2:
+                        builder.addSlotGroup(0, 54, 9);
+                        break;
+                }
+            });
+        }
+
+        if (Ae2.isLoaded()) {
+            api.addCompat(ContainerSkyChest.class, (container, builder) -> {
+                builder.addSlotGroup(0, 36, 9);
+            });
+        }
+
+        if (DraconicEvolution.isLoaded()) {
+            api.addCompatSimple(ContainerDraconiumChest.class, (container, builder) -> {
+                builder.addSlotGroup(0, 260, 26);
+            });
+            api.addPlayerSortButtonPosition(ContainerDraconiumChest.class, (slotGroup, buttonPos) -> {
+                ISlot topRight = slotGroup.getSlots().get(slotGroup.getRowSize() - 1);
+                buttonPos.setVertical();
+                buttonPos.setTopLeft();
+                buttonPos.setPos(topRight.bogo$getX() + 17, topRight.bogo$getY() - 1);
+            });
+        }
+
+        if (Backpack.isLoaded()) {
+            api.addCompat(ContainerAdvanced.class, (container, builder) -> {
+                builder.addGenericSlotGroup();
+            });
+        }
+
+        if (AdventureBackpack2.isLoaded()) {
+            api.addCompat(com.darkona.adventurebackpack.inventory.ContainerBackpack.class, (container, builder) -> {
+                builder.addSlotGroup(36, 84, 8);
+            });
+        }
+
+
+
 //        if (Loader.isModLoaded("futuremc")) {
 //            api.addCompatSimple(ContainerBarrel.class, (container, builder) -> {
 //                builder.addSlotGroup(0, 27, 9);
@@ -113,15 +138,17 @@ public class DefaultCompat {
 //            });
 //        }
 //
-//        if (Loader.isModLoaded("forestry")) {
-//            api.addCompat(ContainerBackpack.class, (container, builder) -> {
-//                if (container.inventorySlots.size() == 51) {
-//                    builder.addSlotGroup(36, container.inventorySlots.size(), 5);
-//                } else {
-//                    builder.addSlotGroup(36, container.inventorySlots.size(), 9);
-//
-//                }
-//            });
+        if (Forestry.isLoaded()) {
+            api.addCompat(ContainerBackpack.class, (container, builder) -> {
+                if (container.inventorySlots.size() == 51) {
+                    builder.addSlotGroup(36, container.inventorySlots.size(), 5);
+                } else {
+                    builder.addSlotGroup(36, container.inventorySlots.size(), 9);
+
+                }
+            });
+        }
+
 //            api.addCompat(ContainerNaturalistBackpack.class, (container, builder) -> {
 //                List<Slot> slots = new ArrayList<>();
 //                for (int i = 0; i < 25; i++) {
@@ -324,15 +351,15 @@ public class DefaultCompat {
 //            });
 //        }
 //
-//        if (Loader.isModLoaded("galacticraftcore")) {
-//            api.addCompat(ContainerParaChest.class, (container, builder) -> {
-//                int slot = container.getparachestInventory().getSizeInventory() - 3;
-//
-//                if (slot > 0) {
-//                    builder.addSlotGroup(0, slot, 9);
-//                }
-//            });
-//        }
+        if (GalacticraftCore.isLoaded()) {
+            api.addCompat(ContainerParaChest.class, (container, builder) -> {
+                int slot = container.getparachestInventory().getSizeInventory() - 3;
+
+                if (slot > 0) {
+                    builder.addSlotGroup(0, slot, 9);
+                }
+            });
+        }
 //
 //        if (Loader.isModLoaded("rustic")) {
 //            api.addCompat(ContainerCabinet.class, (container, builder) -> {
@@ -348,28 +375,22 @@ public class DefaultCompat {
 //            api.addCompat(ContainerVase.class, (container, builder) -> builder.addGenericSlotGroup()
 //                    .buttonPosSetter(BogoSorter.isQuarkLoaded() ? IPosSetter.TOP_RIGHT_VERTICAL : IPosSetter.TOP_RIGHT_HORIZONTAL));
 //        }
+        if (AvaritiaAddons.isLoaded()) {
+            api.addCompatSimple(ContainerCompressedChest.class, (container, builder) -> {
+                builder.addSlotGroup(0, 243, 27);
+            });
 //
-//        if (Loader.isModLoaded("avaritiaddons")) {
-//            api.addSlotGetter(InfinitySlot.class, InfinitySlotWrapper::new);
-//            api.addCustomInsertable(ContainerInfinityChest.class, (container, slots, itemStack, emptyOnly) -> {
-//                ISlot slot = avaritiaddons$findSlot(slots, itemStack, emptyOnly);
-//                if (slot == null) return itemStack;
-//                if (emptyOnly) itemStack = ShortcutHandler.insert(slot, itemStack, true);
-//                return itemStack.isEmpty() ? ItemStack.EMPTY : ShortcutHandler.insert(slot, itemStack, false);
-//            });
-//            api.addCompatSimple(ContainerCompressedChest.class, (container, builder) -> {
-//                builder.addSlotGroup(0, 9 * 27, 27);
-//            });
-//            api.addCompatSimple(ContainerInfinityChest.class, (container, builder) -> {
-//                List<ISlot> slots = new ArrayList<>();
-//                for (Slot slot : builder.getContainer().inventorySlots) {
-//                    if (slot instanceof InfinitySlot) {
-//                        slots.add(new InfinitySlotWrapper((InfinitySlot) slot));
-//                    }
-//                }
-//                builder.addSlotGroup(slots, 27);
-//            });
-//        }
+//                //todo compat with infinity chest
+//                api.addCompatSimple(ContainerInfinityChest.class, (container, builder) -> {
+//                    builder.addSlotGroup(0, 9 * 27, 27);
+//                });
+//                api.addPlayerSortButtonPosition(ContainerInfinityChest.class, (slotGroup, buttonPos) -> {
+//                    ISlot topRight = slotGroup.getSlots().get(slotGroup.getRowSize() - 1);
+//                    buttonPos.setVertical();
+//                    buttonPos.setTopLeft();
+//                    buttonPos.setPos(topRight.bogo$getX() + 17, topRight.bogo$getY() - 1);
+//                });
+        }
 //
 //        if (BogoSorter.isExpandableInventoryLoaded()) {
 //            // mark as sortable
@@ -402,10 +423,10 @@ public class DefaultCompat {
 //            });
 //        }
 //
-//        if (Loader.isModLoaded("cookingforblockheads")) {
-//            api.addGenericCompat(ContainerCounter.class);
-//            api.addGenericCompat(ContainerFridge.class);
-//        }
+        if (CookingForBlockheads.isLoaded()) {
+            api.addGenericCompat(ContainerCounter.class);
+            api.addGenericCompat(ContainerFridge.class);
+        }
 //
 //        if (Loader.isModLoaded("mekanism")) {
 //            api.addGenericCompat(mekanism.common.inventory.container.ContainerPersonalChest.class);
@@ -413,18 +434,18 @@ public class DefaultCompat {
 //
 //        if (Loader.isModLoaded("conarm")) {
 //            api.addGenericCompat(ContainerKnapsack.class);
-//        }
-//    }
-//
+    }
+}
+
 //    private static ISlot avaritiaddons$findSlot(List<ISlot> slots, ItemStack itemStack, boolean emptyOnly) {
 //        for (ISlot slot : slots) {
 //            ItemStack stackInSlot = slot.bogo$getStack();
-//            if (!stackInSlot.isEmpty() && ItemHandlerHelper.canItemStacksStack(stackInSlot, itemStack)) {
+//            if (stackInSlot != null && ItemHandlerHelper.canItemStacksStack(stackInSlot, itemStack)) {
 //                return emptyOnly ? null : slot;
 //            }
 //        }
 //        for (ISlot slot : slots) {
-//            if (slot.bogo$getStack().isEmpty()) return slot;
+//            if (slot.bogo$getStack()== null) return slot;
 //        }
 //        return null;
 //    }
@@ -437,5 +458,4 @@ public class DefaultCompat {
 //            }
 //        }
 //    }
-    }
-}
+

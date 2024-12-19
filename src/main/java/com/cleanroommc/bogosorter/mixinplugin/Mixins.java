@@ -1,4 +1,4 @@
-package com.cleanroommc.bogosorter.mixins;
+package com.cleanroommc.bogosorter.mixinplugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,20 +9,56 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 
-import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.core.BogoSorterCore;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public enum Mixins {
 
-    Vanilla_client(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA).setSide(Side.CLIENT)
-        .setPhase(Phase.EARLY).addMixinClasses(
+    Vanilla(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)
+        .setSide(Side.BOTH).setPhase(Phase.EARLY).addMixinClasses(
             "minecraft.ContainerHorseInventoryMixin",
+//            "minecraft.MixinEntityPlayer",
+            "minecraft.SlotMixin"
+        )
+        .setSide(Side.CLIENT).setPhase(Phase.EARLY).addMixinClasses(
             "minecraft.CreativeSlotMixin",
             "minecraft.GuiContainerMixin",
-            "minecraft.GuiEditSignMixin",
-           // "minecraft.ItemStackMixin",
-            "minecraft.MinecraftMixin",
-            "minecraft.SlotMixin"));
+            "minecraft.GuiEditSignMixin"
+//            "minecraft.MinecraftMixin"
+        )),
+
+
+    Avaritiaddons( new Builder(" Avaritiaddons").addTargetedMod(TargetedMod.AVARITIADDONS).setSide(Side.BOTH)
+        .setPhase(Phase.LATE).addMixinClasses(
+            "avaritiaddons.ContainerAvaritiaddonsChestMixin"
+        )),
+    IronChest(new Builder(" Iron Chests").addTargetedMod(TargetedMod.IRONCHEST).setSide(Side.BOTH)
+        .setPhase(Phase.LATE).addMixinClasses(
+            "ironchests.MixinIronChestContainer"
+        )),
+    EnderIo(new Builder(" Ender IO").addTargetedMod(TargetedMod.ENDERIO).setSide(Side.BOTH)
+        .setPhase(Phase.LATE).addMixinClasses(
+            "enderio.MixinVacuumChest",
+            "enderio.MixinBuffer"
+        )),
+    GalacticraftCore(new Builder(" Galacticraft").addTargetedMod(TargetedMod.GALACTICRAFTCORE).setSide(Side.BOTH)
+        .setPhase(Phase.LATE).addMixinClasses(
+            "galacticraft.core.MixinContainerRocketInventory",
+            "galacticraft.planets.MixinContainerSlimeling"
+        )),
+
+    ThermalExpansion(new Builder(" Thermal Expansion").addTargetedMod(TargetedMod.THERMALEXPANSION).setSide(Side.BOTH)
+        .setPhase(Phase.LATE).addMixinClasses(
+            "thermal.MixinContainerSatchel",
+            "thermal.MixinContainerStrongbox"
+
+        ))
+
+
+    ;
+
+
+
 
     private final List<String> mixinClasses;
     private final Supplier<Boolean> applyIf;
@@ -59,7 +95,7 @@ public enum Mixins {
                 }
             }
         }
-        BogoSorter.LOGGER.info("Not loading the following EARLY mixins: {}", notLoading);
+        BogoSorterCore.LOGGER.info("Not loading the following EARLY mixins: {}", notLoading);
         return mixins;
     }
 
@@ -75,7 +111,7 @@ public enum Mixins {
                 }
             }
         }
-        BogoSorter.LOGGER.info("Not loading the following LATE mixins: {}", notLoading.toString());
+        BogoSorterCore.LOGGER.info("Not loading the following LATE mixins: {}", notLoading.toString());
         return mixins;
     }
 

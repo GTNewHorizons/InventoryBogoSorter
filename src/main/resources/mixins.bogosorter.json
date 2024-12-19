@@ -4,8 +4,5 @@
   "package": "com.cleanroommc.bogosorter.mixins",
   "refmap": "mixins.bogosorter.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [],
-  "client": [],
-  "server": []
+  "compatibilityLevel": "JAVA_8"
 }

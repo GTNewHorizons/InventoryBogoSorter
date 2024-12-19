@@ -38,18 +38,36 @@
  * For more details, see https://docs.gradle.org/8.4/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-
     api("com.github.GTNewHorizons:ModularUI2:2.1.16-1.7.10:dev")
     api("com.github.GTNewHorizons:ModularUI:1.2.17:dev")
-    api("com.github.GTNewHorizons:GTNHLib:0.5.22:dev")
-    api("org.jetbrains:annotations:24.0.1")
-//    implementation rfg.deobf("curse.maven:modern-keybinding-686846:4034361")
+
+
+
+//    api("com.github.GTNewHorizons:AdventureBackpack2:1.2.4-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:AdventureBackpack2:1.2.4-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.4.3-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Galacticraft:3.2.8-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:EnderIO:2.8.22:dev")
+    compileOnly("com.github.GTNewHorizons:ironchest:6.0.87:dev")
+    compileOnly("com.github.GTNewHorizons:Avaritiaddons:1.8.4-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:CookingForBlockheads:1.3.7-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:ForestryMC:4.9.19:dev")
+    compileOnly("com.github.GTNewHorizons:Draconic-Evolution:1.3.14-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-502-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:EnderStorage:1.6.4:dev")
+
+
+
+    compileOnly rfg.deobf('curse.maven:rftools-224641:2287287')
+    compileOnly rfg.deobf("curse.maven:mcjtylib-233105:2272449")
+    compileOnly rfg.deobf('curse.maven:thermal_expansion-69163:2388758')
+    compileOnly rfg.deobf('curse.maven:thermal_foundation-222880:2388752')
+    compileOnly rfg.deobf('curse.maven:cofh_core-69162:2388750')
 
 
 
 //    implementation("com.cleanroommc:modularui:2.4.2") { transitive false }
 //    //implementation files('libs/modularui-2.2.3-dev.jar') // for testing purpose
-//    compileOnly rfg.deobf('curse.maven:iron_chests-228756:2747935')
 //    compileOnly rfg.deobf('curse.maven:cofh_core-69162:2920433')
 //    compileOnly rfg.deobf('curse.maven:thermal_expansion-69163:2926431')
 //    compileOnly rfg.deobf('curse.maven:actually_additions-228404:3117927')
@@ -94,5 +112,5 @@ dependencies {
 //    compileOnly rfg.deobf('curse.maven:mekanism-268560:2835175')
 //    compileOnly rfg.deobf("curse.maven:industrial-renewal-299849:3340876")
 //    compileOnly rfg.deobf("curse.maven:rftools-224641:2861573")
-//    compileOnly rfg.deobf("curse.maven:mcjtylib-233105:2745846")
+//    compileOnly rfg.deobf("curse.maven:mcjtylib-233105:2272449")
 }

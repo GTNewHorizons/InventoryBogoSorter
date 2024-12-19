@@ -13,6 +13,7 @@ import com.cleanroommc.bogosorter.common.refill.RefillHandler;
 import com.cleanroommc.bogosorter.common.sort.ButtonHandler;
 import com.cleanroommc.bogosorter.common.sort.DefaultRules;
 import com.cleanroommc.bogosorter.compat.DefaultCompat;
+import com.cleanroommc.bogosorter.compat.loader.IntegrationLoader;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -24,17 +25,18 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.Month;
 
+import static com.cleanroommc.bogosorter.ClientEventHandler.configGuiKey;
+import static com.cleanroommc.bogosorter.ClientEventHandler.sortKey;
+
 @Mod(modid = BogoSorter.ID,
         name = BogoSorter.NAME,
         version = BogoSorter.VERSION,
-        dependencies =
-                "required-after:modularui2@[2.1.8-1.7.10,);")
+        dependencies = "required-after:gtnhmixins;" +
+                "required-after:modularui2;")
 //@EventBusSubscriber()
 public class BogoSorter {
 
@@ -42,30 +44,12 @@ public class BogoSorter {
     public static final String NAME = "Inventory Bogo Sorter";
     public static final String VERSION = Tags.VERSION;
 
-    public static final Logger LOGGER = LogManager.getLogger(ID);
-
     public static final XSTR RND = new XSTR();
 
-    private static boolean anyGtLoaded = false;
-    private static boolean tconstructLoaded = false;
-    private static boolean anyIc2Loaded = false;
-    private static boolean ic2ClassicLoaded = false;
-    private static boolean quarkLoaded = false;
-    private static boolean ae2Loaded = false;
-    private static boolean expandableInventoryLoaded = false;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-//        anyGtLoaded = Loader.isModLoaded("gregtech");
-//        tconstructLoaded = Loader.isModLoaded("tconstruct");
-//        anyIc2Loaded = Loader.isModLoaded("ic2");
-//        quarkLoaded = Loader.isModLoaded("quark");
-//        ae2Loaded = Loader.isModLoaded("appliedenergistics2");
-//        expandableInventoryLoaded = Loader.isModLoaded("expandableinventory");
-//        if (anyIc2Loaded) {
-//            ModContainer container = Loader.instance().getIndexedModList().get("ic2");
-//            ic2ClassicLoaded = container.getName().endsWith("Classic");
-//        }
+        IntegrationLoader.INSTANCE.load();
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
         NetworkHandler.init();
@@ -77,17 +61,19 @@ public class BogoSorter {
         MinecraftForge.EVENT_BUS.register(RefillHandler.class);
         if (NetworkUtils.isDedicatedClient()) {
             MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
+            FMLCommonHandler.instance().bus().register(new ClientEventHandler());
             MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
             MinecraftForge.EVENT_BUS.register(new ButtonHandler());
             MinecraftForge.EVENT_BUS.register(new HotbarSwap());
         }
     }
 
+
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
         if (NetworkUtils.isDedicatedClient()) {
-            ClientRegistry.registerKeyBinding(ClientEventHandler.configGuiKey);
-            ClientRegistry.registerKeyBinding(ClientEventHandler.sortKey);
+            ClientRegistry.registerKeyBinding(configGuiKey);
+            ClientRegistry.registerKeyBinding(sortKey);
         }
 //            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.configGuiKey);
 //            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.sortKey);
@@ -113,47 +99,7 @@ public class BogoSorter {
         }
     }
 
-    public static boolean isAnyGtLoaded() {
-        return anyGtLoaded;
-    }
 
-    @SuppressWarnings("all")
-    public static boolean isGTCELoaded() {
-        return anyGtLoaded;// && GregTechVersion.MAJOR == 1;
-    }
-
-    @SuppressWarnings("all")
-    public static boolean isGTCEuLoaded() {
-        return anyGtLoaded;// && GregTechVersion.MAJOR >= 2;
-    }
-
-    public static boolean isTConstructLoaded() {
-        return tconstructLoaded;
-    }
-
-    public static boolean isAnyIc2Loaded() {
-        return anyIc2Loaded;
-    }
-
-    public static boolean isIc2ClassicLoaded() {
-        return anyIc2Loaded && ic2ClassicLoaded;
-    }
-
-    public static boolean isIc2ExpLoaded() {
-        return anyIc2Loaded && !ic2ClassicLoaded;
-    }
-
-    public static boolean isQuarkLoaded() {
-        return quarkLoaded;
-    }
-
-    public static boolean isAe2Loaded() {
-        return ae2Loaded;
-    }
-
-    public static boolean isExpandableInventoryLoaded() {
-        return expandableInventoryLoaded;
-    }
 
     public static boolean isAprilFools() {
         LocalDate date = LocalDate.now();

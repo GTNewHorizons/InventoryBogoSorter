@@ -1,9 +1,9 @@
 package com.cleanroommc.bogosorter.common.config;
 
-import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
 
+import com.cleanroommc.bogosorter.core.BogoSorterCore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -57,7 +57,7 @@ public class Serializer {
             }
             JsonElement jsonElement = loadJson(configJsonPath);
             if (jsonElement == null || !jsonElement.isJsonObject()) {
-                BogoSorter.LOGGER.error("Error loading config!");
+                BogoSorterCore.LOGGER.error("Error loading config!");
             } else {
                 BogoSorterConfig.load(jsonElement.getAsJsonObject());
                 SortHandler.cacheItemSortRules.put(Minecraft.getMinecraft().thePlayer, BogoSorterConfig.sortRules);
@@ -71,7 +71,7 @@ public class Serializer {
         }
         JsonElement jsonElement = loadJson(orePrefixJsonPath);
         if (jsonElement == null || !jsonElement.isJsonObject()) {
-            BogoSorter.LOGGER.error("Error loading ore prefix config!");
+            BogoSorterCore.LOGGER.error("Error loading ore prefix config!");
             return;
         }
         BogoSorterConfig.loadOrePrefixes(jsonElement.getAsJsonObject());
@@ -91,7 +91,7 @@ public class Serializer {
             reader.close();
             return json;
         } catch (Exception e) {
-            BogoSorter.LOGGER.error("Failed to read file on path {}", file, e);
+            BogoSorterCore.LOGGER.error("Failed to read file on path {}", file, e);
         }
         return null;
     }
@@ -100,7 +100,7 @@ public class Serializer {
         try {
             if (!file.getParentFile().isDirectory()) {
                 if (!file.getParentFile().mkdirs()) {
-                    BogoSorter.LOGGER.error("Failed to create file dirs on path {}", file);
+                    BogoSorterCore.LOGGER.error("Failed to create file dirs on path {}", file);
                 }
             }
             Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
@@ -108,7 +108,7 @@ public class Serializer {
             writer.close();
             return true;
         } catch (Exception e) {
-            BogoSorter.LOGGER.error("Failed to save file on path {}", file, e);
+            BogoSorterCore.LOGGER.error("Failed to save file on path {}", file, e);
         }
         return false;
     }

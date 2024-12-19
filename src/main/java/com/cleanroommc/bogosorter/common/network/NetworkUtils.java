@@ -1,6 +1,6 @@
 package com.cleanroommc.bogosorter.common.network;
 
-import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.core.BogoSorterCore;
 import cpw.mods.fml.common.FMLCommonHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -66,7 +66,7 @@ public class NetworkUtils {
         if (bytesTest.length > 32767) {
             bytes = new byte[32767];
             System.arraycopy(bytesTest, 0, bytes, 0, 32767);
-            BogoSorter.LOGGER.warn("Warning! Synced string exceeds max length!");
+            BogoSorterCore.LOGGER.warn("Warning! Synced string exceeds max length!");
         } else {
             bytes = bytesTest;
         }

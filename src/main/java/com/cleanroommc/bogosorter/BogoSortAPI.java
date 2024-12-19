@@ -1,6 +1,7 @@
 package com.cleanroommc.bogosorter;
 
 
+import appeng.container.slot.AppEngSlot;
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.ICustomInsertable;
 import com.cleanroommc.bogosorter.api.IPosSetter;
@@ -12,8 +13,8 @@ import com.cleanroommc.bogosorter.common.config.ConfigGui;
 import com.cleanroommc.bogosorter.common.sort.ClientItemSortRule;
 import com.cleanroommc.bogosorter.common.sort.ItemSortContainer;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
+import com.cleanroommc.bogosorter.compat.loader.Mods;
 import com.cleanroommc.modularui.factory.ClientGUI;
-import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.PlayerInvWrapper;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 import com.cleanroommc.modularui.utils.item.SlotItemHandler;
@@ -26,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -280,14 +282,14 @@ public class BogoSortAPI implements IBogoSortAPI {
     public static boolean isPlayerSlot(ISlot slot) {
         if (slot==null) return false;
         if (slot.bogo$getInventory() instanceof InventoryPlayer ||
-                (slot instanceof SlotItemHandler && isPlayerInventory(((SlotItemHandler) slot).getItemHandler()))) {
-              //   || (BogoSorter.isAe2Loaded() && slot instanceof AppEngSlot && isPlayerInventory(((AppEngSlot) slot).getItemHandler()))) {
+                (slot instanceof SlotItemHandler && isPlayerInventory((IInventory) ((SlotItemHandler) slot).getItemHandler()))
+            || (Mods.Ae2.isLoaded() && slot instanceof AppEngSlot && isPlayerInventory(((AppEngSlot) slot).inventory))) {
             return slot.bogo$getSlotIndex() >= 0 && slot.bogo$getSlotIndex() < 36;
         }
         return false;
     }
 
-    public static boolean isPlayerInventory(IItemHandler itemHandler) {
+    public static boolean isPlayerInventory(IInventory itemHandler) {
         return itemHandler instanceof PlayerMainInvWrapper || itemHandler instanceof PlayerInvWrapper;
     }
 

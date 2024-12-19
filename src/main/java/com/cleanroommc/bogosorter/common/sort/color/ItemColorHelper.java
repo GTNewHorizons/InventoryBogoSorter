@@ -96,7 +96,7 @@ public class ItemColorHelper {
         } catch (Exception ignored) {
         }
         final TextureAtlasSprite textureAtlasSprite;
-        if (BogoSorter.isGTCEuLoaded()) { // && blockState.getBlock() instanceof BlockMachine) {
+        if (true) { // && blockState.getBlock() instanceof BlockMachine) {
 //            MetaTileEntity mte = GTUtility.getMetaTileEntity(itemStack);
 //            Pair<TextureAtlasSprite, Integer> pair = mte.getParticleTexture();
 //            textureAtlasSprite = pair.getKey();

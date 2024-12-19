@@ -1,7 +1,7 @@
 [
 {
-  "modid": "bogosorter",
-  "name": "Inventory Bogo Sorter",
+  "modid":  "${modId}",
+  "name": "${modName}",
   "description": "A highly configurable and advanced inventory sorter mod",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
@@ -10,7 +10,5 @@
   "authorList": ["brachy84"],
   "credits": "Autor of InventoryTweaks",
   "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+  "screenshots": []}
 ]

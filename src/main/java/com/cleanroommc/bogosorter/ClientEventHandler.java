@@ -22,6 +22,8 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.minecraft.client.Minecraft;
@@ -46,7 +48,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-
+@SideOnly(Side.CLIENT)
 public class ClientEventHandler {
 
     public static final List<ItemStack> allItems = new ArrayList<>();
@@ -136,6 +138,15 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
+        if (Keypress(configGuiKey)) {
+            long t = Minecraft.getSystemTime();
+            if (t - timeConfigGui > 500) {
+                if (!ConfigGui.closeCurrent()) {
+                    BogoSortAPI.INSTANCE.openConfigGui(Minecraft.getMinecraft().currentScreen);
+                }
+                timeConfigGui = t;
+            }
+        }
         handleInput(null);
     }
 
@@ -219,18 +230,7 @@ public class ClientEventHandler {
                 return true;
             }
         }
-        boolean c = configGuiKey.isPressed(), s = sortKey.isPressed();
-        if (c) {
-            long t = Minecraft.getSystemTime();
-            if (t - timeConfigGui > 500) {
-                if (!ConfigGui.closeCurrent()) {
-                    BogoSortAPI.INSTANCE.openConfigGui(Minecraft.getMinecraft().currentScreen);
-                }
-                timeConfigGui = t;
-                return true;
-            }
-        }
-        if (container != null && s) {
+        if (container != null && Keypress(sortKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 ISlot slot = getSlot(container);
@@ -247,7 +247,7 @@ public class ClientEventHandler {
     private static boolean canSort(@Nullable ISlot slot) {
         return !Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode ||
 //                sortKey.getKeyModifier().isActive(null) != Minecraft.getMinecraft().gameSettings.keyBindPickBlock.getKeyModifier().isActive(null) ||
-                sortKey.getKeyCode() != Minecraft.getMinecraft().gameSettings.keyBindPickBlock.getKeyCode() ||
+//                sortKey.getKeyCode() != Minecraft.getMinecraft().gameSettings.keyBindPickBlock.getKeyCode() ||
                 (Minecraft.getMinecraft().thePlayer.inventory.getItemStack() == null && (slot == null || slot.bogo$getStack() == null));
     }
 
@@ -332,7 +332,12 @@ public class ClientEventHandler {
         return null;
     }
 
-    private static boolean hasContainer(GuiScreenEvent event) {
-        return event.gui instanceof GuiContainer && handleInput((GuiContainer) event.gui);
+    private static boolean Keypress(KeyBinding key){
+        int keyCode = key.getKeyCode();
+        if (keyCode > 0) {
+            return Keyboard.isKeyDown(keyCode);
+        } else {
+            return Mouse.isButtonDown(100 + keyCode);
+        }
     }
 }

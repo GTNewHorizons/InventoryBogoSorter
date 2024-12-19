@@ -46,6 +46,7 @@ public class RefillHandler {
             {7, 6, 5, 4, 3, 2, 1, 0, 35, 26, 17, 34, 25, 16, 33, 24, 15, 32, 23, 14, 31, 22, 13, 30, 21, 12, 29, 20, 11, 28, 19, 10, 27, 18, 9},
     };
 
+
     @SubscribeEvent
     public static void onDestroyItem(PlayerDestroyItemEvent event) {
         if (event.entityPlayer == null ||

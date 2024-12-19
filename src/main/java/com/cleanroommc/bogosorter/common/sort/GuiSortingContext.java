@@ -162,12 +162,11 @@ public class GuiSortingContext {
     private static void addPlayerInventory(GuiSortingContext.Builder builder, Container container) {
         List<ISlot> slots = new ArrayList<>();
         List<ISlot> hotbar = new ArrayList<>();
-        boolean all = BogoSorter.isExpandableInventoryLoaded(); // && container instanceof ContainerExpandedInventory;
         for (Slot slot : container.inventorySlots) {
             if (BogoSortAPI.isPlayerSlot(slot)) {
                 if (slot.getSlotIndex() < 9) hotbar.add(BogoSortAPI.INSTANCE.getSlot(slot));
                 else slots.add(BogoSortAPI.INSTANCE.getSlot(slot));
-            } else if (all) slots.add(BogoSortAPI.INSTANCE.getSlot(slot));
+            }
         }
         if (!slots.isEmpty()) {
             SlotGroup slotGroup = new SlotGroup(true, false, slots, Math.min(9, slots.size()));

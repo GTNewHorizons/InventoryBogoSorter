@@ -1,9 +1,9 @@
-package com.cleanroommc.bogosorter;
+package com.cleanroommc.bogosorter.mixinplugin;
 
 import java.util.List;
 import java.util.Set;
 
-import com.cleanroommc.bogosorter.mixins.Mixins;
+
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
 

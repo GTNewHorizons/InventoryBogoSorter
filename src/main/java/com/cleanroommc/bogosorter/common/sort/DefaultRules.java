@@ -2,6 +2,7 @@ package com.cleanroommc.bogosorter.common.sort;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.compat.loader.Mods;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants;
@@ -35,7 +36,7 @@ public class DefaultRules {
         api.registerNbtSortingRule("potion", "Potion", Constants.NBT.TAG_STRING, ItemCompareHelper::comparePotionId, DefaultRules::getPotionId);
 //        api.registerNbtSortingRule("enchantment", "ench", Constants.NBT.TAG_LIST, ItemCompareHelper::compareEnchantments, nbtBase -> (NBTTagList) nbtBase);
 //        api.registerNbtSortingRule("enchantment_book", "StoredEnchantments", Constants.NBT.TAG_LIST, ItemCompareHelper::compareEnchantments, nbtBase -> (NBTTagList) nbtBase);
-        if (BogoSorter.isAnyGtLoaded()) {
+        if (Mods.GT5u.isLoaded()) {
             api.registerNbtSortingRule("gt_circ_config", "Configuration", Constants.NBT.TAG_INT);
             api.registerNbtSortingRule("gt_item_damage", "GT.ToolStats/Dmg", Constants.NBT.TAG_INT);
         }

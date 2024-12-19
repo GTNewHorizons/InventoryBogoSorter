@@ -1,11 +1,11 @@
 package com.cleanroommc.bogosorter.common.config;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
+import com.cleanroommc.bogosorter.core.BogoSorterCore;
 import com.cleanroommc.modularui.utils.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -97,7 +97,7 @@ public class BogoSorterConfig {
                 }
                 SortRule<ItemStack> rule = BogoSortAPI.INSTANCE.getItemSortRule(key);
                 if (rule.isEmpty()) {
-                    BogoSorter.LOGGER.error("Could not find item sort rule with key '{}'.", key);
+                    BogoSorterCore.LOGGER.error("Could not find item sort rule with key '{}'.", key);
                 } else {
                     rule.setInverted(inverted);
                     BogoSorterConfig.sortRules.add(rule);
@@ -118,7 +118,7 @@ public class BogoSorterConfig {
                 }
                 NbtSortRule rule = BogoSortAPI.INSTANCE.getNbtSortRule(key);
                 if (rule.isEmpty()) {
-                    BogoSorter.LOGGER.error("Could not find nbt sort rule with key '{}'.", key);
+                    BogoSorterCore.LOGGER.error("Could not find nbt sort rule with key '{}'.", key);
                 } else {
                     rule.setInverted(inverted);
                     BogoSorterConfig.nbtSortRules.add(rule);

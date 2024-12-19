@@ -1,6 +1,5 @@
 package com.cleanroommc.bogosorter.core.visitor;
 
-import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.core.BogoSorterCore;
 import com.cleanroommc.bogosorter.core.CatServerHelper;
 import org.objectweb.asm.ClassVisitor;
@@ -50,7 +49,7 @@ public class EntityPlayerVisitor extends ClassVisitor implements Opcodes {
                 visitVarInsn(ALOAD, 2);
                 visitVarInsn(ALOAD, 4);
                 PIMVisitor.visitOnDestroy(this);
-                BogoSorter.LOGGER.info("Applied EntityPlayer damageShield ASM");
+                BogoSorterCore.LOGGER.info("Applied EntityPlayer damageShield ASM");
             }
         }
     }
@@ -70,7 +69,7 @@ public class EntityPlayerVisitor extends ClassVisitor implements Opcodes {
                 visitVarInsn(ALOAD, 5);
                 visitVarInsn(ALOAD, 2);
                 PIMVisitor.visitOnDestroy(this);
-                BogoSorter.LOGGER.info("Applied EntityPlayer interactOn ASM");
+                BogoSorterCore.LOGGER.info("Applied EntityPlayer interactOn ASM");
             }
         }
     }
@@ -89,7 +88,7 @@ public class EntityPlayerVisitor extends ClassVisitor implements Opcodes {
                 visitVarInsn(ALOAD, CatServerHelper.isCatServerLoaded() ? 26 : 25);
                 visitFieldInsn(GETSTATIC, PIMVisitor.HAND_CLASS, "MAIN_HAND", "L" + PIMVisitor.HAND_CLASS + ";");
                 PIMVisitor.visitOnDestroy(this);
-                BogoSorter.LOGGER.info("Applied EntityPlayer attackTargetEntityWithCurrentItem ASM");
+                BogoSorterCore.LOGGER.info("Applied EntityPlayer attackTargetEntityWithCurrentItem ASM");
             }
         }
     }

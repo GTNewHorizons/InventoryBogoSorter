@@ -1,8 +1,6 @@
 package com.cleanroommc.bogosorter.core.visitor;
 
-import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.core.BogoSorterCore;
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -63,7 +61,7 @@ public class PIMVisitor extends ClassVisitor implements Opcodes {
                 visitVarInsn(ALOAD, 4);
                 visitOnDestroy(this);
                 inject = false;
-                BogoSorter.LOGGER.info("Applied PIM processRightClick ASM");
+                BogoSorterCore.LOGGER.info("Applied PIM processRightClick ASM");
             }
         }
 
@@ -91,7 +89,7 @@ public class PIMVisitor extends ClassVisitor implements Opcodes {
                 visitVarInsn(ALOAD, 9);
                 visitFieldInsn(GETSTATIC, HAND_CLASS, "MAIN_HAND", "L" + HAND_CLASS + ";");
                 visitOnDestroy(this);
-                BogoSorter.LOGGER.info("Applied PIM tryHarvestBlock ASM");
+                BogoSorterCore.LOGGER.info("Applied PIM tryHarvestBlock ASM");
             }
         }
     }
