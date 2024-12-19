@@ -7,6 +7,7 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -17,6 +18,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import static org.lwjgl.opengl.GL11.GL_BLEND;
 
 public class HotbarSwap {
 
@@ -40,7 +45,7 @@ public class HotbarSwap {
     @SubscribeEvent
     public void render(RenderGameOverlayEvent.Post event) {
         if (enabled && event.type == RenderGameOverlayEvent.ElementType.ALL && show) {
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             GuiIngame gui = Minecraft.getMinecraft().ingameGUI;
@@ -50,9 +55,10 @@ public class HotbarSwap {
                 gui.drawTexturedModalRect(m - 91 - 1 + player.inventory.currentItem * 20, event.resolution.getScaledHeight() - 22 - 17 - 18 * verticalIndex, 0, 22, 24, 22);
             }
 
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GL11.glEnable(GL_BLEND);
+
+            OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
             RenderHelper.enableGUIStandardItemLighting();
 
             int x = m - 90 + player.inventory.currentItem * 20 + 2;
@@ -63,8 +69,8 @@ public class HotbarSwap {
             }
 
             RenderHelper.disableStandardItemLighting();
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            GL11.glDisable(GL_BLEND);
         }
     }
 
@@ -115,17 +121,17 @@ public class HotbarSwap {
             RenderItem renderer = new RenderItem();
             float f = (float) stack.animationsToGo - partialTicks;
             if (f > 0.0F) {
-                GlStateManager.pushMatrix();
+                GL11.glPushMatrix();
                 float f1 = 1.0F + f / 5.0F;
-                GlStateManager.translate((float) (x + 8), (float) (y + 12), 0.0F);
-                GlStateManager.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
-                GlStateManager.translate((float) (-(x + 8)), (float) (-(y + 12)), 0.0F);
+                GL11.glTranslatef((float) (x + 8), (float) (y + 12), 0.0F);
+                GL11.glScalef(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
+                GL11.glTranslatef((float) (-(x + 8)), (float) (-(y + 12)), 0.0F);
             }
 
             renderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager,stack, x, y);
 
             if (f > 0.0F) {
-                GlStateManager.popMatrix();
+                GL11.glPopMatrix();
             }
 
             renderer.renderItemOverlayIntoGUI(fontRenderer, textureManager, stack, x, y);
