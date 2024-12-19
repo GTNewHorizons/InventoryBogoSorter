@@ -205,8 +205,6 @@ public class SortHandler {
             ISlot slot = slots.get(i);
             slot.bogo$putStack(items.get(i));
         }
-        System.out.println(items);
-        System.out.println(slots);
     }
 
     public LinkedList<ItemSortContainer> gatherItems(SlotGroup slotGroup) {
@@ -281,7 +279,6 @@ public class SortHandler {
                 }
 
             }
-            System.out.println(slots);
             NetworkHandler.sendToServer(new CSlotSync(slots));
         }
     }
