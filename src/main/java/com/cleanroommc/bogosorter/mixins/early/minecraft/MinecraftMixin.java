@@ -12,13 +12,14 @@
  @Mixin(Minecraft.class)
  public class MinecraftMixin {
 
- @Shadow
- public EntityClientPlayerMP thePlayer;
+     @Shadow
+     public EntityClientPlayerMP thePlayer;
 
- @Redirect(method = "runTick", at = @At(value = "INVOKE", target =
- "Lnet/minecraft/entity/player/InventoryPlayer;changeCurrentItem(I)V"))
- public void mouseInput(InventoryPlayer instance, int p_70453_1_) {
- if (!HotbarSwap.doCancelHotbarSwap()) {thePlayer.inventory.changeCurrentItem(p_70453_1_);
- }
- }
+     @Redirect(method = "runTick", at = @At(value = "INVOKE", target =
+         "Lnet/minecraft/entity/player/InventoryPlayer;changeCurrentItem(I)V"))
+     public void mouseInput(InventoryPlayer instance, int p_70453_1_) {
+         if (!HotbarSwap.doCancelHotbarSwap()) {
+             thePlayer.inventory.changeCurrentItem(p_70453_1_);
+         }
+     }
  }

@@ -25,14 +25,10 @@ public class HotbarSwap {
     private static boolean enabled = true;
     private static boolean show;
     private static int verticalIndex = 0;
-    protected static final RenderItem itemRenderer = RenderItem.getInstance();
-    private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-    private static final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
     public static boolean doCancelHotbarSwap() {
         return show;
     }
-
     public static void setEnabled(boolean enabled) {
         HotbarSwap.enabled = enabled;
     }
@@ -62,7 +58,7 @@ public class HotbarSwap {
             int x = m - 90 + player.inventory.currentItem * 20 + 2;
             int y = event.resolution.getScaledHeight() - 16 - 3 - 70;
             for (int i = 1; i < 4; i++) {
-                renderHotbarItem(x, y, event.partialTicks, player, player.inventory.getStackInSlot(player.inventory.currentItem + i * 9));
+                renderHotbarItem(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), player.inventory.getStackInSlot(player.inventory.currentItem + i * 9),x,y, event.partialTicks);
                 y += 18;
             }
 
@@ -78,7 +74,7 @@ public class HotbarSwap {
             return;
         }
         if (show) {
-            if (!Keyboard.isKeyDown(Keyboard.KEY_LMENU) || !Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
+            if (!isAltKeyDown()) {
                 // swap items on server
                 if (verticalIndex != 0) {
                     int index = 4 - verticalIndex;
@@ -90,7 +86,7 @@ public class HotbarSwap {
                 verticalIndex = 0;
             }
         } else {
-            if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
+            if (isAltKeyDown()) {
                 show = true;
                 verticalIndex = 0;
             }
@@ -114,10 +110,10 @@ public class HotbarSwap {
         }
     }
 
-    private static void renderHotbarItem(int x, int y, float partialTicks, EntityPlayer player, ItemStack stack) {
+    private static void renderHotbarItem(FontRenderer fontRenderer, TextureManager textureManager, ItemStack stack, int x, int y, float partialTicks) {
         if (stack != null) {
+            RenderItem renderer = new RenderItem();
             float f = (float) stack.animationsToGo - partialTicks;
-
             if (f > 0.0F) {
                 GlStateManager.pushMatrix();
                 float f1 = 1.0F + f / 5.0F;
@@ -126,13 +122,16 @@ public class HotbarSwap {
                 GlStateManager.translate((float) (-(x + 8)), (float) (-(y + 12)), 0.0F);
             }
 
-            itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager,stack, x, y);
+            renderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager,stack, x, y);
 
             if (f > 0.0F) {
                 GlStateManager.popMatrix();
             }
 
-            itemRenderer.renderItemOverlayIntoGUI(fontRenderer, textureManager, stack, x, y);
+            renderer.renderItemOverlayIntoGUI(fontRenderer, textureManager, stack, x, y);
         }
+    }
+    public static boolean isAltKeyDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU);
     }
 }
