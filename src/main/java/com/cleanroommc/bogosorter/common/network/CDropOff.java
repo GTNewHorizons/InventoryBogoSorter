@@ -1,10 +1,12 @@
 package com.cleanroommc.bogosorter.common.network;
 
+import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.dropoff.InteractionResult;
 import com.cleanroommc.bogosorter.common.dropoff.InventoryData;
 import com.cleanroommc.bogosorter.common.dropoff.InventoryManager;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCubeTarget;
+import com.cleanroommc.bogosorter.common.sort.SortHandler;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -42,10 +44,12 @@ public class CDropOff implements IPacket {
 
         List<InventoryData> inventoryDataList = inventoryManager.getNearbyInventories();
 
+        // insert into smaller inventories first
+        inventoryDataList.sort((a, b) -> a.getInventory().getSizeInventory() < b.getInventory().getSizeInventory() ? 1 : 0);
+
         for (InventoryData inventoryData : inventoryDataList) {
             IInventory inventory = inventoryData.getInventory();
 
-            //if (DropOffConfig.INSTANCE.dropOff) {
             dropOffHandler.setStartSlot(InventoryManager.Slots.FIRST);
             dropOffHandler.setEndSlot(InventoryManager.Slots.LAST);
 
@@ -58,7 +62,6 @@ public class CDropOff implements IPacket {
             }
 
             dropOffHandler.dropOff(inventoryData);
-            //}
 
             inventory.markDirty();
         }

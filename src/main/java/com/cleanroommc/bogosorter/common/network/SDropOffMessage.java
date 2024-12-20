@@ -1,6 +1,8 @@
 package com.cleanroommc.bogosorter.common.network;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.config.PlayerConfig;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCubeTarget;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
@@ -42,7 +44,7 @@ public class SDropOffMessage implements IPacket {
         buf.writeInt(totalContainers);
 
         buf.writeInt(rendererCubeTargets.size());
-        for (RendererCubeTarget target : rendererCubeTargets){
+        for (RendererCubeTarget target : rendererCubeTargets) {
             buf.writeInt(target.getBlockPos().getX());
             buf.writeInt(target.getBlockPos().getY());
             buf.writeInt(target.getBlockPos().getZ());
@@ -70,25 +72,28 @@ public class SDropOffMessage implements IPacket {
 
     @Override
     public IPacket executeClient(NetHandlerPlayClient handler) {
-        //if (DropOffConfig.INSTANCE.highlightContainers) {
-        RendererCube.INSTANCE.draw(rendererCubeTargets);
-        //}
+        if (DropOffHandler.dropoffRender){
+            RendererCube.INSTANCE.draw(rendererCubeTargets);
+        }
 
-        String message = "[" + EnumChatFormatting.BLUE + BogoSorter.NAME + EnumChatFormatting.RESET + "]: " +
-            String.valueOf(EnumChatFormatting.RED) +
-            itemsCounter +
-            EnumChatFormatting.RESET +
-            " items moved to " +
-            EnumChatFormatting.RED +
-            affectedContainers +
-            EnumChatFormatting.RESET +
-            " containers of " +
-            EnumChatFormatting.RED +
-            totalContainers +
-            EnumChatFormatting.RESET +
-            " checked in total.";
+        if (DropOffHandler.dropoffChatMessage) {
+            String message = "[" + EnumChatFormatting.BLUE + BogoSorter.NAME + EnumChatFormatting.RESET + "]: " +
+                EnumChatFormatting.RED +
+                itemsCounter +
+                EnumChatFormatting.RESET +
+                " items moved to " +
+                EnumChatFormatting.RED +
+                affectedContainers +
+                EnumChatFormatting.RESET +
+                " containers of " +
+                EnumChatFormatting.RED +
+                totalContainers +
+                EnumChatFormatting.RESET +
+                " checked in total.";
 
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
+        }
+
         Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("gui.button.press")));
 
         return null;

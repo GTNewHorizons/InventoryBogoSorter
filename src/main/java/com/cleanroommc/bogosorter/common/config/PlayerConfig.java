@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.service.IPropertyKey;
 
 import java.util.Map;
 

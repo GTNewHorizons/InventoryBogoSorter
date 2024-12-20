@@ -5,6 +5,8 @@ import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
+import com.cleanroommc.bogosorter.common.config.PlayerConfig;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.network.CSort;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
@@ -154,7 +156,9 @@ public class ClientEventHandler {
         if (Keypress(dropoffKey)){
             long t = Minecraft.getSystemTime();
             if (t - timeDropoff > 500) {
-                NetworkHandler.sendToServer(new CDropOff());
+                if (DropOffHandler.enableDroppOff){
+                    NetworkHandler.sendToServer(new CDropOff());
+                }
                 timeDropoff = t;
             }
         }
@@ -212,7 +216,9 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderWorldLastEvent(RenderWorldLastEvent event) {
-        RendererCube.INSTANCE.tryToRender(event);
+        if (DropOffHandler.dropoffRender){
+            RendererCube.INSTANCE.tryToRender(event);
+        }
     }
 
     // handle all inputs in one method

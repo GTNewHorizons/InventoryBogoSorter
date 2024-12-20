@@ -3,6 +3,7 @@ package com.cleanroommc.bogosorter.common.config;
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
 import com.cleanroommc.bogosorter.core.BogoSorterCore;
@@ -38,6 +39,9 @@ public class BogoSorterConfig {
         JsonObject general = new JsonObject();
         general.addProperty("enableAutoRefill", playerConfig.enableAutoRefill);
         general.addProperty("refillDmgThreshold", playerConfig.autoRefillDamageThreshold);
+        general.addProperty("enableDropoff", DropOffHandler.enableDroppOff);
+        general.addProperty("dropoffRender",DropOffHandler.dropoffRender);
+        general.addProperty("dropoffChatMessage",DropOffHandler.dropoffChatMessage);
         general.addProperty("enableHotbarSwap", HotbarSwap.isEnabled());
         general.addProperty("sortSound", SortHandler.getSortSoundName());
         general.addProperty("buttonColor", "#" + Integer.toHexString(buttonColor));
@@ -75,6 +79,9 @@ public class BogoSorterConfig {
             JsonObject general = json.getAsJsonObject("General");
             playerConfig.enableAutoRefill = JsonHelper.getBoolean(general, true, "enableAutoRefill");
             playerConfig.autoRefillDamageThreshold = (short) JsonHelper.getInt(general, 1, "refillDmgThreshold");
+            DropOffHandler.enableDroppOff = JsonHelper.getBoolean(general, true, "enableDropoff");
+            DropOffHandler.dropoffRender = JsonHelper.getBoolean(general, true, "dropoffRender");
+            DropOffHandler.dropoffChatMessage = JsonHelper.getBoolean(general, true, "dropoffChatMessage");
             HotbarSwap.setEnabled(JsonHelper.getBoolean(general, true, "enableHotbarSwap"));
 //            SortHandler.sortSound = JsonHelper.getElement(general, SoundEvents.UI_BUTTON_CLICK, element -> {
 //                if (element.isJsonNull()) return null;

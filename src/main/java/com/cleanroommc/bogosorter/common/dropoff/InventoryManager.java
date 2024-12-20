@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -130,8 +131,27 @@ public class InventoryManager {
 
         // TODO: limit the types of inventories?
 
-        return true;
-        //return DropOffConfig.INSTANCE.dropOffEveryPlace;
+        String inventoryName = getItemStackName(inventoryData.getInventory());
+
+
+        return isInventoryNameValid(inventoryName);
+    }
+
+    private boolean isInventoryNameValid(String name) {
+        List<String> containerNames = new ArrayList<>();
+        containerNames.add("*Chest*");
+        containerNames.add("*Barrel*");
+        containerNames.add("*Drawer*");
+
+        for (String containerName : containerNames) {
+            String regex = containerName.replace("*", ".*").trim();
+
+            if (name.matches(regex)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // Implemented without a loop, because the order of the arguments in the "new InventoryLargeChest()" is important.

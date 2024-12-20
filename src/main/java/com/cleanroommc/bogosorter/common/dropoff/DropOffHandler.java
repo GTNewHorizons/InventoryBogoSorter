@@ -13,6 +13,10 @@ public class DropOffHandler {
     private int startSlot;
     private int endSlot;
 
+    public static boolean enableDroppOff = true;
+    public static boolean dropoffRender = true;
+    public static boolean dropoffChatMessage = true;
+
     public DropOffHandler(InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;
         this.playerInventory = inventoryManager.getPlayer().inventory;
