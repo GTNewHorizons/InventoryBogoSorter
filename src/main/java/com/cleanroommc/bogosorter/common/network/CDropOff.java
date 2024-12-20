@@ -1,13 +1,17 @@
 package com.cleanroommc.bogosorter.common.network;
 
+import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.dropoff.InteractionResult;
 import com.cleanroommc.bogosorter.common.dropoff.InventoryData;
+import com.cleanroommc.bogosorter.common.dropoff.InventoryManager;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCubeTarget;
-import com.cleanroommc.bogosorter.common.dropoff.tasks.MainTask;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -31,11 +35,38 @@ public class CDropOff implements IPacket {
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        MainTask mainTask = new MainTask(handler.playerEntity);
+        EntityPlayerMP player = handler.playerEntity;
+        InventoryManager inventoryManager = new InventoryManager(player);
+        DropOffHandler dropOffHandler = new DropOffHandler(inventoryManager);
+        dropOffHandler.setItemsCounter(0);
 
-        mainTask.run();
+        List<InventoryData> inventoryDataList = inventoryManager.getNearbyInventories();
 
-        List<InventoryData> inventoryDataList = mainTask.getInventoryDataList();
+        for (InventoryData inventoryData : inventoryDataList) {
+            IInventory inventory = inventoryData.getInventory();
+
+            //if (DropOffConfig.INSTANCE.dropOff) {
+            dropOffHandler.setStartSlot(InventoryManager.Slots.FIRST);
+            dropOffHandler.setEndSlot(InventoryManager.Slots.LAST);
+
+            if (inventory instanceof TileEntityFurnace) {
+                if (inventory.getStackInSlot(InventoryManager.Slots.FIRST) == null) {
+                    dropOffHandler.setStartSlot(InventoryManager.Slots.FURNACE_FUEL);
+                }
+
+                dropOffHandler.setEndSlot(InventoryManager.Slots.FURNACE_OUT);
+            }
+
+            dropOffHandler.dropOff(inventoryData);
+            //}
+
+            inventory.markDirty();
+        }
+
+        player.inventory.markDirty();
+
+        player.inventoryContainer.detectAndSendChanges();
+
         List<RendererCubeTarget> rendererCubeTargets = new ArrayList<>();
         int affectedContainers = 0;
 
@@ -58,7 +89,7 @@ public class CDropOff implements IPacket {
             }
         }
 
-        return new SDropOffMessage(mainTask.getItemsCounter(), affectedContainers, inventoryDataList.size(), rendererCubeTargets);
+        return new SDropOffMessage(dropOffHandler.getItemsCounter(), affectedContainers, inventoryDataList.size(), rendererCubeTargets);
     }
 
 }

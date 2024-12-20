@@ -1,10 +1,16 @@
 package com.cleanroommc.bogosorter.common.network;
 
+import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCubeTarget;
-import com.cleanroommc.bogosorter.common.dropoff.tasks.ReportTask;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -64,9 +70,26 @@ public class SDropOffMessage implements IPacket {
 
     @Override
     public IPacket executeClient(NetHandlerPlayClient handler) {
-        ReportTask reportTask = new ReportTask(itemsCounter, affectedContainers, totalContainers, rendererCubeTargets);
+        //if (DropOffConfig.INSTANCE.highlightContainers) {
+        RendererCube.INSTANCE.draw(rendererCubeTargets);
+        //}
 
-        reportTask.run();
+        String message = "[" + EnumChatFormatting.BLUE + BogoSorter.NAME + EnumChatFormatting.RESET + "]: " +
+            String.valueOf(EnumChatFormatting.RED) +
+            itemsCounter +
+            EnumChatFormatting.RESET +
+            " items moved to " +
+            EnumChatFormatting.RED +
+            affectedContainers +
+            EnumChatFormatting.RESET +
+            " containers of " +
+            EnumChatFormatting.RED +
+            totalContainers +
+            EnumChatFormatting.RESET +
+            " checked in total.";
+
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("gui.button.press")));
 
         return null;
     }
