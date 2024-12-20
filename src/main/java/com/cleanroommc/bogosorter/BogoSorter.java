@@ -29,8 +29,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import java.time.LocalDate;
 import java.time.Month;
 
-import static com.cleanroommc.bogosorter.ClientEventHandler.configGuiKey;
-import static com.cleanroommc.bogosorter.ClientEventHandler.sortKey;
+import static com.cleanroommc.bogosorter.ClientEventHandler.*;
 
 @Mod(modid = BogoSorter.ID,
         name = BogoSorter.NAME,
@@ -75,10 +74,8 @@ public class BogoSorter {
         if (NetworkUtils.isDedicatedClient()) {
             ClientRegistry.registerKeyBinding(configGuiKey);
             ClientRegistry.registerKeyBinding(sortKey);
+            ClientRegistry.registerKeyBinding(dropoffKey);
         }
-//            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.configGuiKey);
-//            KeyBindAPI.forceCheckKeyBind(ClientEventHandler.sortKey);
-//            KeyBindAPI.setCompatible(ClientEventHandler.sortKey, Minecraft.getMinecraft().gameSettings.keyBindPickBlock);
     }
 
     @Mod.EventHandler
@@ -99,8 +96,6 @@ public class BogoSorter {
             PlayerConfig.checkPlayers();
         }
     }
-
-
 
     public static boolean isAprilFools() {
         LocalDate date = LocalDate.now();

@@ -37,3 +37,7 @@ The Inventory Tweaks code is very unpleasant to work with. I rather write my own
   - choose profile for ae2 and jei
 - configurable sort sound
 - animation?
+
+
+### Credits
+Dropoff Feature - https://www.curseforge.com/minecraft/mc-mods/dropoff - https://github.com/SCP002/DropOff/tree/1.7.10

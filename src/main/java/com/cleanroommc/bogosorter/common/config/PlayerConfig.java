@@ -17,7 +17,6 @@ public class PlayerConfig {
 
     private static final Map<EntityPlayerMP, PlayerConfig> playerConfig = new Object2ObjectOpenHashMap<>();
     private static final PlayerConfig CLIENT = new PlayerConfig();
-
     public boolean enableAutoRefill = true;
     public int autoRefillDamageThreshold = 1;
 
