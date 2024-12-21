@@ -53,7 +53,6 @@ public class RefillHandler {
 
     @SubscribeEvent
     public void onDestroyItem(PlayerDestroyItemEvent event) {
-        System.out.println(event);
         if (event.entityPlayer == null ||
                 event.entityPlayer.worldObj == null ||
                 event.entityPlayer.worldObj.isRemote ||
@@ -70,7 +69,6 @@ public class RefillHandler {
      * Called via Mixin
      */
     public static void onDestroyItem(EntityPlayer player, ItemStack brokenItem) {
-        System.out.println(brokenItem);
         if (!PlayerConfig.get(player).enableAutoRefill) return;
 
         if (shouldHandleRefill(player, brokenItem)) {
