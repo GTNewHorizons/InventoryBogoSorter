@@ -17,7 +17,8 @@ public enum Mixins {
     Vanilla_BOTH(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)
         .setSide(Side.BOTH).setPhase(Phase.EARLY).addMixinClasses(
             "minecraft.ContainerHorseInventoryMixin",
-//           "minecraft.MixinEntityPlayer",
+           "minecraft.MixinEntityPlayer",
+            "minecraft.MixinItemStack",
             "minecraft.SlotMixin"
         )),
     Vanilla_CLIENT(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)

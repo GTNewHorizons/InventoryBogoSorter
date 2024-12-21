@@ -63,6 +63,9 @@ public class ShortcutHandler {
         if (toInsert == null) {
             toInsert = stack.copy();
             toInsert.stackSize -= (amount);
+            if (toInsert.stackSize == 0){
+                toInsert = null;
+            }
             slot.bogo$putStack(toInsert);
             // needed for crafting tables
             slot.bogo$onSlotChanged(stack, toInsert);
@@ -100,9 +103,13 @@ public class ShortcutHandler {
                    continue;
                ItemStack copy = stackInSlot.copy();
                ItemStack remainder = BogoSortAPI.insert(container, otherSlots.getSlots(), copy);
-               int inserted = stackInSlot.stackSize - remainder.stackSize;
-               if (inserted > 0) {
-                   slot1.bogo$putStack(remainder.stackSize > 0 ? remainder : null);
+               if (remainder == null){
+                   slot1.bogo$putStack(null);
+               } else {
+                   int inserted = stackInSlot.stackSize - remainder.stackSize;
+                   if (inserted > 0) {
+                       slot1.bogo$putStack(remainder.stackSize > 0 ? remainder : null);
+                   }
                }
            }
        }
@@ -150,7 +157,7 @@ public class ShortcutHandler {
             newStack.stackSize = (amount);
             stack.stackSize -= (amount);
             slot.bogo$putStack(newStack);
-            return stack == null ? null : stack;
+            return stack.stackSize == 0 ? null : stack;
         }
         if (stackInSlot != null && ItemHandlerHelper.canItemStacksStack(stackInSlot, stack)) {
             int amount = Math.min(slot.bogo$getItemStackLimit(stackInSlot), Math.min(stack.stackSize, slot.bogo$getMaxStackSize(stack) - stackInSlot.stackSize));
@@ -158,7 +165,7 @@ public class ShortcutHandler {
             stack.stackSize -=(amount);
             stackInSlot.stackSize +=(amount);
             slot.bogo$putStack(stackInSlot);
-            return stack == null ? null : stack;
+            return stack.stackSize == 0 ? null : stack;
         }
         return stack;
     }
