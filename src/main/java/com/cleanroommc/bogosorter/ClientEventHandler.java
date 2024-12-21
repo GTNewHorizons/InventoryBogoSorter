@@ -5,7 +5,11 @@ import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
+import com.cleanroommc.bogosorter.common.config.PlayerConfig;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
+import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.network.CSort;
+import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.sort.ClientSortData;
 import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
@@ -37,7 +41,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -54,6 +58,7 @@ public class ClientEventHandler {
     public static final List<ItemStack> allItems = new ArrayList<>();
     public static final KeyBinding configGuiKey = new KeyBinding("key.sort_config", Keyboard.KEY_K, "key.categories.bogosorter");
     public static final KeyBinding sortKey = new KeyBinding("key.sort", -98, "key.categories.bogosorter");
+    public static final KeyBinding dropoffKey = new KeyBinding("key.dropoff", Keyboard.KEY_SEMICOLON, "key.categories.bogosorter");
     public static final boolean isDeobfuscatedEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
     public static final KeyBind moveAllSame = KeyBind.builder("move_all_same")
@@ -86,6 +91,7 @@ public class ClientEventHandler {
     private static long timeConfigGui = 0;
     private static long timeSort = 0;
     private static long timeShortcut = 0;
+    private static long timeDropoff = 0;
     private static long ticks = 0;
 
     private static GuiScreen nextGui = null;
@@ -147,6 +153,15 @@ public class ClientEventHandler {
                 timeConfigGui = t;
             }
         }
+        if (Keypress(dropoffKey)){
+            long t = Minecraft.getSystemTime();
+            if (t - timeDropoff > 500) {
+                if (DropOffHandler.enableDroppOff){
+                    NetworkHandler.sendToServer(new CDropOff());
+                }
+                timeDropoff = t;
+            }
+        }
         handleInput(null);
     }
 
@@ -196,6 +211,13 @@ public class ClientEventHandler {
         KeyBind.checkKeys(getTicks());
         if (event.gui instanceof GuiContainer && handleInput((GuiContainer) event.gui)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderWorldLastEvent(RenderWorldLastEvent event) {
+        if (DropOffHandler.dropoffRender){
+            RendererCube.INSTANCE.tryToRender(event);
         }
     }
 
