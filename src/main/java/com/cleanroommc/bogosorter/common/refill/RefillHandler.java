@@ -242,12 +242,10 @@ public class RefillHandler {
             inventory.armorInventory[index - 36] = item;
             slot += 5;
         }
-//        else {
-//            inventory.offHandInventory.set(0, item);
-//            slot = 45;
-//        }
         if (item != null) {
             player.inventoryContainer.inventoryItemStacks.set(slot, null);
+        } else {
+            player.inventoryContainer.detectAndSendChanges();
         }
     }
 
