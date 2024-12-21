@@ -110,7 +110,7 @@ public class RefillHandler {
     public boolean handleRefill() {
         if (brokenItem.getItem() instanceof ItemBlock) {
             return findItem(false);
-        } else if (brokenItem.isItemStackDamageable()) {
+        } else if (brokenItem.isItemStackDamageable() || brokenItem.getItem() instanceof Item) {
             if (isGT5uTool(brokenItem)) {
                     exactItemMatcher = (stack, stack2) -> {
                         if (stack.hasTagCompound() != stack2.hasTagCompound()) return false;
