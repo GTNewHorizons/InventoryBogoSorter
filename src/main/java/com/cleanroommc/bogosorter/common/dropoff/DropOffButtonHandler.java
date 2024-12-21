@@ -16,6 +16,9 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class DropOffButtonHandler {
 
+    public static int buttonX = 80;
+    public static int buttonY = 12;
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
