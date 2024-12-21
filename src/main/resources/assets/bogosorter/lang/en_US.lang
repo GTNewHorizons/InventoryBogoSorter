@@ -1,6 +1,7 @@
 key.categories.bogosorter=Inventory Bogo Sorter
 key.sort_config=Open Sort Config
 key.sort=Sort Inventory
+key.dropoff=Dropoff To Nearby Inventories 
 
 bogosort.gui.title=Sort Config
 bogosort.gui.tab.general.name=General
@@ -17,6 +18,11 @@ bogosort.gui.descending=Descending
 bogosort.gui.hotbar_scrolling=Enable hotbar column scrolling
 bogosort.gui.hotbar_scrolling.tooltip=Scroll though inventory column by holding ALT
 bogosort.gui.enabled=Enabled
+bogosort.gui.dropoff_enable=Enable Dropoff
+bogosort.gui.dropoff_render=Show Dropoff Targets
+bogosort.gui.dropoff_chatmessage=Show Dropoff Chat Message
+
+
 
 bogosort.command.config_relaod.success=Reloaded sorting config
 

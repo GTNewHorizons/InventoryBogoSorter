@@ -26,6 +26,8 @@ public class NetworkHandler {
         registerC2S(CHotbarSwap.class);
         registerS2C(SReloadConfig.class);
         registerS2C(SRefillSound.class);
+        registerC2S(CDropOff.class);
+        registerS2C(SDropOffMessage.class);
     }
 
     private static void registerC2S(Class<? extends IPacket> clazz) {

@@ -6,6 +6,7 @@ import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -165,7 +166,49 @@ public class ConfigGui extends CustomModularScreen {
                                               .marginLeft(10)
                                               .height(14)
                                               .addTooltipLine(IKey.lang("bogosort.gui.hotbar_scrolling.tooltip"))
-                                              .tooltipShowUpTimer(10)));
+                                              .tooltipShowUpTimer(10)))
+            .child(new Row()
+                .widthRel(1f).height(14)
+                .margin(0, 2)
+                .child(new CycleButtonWidget()
+                    .value(new BoolValue.Dynamic(() -> DropOffHandler.enableDroppOff, val -> DropOffHandler.enableDroppOff = val))
+                    .stateOverlay(TOGGLE_BUTTON)
+                    .disableHoverBackground()
+                    .size(14, 14)
+                    .margin(8, 0)
+                    .background(IDrawable.EMPTY))
+                .child(IKey.lang("bogosort.gui.dropoff_enable").asWidget()
+                    .height(14)
+                    .marginLeft(10)
+                    .expanded()))
+            .child(new Row()
+                .widthRel(1f).height(14)
+                .margin(0, 2)
+                .child(new CycleButtonWidget()
+                    .value(new BoolValue.Dynamic(() -> DropOffHandler.dropoffRender, val -> DropOffHandler.dropoffRender = val))
+                    .stateOverlay(TOGGLE_BUTTON)
+                    .disableHoverBackground()
+                    .size(14, 14)
+                    .margin(8, 0)
+                    .background(IDrawable.EMPTY))
+                .child(IKey.lang("bogosort.gui.dropoff_render").asWidget()
+                    .height(14)
+                    .marginLeft(10)
+                    .expanded()))
+            .child(new Row()
+                .widthRel(1f).height(14)
+                .margin(0, 2)
+                .child(new CycleButtonWidget()
+                    .value(new BoolValue.Dynamic(() -> DropOffHandler.dropoffChatMessage, val -> DropOffHandler.dropoffChatMessage = val))
+                    .stateOverlay(TOGGLE_BUTTON)
+                    .disableHoverBackground()
+                    .size(14, 14)
+                    .margin(8, 0)
+                    .background(IDrawable.EMPTY))
+                .child(IKey.lang("bogosort.gui.dropoff_chatmessage").asWidget()
+                    .height(14)
+                    .marginLeft(10)
+                    .expanded()));
     }
 
     public IWidget createProfilesConfig(GuiContext context) {

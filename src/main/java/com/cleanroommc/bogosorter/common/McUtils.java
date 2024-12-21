@@ -3,9 +3,15 @@ package com.cleanroommc.bogosorter.common;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,5 +90,14 @@ public class McUtils {
         }
 
         return stack;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void playSound(String sound) {
+        SoundHandler soundHandler = Minecraft.getMinecraft().getSoundHandler();
+        ResourceLocation resourceLocation = new ResourceLocation(sound);
+        PositionedSoundRecord record = PositionedSoundRecord.func_147674_a(resourceLocation, 1.0f);
+
+        soundHandler.playSound(record);
     }
 }
