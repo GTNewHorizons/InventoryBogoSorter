@@ -19,7 +19,6 @@ public enum Mixins {
             "minecraft.ContainerHorseInventoryMixin",
            "minecraft.MixinEntityPlayer",
             "minecraft.MixinItemStack",
-            "minecraft.ItemInWorldManagerMixin",
             "minecraft.SlotMixin"
         )),
     Vanilla_CLIENT(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)

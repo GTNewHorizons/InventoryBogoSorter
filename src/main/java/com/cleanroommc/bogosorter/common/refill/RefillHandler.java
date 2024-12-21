@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
@@ -59,21 +60,9 @@ public class RefillHandler {
                 !PlayerConfig.get(event.entityPlayer).enableAutoRefill)
             return;
 
-        if (event.original.getItem() instanceof ItemBlock && shouldHandleRefill(event.entityPlayer, event.original)) {
+        if (event.original.getItem() != null && shouldHandleRefill(event.entityPlayer, event.original)) {
             int index = event.entityPlayer.inventory.currentItem;
             handle(index, event.original, event.entityPlayer, false);
-        }
-    }
-
-    /**
-     * Called via Mixin
-     */
-    public static void onDestroyItem(EntityPlayer player, ItemStack brokenItem) {
-        if (!PlayerConfig.get(player).enableAutoRefill) return;
-
-        if (shouldHandleRefill(player, brokenItem)) {
-            int index = player.inventory.currentItem;
-            handle(index, brokenItem, player, false);
         }
     }
 
@@ -219,6 +208,7 @@ public class RefillHandler {
         if (!this.swapItems) current = getItem(this.hotbarIndex);
         setAndSyncSlot(hotbarIndex, refill.copy());
         setAndSyncSlot(refillIndex, swapItems ? brokenItem.copy() : null);
+        player.inventoryContainer.detectAndSendChanges();
         if (current != null) {
             // the broken item replaced itself with something
             // insert the item into another slot to prevent it from being lost
@@ -244,8 +234,6 @@ public class RefillHandler {
         }
         if (item != null) {
             player.inventoryContainer.inventoryItemStacks.set(slot, null);
-        } else {
-            player.inventoryContainer.detectAndSendChanges();
         }
     }
 
