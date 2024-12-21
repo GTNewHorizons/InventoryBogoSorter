@@ -34,10 +34,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
      private void onItemUseFinish(CallbackInfo ci, @Local(name = "itemstack") ItemStack returnedItem) {
          EntityPlayer player = bogosorter$EntityPlayer();
          if (!PlayerConfig.get(player).enableAutoRefill) return;
+
          //  used in cases where a modded item returns itself with a different durability (AA coffee, Botania Vials, etc)
-//         if (ItemStack.areItemStackTagsEqual(activeItemStackCopy, itemstack)) {
-//             return;
-//         }
+         //  bug: once it empties, it wont refill with the same type
+         if (returnedItem != null && (returnedItem.getItem() == itemInUse.getItem())){
+             return;
+         }
 
          if (RefillHandler.shouldHandleRefill(player, itemInUse, true)) {
              boolean didSwap = RefillHandler.handle(player.inventory.currentItem, itemInUse, player, false);
