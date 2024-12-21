@@ -6,6 +6,7 @@ import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.network.SRefillSound;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import gregtech.api.items.MetaGeneratedTool;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntListIterator;
@@ -22,17 +23,20 @@ import java.util.function.BiPredicate;
 
 public class RefillHandler {
 
-    private static final Class<?> gtToolClass;
-
-    static {
-        Class<?> clazz;
-        try {
-            clazz = Class.forName("gregtech.api.items.toolitem.IGTTool", false, RefillHandler.class.getClassLoader());
-        } catch (Exception ignored) {
-            clazz = null;
-        }
-        gtToolClass = clazz;
+    public RefillHandler(){
     }
+
+//    private static final Class<?> gtToolClass;
+//
+//    static {
+//        Class<?> clazz;
+//        try {
+//            clazz = Class.forName("gregtech.api.items.MetaGeneratedTool", false, RefillHandler.class.getClassLoader());
+//        } catch (Exception ignored) {
+//            clazz = null;
+//        }
+//        gtToolClass = clazz;
+//    }
 
     private static final int[][] INVENTORY_PROXIMITY_MAP = {
             {1, 2, 3, 4, 5, 6, 7, 8, 27, 18, 9, 28, 19, 10, 29, 20, 11, 30, 21, 12, 31, 22, 13, 32, 23, 14, 33, 24, 15, 34, 25, 16, 35, 26, 17},
@@ -48,7 +52,8 @@ public class RefillHandler {
 
 
     @SubscribeEvent
-    public static void onDestroyItem(PlayerDestroyItemEvent event) {
+    public void onDestroyItem(PlayerDestroyItemEvent event) {
+        System.out.println(event);
         if (event.entityPlayer == null ||
                 event.entityPlayer.worldObj == null ||
                 event.entityPlayer.worldObj.isRemote ||
@@ -56,19 +61,20 @@ public class RefillHandler {
             return;
 
         if (event.original.getItem() instanceof ItemBlock && shouldHandleRefill(event.entityPlayer, event.original)) {
-            int index = event.entityPlayer.getHeldItem() == null ? event.entityPlayer.inventory.currentItem : 40;
+            int index = event.entityPlayer.inventory.currentItem;
             handle(index, event.original, event.entityPlayer, false);
         }
     }
 
     /**
-     * Called via asm
+     * Called via Mixin
      */
     public static void onDestroyItem(EntityPlayer player, ItemStack brokenItem) {
+        System.out.println(brokenItem);
         if (!PlayerConfig.get(player).enableAutoRefill) return;
 
         if (shouldHandleRefill(player, brokenItem)) {
-            int index = player.getHeldItem() != null  ? player.inventory.currentItem : 40;
+            int index = player.inventory.currentItem;
             handle(index, brokenItem, player, false);
         }
     }
@@ -88,14 +94,16 @@ public class RefillHandler {
 
     private BiPredicate<ItemStack, ItemStack> similarItemMatcher = (stack, stack2) -> stack.getItem() == stack2.getItem() && stack.getItemDamage() == stack2.getItemDamage();
     private BiPredicate<ItemStack, ItemStack> exactItemMatcher = RefillHandler::matchTags;
-    private final int hotbarIndex;
-    private final IntList slots;
-    private final ItemStack brokenItem;
-    private final EntityPlayer player;
-    private final InventoryPlayer inventory;
-    private final PlayerConfig playerConfig;
-    private final boolean swapItems;
-    private boolean isDamageable = false;
+    private int hotbarIndex;
+    private IntList slots;
+    private ItemStack brokenItem;
+    private EntityPlayer player;
+    private InventoryPlayer inventory;
+    private PlayerConfig playerConfig;
+    private boolean swapItems;
+    private boolean isDamageable;
+
+
 
     public RefillHandler(int hotbarIndex, ItemStack brokenItem, EntityPlayer player, boolean swapItems) {
         this.hotbarIndex = hotbarIndex;
@@ -107,6 +115,7 @@ public class RefillHandler {
         this.swapItems = swapItems;
     }
 
+
     public RefillHandler(int hotbarIndex, ItemStack brokenItem, EntityPlayer player) {
         this(hotbarIndex, brokenItem, player, false);
     }
@@ -115,12 +124,13 @@ public class RefillHandler {
         if (brokenItem.getItem() instanceof ItemBlock) {
             return findItem(false);
         } else if (brokenItem.isItemStackDamageable()) {
-            if (gtToolClass != null ) { // && isGTCEuTool(brokenItem))
-                exactItemMatcher = (stack, stack2) -> {
-                    if (stack.hasTagCompound() != stack2.hasTagCompound()) return false;
-                    if (!stack.hasTagCompound()) return true;
-                    return OreDictHelper.getGtToolMaterial(stack).equals(OreDictHelper.getGtToolMaterial(stack2));
-                };
+            System.out.println(isGT5uTool(brokenItem));
+            if (isGT5uTool(brokenItem)) {
+                    exactItemMatcher = (stack, stack2) -> {
+                        if (stack.hasTagCompound() != stack2.hasTagCompound()) return false;
+                        if (!stack.hasTagCompound()) return true;
+                        return OreDictHelper.getGtToolMaterial(stack).equals(OreDictHelper.getGtToolMaterial(stack2));
+                    };
             } else {
                 similarItemMatcher = (stack, stack2) -> stack.getItem() == stack2.getItem();
             }
@@ -131,9 +141,9 @@ public class RefillHandler {
         }
     }
 
-//    private static boolean isGTCEuTool(ItemStack itemStack) {
-//        return itemStack.getItem() instanceof IGTTool;
-//    }
+    private static boolean isGT5uTool(ItemStack itemStack) {
+        return itemStack.getItem() instanceof MetaGeneratedTool;
+    }
 
     private boolean findItem(boolean exactOnly) {
         ItemStack firstItemMatch = null;

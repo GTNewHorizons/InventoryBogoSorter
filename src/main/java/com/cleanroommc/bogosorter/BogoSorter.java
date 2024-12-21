@@ -58,7 +58,7 @@ public class BogoSorter {
         DefaultRules.init(BogoSortAPI.INSTANCE);
         DefaultCompat.init(BogoSortAPI.INSTANCE);
         Serializer.loadConfig();
-        MinecraftForge.EVENT_BUS.register(RefillHandler.class);
+        MinecraftForge.EVENT_BUS.register(new RefillHandler());
         if (NetworkUtils.isDedicatedClient()) {
             MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
             FMLCommonHandler.instance().bus().register(new ClientEventHandler());
