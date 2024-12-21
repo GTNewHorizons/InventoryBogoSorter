@@ -6,6 +6,7 @@ import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.network.SRefillSound;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import gregtech.api.items.GTGenericItem;
 import gregtech.api.items.MetaGeneratedTool;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -110,8 +111,8 @@ public class RefillHandler {
     public boolean handleRefill() {
         if (brokenItem.getItem() instanceof ItemBlock) {
             return findItem(false);
-        } else if (brokenItem.isItemStackDamageable() || brokenItem.getItem() instanceof Item) {
-            if (isGT5uTool(brokenItem)) {
+        } else if (brokenItem.isItemStackDamageable() || brokenItem.getItem() instanceof GTGenericItem) {
+            if (brokenItem.getItem() instanceof MetaGeneratedTool) {
                     exactItemMatcher = (stack, stack2) -> {
                         if (stack.hasTagCompound() != stack2.hasTagCompound()) return false;
                         if (!stack.hasTagCompound()) return true;
