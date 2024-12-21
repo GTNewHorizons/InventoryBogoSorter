@@ -40,8 +40,12 @@ import wanion.avaritiaddons.block.chest.ContainerAvaritiaddonsChest;
              }
 
              toInsert = BogoSortAPI.insert(container, otherSlots.getSlots(), toInsert);
-             stack.stackSize -= (amount - toInsert.stackSize);
-             slot.bogo$putStack(toInsert.stackSize > 0 ? toInsert : null);
+             if (toInsert == null){
+                 slot.bogo$putStack(null);
+             } else {
+                stack.stackSize -= (amount - toInsert.stackSize);
+                slot.bogo$putStack(toInsert.stackSize > 0 ? toInsert : null);
+             }
              cir.setReturnValue(toInsert);
          }
          cir.setReturnValue(null);

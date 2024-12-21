@@ -17,15 +17,6 @@ public class DamageHelper {
         if (!playerConfig.enableAutoRefill || playerConfig.autoRefillDamageThreshold <= 0) return false;
 
         if (RefillHandler.shouldHandleRefill(player, itemStack) && isNotArmor(itemStack)) {
-            ItemStack handItem = player.getHeldItem();
-            if (handItem != itemStack) {
-//                handItem = player.getHeldItemOffhand();
-//                if (handItem != itemStack) {
-//                    return false;
-//                }
-                return false;
-            }
-
             int durabilityLeft = itemStack.getMaxDamage() - itemStack.getItemDamage();
             if (durabilityLeft >= 0 && durabilityLeft < playerConfig.autoRefillDamageThreshold) {
                 return RefillHandler.handle(player.inventory.currentItem, itemStack, player, true);
@@ -34,11 +25,10 @@ public class DamageHelper {
         return false;
     }
 
+
     private static boolean isNotArmor(ItemStack itemStack) {
         if (itemStack.getItem() instanceof ItemArmor || itemStack.getItem() instanceof ISpecialArmor) return false;
-//        EntityEquipmentSlot slot = itemStack.getItem().getEquipmentSlot(itemStack);
-//        return slot == null || slot == EntityEquipmentSlot.MAINHAND || slot == EntityEquipmentSlot.OFFHAND;
-        return false;
+        return true;
     }
 
     public static int getDurability(ItemStack item) {

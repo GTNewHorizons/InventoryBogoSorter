@@ -87,12 +87,13 @@ public class OreDictHelper {
     @Optional.Method(modid = "gregtech")
     @NotNull
     public static String getGtToolMaterial(ItemStack itemStack) {
-        NBTTagCompound statsTag = itemStack.stackTagCompound.getCompoundTag("GT.Tool");
+        NBTTagCompound statsTag = itemStack.stackTagCompound.getCompoundTag("GT.ToolStats");
+        System.out.println(statsTag);
         if (statsTag == null) {
             return "";
         }
-        if (statsTag.hasKey("Material")) {
-            return statsTag.getString("Material");
+        if (statsTag.hasKey("PrimaryMaterial")) {
+            return statsTag.getString("PrimaryMaterial");
         }
         return "";
     }
