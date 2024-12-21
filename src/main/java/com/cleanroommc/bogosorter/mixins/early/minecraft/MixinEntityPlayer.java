@@ -34,8 +34,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
      private void onItemUseFinish(CallbackInfo ci, @Local(name = "itemstack") ItemStack returnedItem) {
          EntityPlayer player = bogosorter$EntityPlayer();
          if (!PlayerConfig.get(player).enableAutoRefill) return;
-//         //  used in cases where a modded item returns itself with a different durability (AA coffee, Botania Vials, etc)
-//         if (ItemStack.areItemsEqualIgnoreDurability(activeItemStackCopy, itemstack)) {
+         //  used in cases where a modded item returns itself with a different durability (AA coffee, Botania Vials, etc)
+//         if (ItemStack.areItemStackTagsEqual(activeItemStackCopy, itemstack)) {
 //             return;
 //         }
 
