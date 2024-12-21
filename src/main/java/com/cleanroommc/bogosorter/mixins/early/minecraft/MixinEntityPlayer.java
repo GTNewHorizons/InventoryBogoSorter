@@ -32,8 +32,8 @@ package com.cleanroommc.bogosorter.mixins.early.minecraft;// package com.cleanro
          if (!(bogosorter$EntityPlayer() instanceof EntityPlayer)) return;
          EntityPlayer player = (EntityPlayer) bogosorter$EntityPlayer();
          if (!PlayerConfig.get(player).enableAutoRefill) return;
-//         //  used in cases where a modded item returns itself with a different durability (AA coffee, Botania Vials, etc)
-//         if (ItemStack.areItemsEqualIgnoreDurability(activeItemStackCopy, itemstack)) {
+         //  used in cases where a modded item returns itself with a different durability (AA coffee, Botania Vials, etc)
+//         if (ItemStack.areItemStackTagsEqual(activeItemStackCopy, itemstack)) {
 //             return;
 //         }
 
@@ -48,18 +48,6 @@ package com.cleanroommc.bogosorter.mixins.early.minecraft;// package com.cleanro
              }
          }
      }
-    @Inject(method = "destroyCurrentEquippedItem",
-        at = @At(
-        value = "INVOKE",
-        target = "net/minecraftforge/event/entity/player/PlayerDestroyItemEvent.<init>(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/item/ItemStack;)V", // The target method to inject after
-        shift = At.Shift.BY , by = 2
-    ),
-        locals = LocalCapture.CAPTURE_FAILHARD )
-    private void destroyCurrentEquippedItem(CallbackInfo ci, ItemStack orig) {
-         System.out.println(orig);
-        EntityPlayer player = (EntityPlayer) bogosorter$EntityPlayer();
-        RefillHandler.onDestroyItem(player, orig);
-    }
 
      private EntityPlayer bogosorter$EntityPlayer() {
          return (EntityPlayer) (Object) this;

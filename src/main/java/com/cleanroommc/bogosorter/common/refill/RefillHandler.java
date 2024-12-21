@@ -59,23 +59,12 @@ public class RefillHandler {
                 !PlayerConfig.get(event.entityPlayer).enableAutoRefill)
             return;
 
-        if (event.original.getItem() instanceof ItemBlock && shouldHandleRefill(event.entityPlayer, event.original)) {
+        if (shouldHandleRefill(event.entityPlayer, event.original)) {
             int index = event.entityPlayer.inventory.currentItem;
             handle(index, event.original, event.entityPlayer, false);
         }
     }
 
-    /**
-     * Called via Mixin
-     */
-    public static void onDestroyItem(EntityPlayer player, ItemStack brokenItem) {
-        if (!PlayerConfig.get(player).enableAutoRefill) return;
-
-        if (shouldHandleRefill(player, brokenItem)) {
-            int index = player.inventory.currentItem;
-            handle(index, brokenItem, player, false);
-        }
-    }
 
     public static boolean handle(int hotbarIndex, ItemStack brokenItem, EntityPlayer player, boolean swap) {
         return new RefillHandler(hotbarIndex, brokenItem, player, swap).handleRefill();
