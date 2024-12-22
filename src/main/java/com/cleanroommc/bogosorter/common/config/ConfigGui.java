@@ -80,6 +80,14 @@ public class ConfigGui extends CustomModularScreen {
             public boolean shouldAnimate() {
                 return super.shouldAnimate() && ConfigGui.this.old == null;
             }
+
+            @Override
+            public void onClose() {
+                super.onClose();
+                Serializer.saveConfig();
+                PlayerConfig.syncToServer();
+                MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
+            }
         }.size(300, 250).align(Alignment.Center);
 
         PagedWidget.Controller controller = new PagedWidget.Controller();

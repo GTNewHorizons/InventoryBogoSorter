@@ -22,7 +22,9 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -93,6 +95,11 @@ public class BogoSorter {
         if (event.world.isRemote && event.entity instanceof EntityPlayer) {
             PlayerConfig.syncToServer();
         }
+    }
+    @SubscribeEvent
+    public void onPlayerLogout(FMLNetworkEvent.ClientDisconnectionFromServerEvent ignored){
+        // save config file on logout
+        Serializer.saveConfig();
     }
 
     @SubscribeEvent

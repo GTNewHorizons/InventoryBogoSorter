@@ -173,7 +173,8 @@ public class ClientEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onGuiKeyInput(KeyboardInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
-        if (!(event.gui instanceof GuiContainer)) return;
+        if (!(event.gui instanceof GuiContainer))
+            return;
         if (handleInput((GuiContainer) event.gui)) {
             event.setCanceled(true);
             return;
