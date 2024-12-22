@@ -6,6 +6,7 @@ import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffButtonHandler;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
@@ -178,6 +179,20 @@ public class ConfigGui extends CustomModularScreen {
                     .margin(8, 0)
                     .background(IDrawable.EMPTY))
                 .child(IKey.lang("bogosort.gui.dropoff_enable").asWidget()
+                    .height(14)
+                    .marginLeft(10)
+                    .expanded()))
+            .child(new Row()
+                .widthRel(1f).height(14)
+                .margin(0, 2)
+                .child(new CycleButtonWidget()
+                    .value(new BoolValue.Dynamic(() -> DropOffButtonHandler.showButton, val -> DropOffButtonHandler.showButton = val))
+                    .stateOverlay(TOGGLE_BUTTON)
+                    .disableHoverBackground()
+                    .size(14, 14)
+                    .margin(8, 0)
+                    .background(IDrawable.EMPTY))
+                .child(IKey.lang("bogosort.gui.dropoffbutton_enable").asWidget()
                     .height(14)
                     .marginLeft(10)
                     .expanded()))

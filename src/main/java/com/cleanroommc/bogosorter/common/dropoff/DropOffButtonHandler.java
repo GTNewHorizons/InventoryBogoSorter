@@ -18,12 +18,13 @@ public class DropOffButtonHandler {
 
     public static int buttonX = 80;
     public static int buttonY = 12;
+    public static boolean showButton = true;
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
         GuiScreen screen = event.gui;
-        if (screen instanceof GuiContainerCreative) {
+        if (!showButton || screen instanceof GuiContainerCreative) {
             return;
         }
         try {
@@ -40,6 +41,8 @@ public class DropOffButtonHandler {
     @SubscribeEvent
     public  void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
         GuiScreen screen = event.gui;
+
+        if (!showButton) return;
 
         if (screen instanceof InventoryEffectRenderer) {
             for (GuiButton guiButton : ((IGuiContainerAccessor) event.gui).getButtons()) {
