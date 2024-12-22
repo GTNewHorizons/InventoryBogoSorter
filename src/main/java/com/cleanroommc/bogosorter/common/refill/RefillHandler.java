@@ -5,6 +5,7 @@ import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.network.SRefillSound;
+import com.cleanroommc.bogosorter.compat.loader.Mods;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import gregtech.api.items.GTGenericItem;
 import gregtech.api.items.MetaGeneratedTool;
@@ -111,8 +112,8 @@ public class RefillHandler {
     public boolean handleRefill() {
         if (brokenItem.getItem() instanceof ItemBlock) {
             return findItem(false);
-        } else if (brokenItem.isItemStackDamageable() || brokenItem.getItem() instanceof GTGenericItem) {
-            if (brokenItem.getItem() instanceof MetaGeneratedTool) {
+        } else if (brokenItem.isItemStackDamageable() || ( Mods.GT5u.isLoaded() && brokenItem.getItem() instanceof GTGenericItem)) {
+            if (Mods.GT5u.isLoaded() && brokenItem.getItem() instanceof MetaGeneratedTool) {
                     exactItemMatcher = (stack, stack2) -> {
                         if (stack.hasTagCompound() != stack2.hasTagCompound()) return false;
                         if (!stack.hasTagCompound()) return true;
