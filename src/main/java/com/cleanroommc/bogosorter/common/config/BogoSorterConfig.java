@@ -43,6 +43,7 @@ public class BogoSorterConfig {
         general.addProperty("enableDropoff", DropOffHandler.enableDroppOff);
         general.addProperty("dropoffRender",DropOffHandler.dropoffRender);
         general.addProperty("dropoffChatMessage",DropOffHandler.dropoffChatMessage);
+        general.addProperty("dropoffButtonShow", DropOffButtonHandler.showButton);
         general.addProperty("dropoffButtonX", DropOffButtonHandler.buttonX);
         general.addProperty("dropoffButtonY",DropOffButtonHandler.buttonY);
         general.addProperty("enableHotbarSwap", HotbarSwap.isEnabled());
@@ -85,6 +86,7 @@ public class BogoSorterConfig {
             DropOffHandler.enableDroppOff = JsonHelper.getBoolean(general, true, "enableDropoff");
             DropOffHandler.dropoffRender = JsonHelper.getBoolean(general, true, "dropoffRender");
             DropOffHandler.dropoffChatMessage = JsonHelper.getBoolean(general, true, "dropoffChatMessage");
+            DropOffButtonHandler.showButton = JsonHelper.getBoolean(general, true, "dropoffButtonShow");
             DropOffButtonHandler.buttonX = JsonHelper.getInt(general, 80, "dropoffButtonX");
             DropOffButtonHandler.buttonY = JsonHelper.getInt(general, 12, "dropoffButtonY");
             HotbarSwap.setEnabled(JsonHelper.getBoolean(general, true, "enableHotbarSwap"));
