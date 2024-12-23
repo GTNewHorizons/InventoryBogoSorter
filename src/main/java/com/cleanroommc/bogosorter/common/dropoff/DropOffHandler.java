@@ -16,7 +16,7 @@ public class DropOffHandler {
     public static boolean enableDroppOff = true;
     public static boolean dropoffRender = true;
     public static boolean dropoffChatMessage = true;
-    public static int dropoffQuotaInMS = 1;
+    public static int dropoffQuotaInNS = 1000000;
 
     public DropOffHandler(InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;

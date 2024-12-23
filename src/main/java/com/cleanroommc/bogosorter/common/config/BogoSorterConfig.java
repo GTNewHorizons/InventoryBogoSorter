@@ -43,7 +43,7 @@ public class BogoSorterConfig {
         general.addProperty("enableDropoff", DropOffHandler.enableDroppOff);
         general.addProperty("dropoffRender",DropOffHandler.dropoffRender);
         general.addProperty("dropoffChatMessage",DropOffHandler.dropoffChatMessage);
-        general.addProperty("dropoffQuotaInMS", DropOffHandler.dropoffQuotaInMS);
+        general.addProperty("dropoffQuotaInNS", DropOffHandler.dropoffQuotaInNS);
         general.addProperty("dropoffButtonShow", DropOffButtonHandler.showButton);
         general.addProperty("dropoffButtonX", DropOffButtonHandler.buttonX);
         general.addProperty("dropoffButtonY",DropOffButtonHandler.buttonY);
@@ -87,7 +87,7 @@ public class BogoSorterConfig {
             DropOffHandler.enableDroppOff = JsonHelper.getBoolean(general, true, "enableDropoff");
             DropOffHandler.dropoffRender = JsonHelper.getBoolean(general, true, "dropoffRender");
             DropOffHandler.dropoffChatMessage = JsonHelper.getBoolean(general, true, "dropoffChatMessage");
-            DropOffHandler.dropoffQuotaInMS = JsonHelper.getInt(general, 1, "dropoffQuotaInMS"); //server only
+            DropOffHandler.dropoffQuotaInNS = JsonHelper.getInt(general, 1000000, "dropoffQuotaInNS");
             DropOffButtonHandler.showButton = JsonHelper.getBoolean(general, true, "dropoffButtonShow");
             DropOffButtonHandler.buttonX = JsonHelper.getInt(general, 80, "dropoffButtonX");
             DropOffButtonHandler.buttonY = JsonHelper.getInt(general, 12, "dropoffButtonY");

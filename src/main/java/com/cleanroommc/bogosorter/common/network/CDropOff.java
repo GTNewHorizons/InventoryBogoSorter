@@ -1,12 +1,10 @@
 package com.cleanroommc.bogosorter.common.network;
 
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.dropoff.InteractionResult;
 import com.cleanroommc.bogosorter.common.dropoff.InventoryData;
 import com.cleanroommc.bogosorter.common.dropoff.InventoryManager;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCubeTarget;
-import com.cleanroommc.bogosorter.common.sort.SortHandler;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -44,7 +42,7 @@ public class CDropOff implements IPacket {
 
         List<InventoryData> inventoryDataList = inventoryManager.getNearbyInventories();
 
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         boolean timeLimitExceeded = false;
 
         for (InventoryData inventoryData : inventoryDataList) {
@@ -69,8 +67,8 @@ public class CDropOff implements IPacket {
 
             inventory.markDirty();
 
-            long elapsedTime = System.currentTimeMillis() - startTime;
-            if (elapsedTime >= DropOffHandler.dropoffQuotaInMS) {
+            long elapsedTime = System.nanoTime() - startTime;
+            if (elapsedTime >= DropOffHandler.dropoffQuotaInNS) {
                 timeLimitExceeded = true;
             }
         }
