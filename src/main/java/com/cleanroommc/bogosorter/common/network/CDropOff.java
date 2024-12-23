@@ -44,10 +44,15 @@ public class CDropOff implements IPacket {
 
         List<InventoryData> inventoryDataList = inventoryManager.getNearbyInventories();
 
-        // insert into smaller inventories first
-        inventoryDataList.sort((a, b) -> a.getInventory().getSizeInventory() < b.getInventory().getSizeInventory() ? 1 : 0);
+        final long MAX_PROCESSING_TIME_MS = 2; // todo: server config?
+        long startTime = System.currentTimeMillis();
+        boolean timeLimitExceeded = false;
 
         for (InventoryData inventoryData : inventoryDataList) {
+            if (timeLimitExceeded){
+                inventoryData.setInteractionResult(InteractionResult.DROPOFF_QUOTA_MET);
+                continue;
+            }
             IInventory inventory = inventoryData.getInventory();
 
             dropOffHandler.setStartSlot(InventoryManager.Slots.FIRST);
@@ -64,6 +69,11 @@ public class CDropOff implements IPacket {
             dropOffHandler.dropOff(inventoryData);
 
             inventory.markDirty();
+
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            if (elapsedTime >= MAX_PROCESSING_TIME_MS) {
+                timeLimitExceeded = true;
+            }
         }
 
         player.inventory.markDirty();
@@ -74,9 +84,12 @@ public class CDropOff implements IPacket {
         int affectedContainers = 0;
 
         for (InventoryData inventoryData : inventoryDataList) {
+            InteractionResult result = inventoryData.getInteractionResult();
+            if (result == InteractionResult.DROPOFF_QUOTA_MET) continue;
+
             Color color;
 
-            if (inventoryData.getInteractionResult() == InteractionResult.DROPOFF_SUCCESS) {
+            if (result == InteractionResult.DROPOFF_SUCCESS) {
                 ++affectedContainers;
                 color = new Color(0, 255, 0);
             } else {
@@ -92,7 +105,7 @@ public class CDropOff implements IPacket {
             }
         }
 
-        return new SDropOffMessage(dropOffHandler.getItemsCounter(), affectedContainers, inventoryDataList.size(), rendererCubeTargets);
+        return new SDropOffMessage(dropOffHandler.getItemsCounter(), affectedContainers, inventoryDataList.size(), rendererCubeTargets, timeLimitExceeded);
     }
 
 }

@@ -27,16 +27,18 @@ public class SDropOffMessage implements IPacket {
     private int affectedContainers;
     private int totalContainers;
     private List<RendererCubeTarget> rendererCubeTargets = new ArrayList<>();
+    private boolean timeQuotaReached;
 
     public SDropOffMessage() {
     }
 
     public SDropOffMessage(int itemsCounter, int affectedContainers, int totalContainers,
-                           List<RendererCubeTarget> rendererCubeTargets) {
+                           List<RendererCubeTarget> rendererCubeTargets, boolean timeQuotaReached) {
         this.itemsCounter = itemsCounter;
         this.affectedContainers = affectedContainers;
         this.totalContainers = totalContainers;
         this.rendererCubeTargets = rendererCubeTargets;
+        this.timeQuotaReached = timeQuotaReached;
     }
 
     @Override
@@ -44,6 +46,7 @@ public class SDropOffMessage implements IPacket {
         buf.writeInt(itemsCounter);
         buf.writeInt(affectedContainers);
         buf.writeInt(totalContainers);
+        buf.writeBoolean(timeQuotaReached);
 
         buf.writeInt(rendererCubeTargets.size());
         for (RendererCubeTarget target : rendererCubeTargets) {
@@ -62,6 +65,7 @@ public class SDropOffMessage implements IPacket {
         itemsCounter = buf.readInt();
         affectedContainers = buf.readInt();
         totalContainers = buf.readInt();
+        timeQuotaReached = buf.readBoolean();
 
         int targetsLen = buf.readInt();
         for (int i = 0; i < targetsLen; i++) {
@@ -77,6 +81,13 @@ public class SDropOffMessage implements IPacket {
     public IPacket executeClient(NetHandlerPlayClient handler) {
         if (DropOffHandler.dropoffRender){
             RendererCube.INSTANCE.draw(rendererCubeTargets);
+        }
+
+        if (timeQuotaReached){
+            String message = "[" + EnumChatFormatting.BLUE + BogoSorter.NAME + EnumChatFormatting.RESET + "]: " +
+                EnumChatFormatting.RED + "Quota Time Limit Reached; Stopped Early";
+
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
         }
 
         if (DropOffHandler.dropoffChatMessage) {
