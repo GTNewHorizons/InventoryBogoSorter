@@ -44,7 +44,6 @@ public class CDropOff implements IPacket {
 
         List<InventoryData> inventoryDataList = inventoryManager.getNearbyInventories();
 
-        final long MAX_PROCESSING_TIME_MS = 2; // todo: server config?
         long startTime = System.currentTimeMillis();
         boolean timeLimitExceeded = false;
 
@@ -71,7 +70,7 @@ public class CDropOff implements IPacket {
             inventory.markDirty();
 
             long elapsedTime = System.currentTimeMillis() - startTime;
-            if (elapsedTime >= MAX_PROCESSING_TIME_MS) {
+            if (elapsedTime >= DropOffHandler.dropoffQuotaInMS) {
                 timeLimitExceeded = true;
             }
         }
