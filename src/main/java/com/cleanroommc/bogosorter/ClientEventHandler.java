@@ -358,7 +358,7 @@ public class ClientEventHandler {
     private static boolean Keypress(KeyBinding key){
         int keyCode = key.getKeyCode();
         if (keyCode > 0) {
-            return Keyboard.isKeyDown(keyCode);
+            return key.isPressed();
         } else {
             return Mouse.isButtonDown(100 + keyCode);
         }

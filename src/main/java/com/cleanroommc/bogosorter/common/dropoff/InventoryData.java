@@ -31,7 +31,7 @@ public class InventoryData {
     }
 
     @SuppressWarnings("SameParameterValue")
-    void setInteractionResult(InteractionResult interactionResult) {
+    public void setInteractionResult(InteractionResult interactionResult) {
         this.interactionResult = interactionResult;
     }
 

@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class InventoryManager {
 
@@ -47,9 +48,19 @@ public class InventoryManager {
 
         List<InventoryData> inventoryDataList = new ArrayList<>();
 
-        for (int x = minX; x <= maxX; ++x) {
-            for (int y = minY; y <= maxY; ++y) {
-                for (int z = minZ; z <= maxZ; ++z) {
+        // start the direction the player is facing
+        Vec3 lookVec = player.getLookVec();
+        int lookX = (int) Math.signum(lookVec.xCoord);
+        int lookY = (int) Math.signum(lookVec.yCoord);
+        int lookZ = (int) Math.signum(lookVec.zCoord);
+
+        int[] xOrder = (lookX >= 0) ? range(minX, maxX + 1) : reverseRange(minX, maxX + 1);
+        int[] yOrder = (lookY >= 0) ? range(minY, maxY + 1) : reverseRange(minY, maxY + 1);
+        int[] zOrder = (lookZ >= 0) ? range(minZ, maxZ + 1) : reverseRange(minZ, maxZ + 1);
+
+        for (int x : xOrder) {
+            for (int y : yOrder) {
+                for (int z : zOrder) {
                     TileEntity currentEntity = world.getTileEntity(x, y, z);
 
                     InventoryData currentInvData;
@@ -82,6 +93,14 @@ public class InventoryManager {
         }
 
         return inventoryDataList;
+    }
+
+    private int[] range(int start, int end) {
+        return IntStream.range(start, end).toArray();
+    }
+
+    private int[] reverseRange(int start, int end) {
+        return IntStream.range(start, end).map(i -> end - 1 - (i - start)).toArray();
     }
 
     boolean isStacksEqual(ItemStack left, ItemStack right) {
