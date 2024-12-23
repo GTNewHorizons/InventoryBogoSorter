@@ -6,6 +6,8 @@ import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCubeTarget;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -70,6 +72,7 @@ public class SDropOffMessage implements IPacket {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public IPacket executeClient(NetHandlerPlayClient handler) {
         if (DropOffHandler.dropoffRender){
