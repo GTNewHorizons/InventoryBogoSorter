@@ -11,8 +11,7 @@ import net.minecraftforge.common.ISpecialArmor;
 
 public class DamageHelper {
 
-    public static boolean damageItemHook(ItemStack itemStack) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+    public static boolean damageItemHook(ItemStack itemStack, EntityPlayer player) {
         PlayerConfig playerConfig = PlayerConfig.get(player);
         if (!playerConfig.enableAutoRefill || playerConfig.autoRefillDamageThreshold <= 0) return false;
 
