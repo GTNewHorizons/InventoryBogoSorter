@@ -1,7 +1,11 @@
 package com.cleanroommc.bogosorter.common.dropoff;
 
+import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.modularui.drawable.UITexture;
+import com.cleanroommc.modularui.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
@@ -17,6 +21,12 @@ public class InvButton extends GuiButton {
     private final GuiContainer parent;
     private boolean hold = false;
     private static long timeDropoff = 0;
+    public static final UITexture BUTTON_BACKGROUND = UITexture.builder()
+        .location(BogoSorter.ID, "gui/base_button")
+        .imageSize(18, 18)
+        .adaptable(1)
+        .build();
+
     public InvButton(GuiContainer parentGui) {
         super(394658248, parentGui.guiLeft + DropOffButtonHandler.buttonX, parentGui.guiTop + DropOffButtonHandler.buttonY, 10, 10, "d");
         parent = parentGui;
@@ -27,8 +37,10 @@ public class InvButton extends GuiButton {
         if (hold) {
             drag(mouseX, mouseY);
         }
-
-        super.drawButton(mc, mouseX, mouseY);
+        Color.setGlColor(BogoSorterConfig.buttonColor);
+        BUTTON_BACKGROUND.draw(this.xPosition, this.yPosition, this.width, this.height);
+        Color.resetGlColor();
+        this.drawCenteredString(mc.fontRenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + 1, 14737632);
     }
 
     @Override
