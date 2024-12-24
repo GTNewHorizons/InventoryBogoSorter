@@ -16,6 +16,7 @@ public class InvButton extends GuiButton {
 
     private final GuiContainer parent;
     private boolean hold = false;
+    private static long timeDropoff = 0;
     public InvButton(GuiContainer parentGui) {
         super(394658248, parentGui.guiLeft + DropOffButtonHandler.buttonX, parentGui.guiTop + DropOffButtonHandler.buttonY, 10, 10, "d");
         parent = parentGui;
@@ -36,7 +37,11 @@ public class InvButton extends GuiButton {
             if (GuiScreen.isCtrlKeyDown() && isMouseOver(mouseX, mouseY)) {
                 hold = true;
             } else {
-                NetworkHandler.sendToServer(new CDropOff());
+                long t = Minecraft.getSystemTime();
+                if (t - timeDropoff > DropOffHandler.dropoffPacketThrottleInMS) {
+                    NetworkHandler.sendToServer(new CDropOff());
+                    timeDropoff = t;
+                }
             }
             return true;
         }

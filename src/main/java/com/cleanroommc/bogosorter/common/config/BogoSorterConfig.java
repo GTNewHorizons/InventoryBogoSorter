@@ -40,10 +40,11 @@ public class BogoSorterConfig {
         JsonObject general = new JsonObject();
         general.addProperty("enableAutoRefill", playerConfig.enableAutoRefill);
         general.addProperty("refillDmgThreshold", playerConfig.autoRefillDamageThreshold);
-        general.addProperty("enableDropoff", DropOffHandler.enableDroppOff);
+        general.addProperty("enableDropoff", DropOffHandler.enableDropOff);
         general.addProperty("dropoffRender",DropOffHandler.dropoffRender);
         general.addProperty("dropoffChatMessage",DropOffHandler.dropoffChatMessage);
-        general.addProperty("dropoffQuotaInNS", DropOffHandler.dropoffQuotaInNS);
+        general.addProperty("dropoffQuotaInMS", DropOffHandler.dropoffQuotaInMS);
+        general.addProperty("dropoffPacketThrottleInMS", DropOffHandler.dropoffPacketThrottleInMS);
         general.addProperty("dropoffButtonShow", DropOffButtonHandler.showButton);
         general.addProperty("dropoffButtonX", DropOffButtonHandler.buttonX);
         general.addProperty("dropoffButtonY",DropOffButtonHandler.buttonY);
@@ -84,10 +85,11 @@ public class BogoSorterConfig {
             JsonObject general = json.getAsJsonObject("General");
             playerConfig.enableAutoRefill = JsonHelper.getBoolean(general, true, "enableAutoRefill");
             playerConfig.autoRefillDamageThreshold = (short) JsonHelper.getInt(general, 1, "refillDmgThreshold");
-            DropOffHandler.enableDroppOff = JsonHelper.getBoolean(general, true, "enableDropoff");
+            DropOffHandler.enableDropOff = JsonHelper.getBoolean(general, true, "enableDropoff");
             DropOffHandler.dropoffRender = JsonHelper.getBoolean(general, true, "dropoffRender");
             DropOffHandler.dropoffChatMessage = JsonHelper.getBoolean(general, true, "dropoffChatMessage");
-            DropOffHandler.dropoffQuotaInNS = JsonHelper.getInt(general, 1000000, "dropoffQuotaInNS");
+            DropOffHandler.dropoffQuotaInMS = JsonHelper.getInt(general, 1, "dropoffQuotaInMS");
+            DropOffHandler.dropoffPacketThrottleInMS = JsonHelper.getInt(general, 500, "dropoffPacketThrottleInMS");
             DropOffButtonHandler.showButton = JsonHelper.getBoolean(general, true, "dropoffButtonShow");
             DropOffButtonHandler.buttonX = JsonHelper.getInt(general, 80, "dropoffButtonX");
             DropOffButtonHandler.buttonY = JsonHelper.getInt(general, 12, "dropoffButtonY");

@@ -20,6 +20,7 @@ public class DropOffButtonHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (!DropOffHandler.enableDropOff) return;
         GuiScreen screen = event.gui;
         if (!showButton || screen instanceof GuiContainerCreative) {
             return;
@@ -37,9 +38,8 @@ public class DropOffButtonHandler {
 
     @SubscribeEvent
     public  void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
+        if (!DropOffHandler.enableDropOff) return;
         GuiScreen screen = event.gui;
-
-
         if (!showButton) return;
         if (screen instanceof GuiInventory) {
             for (GuiButton guiButton : ((IGuiContainerAccessor) event.gui).getButtons()) {
