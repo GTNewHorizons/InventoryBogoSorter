@@ -13,10 +13,11 @@ public class DropOffHandler {
     private int startSlot;
     private int endSlot;
 
-    public static boolean enableDroppOff = true;
+    public static boolean enableDropOff = true;
     public static boolean dropoffRender = true;
     public static boolean dropoffChatMessage = true;
-    public static int dropoffQuotaInNS = 1000000;
+    public static int dropoffQuotaInMS = 1;
+    public static int dropoffPacketThrottleInMS = 500;
 
     public DropOffHandler(InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;

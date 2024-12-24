@@ -10,15 +10,21 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class CDropOff implements IPacket {
+
+    static final HashMap<UUID, Long> playerThrottles = new HashMap<>();
 
     public CDropOff() {
     }
@@ -36,15 +42,24 @@ public class CDropOff implements IPacket {
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         EntityPlayerMP player = handler.playerEntity;
+        if (MinecraftServer.getServer().isDedicatedServer()){
+            long lastPlayerTime = playerThrottles.computeIfAbsent(player.getPersistentID(), p -> 0L);
+            final long throttleTime = System.nanoTime();
+            if ((throttleTime - lastPlayerTime) < TimeUnit.MILLISECONDS.toNanos(DropOffHandler.dropoffPacketThrottleInMS)) {
+                return new SDropOffThrottled();
+            }
+            playerThrottles.replace(player.getPersistentID(), throttleTime);
+        }
+
         InventoryManager inventoryManager = new InventoryManager(player);
         DropOffHandler dropOffHandler = new DropOffHandler(inventoryManager);
         dropOffHandler.setItemsCounter(0);
 
         List<InventoryData> inventoryDataList = inventoryManager.getNearbyInventories();
 
-        long startTime = System.nanoTime();
-        boolean timeLimitExceeded = false;
 
+        boolean timeLimitExceeded = false;
+        long startTime = System.nanoTime();
         for (InventoryData inventoryData : inventoryDataList) {
             if (timeLimitExceeded){
                 inventoryData.setInteractionResult(InteractionResult.DROPOFF_QUOTA_MET);
@@ -68,7 +83,7 @@ public class CDropOff implements IPacket {
             inventory.markDirty();
 
             long elapsedTime = System.nanoTime() - startTime;
-            if (elapsedTime >= DropOffHandler.dropoffQuotaInNS) {
+            if (elapsedTime >= TimeUnit.MILLISECONDS.toNanos(DropOffHandler.dropoffQuotaInMS)) {
                 timeLimitExceeded = true;
             }
         }

@@ -22,7 +22,6 @@ import com.cleanroommc.modularui.screen.viewport.GuiContext;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.Theme;
 import com.cleanroommc.modularui.utils.Alignment;
-import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.value.BoolValue;
 import com.cleanroommc.modularui.value.IntValue;
 import com.cleanroommc.modularui.widget.ParentWidget;
@@ -180,7 +179,7 @@ public class ConfigGui extends CustomModularScreen {
                 .widthRel(1f).height(14)
                 .margin(0, 2)
                 .child(new CycleButtonWidget()
-                    .value(new BoolValue.Dynamic(() -> DropOffHandler.enableDroppOff, val -> DropOffHandler.enableDroppOff = val))
+                    .value(new BoolValue.Dynamic(() -> DropOffHandler.enableDropOff, val -> DropOffHandler.enableDropOff = val))
                     .stateOverlay(TOGGLE_BUTTON)
                     .disableHoverBackground()
                     .size(14, 14)
