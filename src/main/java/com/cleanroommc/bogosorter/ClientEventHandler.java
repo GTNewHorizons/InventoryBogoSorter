@@ -143,7 +143,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (Keypress(configGuiKey)) {
+        if (isKeyDown(configGuiKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeConfigGui > 500) {
                 if (!ConfigGui.closeCurrent()) {
@@ -152,7 +152,7 @@ public class ClientEventHandler {
                 timeConfigGui = t;
             }
         }
-        if (Keypress(dropoffKey)){
+        if (isKeyDown(dropoffKey)){
             long t = Minecraft.getSystemTime();
             if (t - timeDropoff > DropOffHandler.dropoffPacketThrottleInMS) {
                 if (DropOffHandler.enableDropOff){
@@ -252,7 +252,7 @@ public class ClientEventHandler {
                 return true;
             }
         }
-        if (container != null && Keypress(sortKey)) {
+        if (container != null && isKeyDown(sortKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 ISlot slot = getSlot(container);
@@ -352,14 +352,5 @@ public class ClientEventHandler {
             return new SortHandler(Minecraft.getMinecraft().thePlayer, container, Int2ObjectMaps.emptyMap());
         }
         return null;
-    }
-
-    private static boolean Keypress(KeyBinding key){
-        int keyCode = key.getKeyCode();
-        if (keyCode > 0) {
-            return key.isPressed();
-        } else {
-            return Mouse.isButtonDown(100 + keyCode);
-        }
     }
 }
