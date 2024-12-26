@@ -31,7 +31,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = CraftingTweaks.MOD_ID, name = "Gregory Tweaks", version = BogoSorter.VERSION, acceptableRemoteVersions = "*")
+@Mod(modid = CraftingTweaks.MOD_ID, name = "Gregory Tweaks For Crafting", version = BogoSorter.VERSION, acceptableRemoteVersions = "*")
 public class CraftingTweaks {
 
     public enum ModSupportState {
