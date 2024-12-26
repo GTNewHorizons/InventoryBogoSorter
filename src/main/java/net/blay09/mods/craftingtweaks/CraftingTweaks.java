@@ -2,6 +2,7 @@ package net.blay09.mods.craftingtweaks;
 
 import java.util.Map;
 
+import com.cleanroommc.bogosorter.BogoSorter;
 import net.blay09.mods.craftingtweaks.api.CraftingTweaksAPI;
 import net.blay09.mods.craftingtweaks.api.SimpleTweakProvider;
 import net.blay09.mods.craftingtweaks.api.TweakProvider;
@@ -30,7 +31,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = CraftingTweaks.MOD_ID, name = "Crafting Tweaks", version = Tags.VERSION, acceptableRemoteVersions = "*")
+@Mod(modid = CraftingTweaks.MOD_ID, name = "Gregory Tweaks", version = BogoSorter.VERSION, acceptableRemoteVersions = "*")
 public class CraftingTweaks {
 
     public enum ModSupportState {
@@ -62,7 +63,6 @@ public class CraftingTweaks {
     public static final Logger logger = LogManager.getLogger();
     public static final String MOD_ID = "craftingtweaks";
 
-    @Mod.Instance
     public static CraftingTweaks instance;
 
     @SidedProxy(
@@ -81,6 +81,7 @@ public class CraftingTweaks {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        instance = this;
         CraftingTweaksAPI.setupAPI(new InternalMethodsImpl());
 
         configMap.put("minecraft", ModSupportState.ENABLED);
