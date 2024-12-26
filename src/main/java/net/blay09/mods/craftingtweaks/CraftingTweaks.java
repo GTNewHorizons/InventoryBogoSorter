@@ -30,7 +30,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = CraftingTweaks.MOD_ID, name = "Crafting Tweaks", acceptableRemoteVersions = "*")
+@Mod(modid = CraftingTweaks.MOD_ID, name = "Crafting Tweaks", version = Tags.VERSION, acceptableRemoteVersions = "*")
 public class CraftingTweaks {
 
     public enum ModSupportState {
