@@ -22,7 +22,7 @@ public class GuiImageButton extends GuiButton {
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        hovered = this.enabled && this.visible
+        field_146123_n = this.enabled && this.visible
             && mouseX >= this.xPosition
             && mouseY >= this.yPosition
             && mouseX < this.xPosition + this.width
@@ -33,7 +33,7 @@ public class GuiImageButton extends GuiButton {
             xPosition,
             yPosition,
             texCoordX,
-            enabled ? texCoordY + (hovered ? 16 : 0) : texCoordY + 32,
+            enabled ? texCoordY + (field_146123_n ? 16 : 0) : texCoordY + 32,
             16,
             16);
     }

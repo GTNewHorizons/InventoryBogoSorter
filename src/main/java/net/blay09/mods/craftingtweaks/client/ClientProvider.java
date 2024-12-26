@@ -91,7 +91,7 @@ public class ClientProvider {
             Slot slot = (Slot) container.inventorySlots.get(i);
             if (slot.getHasStack()) {
                 ItemStack itemStack = slot.getStack();
-                balanceSlots.put(itemStack.getUnlocalizedName() + "@" + itemStack.getMetadata(), slot);
+                balanceSlots.put(itemStack.getUnlocalizedName() + "@" + itemStack.getItemDamage(), slot);
             }
         }
         for (String key : balanceSlots.keySet()) {
@@ -319,7 +319,7 @@ public class ClientProvider {
                 if (slotStack == null) {
                     getController().windowClick(container.windowId, i, 0, 0, entityPlayer);
                 } else if (mouseItem.getItem() == slotStack.getItem()
-                    && (!slotStack.getHasSubtypes() || slotStack.getMetadata() == mouseItem.getMetadata())
+                    && (!slotStack.getHasSubtypes() || slotStack.getItemDamage() == mouseItem.getItemDamage())
                     && ItemStack.areItemStackTagsEqual(slotStack, mouseItem)) {
                         getController().windowClick(container.windowId, i, 0, 0, entityPlayer);
                     }

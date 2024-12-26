@@ -110,7 +110,7 @@ public class DefaultProviderV2Impl implements DefaultProviderV2 {
             int slotIndex = ((Slot) container.inventorySlots.get(i)).getSlotIndex();
             ItemStack itemStack = craftMatrix.getStackInSlot(slotIndex);
             if (itemStack != null && itemStack.getMaxStackSize() > 1) {
-                String key = itemStack.getUnlocalizedName() + "@" + itemStack.getMetadata();
+                String key = itemStack.getUnlocalizedName() + "@" + itemStack.getItemDamage();
                 itemMap.put(key, itemStack);
                 itemCount.add(key, itemStack.stackSize);
             }

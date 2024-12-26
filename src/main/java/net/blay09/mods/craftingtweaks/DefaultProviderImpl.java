@@ -100,7 +100,7 @@ public class DefaultProviderImpl implements DefaultProvider {
         for (int i = start; i < start + size; i++) {
             ItemStack itemStack = craftMatrix.getStackInSlot(i);
             if (itemStack != null && itemStack.getMaxStackSize() > 1) {
-                String key = itemStack.getUnlocalizedName() + "@" + itemStack.getMetadata();
+                String key = itemStack.getUnlocalizedName() + "@" + itemStack.getItemDamage();
                 itemMap.put(key, itemStack);
                 itemCount.add(key, itemStack.stackSize);
             }

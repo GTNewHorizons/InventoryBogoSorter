@@ -332,13 +332,13 @@ public class ClientProxy extends CommonProxy {
             tooltipList.clear();
             for (Object obj : event.gui.buttonList) {
                 GuiButton button = (GuiButton) obj;
-                if (button instanceof ITooltipProvider && button.isMouseOver()) {
+                if (button instanceof ITooltipProvider && button.func_146115_a()) {
                     ((ITooltipProvider) button).addInformation(tooltipList);
                     break;
                 }
             }
             if (!tooltipList.isEmpty()) {
-                event.gui.drawHoveringText(tooltipList, event.mouseX, event.mouseY);
+                event.gui.func_146283_a(tooltipList, event.mouseX, event.mouseY);
             }
         }
     }
@@ -346,7 +346,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onActionPerformed(GuiScreenEvent.ActionPerformedEvent.Pre event) {
         if (event.button instanceof GuiTweakButton) {
-            event.button.playPressSound(
+            event.button.func_146113_a(
                 Minecraft.getMinecraft()
                     .getSoundHandler());
             EntityPlayer entityPlayer = FMLClientHandler.instance()
