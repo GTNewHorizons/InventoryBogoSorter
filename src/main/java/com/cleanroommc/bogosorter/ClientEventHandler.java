@@ -353,7 +353,6 @@ public class ClientEventHandler {
         }
         return null;
     }
-
     private static boolean Keypress(KeyBinding key){
         int keyCode = key.getKeyCode();
         if (keyCode > 0) {
