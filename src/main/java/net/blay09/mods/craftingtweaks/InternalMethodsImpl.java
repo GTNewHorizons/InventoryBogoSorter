@@ -1,6 +1,10 @@
 package net.blay09.mods.craftingtweaks;
 
-import net.blay09.mods.craftingtweaks.api.*;
+import net.blay09.mods.craftingtweaks.api.DefaultProvider;
+import net.blay09.mods.craftingtweaks.api.DefaultProviderV2;
+import net.blay09.mods.craftingtweaks.api.InternalMethods;
+import net.blay09.mods.craftingtweaks.api.SimpleTweakProvider;
+import net.blay09.mods.craftingtweaks.api.TweakProvider;
 import net.blay09.mods.craftingtweaks.client.GuiTweakButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;

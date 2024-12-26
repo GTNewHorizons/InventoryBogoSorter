@@ -2,7 +2,10 @@ package net.blay09.mods.craftingtweaks.addon;
 
 import java.util.List;
 
-import net.blay09.mods.craftingtweaks.api.*;
+import net.blay09.mods.craftingtweaks.api.CraftingTweaksAPI;
+import net.blay09.mods.craftingtweaks.api.DefaultProviderV2;
+import net.blay09.mods.craftingtweaks.api.RotationHandler;
+import net.blay09.mods.craftingtweaks.api.TweakProvider;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
