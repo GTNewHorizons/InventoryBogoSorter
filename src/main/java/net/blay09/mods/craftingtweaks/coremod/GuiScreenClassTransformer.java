@@ -1,6 +1,7 @@
 package net.blay09.mods.craftingtweaks.coremod;
 
 import net.minecraft.launchwrapper.IClassTransformer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
@@ -27,9 +28,9 @@ public class GuiScreenClassTransformer implements IClassTransformer {
     @Override
     public byte[] transform(String className, String transformedClassName, byte[] bytes) {
         String methodName;
-        if(className.equals(OBF_CLASS)) {
+        if (className.equals(OBF_CLASS)) {
             methodName = SRG_METHOD;
-        } else if(className.equals(MCP_CLASS)) {
+        } else if (className.equals(MCP_CLASS)) {
             methodName = MCP_METHOD;
         } else {
             return bytes;
@@ -37,35 +38,45 @@ public class GuiScreenClassTransformer implements IClassTransformer {
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(bytes);
         classReader.accept(classNode, 0);
-        for(MethodNode method : classNode.methods) {
+        for (MethodNode method : classNode.methods) {
             if (method.name.equals(methodName) && method.desc.equals(METHOD_DESC)) {
                 logger.info("CraftingTweaks will now patch {} in {}...", methodName, className);
                 MethodNode mn = new MethodNode();
                 Label notClicked = new Label();
-                //mn.visitMethodInsn(Opcodes.INVOKESTATIC, "org/lwjgl/input/Mouse", "getEventButtonState", "()Z", false);
-                //mn.visitJumpInsn(Opcodes.IFEQ, notClicked); // if getEventButtonState false, continue after
+                // mn.visitMethodInsn(Opcodes.INVOKESTATIC, "org/lwjgl/input/Mouse", "getEventButtonState", "()Z",
+                // false);
+                // mn.visitJumpInsn(Opcodes.IFEQ, notClicked); // if getEventButtonState false, continue after
                 mn.visitVarInsn(Opcodes.ILOAD, 1); // push mouseX
                 mn.visitVarInsn(Opcodes.ILOAD, 2); // push mouseY
                 mn.visitVarInsn(Opcodes.ILOAD, 3); // push button
-                mn.visitMethodInsn(Opcodes.INVOKESTATIC, "net/blay09/mods/craftingtweaks/CraftingTweaks", "onGuiClick", "(III)Z", false); // call onGuiClick
+                mn.visitMethodInsn(
+                    Opcodes.INVOKESTATIC,
+                    "net/blay09/mods/craftingtweaks/CraftingTweaks",
+                    "onGuiClick",
+                    "(III)Z",
+                    false); // call onGuiClick
                 mn.visitJumpInsn(Opcodes.IFEQ, notClicked); // if onGuiClick false, continue after
                 mn.visitInsn(Opcodes.RETURN); // otherwise stop here
                 mn.visitLabel(notClicked); // continue from here
                 AbstractInsnNode insertAfter = null;
-                for(int i = 0; i < method.instructions.size(); i++) {
+                for (int i = 0; i < method.instructions.size(); i++) {
                     AbstractInsnNode node = method.instructions.get(i);
-                    if(node instanceof VarInsnNode) {
-                        if(node.getOpcode() == Opcodes.ISTORE && ((VarInsnNode) node).var == 3) { // ISTORE 3
+                    if (node instanceof VarInsnNode) {
+                        if (node.getOpcode() == Opcodes.ISTORE && ((VarInsnNode) node).var == 3) { // ISTORE 3
                             insertAfter = node;
                             break;
                         }
                     }
                 }
-                if(insertAfter != null) {
+                if (insertAfter != null) {
                     method.instructions.insert(insertAfter, mn.instructions);
                     logger.info("CraftingTweaks successfully patched {} in {}!", methodName, className);
                 } else {
-                    logger.warn("CraftingTweaks failed to patch {0}::{1} ({2} not found) - transfering into crafting grids will not work!", className, methodName, "ISTORE 3");
+                    logger.warn(
+                        "CraftingTweaks failed to patch {0}::{1} ({2} not found) - transfering into crafting grids will not work!",
+                        className,
+                        methodName,
+                        "ISTORE 3");
                 }
             }
         }

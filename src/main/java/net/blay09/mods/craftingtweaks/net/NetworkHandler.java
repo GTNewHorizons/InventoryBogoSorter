@@ -1,13 +1,15 @@
 package net.blay09.mods.craftingtweaks.net;
 
+import net.blay09.mods.craftingtweaks.CraftingTweaks;
+
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
-import net.blay09.mods.craftingtweaks.CraftingTweaks;
 
 public class NetworkHandler {
 
-    public static final SimpleNetworkWrapper instance = NetworkRegistry.INSTANCE.newSimpleChannel(CraftingTweaks.MOD_ID);
+    public static final SimpleNetworkWrapper instance = NetworkRegistry.INSTANCE
+        .newSimpleChannel(CraftingTweaks.MOD_ID);
     public static final int PROTOCOL_VERSION = 1;
 
     public static void init() {

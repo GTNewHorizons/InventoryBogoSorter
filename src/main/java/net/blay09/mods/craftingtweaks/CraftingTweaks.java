@@ -1,16 +1,7 @@
 package net.blay09.mods.craftingtweaks;
 
-import com.google.common.collect.Maps;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Map;
+
 import net.blay09.mods.craftingtweaks.api.CraftingTweaksAPI;
 import net.blay09.mods.craftingtweaks.api.SimpleTweakProvider;
 import net.blay09.mods.craftingtweaks.api.TweakProvider;
@@ -21,16 +12,29 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Mouse;
 
-import java.util.Map;
+import com.google.common.collect.Maps;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = CraftingTweaks.MOD_ID, name = "Crafting Tweaks", acceptableRemoteVersions = "*")
 public class CraftingTweaks {
 
     public enum ModSupportState {
+
         ENABLED,
         BUTTONS_ONLY,
         HOTKEYS_ONLY,
@@ -47,8 +51,9 @@ public class CraftingTweaks {
         public static String[] getValidValues() {
             ModSupportState[] values = ModSupportState.values();
             String[] validValues = new String[values.length];
-            for(int i = 0; i < values.length; i++) {
-                validValues[i] = values[i].name().toLowerCase();
+            for (int i = 0; i < values.length; i++) {
+                validValues[i] = values[i].name()
+                    .toLowerCase();
             }
             return validValues;
         }
@@ -60,7 +65,9 @@ public class CraftingTweaks {
     @Mod.Instance
     public static CraftingTweaks instance;
 
-    @SidedProxy(clientSide = "net.blay09.mods.craftingtweaks.client.ClientProxy", serverSide = "net.blay09.mods.craftingtweaks.CommonProxy")
+    @SidedProxy(
+        clientSide = "net.blay09.mods.craftingtweaks.client.ClientProxy",
+        serverSide = "net.blay09.mods.craftingtweaks.CommonProxy")
     public static CommonProxy proxy;
 
     private static Configuration config;
@@ -98,21 +105,51 @@ public class CraftingTweaks {
         configMap.put("Backpack", ModSupportState.ENABLED);
 
         config = new Configuration(event.getSuggestedConfigurationFile());
-        hideButtons = config.getBoolean("hideButtons", "general", false, "This option is toggled by the 'Toggle Buttons' key that can be defined in the Controls settings.");
-        hideButtonTooltips = config.getBoolean("hideButtonTooltips", "general", false, "Set this to true if you don't want the tweak buttons' tooltips to show.");
-        compressAnywhere = config.getBoolean("compressAnywhere", "general", false, "Set this to true if you want the (de)compress feature to work outside of crafting GUIs (only works if installed on server)");
-        config.setCategoryComment("addons", "Here you can control whether support for a mod should be enabled, buttons_only, hotkeys_only or disabled. For Vanilla Minecraft, see the option 'minecraft'. Mods are identified by their mod ids.");
-        config.getString("minecraft", "addons", ModSupportState.ENABLED.name().toLowerCase(), "", ModSupportState.getValidValues());
+        hideButtons = config.getBoolean(
+            "hideButtons",
+            "general",
+            false,
+            "This option is toggled by the 'Toggle Buttons' key that can be defined in the Controls settings.");
+        hideButtonTooltips = config.getBoolean(
+            "hideButtonTooltips",
+            "general",
+            false,
+            "Set this to true if you don't want the tweak buttons' tooltips to show.");
+        compressAnywhere = config.getBoolean(
+            "compressAnywhere",
+            "general",
+            false,
+            "Set this to true if you want the (de)compress feature to work outside of crafting GUIs (only works if installed on server)");
+        config.setCategoryComment(
+            "addons",
+            "Here you can control whether support for a mod should be enabled, buttons_only, hotkeys_only or disabled. For Vanilla Minecraft, see the option 'minecraft'. Mods are identified by their mod ids.");
+        config.getString(
+            "minecraft",
+            "addons",
+            ModSupportState.ENABLED.name()
+                .toLowerCase(),
+            "",
+            ModSupportState.getValidValues());
         // Load all options (including those from non-included addons)
-        for(Property property : config.getCategory("addons").values()) {
-            configMap.put(property.getName(), ModSupportState.fromName(config.getString(property.getName(), "addons", ModSupportState.ENABLED.name().toLowerCase(), "enabled, buttons_only, hotkeys_only or disabled", ModSupportState.getValidValues())));
+        for (Property property : config.getCategory("addons")
+            .values()) {
+            configMap.put(
+                property.getName(),
+                ModSupportState.fromName(
+                    config.getString(
+                        property.getName(),
+                        "addons",
+                        ModSupportState.ENABLED.name()
+                            .toLowerCase(),
+                        "enabled, buttons_only, hotkeys_only or disabled",
+                        ModSupportState.getValidValues())));
         }
     }
 
     @Mod.EventHandler
     public void imc(FMLInterModComms.IMCEvent event) {
-        for(FMLInterModComms.IMCMessage message : event.getMessages()) {
-            if(message.isNBTMessage() && message.key.equals("RegisterProvider")) {
+        for (FMLInterModComms.IMCMessage message : event.getMessages()) {
+            if (message.isNBTMessage() && message.key.equals("RegisterProvider")) {
                 NBTTagCompound tagCompound = message.getNBTValue();
                 String containerClassName = tagCompound.getString("ContainerClass");
                 SimpleTweakProvider provider = new SimpleTweakProviderImpl(message.getSender());
@@ -121,7 +158,7 @@ public class CraftingTweaks {
                 int buttonOffsetY = tagCompound.hasKey("ButtonOffsetY") ? tagCompound.getInteger("ButtonOffsetY") : 16;
                 EnumFacing alignToGrid = null;
                 String alignToGridName = tagCompound.getString("AlignToGrid");
-                switch(alignToGridName.toLowerCase()) {
+                switch (alignToGridName.toLowerCase()) {
                     case "north":
                     case "up":
                         alignToGrid = EnumFacing.UP;
@@ -146,16 +183,25 @@ public class CraftingTweaks {
                 provider.setPhantomItems(tagCompound.getBoolean("PhantomItems"));
 
                 NBTTagCompound rotateCompound = tagCompound.getCompoundTag("TweakRotate");
-                provider.setTweakRotate(getBoolOr(rotateCompound, "Enabled", true), getBoolOr(rotateCompound, "ShowButton", true),
-                        buttonOffsetX + getIntOr(rotateCompound, "ButtonX", 0), buttonOffsetY + getIntOr(rotateCompound, "ButtonY", 0));
+                provider.setTweakRotate(
+                    getBoolOr(rotateCompound, "Enabled", true),
+                    getBoolOr(rotateCompound, "ShowButton", true),
+                    buttonOffsetX + getIntOr(rotateCompound, "ButtonX", 0),
+                    buttonOffsetY + getIntOr(rotateCompound, "ButtonY", 0));
 
                 NBTTagCompound balanceCompound = tagCompound.getCompoundTag("TweakBalance");
-                provider.setTweakBalance(getBoolOr(balanceCompound, "Enabled", true), getBoolOr(balanceCompound, "ShowButton", true),
-                        buttonOffsetX + getIntOr(balanceCompound, "ButtonX", 0), buttonOffsetY + getIntOr(balanceCompound, "ButtonY", 18));
+                provider.setTweakBalance(
+                    getBoolOr(balanceCompound, "Enabled", true),
+                    getBoolOr(balanceCompound, "ShowButton", true),
+                    buttonOffsetX + getIntOr(balanceCompound, "ButtonX", 0),
+                    buttonOffsetY + getIntOr(balanceCompound, "ButtonY", 18));
 
                 NBTTagCompound clearCompound = tagCompound.getCompoundTag("TweakClear");
-                provider.setTweakClear(getBoolOr(clearCompound, "Enabled", true), getBoolOr(clearCompound, "ShowButton", true),
-                        buttonOffsetX + getIntOr(clearCompound, "ButtonX", 0), buttonOffsetY + getIntOr(clearCompound, "ButtonY", 36));
+                provider.setTweakClear(
+                    getBoolOr(clearCompound, "Enabled", true),
+                    getBoolOr(clearCompound, "ShowButton", true),
+                    buttonOffsetX + getIntOr(clearCompound, "ButtonX", 0),
+                    buttonOffsetY + getIntOr(clearCompound, "ButtonY", 36));
 
                 registerProvider(containerClassName, provider);
                 logger.info(message.getSender() + " has registered " + containerClassName + " for CraftingTweaks");
@@ -202,41 +248,47 @@ public class CraftingTweaks {
     }
 
     public void registerProvider(Class<? extends Container> clazz, TweakProvider provider) {
-        if(!provider.getModId().equals("minecraft") && !Loader.isModLoaded(provider.getModId())) {
+        if (!provider.getModId()
+            .equals("minecraft") && !Loader.isModLoaded(provider.getModId())) {
             return;
         }
-        if(provider.load()) {
+        if (provider.load()) {
             providerMap.put(clazz, provider);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void registerProvider(String className, TweakProvider provider) {
-        config.getString(provider.getModId(), "addons", ModSupportState.ENABLED.name().toLowerCase(), "enabled, buttons_only, hotkeys_only or disabled", ModSupportState.getValidValues());
-        if(Loader.isModLoaded(provider.getModId())) {
-            if(provider.load()) {
+        config.getString(
+            provider.getModId(),
+            "addons",
+            ModSupportState.ENABLED.name()
+                .toLowerCase(),
+            "enabled, buttons_only, hotkeys_only or disabled",
+            ModSupportState.getValidValues());
+        if (Loader.isModLoaded(provider.getModId())) {
+            if (provider.load()) {
                 try {
                     Class clazz = Class.forName(className);
                     if (Container.class.isAssignableFrom(clazz)) {
                         providerMap.put(clazz, provider);
                     }
-                } catch (ClassNotFoundException ignored) {
-                }
+                } catch (ClassNotFoundException ignored) {}
             }
         }
     }
 
     public TweakProvider getProvider(Container container) {
-        if(container == null) {
+        if (container == null) {
             return null;
         }
-        for(Class clazz : providerMap.keySet()) {
-            if(container.getClass() == clazz) {
+        for (Class clazz : providerMap.keySet()) {
+            if (container.getClass() == clazz) {
                 return providerMap.get(clazz);
             }
         }
-        for(Class<? extends Container> clazz : providerMap.keySet()) {
-            if(clazz.isAssignableFrom(container.getClass())) {
+        for (Class<? extends Container> clazz : providerMap.keySet()) {
+            if (clazz.isAssignableFrom(container.getClass())) {
                 return providerMap.get(clazz);
             }
         }
@@ -245,7 +297,7 @@ public class CraftingTweaks {
 
     public ModSupportState getModSupportState(String modId) {
         ModSupportState suportState = configMap.get(modId);
-        if(suportState == null) {
+        if (suportState == null) {
             suportState = ModSupportState.ENABLED;
             configMap.put(modId, suportState);
         }
@@ -253,7 +305,13 @@ public class CraftingTweaks {
     }
 
     public static void saveConfig() {
-        config.get("general", "hideButtons", false, "This option is toggled by the 'Toggle Buttons' key that can be defined in the Controls settings.").set(hideButtons);
+        config
+            .get(
+                "general",
+                "hideButtons",
+                false,
+                "This option is toggled by the 'Toggle Buttons' key that can be defined in the Controls settings.")
+            .set(hideButtons);
         config.save();
     }
 
@@ -267,8 +325,13 @@ public class CraftingTweaks {
 
     @SideOnly(Side.CLIENT)
     public static boolean onGuiClick(int mouseX, int mouseY, int button) {
-        if(Mouse.getEventButtonState()) {
-            GuiClickEvent event = new GuiClickEvent(FMLClientHandler.instance().getClient().currentScreen, mouseX, mouseY, button);
+        if (Mouse.getEventButtonState()) {
+            GuiClickEvent event = new GuiClickEvent(
+                FMLClientHandler.instance()
+                    .getClient().currentScreen,
+                mouseX,
+                mouseY,
+                button);
             MinecraftForge.EVENT_BUS.post(event);
             return event.isCanceled();
         }

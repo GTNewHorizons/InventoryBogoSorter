@@ -8,7 +8,7 @@ public class InventoryCraftingCompress extends InventoryCrafting {
 
     public InventoryCraftingCompress(Container container, int size, ItemStack itemStack) {
         super(container, size, size);
-        for(int i = 0; i < getSizeInventory(); i++) {
+        for (int i = 0; i < getSizeInventory(); i++) {
             setInventorySlotContents(i, itemStack.copy());
         }
     }

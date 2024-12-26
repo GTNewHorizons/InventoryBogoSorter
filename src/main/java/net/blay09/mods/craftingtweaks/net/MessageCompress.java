@@ -9,8 +9,7 @@ public class MessageCompress implements IMessage {
     private boolean isDecompress;
     private boolean compressAll;
 
-    public MessageCompress() {
-    }
+    public MessageCompress() {}
 
     public MessageCompress(int slotNumber, boolean isDecompress, boolean compressAll) {
         this.slotNumber = slotNumber;

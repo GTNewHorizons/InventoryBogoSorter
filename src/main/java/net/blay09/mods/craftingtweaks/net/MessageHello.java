@@ -7,8 +7,7 @@ public class MessageHello implements IMessage {
 
     private int version;
 
-    public MessageHello() {
-    }
+    public MessageHello() {}
 
     public MessageHello(int version) {
         this.version = version;

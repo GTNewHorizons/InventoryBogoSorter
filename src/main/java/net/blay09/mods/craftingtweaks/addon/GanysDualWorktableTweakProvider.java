@@ -1,7 +1,7 @@
 package net.blay09.mods.craftingtweaks.addon;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+
 import net.blay09.mods.craftingtweaks.api.CraftingTweaksAPI;
 import net.blay09.mods.craftingtweaks.api.DefaultProviderV2;
 import net.blay09.mods.craftingtweaks.api.TweakProvider;
@@ -12,7 +12,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class GanysDualWorktableTweakProvider implements TweakProvider {
 
@@ -69,7 +70,8 @@ public class GanysDualWorktableTweakProvider implements TweakProvider {
     }
 
     @Override
-    public ItemStack putIntoGrid(EntityPlayer entityPlayer, Container container, int id, ItemStack itemStack, int index) {
+    public ItemStack putIntoGrid(EntityPlayer entityPlayer, Container container, int id, ItemStack itemStack,
+        int index) {
         return defaultProvider.putIntoGrid(this, id, entityPlayer, container, itemStack, index);
     }
 
@@ -83,12 +85,25 @@ public class GanysDualWorktableTweakProvider implements TweakProvider {
     @SideOnly(Side.CLIENT)
     public void initGui(GuiContainer guiContainer, List buttonList) {
         final int paddingTop = 16;
-        buttonList.add(CraftingTweaksAPI.createRotateButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop));
-        buttonList.add(CraftingTweaksAPI.createBalanceButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 18));
-        buttonList.add(CraftingTweaksAPI.createClearButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 36));
-        buttonList.add(CraftingTweaksAPI.createRotateButton(1, guiContainer.guiLeft + guiContainer.xSize, guiContainer.guiTop + paddingTop));
-        buttonList.add(CraftingTweaksAPI.createBalanceButton(1, guiContainer.guiLeft + guiContainer.xSize, guiContainer.guiTop + paddingTop + 18));
-        buttonList.add(CraftingTweaksAPI.createClearButton(1, guiContainer.guiLeft + guiContainer.xSize, guiContainer.guiTop + paddingTop + 36));
+        buttonList
+            .add(CraftingTweaksAPI.createRotateButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop));
+        buttonList.add(
+            CraftingTweaksAPI.createBalanceButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 18));
+        buttonList.add(
+            CraftingTweaksAPI.createClearButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 36));
+        buttonList.add(
+            CraftingTweaksAPI
+                .createRotateButton(1, guiContainer.guiLeft + guiContainer.xSize, guiContainer.guiTop + paddingTop));
+        buttonList.add(
+            CraftingTweaksAPI.createBalanceButton(
+                1,
+                guiContainer.guiLeft + guiContainer.xSize,
+                guiContainer.guiTop + paddingTop + 18));
+        buttonList.add(
+            CraftingTweaksAPI.createClearButton(
+                1,
+                guiContainer.guiLeft + guiContainer.xSize,
+                guiContainer.guiTop + paddingTop + 36));
     }
 
     @Override

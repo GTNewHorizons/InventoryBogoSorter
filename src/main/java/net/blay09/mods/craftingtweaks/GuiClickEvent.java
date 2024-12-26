@@ -1,8 +1,9 @@
 package net.blay09.mods.craftingtweaks;
 
+import net.minecraft.client.gui.GuiScreen;
+
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
-import net.minecraft.client.gui.GuiScreen;
 
 @Cancelable
 public class GuiClickEvent extends Event {

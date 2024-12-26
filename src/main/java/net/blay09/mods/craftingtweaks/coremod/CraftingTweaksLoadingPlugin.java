@@ -1,8 +1,8 @@
 package net.blay09.mods.craftingtweaks.coremod;
 
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-
 import java.util.Map;
+
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name("CraftingTweaks")
 @IFMLLoadingPlugin.MCVersion("1.7.10")
@@ -12,9 +12,7 @@ public class CraftingTweaksLoadingPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] {
-                "net.blay09.mods.craftingtweaks.coremod.GuiScreenClassTransformer"
-        };
+        return new String[] { "net.blay09.mods.craftingtweaks.coremod.GuiScreenClassTransformer" };
     }
 
     @Override

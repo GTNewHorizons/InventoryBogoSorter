@@ -27,7 +27,9 @@ public class Compatiblity {
     }
 
     public static void twilightforest() {
-        SimpleTweakProvider provider = registerSimpleProvider("TwilightForest", "twilightforest.uncrafting.ContainerTFUncrafting");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "TwilightForest",
+            "twilightforest.uncrafting.ContainerTFUncrafting");
         if (provider != null) {
             provider.setGrid(2, 9);
             provider.setTweakRotate(true, true, 0, 0);
@@ -38,7 +40,9 @@ public class Compatiblity {
     }
 
     public static void tinkersconstruct() {
-        SimpleTweakProvider provider = registerSimpleProvider("TConstruct", "tconstruct.tools.inventory.CraftingStationContainer");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "TConstruct",
+            "tconstruct.tools.inventory.CraftingStationContainer");
         if (provider != null) {
             provider.setTweakRotate(true, true, 0, 0);
             provider.setTweakBalance(true, true, 0, 0);
@@ -48,7 +52,9 @@ public class Compatiblity {
     }
 
     public static void thermalexpansion() {
-        SimpleTweakProvider provider = registerSimpleProvider("ThermalExpansion", "cofh.thermalexpansion.gui.container.device.ContainerWorkbench");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "ThermalExpansion",
+            "cofh.thermalexpansion.gui.container.device.ContainerWorkbench");
         if (provider != null) {
             provider.setGrid(58, 9);
             provider.setTweakRotate(true, false, 0, 0);
@@ -60,7 +66,9 @@ public class Compatiblity {
     }
 
     public static void thaumcraft4() {
-        SimpleTweakProvider provider = registerSimpleProvider("Thaumcraft", "thaumcraft.common.container.ContainerArcaneWorkbench");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "Thaumcraft",
+            "thaumcraft.common.container.ContainerArcaneWorkbench");
         if (provider != null) {
             provider.setGrid(2, 9);
             provider.setTweakRotate(true, true, -12, 40);
@@ -70,7 +78,9 @@ public class Compatiblity {
     }
 
     public static void rotarycraft() {
-        SimpleTweakProvider provider = registerSimpleProvider("RotaryCraft", "Reika.RotaryCraft.Containers.ContainerHandCraft");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "RotaryCraft",
+            "Reika.RotaryCraft.Containers.ContainerHandCraft");
         if (provider != null) {
             provider.setTweakRotate(true, true, 0, 0);
             provider.setTweakBalance(true, true, 0, 0);
@@ -90,7 +100,9 @@ public class Compatiblity {
     }
 
     public static void minefactoryreloaded() {
-        SimpleTweakProvider provider = registerSimpleProvider("MineFactoryReloaded", "powercrystals.minefactoryreloaded.gui.container.ContainerLiquiCrafter");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "MineFactoryReloaded",
+            "powercrystals.minefactoryreloaded.gui.container.ContainerLiquiCrafter");
         if (provider != null) {
             provider.setGrid(0, 9);
             provider.setTweakRotate(true, false, 0, 0);
@@ -112,7 +124,9 @@ public class Compatiblity {
     }
 
     public static void draconicevolution() {
-        SimpleTweakProvider provider = registerSimpleProvider("DraconicEvolution", "com.brandon3055.draconicevolution.common.container.ContainerDraconiumChest");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "DraconicEvolution",
+            "com.brandon3055.draconicevolution.common.container.ContainerDraconiumChest");
         if (provider != null) {
             provider.setGrid(241, 9);
             provider.setTweakRotate(true, false, 0, 0);
@@ -123,7 +137,9 @@ public class Compatiblity {
     }
 
     public static void buildcraft() {
-        SimpleTweakProvider provider = registerSimpleProvider("BuildCraft|Factory", "buildcraft.factory.gui.ContainerAutoWorkbench");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "BuildCraft|Factory",
+            "buildcraft.factory.gui.ContainerAutoWorkbench");
         if (provider != null) {
             provider.setGrid(2, 9);
             provider.setPhantomItems(true);
@@ -135,7 +151,9 @@ public class Compatiblity {
     }
 
     public static void bluepower() {
-        SimpleTweakProvider provider = registerSimpleProvider("bluepower", "com.bluepowermod.container.ContainerProjectTable");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "bluepower",
+            "com.bluepowermod.container.ContainerProjectTable");
         if (provider != null) {
             provider.setGrid(0, 9);
             provider.setTweakRotate(true, true, 14, 35);
@@ -145,7 +163,9 @@ public class Compatiblity {
     }
 
     public static void bibliocraft() {
-        SimpleTweakProvider provider = registerSimpleProvider("BiblioCraft", "jds.bibliocraft.blocks.ContainerFancyWorkbench");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "BiblioCraft",
+            "jds.bibliocraft.blocks.ContainerFancyWorkbench");
         if (provider != null) {
             provider.setGrid(10, 9);
             provider.setTweakRotate(true, true, 42, 16);
@@ -155,7 +175,9 @@ public class Compatiblity {
     }
 
     public static void backpacks() {
-        SimpleTweakProvider provider = registerSimpleProvider("BiblioCraft", "de.eydamos.backpack.inventory.container.ContainerWorkbenchBackpack");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "BiblioCraft",
+            "de.eydamos.backpack.inventory.container.ContainerWorkbenchBackpack");
         if (provider != null) {
             provider.setTweakRotate(true, true, 0, 0);
             provider.setTweakBalance(false, false, 0, 0);
@@ -166,7 +188,9 @@ public class Compatiblity {
     }
 
     public static void railcraft() {
-        SimpleTweakProvider provider = registerSimpleProvider("Railcraft", "mods.railcraft.common.gui.containers.ContainerCartWork");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "Railcraft",
+            "mods.railcraft.common.gui.containers.ContainerCartWork");
         if (provider != null) {
             provider.setTweakRotate(true, true, 0, 0);
             provider.setTweakBalance(true, true, 0, 0);
@@ -184,18 +208,24 @@ public class Compatiblity {
     }
 
     public static void ganyssurface() {
-        SimpleTweakProvider provider = registerSimpleProvider("ganyssurface", "ganymedes01.ganyssurface.inventory.ContainerWorkTable");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "ganyssurface",
+            "ganymedes01.ganyssurface.inventory.ContainerWorkTable");
         if (provider != null) {
             provider.setTweakRotate(true, true, 0, 0);
             provider.setTweakBalance(true, true, 0, 0);
             provider.setTweakClear(true, true, 0, 0);
             provider.setAlignToGrid(EnumFacing.WEST);
         }
-        registerProvider("ganymedes01.ganyssurface.inventory.ContainerDualWorkTable", new GanysDualWorktableTweakProvider());
+        registerProvider(
+            "ganymedes01.ganyssurface.inventory.ContainerDualWorkTable",
+            new GanysDualWorktableTweakProvider());
     }
 
     public static void appliedenergistics2() {
-        SimpleTweakProvider provider = registerSimpleProvider("appliedenergistics2", "appeng.container.implementations.ContainerCraftingTerm");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "appliedenergistics2",
+            "appeng.container.implementations.ContainerCraftingTerm");
         if (provider != null) {
             provider.setGrid(5, 9);
             provider.setTweakRotate(true, true, 0, 0);
@@ -203,7 +233,9 @@ public class Compatiblity {
             provider.setTweakClear(true, true, 0, 0);
             provider.setAlignToGrid(EnumFacing.WEST);
         }
-        provider = registerSimpleProvider("appliedenergistics2", "appeng.container.implementations.ContainerPatternTerm");
+        provider = registerSimpleProvider(
+            "appliedenergistics2",
+            "appeng.container.implementations.ContainerPatternTerm");
         if (provider != null) {
             provider.setGrid(5, 9);
             provider.setTweakRotate(true, false, 0, 0);
@@ -215,7 +247,9 @@ public class Compatiblity {
     }
 
     public static void avaritia() {
-        SimpleTweakProvider provider = registerSimpleProvider("Avaritia", "fox.spiteful.avaritia.gui.ContainerExtremeCrafting");
+        SimpleTweakProvider provider = registerSimpleProvider(
+            "Avaritia",
+            "fox.spiteful.avaritia.gui.ContainerExtremeCrafting");
         if (provider != null) {
             provider.setGrid(1, 81);
             provider.setTweakRotate(false, false, 0, 0);
@@ -244,9 +278,11 @@ public class Compatiblity {
     @SuppressWarnings("unchecked")
     private static SimpleTweakProvider registerSimpleProvider(String modid, String className) {
         try {
-            return CraftingTweaksAPI.registerSimpleProvider(modid, (Class<? extends Container>) Class.forName(className));
+            return CraftingTweaksAPI
+                .registerSimpleProvider(modid, (Class<? extends Container>) Class.forName(className));
         } catch (ClassNotFoundException e) {
-            System.err.println("Could not register Crafting Tweaks addon for " + modid + " - internal names have changed.");
+            System.err
+                .println("Could not register Crafting Tweaks addon for " + modid + " - internal names have changed.");
         }
         return null;
     }
@@ -256,7 +292,9 @@ public class Compatiblity {
         try {
             CraftingTweaksAPI.registerProvider((Class<? extends Container>) Class.forName(className), provider);
         } catch (ClassNotFoundException e) {
-            System.err.println("Could not register Crafting Tweaks addon for " + provider.getModId() + " - internal names have changed.");
+            System.err.println(
+                "Could not register Crafting Tweaks addon for " + provider.getModId()
+                    + " - internal names have changed.");
         }
     }
 }

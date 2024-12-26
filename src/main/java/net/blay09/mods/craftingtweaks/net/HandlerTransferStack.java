@@ -1,8 +1,5 @@
 package net.blay09.mods.craftingtweaks.net;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.blay09.mods.craftingtweaks.CraftingTweaks;
 import net.blay09.mods.craftingtweaks.api.TweakProvider;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +7,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
+
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class HandlerTransferStack implements IMessageHandler<MessageTransferStack, IMessage> {
 
@@ -21,7 +22,8 @@ public class HandlerTransferStack implements IMessageHandler<MessageTransferStac
             TweakProvider tweakProvider = CraftingTweaks.instance.getProvider(container);
             if (tweakProvider != null) {
                 Slot slot = (Slot) container.inventorySlots.get(message.slotNumber);
-                if (!tweakProvider.canTransferFrom(entityPlayer, container, message.id, slot) || slot instanceof SlotCrafting) { // SlotCrafting is always blacklisted
+                if (!tweakProvider.canTransferFrom(entityPlayer, container, message.id, slot)
+                    || slot instanceof SlotCrafting) { // SlotCrafting is always blacklisted
                     return null;
                 }
                 ItemStack slotStack = slot.getStack();

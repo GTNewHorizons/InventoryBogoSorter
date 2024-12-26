@@ -1,8 +1,7 @@
 package net.blay09.mods.craftingtweaks;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+
 import net.blay09.mods.craftingtweaks.api.CraftingTweaksAPI;
 import net.blay09.mods.craftingtweaks.api.DefaultProviderV2;
 import net.blay09.mods.craftingtweaks.api.RotationHandler;
@@ -16,11 +15,14 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
-import java.util.List;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SimpleTweakProviderImpl implements SimpleTweakProvider {
 
     private final RotationHandler smallRotationHandler = new RotationHandler() {
+
         @Override
         public boolean ignoreSlotId(int slotId) {
             return false;
@@ -28,7 +30,7 @@ public class SimpleTweakProviderImpl implements SimpleTweakProvider {
 
         @Override
         public int rotateSlotId(int slotId, boolean counterClockwise) {
-            if(!counterClockwise) {
+            if (!counterClockwise) {
                 switch (slotId) {
                     case 0:
                         return 1;
@@ -40,11 +42,15 @@ public class SimpleTweakProviderImpl implements SimpleTweakProvider {
                         return 2;
                 }
             } else {
-                switch(slotId) {
-                    case 1: return 0;
-                    case 3: return 1;
-                    case 0: return 2;
-                    case 2: return 3;
+                switch (slotId) {
+                    case 1:
+                        return 0;
+                    case 3:
+                        return 1;
+                    case 0:
+                        return 2;
+                    case 2:
+                        return 3;
                 }
             }
             return 0;
@@ -52,6 +58,7 @@ public class SimpleTweakProviderImpl implements SimpleTweakProvider {
     };
 
     public static class TweakSettings {
+
         public final boolean enabled;
         public final boolean showButton;
         public final int buttonX;
@@ -135,7 +142,14 @@ public class SimpleTweakProviderImpl implements SimpleTweakProvider {
     @Override
     public void rotateGrid(EntityPlayer entityPlayer, Container container, int id, boolean counterClockwise) {
         if (tweakRotate.enabled) {
-            defaultProvider.rotateGrid(this, id, entityPlayer, container, getCraftingGridSize(entityPlayer, container, id) == 4 ? smallRotationHandler : defaultProvider.getRotationHandler(), counterClockwise);
+            defaultProvider.rotateGrid(
+                this,
+                id,
+                entityPlayer,
+                container,
+                getCraftingGridSize(entityPlayer, container, id) == 4 ? smallRotationHandler
+                    : defaultProvider.getRotationHandler(),
+                counterClockwise);
         }
     }
 
@@ -164,7 +178,8 @@ public class SimpleTweakProviderImpl implements SimpleTweakProvider {
     }
 
     @Override
-    public ItemStack putIntoGrid(EntityPlayer entityPlayer, Container container, int id, ItemStack itemStack, int index) {
+    public ItemStack putIntoGrid(EntityPlayer entityPlayer, Container container, int id, ItemStack itemStack,
+        int index) {
         return defaultProvider.putIntoGrid(this, id, entityPlayer, container, itemStack, index);
     }
 
@@ -227,7 +242,12 @@ public class SimpleTweakProviderImpl implements SimpleTweakProvider {
 
     @SideOnly(Side.CLIENT)
     private int getButtonX(GuiContainer guiContainer, int index) {
-        Slot firstSlot = (Slot) guiContainer.inventorySlots.inventorySlots.get(getCraftingGridStart(FMLClientHandler.instance().getClientPlayerEntity(), guiContainer.inventorySlots, 0));
+        Slot firstSlot = (Slot) guiContainer.inventorySlots.inventorySlots.get(
+            getCraftingGridStart(
+                FMLClientHandler.instance()
+                    .getClientPlayerEntity(),
+                guiContainer.inventorySlots,
+                0));
         switch (alignToGrid) {
             case NORTH:
             case UP:
@@ -244,7 +264,12 @@ public class SimpleTweakProviderImpl implements SimpleTweakProvider {
 
     @SideOnly(Side.CLIENT)
     private int getButtonY(GuiContainer guiContainer, int index) {
-        Slot firstSlot = (Slot) guiContainer.inventorySlots.inventorySlots.get(getCraftingGridStart(FMLClientHandler.instance().getClientPlayerEntity(), guiContainer.inventorySlots, 0));
+        Slot firstSlot = (Slot) guiContainer.inventorySlots.inventorySlots.get(
+            getCraftingGridStart(
+                FMLClientHandler.instance()
+                    .getClientPlayerEntity(),
+                guiContainer.inventorySlots,
+                0));
         switch (alignToGrid) {
             case NORTH:
             case UP:

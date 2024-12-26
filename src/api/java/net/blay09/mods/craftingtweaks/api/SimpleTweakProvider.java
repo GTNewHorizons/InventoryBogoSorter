@@ -6,6 +6,7 @@ public interface SimpleTweakProvider extends TweakProvider {
 
     /**
      * Sets the settings for the rotation tweak.
+     * 
      * @param enabled if false, this tweak will not be executed and the button will not show up
      * @param buttonX the x position of the tweak button, relative to the top left corner of the GUI
      * @param buttonY the y position of the tweak button, relative to the top left corner of the GUI
@@ -14,6 +15,7 @@ public interface SimpleTweakProvider extends TweakProvider {
 
     /**
      * Sets the settings for the balance tweak.
+     * 
      * @param enabled if false, this tweak will not be executed and the button will not show up
      * @param buttonX the x position of the tweak button, relative to the top left corner of the GUI
      * @param buttonY the y position of the tweak button, relative to the top left corner of the GUI
@@ -22,6 +24,7 @@ public interface SimpleTweakProvider extends TweakProvider {
 
     /**
      * Sets the settings for the clear tweak.
+     * 
      * @param enabled if false, this tweak will not be executed and the button will not show up
      * @param buttonX the x position of the tweak button, relative to the top left corner of the GUI
      * @param buttonY the y position of the tweak button, relative to the top left corner of the GUI
@@ -30,8 +33,10 @@ public interface SimpleTweakProvider extends TweakProvider {
 
     /**
      * Sets the crafting grid index within the inventorySlots list in the container.
-     * @param slotNumber the index of the first crafting matrix slot within the inventorySlots list (NOT within the inventory)
-     * @param size the size of the crafting grid
+     * 
+     * @param slotNumber the index of the first crafting matrix slot within the inventorySlots list (NOT within the
+     *                   inventory)
+     * @param size       the size of the crafting grid
      */
     void setGrid(int slotNumber, int size);
 
@@ -47,6 +52,7 @@ public interface SimpleTweakProvider extends TweakProvider {
 
     /**
      * Setting this will make the buttons always align to the grid and ignore their offset settings.
+     * 
      * @param alignToGrid the direction the buttons should be aligned towards
      */
     void setAlignToGrid(EnumFacing alignToGrid);
