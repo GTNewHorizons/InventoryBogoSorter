@@ -43,12 +43,12 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class ClientProxy extends CommonProxy {
 
-    private static final int HELLO_TIMEOUT = 20 * 10;
+
     private static final List<String> tooltipList = Lists.newArrayList();
 
-    private int helloTimeout;
-    private boolean isServerSide;
 
+    private boolean isServerSide;
+    private boolean missingMessageSent;
     private boolean wasRotated;
     private boolean wasCleared;
     private boolean wasBalanced;
@@ -111,11 +111,6 @@ public class ClientProxy extends CommonProxy {
             .buildSoftDependProxy("NotEnoughItems", "net.blay09.mods.craftingtweaks.addon.NEIHotkeyCheck");
     }
 
-    @SubscribeEvent
-    public void connectedToServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        helloTimeout = HELLO_TIMEOUT;
-        isServerSide = false;
-    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onGuiClick(GuiClickEvent event) {
@@ -169,12 +164,12 @@ public class ClientProxy extends CommonProxy {
         EntityPlayer entityPlayer = FMLClientHandler.instance()
             .getClientPlayerEntity();
         if (entityPlayer != null) {
-            if (helloTimeout > 0) {
-                helloTimeout--;
-                if (helloTimeout <= 0) {
+            if (!CraftingTweaks.isServerSideInstalled) {
+                if (!missingMessageSent) {
                     entityPlayer.addChatMessage(
                         new ChatComponentText(
                             "This server does not have Crafting Tweaks installed. Functionality may be limited."));
+                    missingMessageSent = true;
                     isServerSide = false;
                 }
             }
@@ -406,11 +401,5 @@ public class ClientProxy extends CommonProxy {
                     break;
             }
         }
-    }
-
-    @Override
-    public void receivedHello(EntityPlayer entityPlayer) {
-        helloTimeout = 0;
-        isServerSide = true;
     }
 }
