@@ -14,12 +14,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -46,30 +50,39 @@ public class SortHandler {
         return sortSound == null ? "null" : sortSound.toString();
     }
 
-//    @SideOnly(Side.CLIENT)
-//    public static void playSortSound() {
-//        SoundEvent sound;
-//        if (BogoSorter.isAprilFools()) {
-//            if (foolsSounds == null || foolsBuildTime - Minecraft.getSystemTime() > 300000) {
-//                List<SoundEvent> sounds = new ArrayList<>(256);
-//                for (SoundEvent soundEvent : ForgeRegistries.SOUND_EVENTS) {
-//                    if (soundEvent != null &&
-//                            !soundEvent.getSoundName().getPath().contains("music.") &&
-//                            !soundEvent.getSoundName().getPath().contains("record.")) {
-//                        sounds.add(soundEvent);
-//                    }
-//                }
-//                foolsSounds = sounds;
-//                foolsBuildTime = Minecraft.getSystemTime();
-//            }
-//            sound = foolsSounds.get(BogoSorter.RND.nextInt(foolsSounds.size()));
-//        } else {
-//            sound = sortSound;
-//        }
-//        if (sound != null) {
-//            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(sound, 1f));
-//        }
-//    }
+    @SideOnly(Side.CLIENT)
+    public static void playSortSound() {
+        ResourceLocation sound;
+        SoundHandler soundHandler = Minecraft.getMinecraft().getSoundHandler();
+        if (BogoSorter.isAprilFools()) {
+            if (foolsSounds == null || foolsBuildTime - Minecraft.getSystemTime() > 300000) {
+                List<ResourceLocation> sounds = getResourceLocations(soundHandler);
+                foolsSounds = sounds;
+                foolsBuildTime = Minecraft.getSystemTime();
+            }
+            sound = foolsSounds.get(BogoSorter.RND.nextInt(foolsSounds.size()));
+        } else {
+            sound = sortSound;
+        }
+        if (sound != null) {
+            soundHandler.playSound(PositionedSoundRecord.func_147674_a(sound, 1f));
+        }
+    }
+
+    private static @NotNull List<ResourceLocation> getResourceLocations(SoundHandler soundHandler) {
+        List<ResourceLocation> sounds = new ArrayList<>(256);
+        for (Object key : soundHandler.sndRegistry.getKeys()) {
+            if (key instanceof ResourceLocation) {
+                ResourceLocation soundEvent = (ResourceLocation) key;
+                if (soundEvent != null &&
+                    !soundEvent.getResourcePath().contains("music.") &&
+                    !soundEvent.getResourcePath().contains("records.")) {
+                    sounds.add(soundEvent);
+                }
+            }
+        }
+        return sounds;
+    }
 
     private final EntityPlayer player;
     private final Container container;

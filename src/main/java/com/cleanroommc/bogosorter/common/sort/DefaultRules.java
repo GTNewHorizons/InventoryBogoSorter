@@ -1,7 +1,6 @@
 package com.cleanroommc.bogosorter.common.sort;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.compat.loader.Mods;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
@@ -29,9 +28,9 @@ public class DefaultRules {
         api.registerItemSortingRule("saturation", ItemCompareHelper::compareSaturation);
         api.registerClientItemSortingRule("color", ItemCompareHelper::compareColor, ItemCompareHelper::compareColor);
 
-//        if (Loader.isModLoaded("projecte")) {
-//            api.registerItemSortingRule("emc", ItemCompareHelper::compareEMC);
-//        }
+        if (Mods.ProjectE.isLoaded()) {
+            api.registerItemSortingRule("emc", ItemCompareHelper::compareEMC);
+        }
 
         api.registerNbtSortingRule("potion", "Potion", Constants.NBT.TAG_STRING, ItemCompareHelper::comparePotionId, DefaultRules::getPotionId);
 //        api.registerNbtSortingRule("enchantment", "ench", Constants.NBT.TAG_LIST, ItemCompareHelper::compareEnchantments, nbtBase -> (NBTTagList) nbtBase);

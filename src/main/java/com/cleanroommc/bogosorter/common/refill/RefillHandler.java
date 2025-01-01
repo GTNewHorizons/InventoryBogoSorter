@@ -29,17 +29,6 @@ public class RefillHandler {
     public RefillHandler(){
     }
 
-//    private static final Class<?> gtToolClass;
-//
-//    static {
-//        Class<?> clazz;
-//        try {
-//            clazz = Class.forName("gregtech.api.items.MetaGeneratedTool", false, RefillHandler.class.getClassLoader());
-//        } catch (Exception ignored) {
-//            clazz = null;
-//        }
-//        gtToolClass = clazz;
-//    }
 
     private static final int[][] INVENTORY_PROXIMITY_MAP = {
             {1, 2, 3, 4, 5, 6, 7, 8, 27, 18, 9, 28, 19, 10, 29, 20, 11, 30, 21, 12, 31, 22, 13, 32, 23, 14, 33, 24, 15, 34, 25, 16, 35, 26, 17},
@@ -127,10 +116,6 @@ public class RefillHandler {
         } else {
             return findItem(true);
         }
-    }
-
-    private static boolean isGT5uTool(ItemStack itemStack) {
-        return itemStack.getItem() instanceof MetaGeneratedTool;
     }
 
     private boolean findItem(boolean exactOnly) {
@@ -242,14 +227,14 @@ public class RefillHandler {
     private ItemStack getItem(int index) {
         if (index < 36) return this.inventory.mainInventory[index];
         if (index < 40) return this.inventory.mainInventory[index - 36];
-        return null; //this.inventory.offHandInventory.get(0);
+        return null;
     }
 
     private static boolean matchTags(ItemStack stackA, ItemStack stackB) {
         if (stackA.getTagCompound() == null && stackB.getTagCompound() != null) {
             return false;
         } else {
-            return (stackA.getTagCompound() == null || stackA.getTagCompound().equals(stackB.getTagCompound())); // && stackA.areCapsCompatible(stackB);
+            return (stackA.getTagCompound() == null || stackA.getTagCompound().equals(stackB.getTagCompound()));
         }
     }
 }

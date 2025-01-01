@@ -6,7 +6,10 @@ import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
 //import gregtech.api.items.metaitem.FoodUseManager;p
 //import gregtech.api.items.metaitem.MetaItem;
 //import gregtech.api.items.metaitem.stats.IFoodBehavior;
-//import moze_intel.projecte.utils.EMCHelper;
+import com.cleanroommc.bogosorter.compat.loader.Mods;
+import gregtech.api.interfaces.IFoodStat;
+import gregtech.api.items.MetaGeneratedItem;
+import moze_intel.projecte.utils.EMCHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
@@ -63,13 +66,12 @@ public class ItemCompareHelper {
         if (item.getItem() instanceof ItemFood) {
             return ((ItemFood) item.getItem()).func_150906_h(item);
         }
-//        if (BogoSorter.isAnyGtLoaded() && item.getItem() instanceof MetaItem) {
-//            MetaItem<?>.MetaValueItem valueItem = ((MetaItem<?>) item.getItem()).getItem(item);
-//            if (valueItem.getUseManager() instanceof FoodUseManager) {
-//                IFoodBehavior stats = ((FoodUseManager) valueItem.getUseManager()).getFoodStats();
-//                return stats.getSaturation(item, null);
-//            }
-//        }
+        if (Mods.GT5u.isLoaded() && item.getItem() instanceof MetaGeneratedItem) {
+            MetaGeneratedItem valueItem = ((MetaGeneratedItem) item.getItem());
+                IFoodStat stats = (IFoodStat) valueItem.getFoodValues(item);
+                return stats.getSaturation(valueItem, item,null);
+
+        }
         return Float.MIN_VALUE;
     }
 
@@ -77,19 +79,17 @@ public class ItemCompareHelper {
         if (item.getItem() instanceof ItemFood) {
             return ((ItemFood) item.getItem()).func_150905_g(item);
         }
-//        if (BogoSorter.isAnyGtLoaded() && item.getItem() instanceof MetaItem) {
-//            MetaItem<?>.MetaValueItem valueItem = ((MetaItem<?>) item.getItem()).getItem(item);
-//            if (valueItem.getUseManager() instanceof FoodUseManager) {
-//                IFoodBehavior stats = ((FoodUseManager) valueItem.getUseManager()).getFoodStats();
-//                return stats.getFoodLevel(item, null);
-//            }
-//        }
+        if (Mods.GT5u.isLoaded() && item.getItem() instanceof MetaGeneratedItem) {
+            MetaGeneratedItem valueItem = ((MetaGeneratedItem) item.getItem());
+            IFoodStat stats = ((IFoodStat) valueItem.getFoodValues(item));
+                return stats.getFoodLevel(valueItem, item, null);
+        }
         return Integer.MIN_VALUE;
     }
 
-//    public static long getEmcValue(ItemStack item) {
-//        return EMCHelper.getEmcValue(item);
-//    }
+    public static long getEmcValue(ItemStack item) {
+        return EMCHelper.getEmcValue(item);
+    }
 
     public static int compareMod(ItemStack stack1, ItemStack stack2) {
         return getMod(stack1).compareTo(getMod(stack2));
@@ -351,9 +351,9 @@ public class ItemCompareHelper {
         return Integer.compare(OreDictHelper.getOrePrefixIndex(prefix), OreDictHelper.getOrePrefixIndex(prefix1));
     }
 
-//    public static int compareEMC(ItemStack item1, ItemStack item2) {
-//        return Long.compare(getEmcValue(item2), getEmcValue(item1));
-//    }
+    public static int compareEMC(ItemStack item1, ItemStack item2) {
+        return Long.compare(getEmcValue(item2), getEmcValue(item1));
+    }
 
     public static int compareBlockType(ItemStack item1, ItemStack item2) {
         int c = Boolean.compare(isBlock(item2), isBlock(item1));

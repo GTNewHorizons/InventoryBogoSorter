@@ -13,20 +13,20 @@ public enum Mods {
     GT5u("gregtech"),
     Backpack("Backpack"),
     GalacticraftCore("galacticraftcore"),
-    AdventureBackpack2("adventurebackpack"),;
+    AdventureBackpack2("adventurebackpack"),
+    ProjectE("projecte"),;
 
     public final String modid;
-    private boolean loaded;
+    private Boolean loaded;
 
     Mods(String modid) {
         this.modid = modid;
     }
 
     public boolean isLoaded() {
+        if (loaded == null) {
+            loaded = Loader.isModLoaded(modid);
+        }
         return loaded;
-    }
-
-    public void check() {
-        this.loaded = Loader.isModLoaded(modid);
     }
 }
