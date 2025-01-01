@@ -3,9 +3,6 @@ package com.cleanroommc.bogosorter.common.sort;
 
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
-//import gregtech.api.items.metaitem.FoodUseManager;p
-//import gregtech.api.items.metaitem.MetaItem;
-//import gregtech.api.items.metaitem.stats.IFoodBehavior;
 import com.cleanroommc.bogosorter.compat.loader.Mods;
 import gregtech.api.interfaces.IFoodStat;
 import gregtech.api.items.MetaGeneratedItem;
