@@ -223,9 +223,7 @@ public class ClientEventHandler {
 
     // handle all inputs in one method
     public static boolean handleInput(@Nullable GuiContainer container) {
-//        if (container != null) {// && container.isFocused()) {
-//            return false;
-//        }
+
         if (container != null && canDoShortcutAction()) {
             if (moveAll.isFirstPress() && ShortcutHandler.moveAllItems(container, false)) {
                 shortcutAction();
@@ -268,8 +266,6 @@ public class ClientEventHandler {
 
     private static boolean canSort(@Nullable ISlot slot) {
         return !Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode ||
-//                sortKey.getKeyModifier().isActive(null) != Minecraft.getMinecraft().gameSettings.keyBindPickBlock.getKeyModifier().isActive(null) ||
-//                sortKey.getKeyCode() != Minecraft.getMinecraft().gameSettings.keyBindPickBlock.getKeyCode() ||
                 (Minecraft.getMinecraft().thePlayer.inventory.getItemStack() == null && (slot == null || slot.bogo$getStack() == null));
     }
 
@@ -278,7 +274,7 @@ public class ClientEventHandler {
     }
 
     private static boolean isKeyDown(KeyBinding key) {
-//        if (!key.getKeyModifier().isActive(null)) return false;
+
         if (key.getKeyCode() < 0) {
             return isButtonPressed(key.getKeyCode() + 100);
         }
@@ -324,7 +320,7 @@ public class ClientEventHandler {
             boolean color = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("color"));
             boolean name = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("display_name"));
             NetworkHandler.sendToServer(new CSort(createSortData(slotGroup, color, name), BogoSorterConfig.sortRules, BogoSorterConfig.nbtSortRules, slot.bogo$getSlotNumber(), slotGroup.isPlayerInventory()));
-//            SortHandler.playSortSound();
+            SortHandler.playSortSound();
 
             return true;
 

@@ -41,7 +41,6 @@ import static com.cleanroommc.bogosorter.ClientEventHandler.*;
         version = BogoSorter.VERSION,
         dependencies = "required-after:gtnhmixins;" +
                 "required-after:modularui2;")
-//@EventBusSubscriber()
 public class BogoSorter {
 
     public static final String ID = "bogosorter";
@@ -54,7 +53,7 @@ public class BogoSorter {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        IntegrationLoader.INSTANCE.load();
+        IntegrationLoader.load();
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
         NetworkHandler.init();

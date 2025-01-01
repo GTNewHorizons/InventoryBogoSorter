@@ -89,7 +89,6 @@ public class ItemColorHelper {
             State = block;
         }
 
-//        final BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
         int renderColor = 0xFFFFFFFF;
         try {
             State.colorMultiplier(null, 0, 0, 0);

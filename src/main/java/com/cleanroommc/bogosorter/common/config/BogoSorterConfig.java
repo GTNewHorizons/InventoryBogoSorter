@@ -17,6 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 
 import java.util.ArrayList;
@@ -94,11 +95,11 @@ public class BogoSorterConfig {
             DropOffButtonHandler.buttonX = JsonHelper.getInt(general, 80, "dropoffButtonX");
             DropOffButtonHandler.buttonY = JsonHelper.getInt(general, 12, "dropoffButtonY");
             HotbarSwap.setEnabled(JsonHelper.getBoolean(general, true, "enableHotbarSwap"));
-//            SortHandler.sortSound = JsonHelper.getElement(general, SoundEvents.UI_BUTTON_CLICK, element -> {
-//                if (element.isJsonNull()) return null;
-//                SoundEvent soundEvent = SoundEvent.REGISTRY.getObject(new ResourceLocation(element.getAsString()));
-//                return soundEvent != null ? soundEvent : SoundEvents.UI_BUTTON_CLICK;
-//            }, "sortSound");
+            SortHandler.sortSound = JsonHelper.getElement(general, new ResourceLocation("gui.button.press"), element -> {
+                if (element.isJsonNull()) return null;
+                ResourceLocation soundEvent = new ResourceLocation(element.getAsString());
+                return soundEvent != null ? soundEvent : new ResourceLocation("gui.button.press");
+            }, "sortSound");
             buttonColor = JsonHelper.getColor(general, 0xFFFFFFFF, "buttonColor");
         }
         sortRules.clear();

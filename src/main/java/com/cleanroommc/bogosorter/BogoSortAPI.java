@@ -297,7 +297,7 @@ public class BogoSortAPI implements IBogoSortAPI {
 
         @Override
         public int hashCode(ItemStack o) {
-            return Objects.hash(o.getItem(), o.getItemDamage(), o.getTagCompound()); //, getItemAccessor(o).getCapNBT());
+            return Objects.hash(o.getItem(), o.getItemDamage(), o.getTagCompound());
         }
 
         @Override
@@ -307,7 +307,7 @@ public class BogoSortAPI implements IBogoSortAPI {
             return (a == null && b == null) ||
                     (a.getItem()==b.getItem() &&
                             a.getItemDamage()==b.getItemDamage() &&
-                            Objects.equals(a.getTagCompound(), b.getTagCompound())); // && Objects.equals(getItemAccessor(a).getCapNBT(), getItemAccessor(b).getCapNBT()));
+                            Objects.equals(a.getTagCompound(), b.getTagCompound()));
         }
     };
 
@@ -327,7 +327,4 @@ public class BogoSortAPI implements IBogoSortAPI {
         }
     };
 
-//    public static ItemStackAccessor getItemAccessor(ItemStack itemStack) {
-//        return (ItemStackAccessor) (Object) itemStack;
-//    }
 }

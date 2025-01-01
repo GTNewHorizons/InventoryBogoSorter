@@ -2,9 +2,11 @@ package com.cleanroommc.bogosorter.common;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.compat.loader.Mods;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import gregtech.api.items.MetaGeneratedTool;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -14,13 +16,13 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import tconstruct.library.util.IToolPart;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-//@EventBusSubscriber()
 public class OreDictHelper {
 
     private static final Map<ItemStack, Set<String>> ORE_DICTS = new Object2ObjectOpenCustomHashMap<>(BogoSortAPI.ITEM_META_HASH_STRATEGY);
@@ -75,12 +77,12 @@ public class OreDictHelper {
     }
 
     public static String getMaterial(ItemStack item) {
-//        if (BogoSorter.isGTCEuLoaded() && item.getItem() instanceof IGTTool) {
-//            return getGtToolMaterial(item);
-//        }
-//        if (BogoSorter.isTConstructLoaded() && item.getItem() instanceof IMaterialItem) {
-//            return ((IMaterialItem) item.getItem()).getMaterialID(item);
-//        }
+        if (Mods.GT5u.isLoaded() && item.getItem() instanceof MetaGeneratedTool) {
+            return getGtToolMaterial(item);
+        }
+        if (Mods.Tconstruct.isLoaded() && item.getItem() instanceof IToolPart) {
+            return String.valueOf(((IToolPart) item.getItem()).getMaterialID(item));
+        }
         return MATERIALS.get(item);
     }
 
