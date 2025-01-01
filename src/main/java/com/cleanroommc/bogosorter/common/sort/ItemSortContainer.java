@@ -57,7 +57,7 @@ public class ItemSortContainer {
     @Override
     public int hashCode() {
         ItemStack o = itemStack;
-        return Objects.hash(o.getItem(), o.getItemDamage(), o.getTagCompound()); //, BogoSortAPI.getItemAccessor(o).getCapNBT());
+        return Objects.hash(o.getItem(), o.getItemDamage(), o.getTagCompound());
     }
 
     @Override
@@ -76,6 +76,6 @@ public class ItemSortContainer {
         return (a == null && b == null) ||
                 (a.getItem() == b.getItem() &&
                         a.getItemDamage() == b.getItemDamage() &&
-                        Objects.equals(a.getTagCompound(), b.getTagCompound())); //&& Objects.equals(BogoSortAPI.getItemAccessor(a).getCapNBT(), BogoSortAPI.getItemAccessor(b).getCapNBT()));
+                        Objects.equals(a.getTagCompound(), b.getTagCompound()));
     }
 }
