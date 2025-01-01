@@ -3,6 +3,7 @@ package net.blay09.mods.craftingtweaks;
 import java.util.Map;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
 import net.blay09.mods.craftingtweaks.api.CraftingTweaksAPI;
 import net.blay09.mods.craftingtweaks.api.SimpleTweakProvider;
 import net.blay09.mods.craftingtweaks.api.TweakProvider;
@@ -69,6 +70,8 @@ public class CraftingTweaks {
         clientSide = "net.blay09.mods.craftingtweaks.client.ClientProxy",
         serverSide = "net.blay09.mods.craftingtweaks.CommonProxy")
     public static CommonProxy proxy;
+
+    public static boolean isServerSideInstalled = false;
 
     private static Configuration config;
 
@@ -247,6 +250,16 @@ public class CraftingTweaks {
 
         config.save();
     }
+
+
+    @NetworkCheckHandler
+    public boolean checkNetwork(Map<String, String> map, Side side) {
+        if (side == Side.SERVER) {
+            isServerSideInstalled = map.containsKey(MOD_ID);
+        }
+        return true;
+    }
+
 
     public void registerProvider(Class<? extends Container> clazz, TweakProvider provider) {
         if (!provider.getModId()

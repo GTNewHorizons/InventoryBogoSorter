@@ -43,12 +43,11 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class ClientProxy extends CommonProxy {
 
-    private static final int HELLO_TIMEOUT = 20 * 10;
+
     private static final List<String> tooltipList = Lists.newArrayList();
 
-    private int helloTimeout;
-    private boolean isServerSide;
 
+    private boolean missingMessageSent;
     private boolean wasRotated;
     private boolean wasCleared;
     private boolean wasBalanced;
@@ -111,11 +110,6 @@ public class ClientProxy extends CommonProxy {
             .buildSoftDependProxy("NotEnoughItems", "net.blay09.mods.craftingtweaks.addon.NEIHotkeyCheck");
     }
 
-    @SubscribeEvent
-    public void connectedToServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        helloTimeout = HELLO_TIMEOUT;
-        isServerSide = false;
-    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onGuiClick(GuiClickEvent event) {
@@ -147,7 +141,7 @@ public class ClientProxy extends CommonProxy {
                                     }
                                 }
                             }
-                            if (isServerSide) {
+                            if (CraftingTweaks.isServerSideInstalled) {
                                 for (Slot slot : transferSlots) {
                                     NetworkHandler.instance.sendToServer(new MessageTransferStack(0, slot.slotNumber));
                                 }
@@ -169,13 +163,12 @@ public class ClientProxy extends CommonProxy {
         EntityPlayer entityPlayer = FMLClientHandler.instance()
             .getClientPlayerEntity();
         if (entityPlayer != null) {
-            if (helloTimeout > 0) {
-                helloTimeout--;
-                if (helloTimeout <= 0) {
+            if (!CraftingTweaks.isServerSideInstalled) {
+                if (!missingMessageSent) {
                     entityPlayer.addChatMessage(
                         new ChatComponentText(
                             "This server does not have Crafting Tweaks installed. Functionality may be limited."));
-                    isServerSide = false;
+                    missingMessageSent = true;
                 }
             }
             if ((hotkeyCheck != null && !hotkeyCheck.allowHotkeys())) {
@@ -193,7 +186,7 @@ public class ClientProxy extends CommonProxy {
                         || config == CraftingTweaks.ModSupportState.HOTKEYS_ONLY) {
                         if (keyRotate.getKeyCode() > 0 && Keyboard.isKeyDown(keyRotate.getKeyCode())) {
                             if (!wasRotated) {
-                                if (isServerSide) {
+                                if (CraftingTweaks.isServerSideInstalled) {
                                     NetworkHandler.instance.sendToServer(new MessageRotate(0, isShiftDown));
                                 } else {
                                     clientProvider.rotateGrid(provider, entityPlayer, container, 0, isShiftDown);
@@ -205,7 +198,7 @@ public class ClientProxy extends CommonProxy {
                         }
                         if (keyClear.getKeyCode() > 0 && Keyboard.isKeyDown(keyClear.getKeyCode())) {
                             if (!wasCleared) {
-                                if (isServerSide) {
+                                if (CraftingTweaks.isServerSideInstalled) {
                                     NetworkHandler.instance.sendToServer(new MessageClear(0, isShiftDown));
                                 } else {
                                     clientProvider.clearGrid(provider, entityPlayer, container, 0, isShiftDown);
@@ -217,7 +210,7 @@ public class ClientProxy extends CommonProxy {
                         }
                         if (keyBalance.getKeyCode() > 0 && Keyboard.isKeyDown(keyBalance.getKeyCode())) {
                             if (!wasBalanced) {
-                                if (isServerSide) {
+                                if (CraftingTweaks.isServerSideInstalled) {
                                     NetworkHandler.instance.sendToServer(new MessageBalance(0, isShiftDown));
                                 } else {
                                     if (isShiftDown) {
@@ -260,7 +253,7 @@ public class ClientProxy extends CommonProxy {
                             if (mouseSlot != null) {
                                 boolean isDecompress = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)
                                     || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
-                                if (isServerSide) {
+                                if (CraftingTweaks.isServerSideInstalled) {
                                     NetworkHandler.instance.sendToServer(
                                         new MessageCompress(mouseSlot.slotNumber, isDecompress, !isShiftDown));
                                 } else if (isDecompress && provider != null) {
@@ -278,7 +271,7 @@ public class ClientProxy extends CommonProxy {
                     if (keyDecompress.getKeyCode() > 0 && Keyboard.isKeyDown(keyDecompress.getKeyCode())) {
                         if (!wasDecompressed) {
                             if (mouseSlot != null) {
-                                if (isServerSide) {
+                                if (CraftingTweaks.isServerSideInstalled) {
                                     NetworkHandler.instance
                                         .sendToServer(new MessageCompress(mouseSlot.slotNumber, true, isShiftDown));
                                 } else if (provider != null) {
@@ -356,7 +349,7 @@ public class ClientProxy extends CommonProxy {
             boolean isShiftDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
             switch (((GuiTweakButton) event.button).getTweakOption()) {
                 case Rotate:
-                    if (isServerSide) {
+                    if (CraftingTweaks.isServerSideInstalled) {
                         NetworkHandler.instance
                             .sendToServer(new MessageRotate(((GuiTweakButton) event.button).getTweakId(), isShiftDown));
                     } else {
@@ -370,7 +363,7 @@ public class ClientProxy extends CommonProxy {
                     event.setCanceled(true);
                     break;
                 case Balance:
-                    if (isServerSide) {
+                    if (CraftingTweaks.isServerSideInstalled) {
                         NetworkHandler.instance.sendToServer(
                             new MessageBalance(((GuiTweakButton) event.button).getTweakId(), isShiftDown));
                     } else {
@@ -391,7 +384,7 @@ public class ClientProxy extends CommonProxy {
                     event.setCanceled(true);
                     break;
                 case Clear:
-                    if (isServerSide) {
+                    if (CraftingTweaks.isServerSideInstalled) {
                         NetworkHandler.instance
                             .sendToServer(new MessageClear(((GuiTweakButton) event.button).getTweakId(), isShiftDown));
                     } else {
@@ -406,11 +399,5 @@ public class ClientProxy extends CommonProxy {
                     break;
             }
         }
-    }
-
-    @Override
-    public void receivedHello(EntityPlayer entityPlayer) {
-        helloTimeout = 0;
-        isServerSide = true;
     }
 }
