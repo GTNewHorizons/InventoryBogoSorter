@@ -67,7 +67,7 @@ public class ItemCompareHelper {
         if (Mods.GT5u.isLoaded() && item.getItem() instanceof MetaGeneratedItem) {
             MetaGeneratedItem valueItem = ((MetaGeneratedItem) item.getItem());
                 IFoodStat stats = (IFoodStat) valueItem.getFoodValues(item);
-                return stats.getSaturation(valueItem, item,null);
+                return stats.getSaturation(null, item,null);
 
         }
         return Float.MIN_VALUE;
@@ -80,7 +80,7 @@ public class ItemCompareHelper {
         if (Mods.GT5u.isLoaded() && item.getItem() instanceof MetaGeneratedItem) {
             MetaGeneratedItem valueItem = ((MetaGeneratedItem) item.getItem());
             IFoodStat stats = ((IFoodStat) valueItem.getFoodValues(item));
-                return stats.getFoodLevel(valueItem, item, null);
+                return stats.getFoodLevel(null, item, null);
         }
         return Integer.MIN_VALUE;
     }
