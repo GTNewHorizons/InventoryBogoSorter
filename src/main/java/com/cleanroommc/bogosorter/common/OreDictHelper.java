@@ -90,7 +90,6 @@ public class OreDictHelper {
     @NotNull
     public static String getGtToolMaterial(ItemStack itemStack) {
         NBTTagCompound statsTag = itemStack.stackTagCompound.getCompoundTag("GT.ToolStats");
-        System.out.println(statsTag);
         if (statsTag == null) {
             return "";
         }
