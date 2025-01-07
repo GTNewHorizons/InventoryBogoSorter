@@ -1,5 +1,6 @@
 package com.cleanroommc.bogosorter.mixinplugin;
 
+
 public enum TargetedMod {
 
     VANILLA("Minecraft", null),
@@ -7,9 +8,11 @@ public enum TargetedMod {
     IRONCHEST("Iron Chests", null, "IronChest"),
     ENDERIO("Ender IO", null, "EnderIO"),
     GALACTICRAFTCORE("Galacticraft Core", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
-    THERMALEXPANSION("Thermal Expansion", null, "ThermalExpansion"),;
-
-
+    THERMALEXPANSION("Thermal Expansion", null, "ThermalExpansion"),
+    Forestry("Forestry", null, "Forestry"),
+    CodeChickenCore("CodeChickenCore", "codechicken.core.launch.CodeChickenCorePlugin", "CodeChickenCore"),
+    NEI("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
+    ;
     /** The "name" in the @Mod annotation */
     public final String modName;
     /** Class that implements the IFMLLoadingPlugin interface */
