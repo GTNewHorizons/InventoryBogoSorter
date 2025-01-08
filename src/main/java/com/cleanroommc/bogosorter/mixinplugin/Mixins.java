@@ -56,19 +56,24 @@ public enum Mixins {
         )),
 
     Forestry(new Builder(" Forestry").addTargetedMod(TargetedMod.Forestry).setSide(Side.CLIENT)
-    .setPhase(Phase.LATE).addMixinClasses(
-        "forestry.MixinGuiForestry"
-    )),
+        .setPhase(Phase.LATE).addMixinClasses(
+            "forestry.MixinGuiForestry"
+        )),
     CodeChickenCore(new Builder(" CodeChickenCore").addTargetedMod(TargetedMod.CodeChickenCore).setSide(Side.CLIENT)
-    .setPhase(Phase.LATE).addMixinClasses(
-        "codechicken.core.MixinGuiContainerWidget"
-    )),
+        .setPhase(Phase.LATE).addMixinClasses(
+            "codechicken.core.MixinGuiContainerWidget"
+        )),
 
     NEI(new Builder(" CodeChickenCore").addTargetedMod(TargetedMod.CodeChickenCore).setSide(Side.CLIENT)
-    .setPhase(Phase.LATE).addMixinClasses(
-        "codechicken.nei.MixinGuiEnchantmentModifier",
-        "codechicken.nei.MixinGuiRecipe"
-    )),
+        .setPhase(Phase.LATE).addMixinClasses(
+            "codechicken.nei.MixinGuiEnchantmentModifier",
+            "codechicken.nei.MixinGuiRecipe"
+        )),
+    AE2(new Builder(" Applied Energistics 2").addTargetedMod(TargetedMod.AE2).setSide(Side.CLIENT)
+        .setPhase(Phase.LATE).addMixinClasses(
+            "appliedenergistics.MixinAEBaseGui"
+        )),
+
     ;
 
 

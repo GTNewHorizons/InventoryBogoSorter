@@ -12,6 +12,7 @@ public enum TargetedMod {
     Forestry("Forestry", null, "Forestry"),
     CodeChickenCore("CodeChickenCore", "codechicken.core.launch.CodeChickenCorePlugin", "CodeChickenCore"),
     NEI("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
+    AE2("Applied Energistics 2", "appeng.transformer.AppEngCore", "appliedenergistics2"),
     ;
     /** The "name" in the @Mod annotation */
     public final String modName;

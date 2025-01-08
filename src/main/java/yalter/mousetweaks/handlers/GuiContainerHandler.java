@@ -3,14 +3,12 @@ package yalter.mousetweaks.handlers;
 import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.crash.CrashReport;
 import net.minecraft.inventory.ContainerRepair;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.inventory.SlotMerchantResult;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ReportedException;
 import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.ClientEventHandler;
 import yalter.mousetweaks.impl.IGuiScreenHandler;
@@ -32,12 +30,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
     public GuiContainerHandler(GuiContainer guiContainer) {
         this.mc = Minecraft.getMinecraft();
         this.guiContainer = guiContainer;
-        try {
-            this.mixinGuiContainer = (IGuiContainerAccessor) guiContainer;
-        } catch (ClassCastException e) {
-            CrashReport crashreport = CrashReport.makeCrashReport(e, "GuiContainer could not be cast to IGuiContainerAccessor.");
-            throw new ReportedException(crashreport);
-        }
+        this.mixinGuiContainer = (IGuiContainerAccessor) guiContainer;
     }
 
     private int getDisplayWidth() {

@@ -9,7 +9,7 @@
  import org.spongepowered.asm.mixin.Shadow;
 
  @Mixin(ContainerHorseInventory.class)
- public class ContainerHorseInventoryMixin implements ISortableContainer {
+ public abstract class ContainerHorseInventoryMixin implements ISortableContainer {
 
      @Shadow
      @Final

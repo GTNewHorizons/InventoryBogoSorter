@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 
 @Mixin(GuiContainerWidget.class)
-public class MixinGuiContainerWidget implements IMTModGuiContainer2 {
+public abstract class MixinGuiContainerWidget implements IMTModGuiContainer2 {
 
     @Override
     public boolean MT_isMouseTweaksDisabled() {

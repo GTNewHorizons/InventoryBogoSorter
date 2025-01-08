@@ -2,10 +2,8 @@ package yalter.mousetweaks.handlers;
 
 import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ReportedException;
 import yalter.mousetweaks.impl.IGuiScreenHandler;
 import yalter.mousetweaks.impl.MouseButton;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
@@ -21,12 +19,8 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
     public IMTModGuiContainer2Handler(IMTModGuiContainer2 modGuiContainer) {
         this.mc = Minecraft.getMinecraft();
         this.modGuiContainer = modGuiContainer;
-        try {
-            this.mixinGuiContainer = (IGuiContainerAccessor) modGuiContainer;
-        } catch (ClassCastException e) {
-            CrashReport crashreport = CrashReport.makeCrashReport(e, "Mod GuiContainer could not be cast to IGuiContainerAccessor.");
-            throw new ReportedException(crashreport);
-        }
+        this.mixinGuiContainer = (IGuiContainerAccessor) modGuiContainer;
+
     }
 
     @Override

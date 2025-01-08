@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ContainerSlimeling.class)
-public class MixinContainerSlimeling implements ISortableContainer {
+public abstract class MixinContainerSlimeling implements ISortableContainer {
 
     @Override
     public void buildSortingContext(ISortingContextBuilder builder) {

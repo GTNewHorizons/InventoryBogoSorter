@@ -8,7 +8,7 @@
  import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
  @Mixin(GuiEditSign.class)
- public class GuiEditSignMixin {
+ public abstract class GuiEditSignMixin {
 
  @Inject(method = "<init>", at = @At("RETURN"))
  public void init(TileEntitySign p_i1097_1_, CallbackInfo ci) {
