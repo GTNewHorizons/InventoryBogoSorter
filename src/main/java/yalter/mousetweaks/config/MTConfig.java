@@ -33,10 +33,6 @@ public class MTConfig {
     @Config.Name("Wheel tweak scroll direction")
     public static WheelScrollDirection wheelScrollDirection = WheelScrollDirection.NORMAL;
 
-    @Config.Comment("When set to smooth scrolling, minor issues may be experienced such as scrolling \"through\" JEI or other mods. Non-smooth scrolling works only with the Forge OnTick method.")
-    @Config.Name("Scroll handling")
-    public static ScrollHandling scrollHandling = ScrollHandling.SIMPLE;
-
     @Config.Comment("This determines how many items are moved when you scroll. On some setups (notably macOS), scrolling the wheel with different speeds results in different distances scrolled per wheel \"bump\". To make those setups play nicely with Mouse Tweaks, set this option to \"Always exactly one item\".")
     @Config.Name("Scroll item scaling")
     public static ScrollItemScaling scrollItemScaling = ScrollItemScaling.PROPORTIONAL;
@@ -44,30 +40,6 @@ public class MTConfig {
     /**
      * Config Enums
      */
-    public enum ScrollHandling {
-
-        SIMPLE("Smooth scrolling, minor issues"),
-        EVENT_BASED("Non-smooth scrolling, no issues");
-
-        private final String id;
-
-        ScrollHandling(String id) {
-            this.id = id;
-        }
-
-        public String getValue() {
-            return this.id;
-        }
-
-        public static ScrollHandling fromId(int ordinal) {
-            return ordinal == 0 ? SIMPLE : EVENT_BASED;
-        }
-
-        @Override
-        public String toString() {
-            return this.getValue();
-        }
-    }
 
     public enum ScrollItemScaling {
 
