@@ -3,7 +3,7 @@ package com.cleanroommc.bogosorter.mixins.early.minecraft;
 import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ import com.cleanroommc.bogosorter.common.refill.DamageHelper;
 public abstract class MixinItemStack {
 
     @Unique
-    EntityPlayer bogo$entityPlayer = null;
+    EntityPlayerMP bogo$entityPlayer = null;
 
     @Inject(
         method = "attemptDamageItem",
@@ -35,7 +35,7 @@ public abstract class MixinItemStack {
             target = "Lnet/minecraft/item/ItemStack;isItemStackDamageable()Z",
             shift = At.Shift.AFTER))
     private void bogo$damageItem(int p_77972_1_, EntityLivingBase p_77972_2_, CallbackInfo ci) {
-        if (p_77972_2_ instanceof EntityPlayer player) {
+        if (p_77972_2_ instanceof EntityPlayerMP player) {
             bogo$entityPlayer = player;
         } else bogo$entityPlayer = null;
     }
