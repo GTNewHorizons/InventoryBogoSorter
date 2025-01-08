@@ -120,14 +120,6 @@ public class Main {
                         + (disableWheelForThisContainer ? "disabled" : "enabled")
                         + ".");
 
-                System.out.println(
-                    "Handler: " + handler.getClass()
-                        .getSimpleName()
-                        + "; MT is "
-                        + (disableForThisContainer ? "disabled" : "enabled")
-                        + "; wheel tweak is "
-                        + (disableWheelForThisContainer ? "disabled" : "enabled")
-                        + ".");
             }
         }
 
