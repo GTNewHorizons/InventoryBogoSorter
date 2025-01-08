@@ -115,7 +115,7 @@ public class ShortcutHandler {
                 } else {
                     int inserted = stackInSlot.stackSize - remainder.stackSize;
                     if (inserted > 0) {
-                        slot1.bogo$putStack(remainder.stackSize > 0 ? remainder : null);
+                        slot1.bogo$putStack(remainder.copy());
                     }
                 }
             }
