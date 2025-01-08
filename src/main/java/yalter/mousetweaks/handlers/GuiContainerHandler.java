@@ -12,7 +12,7 @@ import net.minecraft.inventory.SlotMerchantResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ReportedException;
 import org.lwjgl.input.Mouse;
-import yalter.mousetweaks.MouseTweaks;
+import yalter.mousetweaks.ClientEventHandler;
 import yalter.mousetweaks.impl.IGuiScreenHandler;
 import yalter.mousetweaks.impl.MouseButton;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
@@ -59,13 +59,13 @@ public class GuiContainerHandler implements IGuiScreenHandler {
     @Override
     public boolean isMouseTweaksDisabled() {
         return guiContainer.getClass().isAnnotationPresent(MouseTweaksIgnore.class) || (mixinGuiContainer
-                == null) || MouseTweaks.isMouseTweakDisabled(guiContainer.getClass());
+                == null) || ClientEventHandler.isMouseTweakDisabled(guiContainer.getClass());
     }
 
     @Override
     public boolean isWheelTweakDisabled() {
         return guiContainer.getClass().isAnnotationPresent(MouseTweaksDisableWheelTweak.class)
-                || MouseTweaks.isWheelTweakDisabled(guiContainer.getClass());
+                || ClientEventHandler.isWheelTweakDisabled(guiContainer.getClass());
     }
 
     @Override

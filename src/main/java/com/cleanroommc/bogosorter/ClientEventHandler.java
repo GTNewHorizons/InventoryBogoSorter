@@ -25,8 +25,6 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.minecraft.client.Minecraft;
@@ -51,7 +49,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@SideOnly(Side.CLIENT)
 public class ClientEventHandler {
 
     public static final List<ItemStack> allItems = new ArrayList<>();

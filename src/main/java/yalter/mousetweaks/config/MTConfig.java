@@ -3,7 +3,6 @@ package yalter.mousetweaks.config;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
 import yalter.mousetweaks.MouseTweaks;
-
 import static yalter.mousetweaks.Main.isLwjgl3Loaded;
 
 @Config(modid = MouseTweaks.MOD_ID)

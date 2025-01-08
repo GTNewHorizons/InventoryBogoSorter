@@ -1,7 +1,7 @@
 package yalter.mousetweaks.config;
 
 
-import yalter.mousetweaks.util.MTLog;
+import yalter.mousetweaks.MouseTweaks;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class OldConfig {
                 file.delete();
             }
         } catch (IOException e) {
-            MTLog.logger.error(e);
+            MouseTweaks.LOGGER.error(e);
         }
     }
 

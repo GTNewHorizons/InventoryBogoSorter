@@ -24,7 +24,7 @@ public abstract class MixinGuiRecipe extends GuiContainer implements IMTModGuiCo
 
     @Override
     public boolean MT_isWheelTweakDisabled() {
-        return false;
+        return true;
     }
 
     @Override
@@ -44,7 +44,7 @@ public abstract class MixinGuiRecipe extends GuiContainer implements IMTModGuiCo
 
     @Override
     public boolean MT_isIgnored(Slot slot) {
-        return false;
+        return true;
     }
 
     @Override

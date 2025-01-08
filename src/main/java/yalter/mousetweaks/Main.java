@@ -1,8 +1,6 @@
 package yalter.mousetweaks;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -23,13 +21,11 @@ import yalter.mousetweaks.handlers.IMTModGuiContainerHandler;
 import yalter.mousetweaks.impl.IGuiScreenHandler;
 import yalter.mousetweaks.impl.IMouseState;
 import yalter.mousetweaks.impl.MouseButton;
-import yalter.mousetweaks.util.MTLog;
 
 import java.util.List;
 
 import static net.minecraft.item.ItemStack.copyItemStack;
 
-@SideOnly(Side.CLIENT)
 public class Main {
 
     private static IMouseState mouseState = new SimpleMouseState();
@@ -53,12 +49,12 @@ public class Main {
 
         lwjgl3Loaded = Loader.isModLoaded("lwjgl3ify");
         if (lwjgl3Loaded) {
-            MTLog.logger.info("Detected lwjgl3!");
+            MouseTweaks.LOGGER.info("Detected lwjgl3!");
         }
 
         initialized = true;
 
-        MTLog.logger.fatal("Mouse Tweaks has been initialized.");
+        MouseTweaks.LOGGER.debug("Mouse Tweaks has been initialized.");
 
         return true;
     }
@@ -92,7 +88,7 @@ public class Main {
         if (oldGuiScreen != currentScreen) {
             oldGuiScreen = currentScreen;
 
-            MTLog.logger.debug("You have just opened " + currentScreen.getClass().getSimpleName() + ".");
+            MouseTweaks.LOGGER.debug("You have just opened " + currentScreen.getClass().getSimpleName() + ".");
 
             handler = findHandler(currentScreen);
 
@@ -102,7 +98,7 @@ public class Main {
             if (handler == null) {
                 disableForThisContainer = true;
 
-                MTLog.logger.debug("No valid handler found; MT is disabled.");
+                MouseTweaks.LOGGER.debug("No valid handler found; MT is disabled.");
 
                 return;
             } else {
@@ -111,7 +107,7 @@ public class Main {
 
                 if (isMouseWheelTransferActive() && !disableWheelForThisContainer) Mouse.getDWheel(); // reset the mouse wheel delta
 
-                MTLog.logger.debug("Handler: "
+                MouseTweaks.LOGGER.debug("Handler: "
                         + handler.getClass().getSimpleName()
                         + "; MT is "
                         + (disableForThisContainer
@@ -178,7 +174,7 @@ public class Main {
             if (firstRightClickedSlot == selectedSlot)
                 firstRightClickedSlot = null;
 
-            MTLog.logger.debug("You have selected a new slot, it's slot number is " + selectedSlot.slotNumber);
+            MouseTweaks.LOGGER.debug("You have selected a new slot, it's slot number is " + selectedSlot.slotNumber);
 
             // Copy stacks, otherwise when we click stuff they get updated and mess up the logic.
             ItemStack targetStack = copyItemStack(selectedSlot.getStack());
@@ -281,8 +277,9 @@ public class Main {
 
                 return;
             }
-
+            int attemptsLeft = 100;
             do {
+                attemptsLeft--;
                 Slot applicableSlot = findWheelApplicableSlot(slots, selectedSlot, pushItems);
                 if (applicableSlot == null)
                     break;
@@ -351,7 +348,7 @@ public class Main {
                             handler.clickSlot(slotFrom, MouseButton.LEFT, false);
                     }
                 }
-            } while (numItemsToMove > 0);
+            } while (numItemsToMove > 0 && attemptsLeft > 0);
         }
     }
 

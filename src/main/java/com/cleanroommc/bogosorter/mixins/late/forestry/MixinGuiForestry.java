@@ -18,9 +18,6 @@ import yalter.mousetweaks.api.IMTModGuiContainer2;
 
 @Mixin(GuiForestry.class)
 public abstract class MixinGuiForestry extends GuiContainer implements IMTModGuiContainer2 {
-    @Shadow
-    public abstract Slot getSlotAtPosition(int par1, int par2);
-
     public MixinGuiForestry(Container p_i1072_1_) {
         super(p_i1072_1_);
     }
@@ -38,12 +35,12 @@ public abstract class MixinGuiForestry extends GuiContainer implements IMTModGui
 
     @Override
     public Container MT_getContainer() {
-        return this.inventorySlots;
+        return inventorySlots;
     }
 
     @Override
     public Slot MT_getSlotUnderMouse() {
-        return this.theSlot;
+        return theSlot;
     }
 
     @Override
@@ -80,11 +77,11 @@ public abstract class MixinGuiForestry extends GuiContainer implements IMTModGui
 
     @Override
     public boolean MT_disableRMBDraggingFunctionality() {
-        if (this.field_147007_t && this.field_146988_G == 1) {
-            this.field_147007_t = false;
+        if (field_147007_t && field_146988_G == 1) {
+            field_147007_t = false;
             // Don't ignoreMouseUp on slots that can't accept the item. (crafting output, ME slot, etc.)
-            if (this.theSlot != null && this.theSlot.isItemValid(this.mc.thePlayer.inventory.getItemStack())) {
-                this.field_146995_H = true;
+            if (theSlot != null && theSlot.isItemValid(mc.thePlayer.inventory.getItemStack())) {
+                field_146995_H = true;
             }
             return true;
         }

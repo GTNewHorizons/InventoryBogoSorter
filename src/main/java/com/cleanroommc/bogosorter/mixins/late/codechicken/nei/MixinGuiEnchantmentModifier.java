@@ -47,6 +47,14 @@ public abstract class MixinGuiEnchantmentModifier extends GuiContainer implement
 
     @Override
     public boolean MT_disableRMBDraggingFunctionality() {
+        if (field_147007_t && field_146988_G == 1) {
+            field_147007_t = false;
+            // Don't ignoreMouseUp on slots that can't accept the item. (crafting output, ME slot, etc.)
+            if (theSlot != null && theSlot.isItemValid(mc.thePlayer.inventory.getItemStack())) {
+                field_146995_H = true;
+            }
+            return true;
+        }
         return false;
     }
 }

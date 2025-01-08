@@ -17,7 +17,7 @@ public class MixinGuiContainerWidget implements IMTModGuiContainer2 {
 
     @Override
     public boolean MT_isWheelTweakDisabled() {
-        return false;
+        return true;
     }
 
     @Override

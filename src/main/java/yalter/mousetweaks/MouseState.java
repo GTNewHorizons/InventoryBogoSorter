@@ -1,8 +1,8 @@
 package yalter.mousetweaks;
 
 
+import com.google.common.base.Objects;
 import org.lwjgl.input.Mouse;
-import org.spongepowered.libraries.com.google.common.base.MoreObjects;
 import yalter.mousetweaks.config.MTConfig;
 import yalter.mousetweaks.impl.IMouseState;
 import yalter.mousetweaks.impl.MouseButton;
@@ -100,7 +100,7 @@ public class MouseState implements IMouseState {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
+        return Objects.toStringHelper(this)
                 .add("pressedButtons", pressedButtons.toArray())
                 .add("scrollAmount", scrollAmount)
                 .toString();
