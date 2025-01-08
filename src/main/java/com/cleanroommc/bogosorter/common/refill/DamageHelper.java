@@ -15,8 +15,8 @@ public class DamageHelper {
 
         if (RefillHandler.shouldHandleRefill(player, itemStack) && isNotArmor(itemStack)) {
             ItemStack handItem = player.getHeldItem();
-                if (handItem != itemStack) {
-                    return false;
+            if (handItem != itemStack) {
+                return false;
             }
             int durabilityLeft = itemStack.getMaxDamage() - itemStack.getItemDamage();
             if (durabilityLeft >= 0 && durabilityLeft < playerConfig.autoRefillDamageThreshold) {
