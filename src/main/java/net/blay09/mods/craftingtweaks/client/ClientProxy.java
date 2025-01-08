@@ -39,13 +39,10 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class ClientProxy extends CommonProxy {
 
-
     private static final List<String> tooltipList = Lists.newArrayList();
-
 
     private boolean missingMessageSent;
     private boolean wasRotated;
@@ -109,7 +106,6 @@ public class ClientProxy extends CommonProxy {
         hotkeyCheck = (HotkeyCheck) event
             .buildSoftDependProxy("NotEnoughItems", "net.blay09.mods.craftingtweaks.addon.NEIHotkeyCheck");
     }
-
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onGuiClick(GuiClickEvent event) {

@@ -1,7 +1,5 @@
 package com.cleanroommc.bogosorter.mixins.early.minecraft;
 
-
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -14,7 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import com.cleanroommc.bogosorter.api.ISlot;
 
 @Mixin(Slot.class)
-public class SlotMixin implements ISlot {
+public abstract class SlotMixin implements ISlot {
 
     @Shadow
     public int xDisplayPosition;

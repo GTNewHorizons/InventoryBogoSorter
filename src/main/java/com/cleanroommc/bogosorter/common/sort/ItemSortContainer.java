@@ -1,9 +1,8 @@
 package com.cleanroommc.bogosorter.common.sort;
 
+import java.util.Objects;
 
 import net.minecraft.item.ItemStack;
-
-import java.util.Objects;
 
 public class ItemSortContainer {
 
@@ -47,7 +46,6 @@ public class ItemSortContainer {
         return getAmount() > 0;
     }
 
-
     public ItemStack makeStack(int max) {
         // Ensure max is not larger than the available stack size
         int splitAmount = Math.min(max, this.itemStack.stackSize);
@@ -73,9 +71,7 @@ public class ItemSortContainer {
         } else {
             return false;
         }
-        return (a == null && b == null) ||
-                (a.getItem() == b.getItem() &&
-                        a.getItemDamage() == b.getItemDamage() &&
-                        Objects.equals(a.getTagCompound(), b.getTagCompound()));
+        return (a == null && b == null) || (a.getItem() == b.getItem() && a.getItemDamage() == b.getItemDamage()
+            && Objects.equals(a.getTagCompound(), b.getTagCompound()));
     }
 }

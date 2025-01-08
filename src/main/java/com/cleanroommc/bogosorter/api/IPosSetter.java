@@ -7,19 +7,23 @@ package com.cleanroommc.bogosorter.api;
 public interface IPosSetter {
 
     IPosSetter TOP_RIGHT_HORIZONTAL = (slotGroup, buttonPos) -> {
-        if (slotGroup.getSlots().size() < slotGroup.getRowSize()) {
+        if (slotGroup.getSlots()
+            .size() < slotGroup.getRowSize()) {
             buttonPos.setPos(-1000, -1000);
         } else {
-            ISlot topRight = slotGroup.getSlots().get(slotGroup.getRowSize() - 1);
+            ISlot topRight = slotGroup.getSlots()
+                .get(slotGroup.getRowSize() - 1);
             buttonPos.setPos(topRight.bogo$getX() + 17, topRight.bogo$getY() - 2);
         }
     };
 
     IPosSetter TOP_RIGHT_VERTICAL = (slotGroup, buttonPos) -> {
-        if (slotGroup.getSlots().size() < slotGroup.getRowSize()) {
+        if (slotGroup.getSlots()
+            .size() < slotGroup.getRowSize()) {
             buttonPos.setPos(-1000, -1000);
         } else {
-            ISlot topRight = slotGroup.getSlots().get(slotGroup.getRowSize() - 1);
+            ISlot topRight = slotGroup.getSlots()
+                .get(slotGroup.getRowSize() - 1);
             buttonPos.setVertical();
             buttonPos.setTopLeft();
             buttonPos.setPos(topRight.bogo$getX() + 18, topRight.bogo$getY() - 1);

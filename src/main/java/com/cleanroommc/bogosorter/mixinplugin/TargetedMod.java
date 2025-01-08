@@ -7,8 +7,11 @@ public enum TargetedMod {
     IRONCHEST("Iron Chests", null, "IronChest"),
     ENDERIO("Ender IO", null, "EnderIO"),
     GALACTICRAFTCORE("Galacticraft Core", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
-    THERMALEXPANSION("Thermal Expansion", null, "ThermalExpansion"),;
-
+    THERMALEXPANSION("Thermal Expansion", null, "ThermalExpansion"),
+    Forestry("Forestry", null, "Forestry"),
+    CodeChickenCore("CodeChickenCore", "codechicken.core.launch.CodeChickenCorePlugin", "CodeChickenCore"),
+    NEI("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
+    AE2("Applied Energistics 2", "appeng.transformer.AppEngCore", "appliedenergistics2"),;
 
     /** The "name" in the @Mod annotation */
     public final String modName;

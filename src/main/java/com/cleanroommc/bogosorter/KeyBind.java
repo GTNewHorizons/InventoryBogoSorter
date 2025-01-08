@@ -1,13 +1,15 @@
 package com.cleanroommc.bogosorter;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+
+import net.minecraft.client.Minecraft;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * A key combo containing key which must be pressed and which must not be pressed in order for the key to activate.
@@ -165,7 +167,11 @@ public class KeyBind {
         public KeyBind build() {
             keys.trim();
             notKeys.trim();
-            return new KeyBind(this.name, keys.elements(), notKeys.elements(), validator != null ? validator : () -> true);
+            return new KeyBind(
+                this.name,
+                keys.elements(),
+                notKeys.elements(),
+                validator != null ? validator : () -> true);
         }
     }
 }

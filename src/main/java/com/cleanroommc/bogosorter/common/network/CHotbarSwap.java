@@ -1,18 +1,17 @@
 package com.cleanroommc.bogosorter.common.network;
 
+import java.io.IOException;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
-
-import java.io.IOException;
 
 public class CHotbarSwap implements IPacket {
 
     private int hotbarIndex;
     private int swapIndex;
 
-    public CHotbarSwap() {
-    }
+    public CHotbarSwap() {}
 
     public CHotbarSwap(int hotbarIndex, int swapIndex) {
         this.hotbarIndex = hotbarIndex;

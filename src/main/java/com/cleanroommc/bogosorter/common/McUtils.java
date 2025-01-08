@@ -1,10 +1,9 @@
 package com.cleanroommc.bogosorter.common;
 
-import com.cleanroommc.modularui.utils.item.IItemHandler;
-import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
-import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
@@ -13,18 +12,24 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import java.util.List;
+import com.cleanroommc.modularui.utils.item.IItemHandler;
+import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
+import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class McUtils {
 
-        public static void dropItem(ItemStack stack, World world, double x, double y, double z) {
+    public static void dropItem(ItemStack stack, World world, double x, double y, double z) {
         dropItem(stack, world, x, y, z, null, false, 10);
     }
 
-    public static void dropItem(ItemStack stack, World world, double x, double y, double z, @Nullable String thrower, boolean noDespawn, int pickUpDelay) {
+    public static void dropItem(ItemStack stack, World world, double x, double y, double z, @Nullable String thrower,
+        boolean noDespawn, int pickUpDelay) {
         if (!world.isRemote && stack != null && !world.restoringBlockSnapshots) {
             double d0 = (double) (world.rand.nextFloat() * 0.5F) + 0.25D;
             double d1 = (double) (world.rand.nextFloat() * 0.5F) + 0.25D;
@@ -53,8 +58,7 @@ public class McUtils {
     }
 
     public static ItemStack insertToPlayer(PlayerMainInvWrapper itemHandler, ItemStack stack, boolean simulate) {
-        if (itemHandler == null || stack ==null)
-            return stack;
+        if (itemHandler == null || stack == null) return stack;
 
         // not stackable -> just insert into a new slot
         if (!stack.isStackable()) {
@@ -79,8 +83,7 @@ public class McUtils {
     }
 
     public static ItemStack insertItem(IItemHandler dest, @Nonnull ItemStack stack, boolean simulate, int startSlot) {
-        if (dest == null || stack == null)
-            return stack;
+        if (dest == null || stack == null) return stack;
 
         for (int i = startSlot; i < dest.getSlots(); i++) {
             stack = dest.insertItem(i, stack, simulate);
@@ -94,7 +97,8 @@ public class McUtils {
 
     @SideOnly(Side.CLIENT)
     public static void playSound(String sound) {
-        SoundHandler soundHandler = Minecraft.getMinecraft().getSoundHandler();
+        SoundHandler soundHandler = Minecraft.getMinecraft()
+            .getSoundHandler();
         ResourceLocation resourceLocation = new ResourceLocation(sound);
         PositionedSoundRecord record = PositionedSoundRecord.func_147674_a(resourceLocation, 1.0f);
 

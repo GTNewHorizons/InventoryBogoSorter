@@ -1,12 +1,9 @@
 package com.cleanroommc.bogosorter.common.sort;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import com.cleanroommc.bogosorter.common.OreDictHelper;
-import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
-import com.cleanroommc.bogosorter.compat.loader.Mods;
-import gregtech.api.interfaces.IFoodStat;
-import gregtech.api.items.MetaGeneratedItem;
-import moze_intel.projecte.utils.EMCHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
@@ -23,14 +20,18 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
-
 import net.minecraftforge.common.util.Constants;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
+import com.cleanroommc.bogosorter.common.OreDictHelper;
+import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
+import com.cleanroommc.bogosorter.compat.loader.Mods;
+
+import gregtech.api.interfaces.IFoodStat;
+import gregtech.api.items.MetaGeneratedItem;
+import moze_intel.projecte.utils.EMCHelper;
 
 public class ItemCompareHelper {
 
@@ -66,8 +67,8 @@ public class ItemCompareHelper {
         }
         if (Mods.GT5u.isLoaded() && item.getItem() instanceof MetaGeneratedItem) {
             MetaGeneratedItem valueItem = ((MetaGeneratedItem) item.getItem());
-                IFoodStat stats = (IFoodStat) valueItem.getFoodValues(item);
-                return stats.getSaturation(null, item,null);
+            IFoodStat stats = (IFoodStat) valueItem.getFoodValues(item);
+            return stats.getSaturation(null, item, null);
 
         }
         return Float.MIN_VALUE;
@@ -80,7 +81,7 @@ public class ItemCompareHelper {
         if (Mods.GT5u.isLoaded() && item.getItem() instanceof MetaGeneratedItem) {
             MetaGeneratedItem valueItem = ((MetaGeneratedItem) item.getItem());
             IFoodStat stats = ((IFoodStat) valueItem.getFoodValues(item));
-                return stats.getFoodLevel(null, item, null);
+            return stats.getFoodLevel(null, item, null);
         }
         return Integer.MIN_VALUE;
     }
@@ -108,7 +109,8 @@ public class ItemCompareHelper {
 
     @SuppressWarnings("all")
     public static int compareFormattedString(String s1, String s2) {
-        return EnumChatFormatting.getTextWithoutFormattingCodes(s1).compareTo(EnumChatFormatting.getTextWithoutFormattingCodes(s2));
+        return EnumChatFormatting.getTextWithoutFormattingCodes(s1)
+            .compareTo(EnumChatFormatting.getTextWithoutFormattingCodes(s2));
     }
 
     public static int compareMeta(ItemStack stack1, ItemStack stack2) {
@@ -142,7 +144,8 @@ public class ItemCompareHelper {
         }
         int val = 0;
         for (int i = 0, n = ores1.size(); i < n; i++) {
-            val += ores1.get(i).compareTo(ores2.get(i));
+            val += ores1.get(i)
+                .compareTo(ores2.get(i));
         }
         return MathHelper.clamp_int(val, -1, 1);
     }
@@ -164,7 +167,8 @@ public class ItemCompareHelper {
     public static int compareNbtValues(ItemStack itemStack1, ItemStack itemStack2) {
         int result = compareHasNbt(itemStack1, itemStack2);
         if (result != 0) return result;
-        return itemStack1.hasTagCompound() ? compareNbtValues(itemStack1.getTagCompound(), itemStack2.getTagCompound()) : 0;
+        return itemStack1.hasTagCompound() ? compareNbtValues(itemStack1.getTagCompound(), itemStack2.getTagCompound())
+            : 0;
     }
 
     public static int compareNbtValues(@NotNull NBTTagCompound nbt1, @NotNull NBTTagCompound nbt2) {
@@ -179,7 +183,9 @@ public class ItemCompareHelper {
     public static int compareNbtAllValues(ItemStack itemStack1, ItemStack itemStack2) {
         int result = compareHasNbt(itemStack1, itemStack2);
         if (result != 0) return result;
-        return itemStack1.hasTagCompound() ? compareNbtAllValues(itemStack1.getTagCompound(), itemStack2.getTagCompound()) : 0;
+        return itemStack1.hasTagCompound()
+            ? compareNbtAllValues(itemStack1.getTagCompound(), itemStack2.getTagCompound())
+            : 0;
     }
 
     public static int compareNbtAllValues(@NotNull NBTTagCompound nbt1, @NotNull NBTTagCompound nbt2) {
@@ -199,7 +205,8 @@ public class ItemCompareHelper {
             return compareNbtAllValues((NBTTagCompound) nbt1, (NBTTagCompound) nbt2);
         }
         if (nbt1 instanceof NBTBase.NBTPrimitive) {
-            return Double.compare(((NBTBase.NBTPrimitive) nbt1).func_150286_g(), ((NBTBase.NBTPrimitive) nbt2).func_150286_g());
+            return Double
+                .compare(((NBTBase.NBTPrimitive) nbt1).func_150286_g(), ((NBTBase.NBTPrimitive) nbt2).func_150286_g());
         }
         if (nbt1.getId() == Constants.NBT.TAG_BYTE_ARRAY) {
             byte[] array1 = ((NBTTagByteArray) nbt1).func_150292_c();
@@ -225,17 +232,18 @@ public class ItemCompareHelper {
             }
             return total;
         }
-//        if (nbt1.getId() == Constants.NBT.TAG_LONG_ARRAY) {
-//            // TODO for some fucking reason long array tag doesn't have a array getter
-//            return 0;
-//        }
+        // if (nbt1.getId() == Constants.NBT.TAG_LONG_ARRAY) {
+        // // TODO for some fucking reason long array tag doesn't have a array getter
+        // return 0;
+        // }
         return 0;
     }
 
     public static int compareNbtSize(ItemStack itemStack1, ItemStack itemStack2) {
         int result = compareHasNbt(itemStack1, itemStack2);
         if (result != 0) return result;
-        return itemStack1.hasTagCompound() ? compareNbtSize(itemStack1.getTagCompound(), itemStack2.getTagCompound()) : 0;
+        return itemStack1.hasTagCompound() ? compareNbtSize(itemStack1.getTagCompound(), itemStack2.getTagCompound())
+            : 0;
     }
 
     public static int compareNbtSize(@NotNull NBTTagCompound nbt1, @NotNull NBTTagCompound nbt2) {
@@ -289,8 +297,12 @@ public class ItemCompareHelper {
     }
 
     public static int comparePotionId(String potion1, String potion2) {
-        String id1 = potion1.startsWith("strong") || potion1.startsWith("long") ? potion1.substring(potion1.indexOf('_') + 1) : potion1;
-        String id2 = potion2.startsWith("strong") || potion2.startsWith("long") ? potion2.substring(potion2.indexOf('_') + 1) : potion2;
+        String id1 = potion1.startsWith("strong") || potion1.startsWith("long")
+            ? potion1.substring(potion1.indexOf('_') + 1)
+            : potion1;
+        String id2 = potion2.startsWith("strong") || potion2.startsWith("long")
+            ? potion2.substring(potion2.indexOf('_') + 1)
+            : potion2;
         int result = id1.compareTo(id2);
         if (result != 0) return result;
         boolean strong1 = potion1.startsWith("strong");
@@ -408,20 +420,36 @@ public class ItemCompareHelper {
     }
 
     public static Block getBlock(ItemStack stack) {
-        return stack.getItem() instanceof ItemBlock ? ((ItemBlock) stack.getItem()).field_150939_a : ((ItemReed) stack.getItem()).field_150935_a;
+        return stack.getItem() instanceof ItemBlock ? ((ItemBlock) stack.getItem()).field_150939_a
+            : ((ItemReed) stack.getItem()).field_150935_a;
     }
 
     public static boolean isSlab(Block block) {
-        return block instanceof BlockSlab || SLAB_PATTERN.matcher(block.getClass().getSimpleName()).matches();
+        return block instanceof BlockSlab || SLAB_PATTERN.matcher(
+            block.getClass()
+                .getSimpleName())
+            .matches();
     }
 
     public static boolean isStair(Block block) {
-        return block instanceof BlockStairs || STAIR_PATTERN.matcher(block.getClass().getSimpleName()).matches();
+        return block instanceof BlockStairs || STAIR_PATTERN.matcher(
+            block.getClass()
+                .getSimpleName())
+            .matches();
     }
 
     public static boolean isPipe(Block block) {
-        return PIPE_PATTERN.matcher(block.getClass().getSimpleName()).matches() ||
-                CABLE_PATTERN.matcher(block.getClass().getSimpleName()).matches() ||
-                WIRE_PATTERN.matcher(block.getClass().getSimpleName()).matches();
+        return PIPE_PATTERN.matcher(
+            block.getClass()
+                .getSimpleName())
+            .matches()
+            || CABLE_PATTERN.matcher(
+                block.getClass()
+                    .getSimpleName())
+                .matches()
+            || WIRE_PATTERN.matcher(
+                block.getClass()
+                    .getSimpleName())
+                .matches();
     }
 }

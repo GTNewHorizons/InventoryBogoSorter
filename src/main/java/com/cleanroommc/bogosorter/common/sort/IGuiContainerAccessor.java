@@ -1,8 +1,9 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import net.minecraft.client.gui.GuiButton;
-
 import java.util.List;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.inventory.Slot;
 
 public interface IGuiContainerAccessor {
 
@@ -11,4 +12,16 @@ public interface IGuiContainerAccessor {
     int getGuiTop();
 
     int getGuiLeft();
+
+    void setIgnoreMouseUp(boolean ignoreMouseUp);
+
+    boolean getDragSplitting();
+
+    void setDragSplitting(boolean dragSplitting);
+
+    int getDragSplittingButton();
+
+    Slot getSlotAt(int x, int y);
+
+    void mouseClick(Slot slot, int slotId, int mouseButton, int clickType);
 }

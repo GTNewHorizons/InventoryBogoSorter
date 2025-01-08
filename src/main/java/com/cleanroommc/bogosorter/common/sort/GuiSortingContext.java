@@ -1,19 +1,22 @@
 package com.cleanroommc.bogosorter.common.sort;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.api.ISlot;
 import com.cleanroommc.bogosorter.api.ISlotGroup;
 import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.ISortingContextBuilder;
-import it.unimi.dsi.fastutil.ints.IntArraySet;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
 
 public class GuiSortingContext {
 
@@ -35,7 +38,8 @@ public class GuiSortingContext {
         if (container instanceof ISortableContainer) {
             ((ISortableContainer) container).buildSortingContext(builder);
         } else if (BogoSortAPI.isValidSortable(container)) {
-            BogoSortAPI.INSTANCE.getBuilder(container).accept(container, builder);
+            BogoSortAPI.INSTANCE.getBuilder(container)
+                .accept(container, builder);
         }
         return builder.build();
     }
@@ -110,13 +114,20 @@ public class GuiSortingContext {
 
         @Override
         public ISlotGroup addSlotGroupOf(List<Slot> slots, int rowSize) {
-            return addSlotGroup(slots.stream().map(BogoSortAPI.INSTANCE::getSlot).collect(Collectors.toList()), rowSize);
+            return addSlotGroup(
+                slots.stream()
+                    .map(BogoSortAPI.INSTANCE::getSlot)
+                    .collect(Collectors.toList()),
+                rowSize);
         }
 
         @Override
         public ISlotGroup addSlotGroup(List<ISlot> slots, int rowSize) {
             if (slots.size() < rowSize) {
-                throw new IllegalArgumentException("Slots must at least fill 1 row! Expected at least " + rowSize + " slot, but only found " + slots.size());
+                throw new IllegalArgumentException(
+                    "Slots must at least fill 1 row! Expected at least " + rowSize
+                        + " slot, but only found "
+                        + slots.size());
             }
             if (slots.size() < 2) {
                 throw new IllegalArgumentException("Slot group must have at least 2 slots!");
@@ -170,14 +181,14 @@ public class GuiSortingContext {
         if (!slots.isEmpty()) {
             SlotGroup slotGroup = new SlotGroup(true, false, slots, Math.min(9, slots.size()));
             slotGroup.priority(-10000)
-                    .buttonPosSetter(BogoSortAPI.INSTANCE.getPlayerButtonPos(container));
+                .buttonPosSetter(BogoSortAPI.INSTANCE.getPlayerButtonPos(container));
             builder.slots.add(slotGroup);
             builder.player = true;
         }
         if (!hotbar.isEmpty()) {
             SlotGroup slotGroup = new SlotGroup(true, true, hotbar, Math.min(9, hotbar.size()));
             slotGroup.priority(-10000)
-                    .buttonPosSetter(null);
+                .buttonPosSetter(null);
             builder.slots.add(slotGroup);
             builder.player = true;
         }

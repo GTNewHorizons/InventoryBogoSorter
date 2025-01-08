@@ -1,4 +1,6 @@
-package com.cleanroommc.bogosorter.mixins.late.avaritiaddons;//package com.cleanroommc.bogosorter.mixins.early.avaritiaddons;
+package com.cleanroommc.bogosorter.mixins.late.avaritiaddons;// package
+                                                             // com.cleanroommc.bogosorter.mixins.early.avaritiaddons;
+
 //
 // import com.cleanroommc.bogosorter.BogoSortAPI;
 // import com.cleanroommc.bogosorter.api.ISlot;
@@ -18,15 +20,15 @@ package com.cleanroommc.bogosorter.mixins.late.avaritiaddons;//package com.clean
 // @Mixin(ContainerInfinityChest.class)
 // public abstract class ContainerInfinityChestMixin extends Container {
 //
-//     @Inject(method = "slotClick", at = @At("HEAD"), cancellable = true)
-//     public void onSlotClick(int slotId, final int mouseButton, final int modifier, final EntityPlayer entityPlayer,
-//                             CallbackInfoReturnable<ItemStack> cir) {
-//         if (slotId < 0) return;
-//         Container container = (Container) (Object) this;
-//         ISlot slot = BogoSortAPI.getSlot(container, slotId);
-//         if (slot != null) {
-//             transferStackInSlot(entityPlayer, slotId);
-//             cir.setReturnValue(null);
-//         }
-//     }
+// @Inject(method = "slotClick", at = @At("HEAD"), cancellable = true)
+// public void onSlotClick(int slotId, final int mouseButton, final int modifier, final EntityPlayer entityPlayer,
+// CallbackInfoReturnable<ItemStack> cir) {
+// if (slotId < 0) return;
+// Container container = (Container) (Object) this;
+// ISlot slot = BogoSortAPI.getSlot(container, slotId);
+// if (slot != null) {
+// transferStackInSlot(entityPlayer, slotId);
+// cir.setReturnValue(null);
+// }
+// }
 // }

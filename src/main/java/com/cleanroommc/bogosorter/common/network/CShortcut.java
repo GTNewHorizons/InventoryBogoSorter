@@ -1,13 +1,14 @@
 package com.cleanroommc.bogosorter.common.network;
 
-import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.ShortcutHandler;
-import com.cleanroommc.bogosorter.api.ISlot;
+import java.io.IOException;
+
 import net.minecraft.inventory.Container;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
 
-import java.io.IOException;
+import com.cleanroommc.bogosorter.BogoSortAPI;
+import com.cleanroommc.bogosorter.ShortcutHandler;
+import com.cleanroommc.bogosorter.api.ISlot;
 
 public class CShortcut implements IPacket {
 
@@ -19,8 +20,7 @@ public class CShortcut implements IPacket {
         this.slotNumber = slotNumber;
     }
 
-    public CShortcut() {
-    }
+    public CShortcut() {}
 
     @Override
     public void encode(PacketBuffer buf) throws IOException {
@@ -30,7 +30,7 @@ public class CShortcut implements IPacket {
 
     @Override
     public void decode(PacketBuffer buf) throws IOException {
-        type = NetworkUtils.readEnumValue(buf,Type.class);
+        type = NetworkUtils.readEnumValue(buf, Type.class);
         slotNumber = buf.readVarIntFromBuffer();
     }
 
@@ -38,7 +38,7 @@ public class CShortcut implements IPacket {
     public IPacket executeServer(NetHandlerPlayServer handler) {
         Container container = handler.playerEntity.openContainer;
         if (container == null) throw new IllegalStateException("Expected open container on server");
-        ISlot slot = BogoSortAPI.getSlot(container, slotNumber);//container.getSlot(slotNumber);
+        ISlot slot = BogoSortAPI.getSlot(container, slotNumber);// container.getSlot(slotNumber);
         if (!slot.bogo$canTakeStack(handler.playerEntity)) {
             return null;
         }
@@ -67,6 +67,11 @@ public class CShortcut implements IPacket {
     }
 
     public enum Type {
-        MOVE_ALL, MOVE_ALL_SAME, MOVE_SINGLE, MOVE_SINGLE_EMPTY, DROP_ALL, DROP_ALL_SAME
+        MOVE_ALL,
+        MOVE_ALL_SAME,
+        MOVE_SINGLE,
+        MOVE_SINGLE_EMPTY,
+        DROP_ALL,
+        DROP_ALL_SAME
     }
 }

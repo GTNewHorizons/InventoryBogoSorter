@@ -1,9 +1,7 @@
 package com.cleanroommc.bogosorter.common;
 
-import com.cleanroommc.bogosorter.common.network.CHotbarSwap;
-import com.cleanroommc.bogosorter.common.network.NetworkHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
@@ -16,12 +14,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
+import com.cleanroommc.bogosorter.common.network.CHotbarSwap;
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
 
 public class HotbarSwap {
 
@@ -34,6 +37,7 @@ public class HotbarSwap {
     public static boolean doCancelHotbarSwap() {
         return show;
     }
+
     public static void setEnabled(boolean enabled) {
         HotbarSwap.enabled = enabled;
     }
@@ -51,8 +55,16 @@ public class HotbarSwap {
             GuiIngame gui = Minecraft.getMinecraft().ingameGUI;
             int m = event.resolution.getScaledWidth() / 2;
             if (verticalIndex != 0) {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(WIDGETS_TEX_PATH);
-                gui.drawTexturedModalRect(m - 91 - 1 + player.inventory.currentItem * 20, event.resolution.getScaledHeight() - 22 - 17 - 18 * verticalIndex, 0, 22, 24, 22);
+                Minecraft.getMinecraft()
+                    .getTextureManager()
+                    .bindTexture(WIDGETS_TEX_PATH);
+                gui.drawTexturedModalRect(
+                    m - 91 - 1 + player.inventory.currentItem * 20,
+                    event.resolution.getScaledHeight() - 22 - 17 - 18 * verticalIndex,
+                    0,
+                    22,
+                    24,
+                    22);
             }
 
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -64,7 +76,14 @@ public class HotbarSwap {
             int x = m - 90 + player.inventory.currentItem * 20 + 2;
             int y = event.resolution.getScaledHeight() - 16 - 3 - 70;
             for (int i = 1; i < 4; i++) {
-                renderHotbarItem(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().getTextureManager(), player.inventory.getStackInSlot(player.inventory.currentItem + i * 9),x,y, event.partialTicks);
+                renderHotbarItem(
+                    Minecraft.getMinecraft().fontRenderer,
+                    Minecraft.getMinecraft()
+                        .getTextureManager(),
+                    player.inventory.getStackInSlot(player.inventory.currentItem + i * 9),
+                    x,
+                    y,
+                    event.partialTicks);
                 y += 18;
             }
 
@@ -116,7 +135,8 @@ public class HotbarSwap {
         }
     }
 
-    private static void renderHotbarItem(FontRenderer fontRenderer, TextureManager textureManager, ItemStack stack, int x, int y, float partialTicks) {
+    private static void renderHotbarItem(FontRenderer fontRenderer, TextureManager textureManager, ItemStack stack,
+        int x, int y, float partialTicks) {
         if (stack != null) {
             RenderItem renderer = new RenderItem();
             float f = (float) stack.animationsToGo - partialTicks;
@@ -128,7 +148,7 @@ public class HotbarSwap {
                 GL11.glTranslatef((float) (-(x + 8)), (float) (-(y + 12)), 0.0F);
             }
 
-            renderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager,stack, x, y);
+            renderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager, stack, x, y);
 
             if (f > 0.0F) {
                 GL11.glPopMatrix();
@@ -137,6 +157,7 @@ public class HotbarSwap {
             renderer.renderItemOverlayIntoGUI(fontRenderer, textureManager, stack, x, y);
         }
     }
+
     public static boolean isAltKeyDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU);
     }

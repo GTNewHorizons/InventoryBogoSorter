@@ -1,9 +1,9 @@
 package com.cleanroommc.bogosorter.api;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
-
-import java.util.List;
 
 /**
  * A slot group is a list of slots which is organized in a rectangle.

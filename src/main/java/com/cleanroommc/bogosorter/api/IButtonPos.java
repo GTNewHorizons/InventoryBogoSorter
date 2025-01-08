@@ -65,10 +65,14 @@ public interface IButtonPos {
     Layout getLayout();
 
     enum Alignment {
-        TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT
+        TOP_RIGHT,
+        TOP_LEFT,
+        BOTTOM_RIGHT,
+        BOTTOM_LEFT
     }
 
     enum Layout {
-        HORIZONTAL, VERTICAL
+        HORIZONTAL,
+        VERTICAL
     }
 }
