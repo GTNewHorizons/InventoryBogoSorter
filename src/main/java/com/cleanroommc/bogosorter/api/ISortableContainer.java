@@ -1,9 +1,9 @@
 package com.cleanroommc.bogosorter.api;
 
+import java.util.function.BiConsumer;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
 
 /**
  * This interface marks a {@link net.minecraft.inventory.Container} as sortable.

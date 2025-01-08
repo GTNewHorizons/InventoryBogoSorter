@@ -1,8 +1,8 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import com.cleanroommc.bogosorter.api.IButtonPos;
-
 import java.util.Objects;
+
+import com.cleanroommc.bogosorter.api.IButtonPos;
 
 public class ButtonPos implements IButtonPos {
 
@@ -65,7 +65,8 @@ public class ButtonPos implements IButtonPos {
         return this.layout;
     }
 
-    public void applyPos(int guiLeft, int guiTop, ButtonHandler.SortButton sortButton, ButtonHandler.SortButton settingsButton) {
+    public void applyPos(int guiLeft, int guiTop, ButtonHandler.SortButton sortButton,
+        ButtonHandler.SortButton settingsButton) {
         int s = ButtonHandler.BUTTON_SIZE;
         boolean h = this.layout == Layout.HORIZONTAL;
         switch (this.alignment) {

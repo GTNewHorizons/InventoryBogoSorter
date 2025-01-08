@@ -1,5 +1,10 @@
 package com.cleanroommc.bogosorter.mixins.late.forestry;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+
+import org.spongepowered.asm.mixin.Mixin;
 
 import forestry.core.gui.GuiForestry;
 import forestry.factory.gui.ContainerCarpenter;
@@ -8,20 +13,14 @@ import forestry.factory.gui.ContainerFabricator;
 import forestry.factory.gui.ContainerMoistener;
 import forestry.factory.gui.ContainerSqueezer;
 import forestry.factory.gui.ContainerWorktable;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
-
 
 @Mixin(GuiForestry.class)
 public abstract class MixinGuiForestry extends GuiContainer implements IMTModGuiContainer2 {
+
     public MixinGuiForestry(Container p_i1072_1_) {
         super(p_i1072_1_);
     }
-
 
     @Override
     public boolean MT_isMouseTweaksDisabled() {

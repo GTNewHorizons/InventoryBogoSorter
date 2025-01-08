@@ -1,10 +1,8 @@
 package com.cleanroommc.bogosorter.common.sort.color;
 
-import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.BogoSorter;
-import com.cleanroommc.modularui.utils.Color;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
+import java.awt.image.BufferedImage;
+import java.util.Objects;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -14,14 +12,19 @@ import net.minecraft.item.ItemColored;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.image.BufferedImage;
-import java.util.Objects;
+import com.cleanroommc.bogosorter.BogoSortAPI;
+import com.cleanroommc.modularui.utils.Color;
+
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 
 public class ItemColorHelper {
 
-    private static final Object2IntMap<ItemStack> ITEM_COLORS = new Object2IntOpenCustomHashMap<>(BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
+    private static final Object2IntMap<ItemStack> ITEM_COLORS = new Object2IntOpenCustomHashMap<>(
+        BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
 
     public static int getHue(int color) {
         if (color == 0) return 0;
@@ -70,7 +73,9 @@ public class ItemColorHelper {
 
     private static int getItemColors(ItemStack itemStack) {
         try {
-            final ItemColored itemColors = new ItemColored(((ItemBlock) Objects.requireNonNull(itemStack.getItem())).field_150939_a, false);
+            final ItemColored itemColors = new ItemColored(
+                ((ItemBlock) Objects.requireNonNull(itemStack.getItem())).field_150939_a,
+                false);
             final int renderColor = itemColors.getColorFromItemStack(itemStack, 0);
             final TextureAtlasSprite textureAtlasSprite = getTextureAtlasSprite(itemStack);
             return getColors(textureAtlasSprite, renderColor);
@@ -92,14 +97,13 @@ public class ItemColorHelper {
         int renderColor = 0xFFFFFFFF;
         try {
             State.colorMultiplier(null, 0, 0, 0);
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
         final TextureAtlasSprite textureAtlasSprite;
         if (true) { // && blockState.getBlock() instanceof BlockMachine) {
-//            MetaTileEntity mte = GTUtility.getMetaTileEntity(itemStack);
-//            Pair<TextureAtlasSprite, Integer> pair = mte.getParticleTexture();
-//            textureAtlasSprite = pair.getKey();
-//            renderColor = pair.getRight();
+            // MetaTileEntity mte = GTUtility.getMetaTileEntity(itemStack);
+            // Pair<TextureAtlasSprite, Integer> pair = mte.getParticleTexture();
+            // textureAtlasSprite = pair.getKey();
+            // renderColor = pair.getRight();
             return 0;
         } else {
             textureAtlasSprite = getTextureAtlasSprite(block);
@@ -110,11 +114,11 @@ public class ItemColorHelper {
     public static int getColors(TextureAtlasSprite textureAtlasSprite, int renderColor) {
         int[] color;
         if (textureAtlasSprite == null) {
-            color = new int[]{0, 0, 0};
+            color = new int[] { 0, 0, 0 };
         } else {
             final BufferedImage bufferedImage = getBufferedImage(textureAtlasSprite);
             if (bufferedImage == null) {
-                color = new int[]{0, 0, 0};
+                color = new int[] { 0, 0, 0 };
             } else {
                 color = ColorThief.getColor(bufferedImage, 10, true);
             }
@@ -138,7 +142,10 @@ public class ItemColorHelper {
             return null;
         }
 
-        BufferedImage bufferedImage = new BufferedImage(iconWidth, iconHeight * frameCount, BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage bufferedImage = new BufferedImage(
+            iconWidth,
+            iconHeight * frameCount,
+            BufferedImage.TYPE_4BYTE_ABGR);
         for (int i = 0; i < frameCount; i++) {
             int[][] frameTextureData = textureAtlasSprite.getFrameTextureData(i);
             int[] largestMipMapTextureData = frameTextureData[0];
@@ -161,9 +168,9 @@ public class ItemColorHelper {
     }
 
     private static TextureAtlasSprite getTextureAtlasSprite(ItemStack itemStack) {
-//        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-//        ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
-//        IBakedModel itemModel = itemModelMesher.getItemModel(itemStack);
-        return null ; //itemModel.getParticleTexture();
+        // RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+        // ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
+        // IBakedModel itemModel = itemModelMesher.getItemModel(itemStack);
+        return null; // itemModel.getParticleTexture();
     }
 }

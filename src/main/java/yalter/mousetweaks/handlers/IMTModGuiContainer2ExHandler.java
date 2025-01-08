@@ -1,15 +1,17 @@
 package yalter.mousetweaks.handlers;
 
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
 import yalter.mousetweaks.impl.IGuiScreenHandler;
 import yalter.mousetweaks.impl.MouseButton;
-import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
-
-import java.util.List;
 
 public class IMTModGuiContainer2ExHandler implements IGuiScreenHandler {
+
     protected Minecraft mc;
     protected IMTModGuiContainer2Ex modGuiContainer;
 
@@ -45,9 +47,7 @@ public class IMTModGuiContainer2ExHandler implements IGuiScreenHandler {
 
     @Override
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-        modGuiContainer.MT_clickSlot(slot,
-                mouseButton.getValue(),
-                shiftPressed ? 1 : 0);
+        modGuiContainer.MT_clickSlot(slot, mouseButton.getValue(), shiftPressed ? 1 : 0);
     }
 
     @Override

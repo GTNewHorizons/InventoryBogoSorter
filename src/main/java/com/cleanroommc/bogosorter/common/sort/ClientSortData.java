@@ -1,15 +1,18 @@
 package com.cleanroommc.bogosorter.common.sort;
 
+import java.io.IOException;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.IOException;
 
 public class ClientSortData {
 
@@ -25,7 +28,8 @@ public class ClientSortData {
         String name = buf.readStringFromBuffer(64);
         ClientSortData sortData = new ClientSortData(color, name);
         for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
-            sortData.getSlotNumbers().add(buf.readVarIntFromBuffer());
+            sortData.getSlotNumbers()
+                .add(buf.readVarIntFromBuffer());
         }
         return sortData;
     }

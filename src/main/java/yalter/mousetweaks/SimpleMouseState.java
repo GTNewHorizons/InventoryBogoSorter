@@ -1,11 +1,10 @@
 package yalter.mousetweaks;
 
 import org.lwjgl.input.Mouse;
+
 import yalter.mousetweaks.config.MTConfig;
 import yalter.mousetweaks.impl.IMouseState;
 import yalter.mousetweaks.impl.MouseButton;
-
-
 
 /**
  * Simple polling mouse state.
@@ -18,6 +17,7 @@ import yalter.mousetweaks.impl.MouseButton;
  * - https://github.com/YaLTeR/MouseTweaks/issues/19
  */
 public class SimpleMouseState implements IMouseState {
+
     private int scrollAmount = 0;
 
     @Override

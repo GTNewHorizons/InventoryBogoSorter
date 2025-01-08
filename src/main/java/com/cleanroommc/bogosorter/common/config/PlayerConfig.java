@@ -1,18 +1,20 @@
 package com.cleanroommc.bogosorter.common.config;
 
-import com.cleanroommc.bogosorter.common.network.CConfigSync;
-import com.cleanroommc.bogosorter.common.network.NetworkHandler;
-import com.cleanroommc.bogosorter.common.network.NetworkUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.service.IPropertyKey;
 
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+
+import com.cleanroommc.bogosorter.common.network.CConfigSync;
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.bogosorter.common.network.NetworkUtils;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public class PlayerConfig {
 
@@ -32,7 +34,8 @@ public class PlayerConfig {
     }
 
     public static void checkPlayers() {
-        playerConfig.keySet().removeIf(player -> player.worldObj == null);
+        playerConfig.keySet()
+            .removeIf(player -> player.worldObj == null);
     }
 
     @SideOnly(Side.CLIENT)

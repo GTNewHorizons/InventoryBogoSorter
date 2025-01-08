@@ -1,32 +1,5 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.BogoSorter;
-import com.cleanroommc.bogosorter.ClientEventHandler;
-import com.cleanroommc.bogosorter.api.ISlot;
-import com.cleanroommc.bogosorter.api.SortRule;
-import com.cleanroommc.bogosorter.common.McUtils;
-import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import com.cleanroommc.bogosorter.common.network.CSlotSync;
-import com.cleanroommc.bogosorter.common.network.NetworkHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,13 +9,44 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ResourceLocation;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.cleanroommc.bogosorter.BogoSortAPI;
+import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.ClientEventHandler;
+import com.cleanroommc.bogosorter.api.ISlot;
+import com.cleanroommc.bogosorter.api.SortRule;
+import com.cleanroommc.bogosorter.common.McUtils;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.network.CSlotSync;
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 public class SortHandler {
 
     public static final Map<EntityPlayer, List<SortRule<ItemStack>>> cacheItemSortRules = new Object2ObjectOpenHashMap<>();
     public static final Map<EntityPlayer, List<NbtSortRule>> cacheNbtSortRules = new Object2ObjectOpenHashMap<>();
-    public static final AtomicReference<List<NbtSortRule>> currentNbtSortRules = new AtomicReference<>(Collections.emptyList());
+    public static final AtomicReference<List<NbtSortRule>> currentNbtSortRules = new AtomicReference<>(
+        Collections.emptyList());
 
-    @Nullable public static ResourceLocation sortSound = new ResourceLocation("gui.button.press");
+    @Nullable
+    public static ResourceLocation sortSound = new ResourceLocation("gui.button.press");
     private static List<ResourceLocation> foolsSounds = null;
     private static long foolsBuildTime = 0;
 
@@ -53,7 +57,8 @@ public class SortHandler {
     @SideOnly(Side.CLIENT)
     public static void playSortSound() {
         ResourceLocation sound;
-        SoundHandler soundHandler = Minecraft.getMinecraft().getSoundHandler();
+        SoundHandler soundHandler = Minecraft.getMinecraft()
+            .getSoundHandler();
         if (BogoSorter.isAprilFools()) {
             if (foolsSounds == null || foolsBuildTime - Minecraft.getSystemTime() > 300000) {
                 List<ResourceLocation> sounds = getResourceLocations(soundHandler);
@@ -74,9 +79,10 @@ public class SortHandler {
         for (Object key : soundHandler.sndRegistry.getKeys()) {
             if (key instanceof ResourceLocation) {
                 ResourceLocation soundEvent = (ResourceLocation) key;
-                if (soundEvent != null &&
-                    !soundEvent.getResourcePath().contains("music.") &&
-                    !soundEvent.getResourcePath().contains("records.")) {
+                if (soundEvent != null && !soundEvent.getResourcePath()
+                    .contains("music.")
+                    && !soundEvent.getResourcePath()
+                        .contains("records.")) {
                     sounds.add(soundEvent);
                 }
             }
@@ -96,7 +102,7 @@ public class SortHandler {
     }
 
     public SortHandler(EntityPlayer player, Container container, GuiSortingContext sortingContext,
-                       Int2ObjectMap<ClientSortData> clientSortData) {
+        Int2ObjectMap<ClientSortData> clientSortData) {
         this.player = player;
         this.container = container;
         this.context = sortingContext;
@@ -104,8 +110,9 @@ public class SortHandler {
         this.containerComparator = (container1, container2) -> {
             int result;
             for (SortRule<ItemStack> sortRule : itemSortRules) {
-                result = sortRule instanceof ClientItemSortRule ? ((ClientItemSortRule) sortRule).compareServer(container1, container2) :
-                         sortRule.compare(container1.getItemStack(), container2.getItemStack());
+                result = sortRule instanceof ClientItemSortRule
+                    ? ((ClientItemSortRule) sortRule).compareServer(container1, container2)
+                    : sortRule.compare(container1.getItemStack(), container2.getItemStack());
                 if (result != 0) return result;
             }
             result = ItemCompareHelper.compareRegistryOrder(container1.getItemStack(), container2.getItemStack());
@@ -155,8 +162,9 @@ public class SortHandler {
                 continue;
             }
 
-            int max = Math.min(slot.bogo$getItemStackLimit(itemSortContainer.getItemStack()),
-                               slot.bogo$getMaxStackSize(itemSortContainer.getItemStack()));
+            int max = Math.min(
+                slot.bogo$getItemStackLimit(itemSortContainer.getItemStack()),
+                slot.bogo$getMaxStackSize(itemSortContainer.getItemStack()));
             if (max <= 0) continue;
 
             slot.bogo$putStack(itemSortContainer.makeStack(max));
@@ -173,38 +181,38 @@ public class SortHandler {
     }
 
     // TODO untested
-    /*public void sortVertical(SlotGroup slotGroup) {
-        LinkedList<ItemSortContainer> itemList = gatherItems(slotGroup);
-        if (itemList.isEmpty()) return;
-
-        currentNbtSortRules.set(cacheNbtSortRules.getOrDefault(player, Collections.emptyList()));
-        itemList.sort(containerComparator);
-        currentNbtSortRules.set(Collections.emptyList());
-
-        ItemSortContainer itemSortContainer = itemList.pollFirst();
-        if (itemSortContainer == null) return;
-        main:
-        for (int c = 0; c < slotGroup[0].length; c++) {
-            for (Slot[] slots : slotGroup) {
-                if (c >= slots.length) break main;
-                Slot slot = slots[c];
-                if (itemSortContainer == null) {
-                    slot.putStack(ItemStack.EMPTY);
-                    continue;
-                }
-                if (!itemSortContainer.canMakeStack()) {
-                    itemSortContainer = itemList.pollFirst();
-                    if (itemSortContainer == null) continue;
-                }
-                int max = slot.getItemStackLimit(itemSortContainer.getItemStack());
-                if (max <= 0) continue;
-                slot.putStack(itemSortContainer.makeStack(max));
-            }
-        }
-        if (!itemList.isEmpty()) {
-            McUtils.giveItemsToPlayer(this.player, prepareDropList(itemList));
-        }
-    }*/
+    /*
+     * public void sortVertical(SlotGroup slotGroup) {
+     * LinkedList<ItemSortContainer> itemList = gatherItems(slotGroup);
+     * if (itemList.isEmpty()) return;
+     * currentNbtSortRules.set(cacheNbtSortRules.getOrDefault(player, Collections.emptyList()));
+     * itemList.sort(containerComparator);
+     * currentNbtSortRules.set(Collections.emptyList());
+     * ItemSortContainer itemSortContainer = itemList.pollFirst();
+     * if (itemSortContainer == null) return;
+     * main:
+     * for (int c = 0; c < slotGroup[0].length; c++) {
+     * for (Slot[] slots : slotGroup) {
+     * if (c >= slots.length) break main;
+     * Slot slot = slots[c];
+     * if (itemSortContainer == null) {
+     * slot.putStack(ItemStack.EMPTY);
+     * continue;
+     * }
+     * if (!itemSortContainer.canMakeStack()) {
+     * itemSortContainer = itemList.pollFirst();
+     * if (itemSortContainer == null) continue;
+     * }
+     * int max = slot.getItemStackLimit(itemSortContainer.getItemStack());
+     * if (max <= 0) continue;
+     * slot.putStack(itemSortContainer.makeStack(max));
+     * }
+     * }
+     * if (!itemList.isEmpty()) {
+     * McUtils.giveItemsToPlayer(this.player, prepareDropList(itemList));
+     * }
+     * }
+     */
 
     public void sortBogo(SlotGroup slotGroup) {
         List<ItemStack> items = new ArrayList<>();
@@ -223,7 +231,7 @@ public class SortHandler {
     public LinkedList<ItemSortContainer> gatherItems(SlotGroup slotGroup) {
         LinkedList<ItemSortContainer> list = new LinkedList<>();
         Object2ObjectOpenCustomHashMap<ItemStack, ItemSortContainer> items = new Object2ObjectOpenCustomHashMap<>(
-                BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
+            BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
         for (ISlot slot : getSortableSlots(slotGroup)) {
             ItemStack stack = slot.bogo$getStack();
             if (stack != null) {
@@ -244,7 +252,10 @@ public class SortHandler {
         List<ItemStack> dropList = new ArrayList<>();
         for (ItemSortContainer itemSortContainer : sortedList) {
             while (itemSortContainer.canMakeStack()) {
-                dropList.add(itemSortContainer.makeStack(itemSortContainer.getItemStack().getMaxStackSize()));
+                dropList.add(
+                    itemSortContainer.makeStack(
+                        itemSortContainer.getItemStack()
+                            .getMaxStackSize()));
             }
         }
         return dropList;
@@ -286,7 +297,9 @@ public class SortHandler {
             Random random = new Random();
             for (ISlot slot : getSortableSlots(slotGroup)) {
                 if (random.nextFloat() < 0.3f) {
-                    ItemStack randomItem = ClientEventHandler.allItems.get(random.nextInt(ClientEventHandler.allItems.size())).copy();
+                    ItemStack randomItem = ClientEventHandler.allItems
+                        .get(random.nextInt(ClientEventHandler.allItems.size()))
+                        .copy();
                     slot.bogo$putStack(randomItem.copy());
                     slots.add(Pair.of(randomItem, slot.bogo$getSlotNumber()));
                 }
@@ -304,20 +317,19 @@ public class SortHandler {
              * Logic being used to check if we cannot access the slot:
              * 1. Can the player take the stack?
              * This usually returns true, but some slot implementations return false if the slot is empty.
-             *
              * 2. Can we insert the current stack into the slot?
              * This may seem roundabout, but this means that if it returns false, then most likely, the slot is
              * always returning false.
-             *
              * 3. Is the stack in the slot empty?
              * If it is empty, some implementations return false for both above methods.
              * Although this might risk changing actually inaccessible slots, most likely, those slots would not be
              * empty.
-             *
              * The slot should only be marked as inaccessible if all three conditions return false.
              */
             boolean canTake = slot.bogo$canTakeStack(player);
-            boolean canInsert = (slot.bogo$getStack() != null) && slot.bogo$isItemValid(slot.bogo$getStack().copy()            );
+            boolean canInsert = (slot.bogo$getStack() != null) && slot.bogo$isItemValid(
+                slot.bogo$getStack()
+                    .copy());
             boolean isEmpty = slot.bogo$getStack() == null;
             if (canTake || canInsert || isEmpty) result.add(slot);
         }

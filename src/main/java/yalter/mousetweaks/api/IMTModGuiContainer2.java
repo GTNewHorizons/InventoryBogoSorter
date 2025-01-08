@@ -11,6 +11,7 @@ import net.minecraft.inventory.Slot;
  * or the MouseTweaksDisableWheelTweak annotations.
  */
 public interface IMTModGuiContainer2 {
+
     /**
      * If you want to disable Mouse Tweaks in your GuiScreen, return true from this method.
      *
@@ -61,13 +62,16 @@ public interface IMTModGuiContainer2 {
      * If your container has an RMB dragging functionality (like vanilla containers), disable it inside this method.
      * This method is called every frame (render tick), which is after all mouseClicked / mouseClickMove / mouseReleased
      * events are handled (although note these events are handled every game tick, which is far less frequent than every
-     * render tick).<br><br>
+     * render tick).<br>
+     * <br>
      * <p>
      * If true is returned from this method, Mouse Tweaks (after checking other conditions like isIgnored) will click
      * the slot on which the right mouse button was initially pressed (in most cases this is the slot currently under
-     * mouse). This is needed because the vanilla RMB dragging functionality prevents the initial slot click.<br><br>
+     * mouse). This is needed because the vanilla RMB dragging functionality prevents the initial slot click.<br>
+     * <br>
      * <p>
      * For vanilla containers this method looks like this:
+     * 
      * <pre>
      * this.ignoreMouseUp = true;
      *

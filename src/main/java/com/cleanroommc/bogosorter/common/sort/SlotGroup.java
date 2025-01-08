@@ -1,13 +1,14 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import com.cleanroommc.bogosorter.api.IPosSetter;
-import com.cleanroommc.bogosorter.api.ISlot;
-import com.cleanroommc.bogosorter.api.ISlotGroup;
+import java.util.Collections;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.Collections;
-import java.util.List;
+import com.cleanroommc.bogosorter.api.IPosSetter;
+import com.cleanroommc.bogosorter.api.ISlot;
+import com.cleanroommc.bogosorter.api.ISlotGroup;
 
 public class SlotGroup implements ISlotGroup {
 

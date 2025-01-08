@@ -1,8 +1,8 @@
 package com.cleanroommc.bogosorter.compat.loader;
 
-import cpw.mods.fml.common.Loader;
-
 import java.util.function.Supplier;
+
+import cpw.mods.fml.common.Loader;
 
 public enum Mods {
 
@@ -28,6 +28,7 @@ public enum Mods {
         this.modid = modid;
         this.supplier = null;
     }
+
     Mods(Supplier<Boolean> supplier) {
         this.supplier = supplier;
         this.modid = null;
@@ -36,9 +37,9 @@ public enum Mods {
 
     public boolean isLoaded() {
         if (loaded == null) {
-            if (supplier != null){
+            if (supplier != null) {
                 loaded = supplier.get();
-            }else if (modid != null) {
+            } else if (modid != null) {
                 loaded = Loader.isModLoaded(modid);
             } else loaded = false;
         }

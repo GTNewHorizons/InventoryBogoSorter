@@ -1,19 +1,21 @@
 package com.cleanroommc.bogosorter.common.network;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.PacketBuffer;
+
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.sort.ClientSortData;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.PacketBuffer;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class CSort implements IPacket {
 
@@ -23,7 +25,8 @@ public class CSort implements IPacket {
     private int hover;
     private boolean player;
 
-    public CSort(Collection<ClientSortData> clientSortDataList, List<SortRule<ItemStack>> sortRules, List<NbtSortRule> nbtSortRules, int hover, boolean player) {
+    public CSort(Collection<ClientSortData> clientSortDataList, List<SortRule<ItemStack>> sortRules,
+        List<NbtSortRule> nbtSortRules, int hover, boolean player) {
         this.clientSortDataList = clientSortDataList;
         this.sortRules = sortRules;
         this.nbtSortRules = nbtSortRules;
@@ -31,8 +34,7 @@ public class CSort implements IPacket {
         this.player = player;
     }
 
-    public CSort() {
-    }
+    public CSort() {}
 
     @Override
     public void encode(PacketBuffer buf) throws IOException {

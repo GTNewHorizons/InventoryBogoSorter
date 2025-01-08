@@ -1,10 +1,11 @@
 package com.cleanroommc.bogosorter.api;
 
+import java.util.List;
+
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import org.jetbrains.annotations.ApiStatus;
 
-import java.util.List;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * A helper interface to create {@link ISlotGroup} instances.

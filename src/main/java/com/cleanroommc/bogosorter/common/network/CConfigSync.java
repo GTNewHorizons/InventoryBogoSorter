@@ -1,11 +1,13 @@
 package com.cleanroommc.bogosorter.common.network;
 
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
-import io.netty.buffer.Unpooled;
+import java.io.IOException;
+
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
 
-import java.io.IOException;
+import com.cleanroommc.bogosorter.common.config.PlayerConfig;
+
+import io.netty.buffer.Unpooled;
 
 public class CConfigSync implements IPacket {
 
@@ -14,7 +16,8 @@ public class CConfigSync implements IPacket {
     @Override
     public void encode(PacketBuffer buf) throws IOException {
         packet = new PacketBuffer(Unpooled.buffer());
-        PlayerConfig.getClient().writePacket(packet);
+        PlayerConfig.getClient()
+            .writePacket(packet);
         NetworkUtils.writePacketBuffer(buf, packet);
     }
 
@@ -25,7 +28,8 @@ public class CConfigSync implements IPacket {
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        PlayerConfig.get(handler.playerEntity).readPacket(packet);
+        PlayerConfig.get(handler.playerEntity)
+            .readPacket(packet);
         return null;
     }
 }

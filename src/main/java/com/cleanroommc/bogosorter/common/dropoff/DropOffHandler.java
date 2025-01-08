@@ -50,11 +50,11 @@ public class DropOffHandler {
 
         for (int i = InventoryManager.Slots.PLAYER_INVENTORY_FIRST; i < playerStacks.length; ++i) {
             if (playerStacks[i] != null && isItemValid(playerStacks[i].getDisplayName())) {
-//                if (DropOffConfig.INSTANCE.dropOffOnlyFullStacks &&
-//                    playerStacks[i].stackSize <
-//                        inventoryManager.getMaxAllowedStackSize(playerInventory, playerStacks[i])) {
-//                    continue;
-//                }
+                // if (DropOffConfig.INSTANCE.dropOffOnlyFullStacks &&
+                // playerStacks[i].stackSize <
+                // inventoryManager.getMaxAllowedStackSize(playerInventory, playerStacks[i])) {
+                // continue;
+                // }
 
                 int oldPlayerStackSize = playerStacks[i].stackSize;
 
@@ -75,16 +75,16 @@ public class DropOffHandler {
      * This method checks the config text field to determine whether to DropOff the item with the specified name or not.
      */
     private boolean isItemValid(String name) {
-//        String[] itemNames = StringUtils.split(DropOffConfig.INSTANCE.excludeItemsWithNames,
-//            DropOffConfig.INSTANCE.delimiter);
-//
-//        for (String itemName : itemNames) {
-//            String regex = itemName.replace("*", ".*").trim();
-//
-//            if (name.matches(regex)) {
-//                return false;
-//            }
-//        }
+        // String[] itemNames = StringUtils.split(DropOffConfig.INSTANCE.excludeItemsWithNames,
+        // DropOffConfig.INSTANCE.delimiter);
+        //
+        // for (String itemName : itemNames) {
+        // String regex = itemName.replace("*", ".*").trim();
+        //
+        // if (name.matches(regex)) {
+        // return false;
+        // }
+        // }
 
         return true;
     }
@@ -122,8 +122,8 @@ public class DropOffHandler {
             }
         }
 
-        if (hasSameStack && emptySlotIndex != null &&
-            toInventory.isItemValidForSlot(emptySlotIndex, playerStacks[playerStackIndex])) {
+        if (hasSameStack && emptySlotIndex != null
+            && toInventory.isItemValidForSlot(emptySlotIndex, playerStacks[playerStackIndex])) {
             toInventory.setInventorySlotContents(emptySlotIndex, playerStacks[playerStackIndex]);
             playerStacks[playerStackIndex] = null;
         }

@@ -1,15 +1,16 @@
 package com.cleanroommc.bogosorter.common.dropoff.render;
 
-
-import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import org.lwjgl.opengl.GL11;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+
+import org.lwjgl.opengl.GL11;
+
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 public class RendererCube {
 

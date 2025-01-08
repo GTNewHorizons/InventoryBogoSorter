@@ -1,15 +1,17 @@
 package com.cleanroommc.bogosorter.common.dropoff;
 
-import com.cleanroommc.bogosorter.BogoSorter;
-import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraftforge.client.event.GuiScreenEvent;
+
+import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class DropOffButtonHandler {
 
@@ -30,14 +32,12 @@ public class DropOffButtonHandler {
                 event.buttonList.add(new InvButton(inv));
             }
         } catch (NullPointerException e) {
-            BogoSorter.LOGGER.error(
-                "Erroring adding dropoff button to player inventory \n" + e);
+            BogoSorter.LOGGER.error("Erroring adding dropoff button to player inventory \n" + e);
         }
     }
 
-
     @SubscribeEvent
-    public  void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
+    public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (!DropOffHandler.enableDropOff) return;
         GuiScreen screen = event.gui;
         if (!showButton) return;

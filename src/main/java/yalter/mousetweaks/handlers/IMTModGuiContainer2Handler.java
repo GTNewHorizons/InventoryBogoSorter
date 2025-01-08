@@ -1,20 +1,22 @@
 package yalter.mousetweaks.handlers;
 
-import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
+
+import yalter.mousetweaks.api.IMTModGuiContainer2;
 import yalter.mousetweaks.impl.IGuiScreenHandler;
 import yalter.mousetweaks.impl.MouseButton;
-import yalter.mousetweaks.api.IMTModGuiContainer2;
-
-import java.util.List;
 
 public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
+
     protected Minecraft mc;
     protected IMTModGuiContainer2 modGuiContainer;
     protected IGuiContainerAccessor mixinGuiContainer;
-
 
     public IMTModGuiContainer2Handler(IMTModGuiContainer2 modGuiContainer) {
         this.mc = Minecraft.getMinecraft();
@@ -50,10 +52,7 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
     @Override
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-        mixinGuiContainer.mouseClick(slot,
-            slot.slotNumber,
-            mouseButton.getValue(),
-            shiftPressed ? 1 : 0);
+        mixinGuiContainer.mouseClick(slot, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0);
     }
 
     @Override

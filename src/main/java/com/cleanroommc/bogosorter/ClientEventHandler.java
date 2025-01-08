@@ -1,32 +1,11 @@
 package com.cleanroommc.bogosorter;
 
-import com.cleanroommc.bogosorter.api.ISlot;
-import com.cleanroommc.bogosorter.api.ISortableContainer;
-import com.cleanroommc.bogosorter.api.SortRule;
-import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import com.cleanroommc.bogosorter.common.config.ConfigGui;
-import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
-import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
-import com.cleanroommc.bogosorter.common.network.CSort;
-import com.cleanroommc.bogosorter.common.network.CDropOff;
-import com.cleanroommc.bogosorter.common.network.NetworkHandler;
-import com.cleanroommc.bogosorter.common.sort.ClientSortData;
-import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
-import com.cleanroommc.bogosorter.common.sort.SlotGroup;
-import com.cleanroommc.bogosorter.common.sort.SortHandler;
-import com.cleanroommc.bogosorter.compat.screen.WarningScreen;
-import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
-import com.cleanroommc.modularui.api.event.MouseInputEvent;
-import com.cleanroommc.modularui.factory.ClientGUI;
-import com.google.common.collect.Lists;
-import com.mojang.realmsclient.gui.ChatFormatting;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -39,50 +18,103 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.cleanroommc.bogosorter.api.ISlot;
+import com.cleanroommc.bogosorter.api.ISortableContainer;
+import com.cleanroommc.bogosorter.api.SortRule;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.config.ConfigGui;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
+import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
+import com.cleanroommc.bogosorter.common.network.CDropOff;
+import com.cleanroommc.bogosorter.common.network.CSort;
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.bogosorter.common.sort.ClientSortData;
+import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
+import com.cleanroommc.bogosorter.common.sort.SlotGroup;
+import com.cleanroommc.bogosorter.common.sort.SortHandler;
+import com.cleanroommc.bogosorter.compat.screen.WarningScreen;
+import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
+import com.cleanroommc.modularui.api.event.MouseInputEvent;
+import com.cleanroommc.modularui.factory.ClientGUI;
+import com.google.common.collect.Lists;
+import com.mojang.realmsclient.gui.ChatFormatting;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 
 public class ClientEventHandler {
 
     public static final List<ItemStack> allItems = new ArrayList<>();
-    public static final KeyBinding configGuiKey = new KeyBinding("key.sort_config", Keyboard.KEY_K, "key.categories.bogosorter");
+    public static final KeyBinding configGuiKey = new KeyBinding(
+        "key.sort_config",
+        Keyboard.KEY_K,
+        "key.categories.bogosorter");
     public static final KeyBinding sortKey = new KeyBinding("key.sort", -98, "key.categories.bogosorter");
-    public static final KeyBinding dropoffKey = new KeyBinding("key.dropoff", Keyboard.KEY_SEMICOLON, "key.categories.bogosorter");
-    public static final boolean isDeobfuscatedEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+    public static final KeyBinding dropoffKey = new KeyBinding(
+        "key.dropoff",
+        Keyboard.KEY_SEMICOLON,
+        "key.categories.bogosorter");
+    public static final boolean isDeobfuscatedEnvironment = (boolean) Launch.blackboard
+        .get("fml.deobfuscatedEnvironment");
 
     public static final KeyBind moveAllSame = KeyBind.builder("move_all_same")
-            .lmb(true).rmb(false)
-            .shift(false).ctrl(false).alt(true).space(false)
-            .build();
+        .lmb(true)
+        .rmb(false)
+        .shift(false)
+        .ctrl(false)
+        .alt(true)
+        .space(false)
+        .build();
     public static final KeyBind moveAll = KeyBind.builder("move_all")
-            .lmb(true).rmb(false)
-            .shift(false).ctrl(false).alt(false).space(true)
-            .build();
+        .lmb(true)
+        .rmb(false)
+        .shift(false)
+        .ctrl(false)
+        .alt(false)
+        .space(true)
+        .build();
     public static final KeyBind moveSingle = KeyBind.builder("move_single")
-            .lmb(true).rmb(false)
-            .shift(false).ctrl(true).alt(false)
-            .build();
+        .lmb(true)
+        .rmb(false)
+        .shift(false)
+        .ctrl(true)
+        .alt(false)
+        .build();
     public static final KeyBind moveSingleEmpty = KeyBind.builder("move_single_empty")
-            .lmb(false).rmb(true)
-            .shift(false).ctrl(true).alt(false)
-            .build();
+        .lmb(false)
+        .rmb(true)
+        .shift(false)
+        .ctrl(true)
+        .alt(false)
+        .build();
     public static final KeyBind throwAllSame = KeyBind.builder("throw_all_same")
-            .lmb(false).rmb(false)
-            .shift(false).ctrl(false).alt(true).space(false)
-            .validator(() -> isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop))
-            .build();
+        .lmb(false)
+        .rmb(false)
+        .shift(false)
+        .ctrl(false)
+        .alt(true)
+        .space(false)
+        .validator(() -> isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop))
+        .build();
     public static final KeyBind throwAll = KeyBind.builder("throw_all")
-            .lmb(false).rmb(false)
-            .shift(false).ctrl(false).alt(false).space(true)
-            .validator(() -> isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop))
-            .build();
+        .lmb(false)
+        .rmb(false)
+        .shift(false)
+        .ctrl(false)
+        .alt(false)
+        .space(true)
+        .validator(() -> isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop))
+        .build();
 
     private static long timeConfigGui = 0;
     private static long timeSort = 0;
@@ -149,10 +181,10 @@ public class ClientEventHandler {
                 timeConfigGui = t;
             }
         }
-        if (Keypress(dropoffKey)){
+        if (Keypress(dropoffKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeDropoff > DropOffHandler.dropoffPacketThrottleInMS) {
-                if (DropOffHandler.enableDropOff){
+                if (DropOffHandler.enableDropOff) {
                     NetworkHandler.sendToServer(new CDropOff());
                 }
                 timeDropoff = t;
@@ -169,8 +201,7 @@ public class ClientEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onGuiKeyInput(KeyboardInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
-        if (!(event.gui instanceof GuiContainer))
-            return;
+        if (!(event.gui instanceof GuiContainer)) return;
         if (handleInput((GuiContainer) event.gui)) {
             event.setCanceled(true);
             return;
@@ -188,10 +219,11 @@ public class ClientEventHandler {
             // random
             if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2)) {
                 if (allItems.isEmpty()) {
-                    for (Object key : Item.itemRegistry.getKeys()) {  // Iterate over the registry keys
-                        Item item = (Item) Item.itemRegistry.getObject(key);  // Get the actual Item using the key
+                    for (Object key : Item.itemRegistry.getKeys()) { // Iterate over the registry keys
+                        Item item = (Item) Item.itemRegistry.getObject(key); // Get the actual Item using the key
                         List<ItemStack> subItems = Lists.newArrayList();
-                        item.getSubItems(item , CreativeTabs.tabAllSearch, subItems);  // Get sub-items based on the creative tab
+                        item.getSubItems(item, CreativeTabs.tabAllSearch, subItems); // Get sub-items based on the
+                                                                                     // creative tab
                         allItems.addAll(subItems);
                     }
                 }
@@ -213,7 +245,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderWorldLastEvent(RenderWorldLastEvent event) {
-        if (DropOffHandler.dropoffRender){
+        if (DropOffHandler.dropoffRender) {
             RendererCube.INSTANCE.tryToRender(event);
         }
     }
@@ -262,8 +294,9 @@ public class ClientEventHandler {
     }
 
     private static boolean canSort(@Nullable ISlot slot) {
-        return !Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode ||
-                (Minecraft.getMinecraft().thePlayer.inventory.getItemStack() == null && (slot == null || slot.bogo$getStack() == null));
+        return !Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode
+            || (Minecraft.getMinecraft().thePlayer.inventory.getItemStack() == null
+                && (slot == null || slot.bogo$getStack() == null));
     }
 
     private static boolean isButtonPressed(int button) {
@@ -307,7 +340,8 @@ public class ClientEventHandler {
                     slotGroup = sortingContext.getPlayerSlotGroup();
                 }
                 if (slotGroup == null || slotGroup.isEmpty()) return false;
-                slot = slotGroup.getSlots().get(0);
+                slot = slotGroup.getSlots()
+                    .get(0);
             } else {
                 slotGroup = sortingContext.getSlotGroup(slot.bogo$getSlotNumber());
                 if (slotGroup == null || slotGroup.isEmpty()) return false;
@@ -316,7 +350,13 @@ public class ClientEventHandler {
             List<SortRule<ItemStack>> sortRules = BogoSorterConfig.sortRules;
             boolean color = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("color"));
             boolean name = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("display_name"));
-            NetworkHandler.sendToServer(new CSort(createSortData(slotGroup, color, name), BogoSorterConfig.sortRules, BogoSorterConfig.nbtSortRules, slot.bogo$getSlotNumber(), slotGroup.isPlayerInventory()));
+            NetworkHandler.sendToServer(
+                new CSort(
+                    createSortData(slotGroup, color, name),
+                    BogoSorterConfig.sortRules,
+                    BogoSorterConfig.nbtSortRules,
+                    slot.bogo$getSlotNumber(),
+                    slotGroup.isPlayerInventory()));
             SortHandler.playSortSound();
 
             return true;
@@ -327,9 +367,12 @@ public class ClientEventHandler {
 
     public static Collection<ClientSortData> createSortData(SlotGroup slotGroup, boolean color, boolean name) {
         if (!color && !name) return Collections.emptyList();
-        Map<ItemStack, ClientSortData> map = new Object2ObjectOpenCustomHashMap<>(BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
+        Map<ItemStack, ClientSortData> map = new Object2ObjectOpenCustomHashMap<>(
+            BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
         for (ISlot slot1 : slotGroup.getSlots()) {
-            map.computeIfAbsent(slot1.bogo$getStack(), stack -> ClientSortData.of(stack, color, name)).getSlotNumbers().add(slot1.bogo$getSlotNumber());
+            map.computeIfAbsent(slot1.bogo$getStack(), stack -> ClientSortData.of(stack, color, name))
+                .getSlotNumbers()
+                .add(slot1.bogo$getSlotNumber());
         }
         return map.values();
     }
@@ -346,7 +389,8 @@ public class ClientEventHandler {
         }
         return null;
     }
-    private static boolean Keypress(KeyBinding key){
+
+    private static boolean Keypress(KeyBinding key) {
         int keyCode = key.getKeyCode();
         if (keyCode > 0) {
             return key.isPressed();

@@ -1,15 +1,17 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import com.cleanroommc.bogosorter.api.SortRule;
+import java.util.Comparator;
+
 import net.minecraft.item.ItemStack;
 
-import java.util.Comparator;
+import com.cleanroommc.bogosorter.api.SortRule;
 
 public class ClientItemSortRule extends SortRule<ItemStack> {
 
     private final Comparator<ItemSortContainer> serverComparator;
 
-    public ClientItemSortRule(String key, Comparator<ItemStack> comparator, Comparator<ItemSortContainer> serverComparator) {
+    public ClientItemSortRule(String key, Comparator<ItemStack> comparator,
+        Comparator<ItemSortContainer> serverComparator) {
         super(key, comparator);
         this.serverComparator = serverComparator;
     }

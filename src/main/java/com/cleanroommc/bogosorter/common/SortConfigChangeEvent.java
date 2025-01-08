@@ -1,18 +1,21 @@
 package com.cleanroommc.bogosorter.common;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+
+import org.jetbrains.annotations.Unmodifiable;
+
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
+
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.Unmodifiable;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class SortConfigChangeEvent extends Event {
 

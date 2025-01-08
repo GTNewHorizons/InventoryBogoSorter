@@ -1,16 +1,17 @@
 package com.cleanroommc.bogosorter.mixins.late.codechicken.nei;
 
-
-import codechicken.nei.GuiEnchantmentModifier;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import org.spongepowered.asm.mixin.Mixin;
-import yalter.mousetweaks.api.IMTModGuiContainer2;
 
+import org.spongepowered.asm.mixin.Mixin;
+
+import codechicken.nei.GuiEnchantmentModifier;
+import yalter.mousetweaks.api.IMTModGuiContainer2;
 
 @Mixin(GuiEnchantmentModifier.class)
 public abstract class MixinGuiEnchantmentModifier extends GuiContainer implements IMTModGuiContainer2 {
+
     public MixinGuiEnchantmentModifier(Container p_i1072_1_) {
         super(p_i1072_1_);
     }

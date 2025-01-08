@@ -1,12 +1,14 @@
 package com.cleanroommc.bogosorter.common.config;
 
-import com.cleanroommc.bogosorter.common.network.NetworkHandler;
-import com.cleanroommc.bogosorter.common.network.SReloadConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentTranslation;
+
 import org.jetbrains.annotations.NotNull;
+
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.bogosorter.common.network.SReloadConfig;
 
 public class ConfigReloadCommand extends CommandBase {
 

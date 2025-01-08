@@ -52,8 +52,6 @@ public class SortRule<T> implements Comparator<T> {
 
     @Override
     public String toString() {
-        return "SortRule{" +
-                "key='" + key + '\'' +
-                '}';
+        return "SortRule{" + "key='" + key + '\'' + '}';
     }
 }

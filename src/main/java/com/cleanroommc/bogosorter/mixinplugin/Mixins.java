@@ -8,76 +8,74 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-
 import com.cleanroommc.bogosorter.core.BogoSorterCore;
+
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
 public enum Mixins {
 
     Vanilla_BOTH(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)
-        .setSide(Side.BOTH).setPhase(Phase.EARLY).addMixinClasses(
+        .setSide(Side.BOTH)
+        .setPhase(Phase.EARLY)
+        .addMixinClasses(
             "minecraft.ContainerHorseInventoryMixin",
-           "minecraft.MixinEntityPlayer",
+            "minecraft.MixinEntityPlayer",
             "minecraft.MixinItemStack",
-            "minecraft.SlotMixin"
-        )),
+            "minecraft.SlotMixin")),
     Vanilla_CLIENT(new Builder(" Vanilla").addTargetedMod(TargetedMod.VANILLA)
-        .setSide(Side.CLIENT).setPhase(Phase.EARLY).addMixinClasses(
+        .setSide(Side.CLIENT)
+        .setPhase(Phase.EARLY)
+        .addMixinClasses(
             "minecraft.CreativeSlotMixin",
             "minecraft.GuiContainerMixin",
             "minecraft.GuiEditSignMixin",
-            "minecraft.MinecraftMixin"
-    )),
+            "minecraft.MinecraftMixin")),
 
-    Avaritiaddons( new Builder(" Avaritiaddons").addTargetedMod(TargetedMod.AVARITIADDONS).setSide(Side.BOTH)
-        .setPhase(Phase.LATE).addMixinClasses(
-            "avaritiaddons.ContainerAvaritiaddonsChestMixin"
-        )),
-    IronChest(new Builder(" Iron Chests").addTargetedMod(TargetedMod.IRONCHEST).setSide(Side.BOTH)
-        .setPhase(Phase.LATE).addMixinClasses(
-            "ironchests.MixinIronChestContainer"
-        )),
-    EnderIo(new Builder(" Ender IO").addTargetedMod(TargetedMod.ENDERIO).setSide(Side.BOTH)
-        .setPhase(Phase.LATE).addMixinClasses(
-            "enderio.MixinVacuumChest",
-            "enderio.MixinBuffer"
-        )),
-    GalacticraftCore(new Builder(" Galacticraft").addTargetedMod(TargetedMod.GALACTICRAFTCORE).setSide(Side.BOTH)
-        .setPhase(Phase.LATE).addMixinClasses(
+    Avaritiaddons(new Builder(" Avaritiaddons").addTargetedMod(TargetedMod.AVARITIADDONS)
+        .setSide(Side.BOTH)
+        .setPhase(Phase.LATE)
+        .addMixinClasses("avaritiaddons.ContainerAvaritiaddonsChestMixin")),
+    IronChest(new Builder(" Iron Chests").addTargetedMod(TargetedMod.IRONCHEST)
+        .setSide(Side.BOTH)
+        .setPhase(Phase.LATE)
+        .addMixinClasses("ironchests.MixinIronChestContainer")),
+    EnderIo(new Builder(" Ender IO").addTargetedMod(TargetedMod.ENDERIO)
+        .setSide(Side.BOTH)
+        .setPhase(Phase.LATE)
+        .addMixinClasses("enderio.MixinVacuumChest", "enderio.MixinBuffer")),
+    GalacticraftCore(new Builder(" Galacticraft").addTargetedMod(TargetedMod.GALACTICRAFTCORE)
+        .setSide(Side.BOTH)
+        .setPhase(Phase.LATE)
+        .addMixinClasses(
             "galacticraft.core.MixinContainerRocketInventory",
-            "galacticraft.planets.MixinContainerSlimeling"
+            "galacticraft.planets.MixinContainerSlimeling")),
+
+    ThermalExpansion(new Builder(" Thermal Expansion").addTargetedMod(TargetedMod.THERMALEXPANSION)
+        .setSide(Side.BOTH)
+        .setPhase(Phase.LATE)
+        .addMixinClasses("thermal.MixinContainerSatchel", "thermal.MixinContainerStrongbox"
+
         )),
 
-    ThermalExpansion(new Builder(" Thermal Expansion").addTargetedMod(TargetedMod.THERMALEXPANSION).setSide(Side.BOTH)
-        .setPhase(Phase.LATE).addMixinClasses(
-            "thermal.MixinContainerSatchel",
-            "thermal.MixinContainerStrongbox"
+    Forestry(new Builder(" Forestry").addTargetedMod(TargetedMod.Forestry)
+        .setSide(Side.CLIENT)
+        .setPhase(Phase.LATE)
+        .addMixinClasses("forestry.MixinGuiForestry")),
+    CodeChickenCore(new Builder(" CodeChickenCore").addTargetedMod(TargetedMod.CodeChickenCore)
+        .setSide(Side.CLIENT)
+        .setPhase(Phase.LATE)
+        .addMixinClasses("codechicken.core.MixinGuiContainerWidget")),
 
-        )),
-
-    Forestry(new Builder(" Forestry").addTargetedMod(TargetedMod.Forestry).setSide(Side.CLIENT)
-        .setPhase(Phase.LATE).addMixinClasses(
-            "forestry.MixinGuiForestry"
-        )),
-    CodeChickenCore(new Builder(" CodeChickenCore").addTargetedMod(TargetedMod.CodeChickenCore).setSide(Side.CLIENT)
-        .setPhase(Phase.LATE).addMixinClasses(
-            "codechicken.core.MixinGuiContainerWidget"
-        )),
-
-    NEI(new Builder(" CodeChickenCore").addTargetedMod(TargetedMod.CodeChickenCore).setSide(Side.CLIENT)
-        .setPhase(Phase.LATE).addMixinClasses(
-            "codechicken.nei.MixinGuiEnchantmentModifier",
-            "codechicken.nei.MixinGuiRecipe"
-        )),
-    AE2(new Builder(" Applied Energistics 2").addTargetedMod(TargetedMod.AE2).setSide(Side.CLIENT)
-        .setPhase(Phase.LATE).addMixinClasses(
-            "appliedenergistics.MixinAEBaseGui"
-        )),
+    NEI(new Builder(" CodeChickenCore").addTargetedMod(TargetedMod.CodeChickenCore)
+        .setSide(Side.CLIENT)
+        .setPhase(Phase.LATE)
+        .addMixinClasses("codechicken.nei.MixinGuiEnchantmentModifier", "codechicken.nei.MixinGuiRecipe")),
+    AE2(new Builder(" Applied Energistics 2").addTargetedMod(TargetedMod.AE2)
+        .setSide(Side.CLIENT)
+        .setPhase(Phase.LATE)
+        .addMixinClasses("appliedenergistics.MixinAEBaseGui")),
 
     ;
-
-
-
 
     private final List<String> mixinClasses;
     private final Supplier<Boolean> applyIf;
@@ -135,8 +133,10 @@ public enum Mixins {
     }
 
     private boolean shouldLoadSide() {
-        return side == Side.BOTH || (side == Side.SERVER && FMLLaunchHandler.side().isServer())
-            || (side == Side.CLIENT && FMLLaunchHandler.side().isClient());
+        return side == Side.BOTH || (side == Side.SERVER && FMLLaunchHandler.side()
+            .isServer())
+            || (side == Side.CLIENT && FMLLaunchHandler.side()
+                .isClient());
     }
 
     private boolean allModsLoaded(List<TargetedMod> targetedMods, Set<String> loadedCoreMods, Set<String> loadedMods) {
@@ -147,8 +147,7 @@ public enum Mixins {
 
             // Check coremod first
             if (!loadedCoreMods.isEmpty() && target.coreModClass != null
-                && !loadedCoreMods.contains(target.coreModClass))
-                return false;
+                && !loadedCoreMods.contains(target.coreModClass)) return false;
             else if (!loadedMods.isEmpty() && target.modId != null && !loadedMods.contains(target.modId)) return false;
         }
 
@@ -163,8 +162,7 @@ public enum Mixins {
 
             // Check coremod first
             if (!loadedCoreMods.isEmpty() && target.coreModClass != null
-                && loadedCoreMods.contains(target.coreModClass))
-                return false;
+                && loadedCoreMods.contains(target.coreModClass)) return false;
             else if (!loadedMods.isEmpty() && target.modId != null && loadedMods.contains(target.modId)) return false;
         }
 
@@ -221,7 +219,9 @@ public enum Mixins {
 
     @SuppressWarnings("SimplifyStreamApiCallChains")
     private static String[] addPrefix(String prefix, String... values) {
-        return Arrays.stream(values).map(s -> prefix + s).collect(Collectors.toList())
+        return Arrays.stream(values)
+            .map(s -> prefix + s)
+            .collect(Collectors.toList())
             .toArray(new String[values.length]);
     }
 

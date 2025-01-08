@@ -1,21 +1,24 @@
 package com.cleanroommc.bogosorter.api;
 
-import com.cleanroommc.bogosorter.BogoSortAPI;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import com.cleanroommc.bogosorter.BogoSortAPI;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @ApiStatus.NonExtendable
 public interface IBogoSortAPI {
@@ -121,7 +124,8 @@ public interface IBogoSortAPI {
      * @param converter    converts the tag found at the tagPath for the comparator
      * @see net.minecraftforge.common.util.Constants.NBT for expectedType
      */
-    <T> void registerNbtSortingRule(String key, String tagPath, int expectedType, Comparator<T> comparator, Function<NBTBase, T> converter);
+    <T> void registerNbtSortingRule(String key, String tagPath, int expectedType, Comparator<T> comparator,
+        Function<NBTBase, T> converter);
 
     /**
      * Opens the bogosort config gui

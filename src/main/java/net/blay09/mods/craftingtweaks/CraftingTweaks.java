@@ -2,8 +2,6 @@ package net.blay09.mods.craftingtweaks;
 
 import java.util.Map;
 
-import com.cleanroommc.bogosorter.BogoSorter;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
 import net.blay09.mods.craftingtweaks.api.CraftingTweaksAPI;
 import net.blay09.mods.craftingtweaks.api.SimpleTweakProvider;
 import net.blay09.mods.craftingtweaks.api.TweakProvider;
@@ -19,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Mouse;
 
+import com.cleanroommc.bogosorter.BogoSorter;
 import com.google.common.collect.Maps;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -29,10 +28,15 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = CraftingTweaks.MOD_ID, name = "Gregory Tweaks For Crafting", version = BogoSorter.VERSION, acceptableRemoteVersions = "*")
+@Mod(
+    modid = CraftingTweaks.MOD_ID,
+    name = "Gregory Tweaks For Crafting",
+    version = BogoSorter.VERSION,
+    acceptableRemoteVersions = "*")
 public class CraftingTweaks {
 
     public enum ModSupportState {
@@ -251,7 +255,6 @@ public class CraftingTweaks {
         config.save();
     }
 
-
     @NetworkCheckHandler
     public boolean checkNetwork(Map<String, String> map, Side side) {
         if (side == Side.SERVER) {
@@ -259,7 +262,6 @@ public class CraftingTweaks {
         }
         return true;
     }
-
 
     public void registerProvider(Class<? extends Container> clazz, TweakProvider provider) {
         if (!provider.getModId()

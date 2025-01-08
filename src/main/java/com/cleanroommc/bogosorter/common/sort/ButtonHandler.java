@@ -1,5 +1,18 @@
 package com.cleanroommc.bogosorter.common.sort;
 
+import java.util.Collections;
+import java.util.Objects;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.Container;
+import net.minecraftforge.client.event.GuiScreenEvent;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.ClientEventHandler;
@@ -8,18 +21,8 @@ import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.screen.GuiScreenWrapper;
 import com.cleanroommc.modularui.utils.Color;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.inventory.Container;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.Objects;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ButtonHandler {
 
@@ -28,10 +31,10 @@ public class ButtonHandler {
     public static final int BUTTON_SIZE = 10;
 
     public static final UITexture BUTTON_BACKGROUND = UITexture.builder()
-            .location(BogoSorter.ID, "gui/base_button")
-            .imageSize(18, 18)
-            .adaptable(1)
-            .build();
+        .location(BogoSorter.ID, "gui/base_button")
+        .imageSize(18, 18)
+        .adaptable(1)
+        .build();
 
     @SubscribeEvent
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
@@ -49,7 +52,7 @@ public class ButtonHandler {
     }
 
     @SubscribeEvent
-    public  void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Pre event) {
+    public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Pre event) {
         if (ClientEventHandler.isSortableContainer(event.gui) && !(event.gui instanceof GuiScreenWrapper)) {
             GuiContainer gui = (GuiContainer) event.gui;
             IGuiContainerAccessor guiAccess = (IGuiContainerAccessor) gui;
@@ -72,7 +75,8 @@ public class ButtonHandler {
                 }
                 if (sortButton == null || settingsButton == null) continue;
                 buttonPos.reset();
-                slotGroup.getPosSetter().setButtonPos(slotGroup, buttonPos);
+                slotGroup.getPosSetter()
+                    .setButtonPos(slotGroup, buttonPos);
                 sortButton.enabled = buttonPos.isEnabled();
                 settingsButton.enabled = buttonPos.isEnabled();
                 buttonPos.applyPos(guiAccess.getGuiLeft(), guiAccess.getGuiTop(), sortButton, settingsButton);
@@ -81,7 +85,7 @@ public class ButtonHandler {
     }
 
     @SubscribeEvent
-    public  void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
+    public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (ClientEventHandler.isSortableContainer(event.gui) && !(event.gui instanceof GuiScreenWrapper)) {
             for (GuiButton guiButton : ((IGuiContainerAccessor) event.gui).getButtons()) {
                 if (guiButton instanceof SortButton) {
@@ -92,11 +96,14 @@ public class ButtonHandler {
     }
 
     @SubscribeEvent
-    public  void onActionPerformed(GuiScreenEvent.ActionPerformedEvent.Pre event) {
+    public void onActionPerformed(GuiScreenEvent.ActionPerformedEvent.Pre event) {
         if (event.button instanceof SortButton && event.button.enabled) {
             SortButton sortButton = (SortButton) event.button;
             if (sortButton.sort) {
-                ClientEventHandler.sort(event.gui, sortButton.slotGroup.getSlots().get(0));
+                ClientEventHandler.sort(
+                    event.gui,
+                    sortButton.slotGroup.getSlots()
+                        .get(0));
             } else {
                 BogoSortAPI.INSTANCE.openConfigGui(event.gui);
                 Interactable.playButtonClickSound();
@@ -119,7 +126,9 @@ public class ButtonHandler {
         @Override
         public void drawButton(@NotNull Minecraft mc, int mouseX, int mouseY) {
             if (this.visible && this.enabled) {
-                this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+                this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition
+                    && mouseX < this.xPosition + this.width
+                    && mouseY < this.yPosition + this.height;
                 Color.setGlColor(BogoSorterConfig.buttonColor);
                 BUTTON_BACKGROUND.draw(this.xPosition, this.yPosition, this.width, this.height);
                 Color.resetGlColor();
@@ -142,7 +151,10 @@ public class ButtonHandler {
         public void drawTooltip(int mouseX, int mouseY) {
             if (this.enabled && this.field_146123_n) {
                 GuiScreen guiScreen = Objects.requireNonNull(Minecraft.getMinecraft().currentScreen);
-                guiScreen.func_146283_a(Collections.singletonList(I18n.format(this.sort ? "key.sort" : "key.sort_config")),mouseX, mouseY);
+                guiScreen.func_146283_a(
+                    Collections.singletonList(I18n.format(this.sort ? "key.sort" : "key.sort_config")),
+                    mouseX,
+                    mouseY);
             }
         }
     }
