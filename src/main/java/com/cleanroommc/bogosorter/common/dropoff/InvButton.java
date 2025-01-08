@@ -1,11 +1,8 @@
 package com.cleanroommc.bogosorter.common.dropoff;
 
-import com.cleanroommc.bogosorter.BogoSorter;
-import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import com.cleanroommc.bogosorter.common.network.CDropOff;
-import com.cleanroommc.bogosorter.common.network.NetworkHandler;
-import com.cleanroommc.modularui.drawable.UITexture;
-import com.cleanroommc.modularui.utils.Color;
+import java.util.Arrays;
+import java.util.Objects;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
@@ -13,8 +10,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 
-import java.util.Arrays;
-import java.util.Objects;
+import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.network.CDropOff;
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.modularui.drawable.UITexture;
+import com.cleanroommc.modularui.utils.Color;
 
 public class InvButton extends GuiButton {
 
@@ -28,7 +29,13 @@ public class InvButton extends GuiButton {
         .build();
 
     public InvButton(GuiContainer parentGui) {
-        super(394658248, parentGui.guiLeft + DropOffButtonHandler.buttonX, parentGui.guiTop + DropOffButtonHandler.buttonY, 10, 10, "d");
+        super(
+            394658248,
+            parentGui.guiLeft + DropOffButtonHandler.buttonX,
+            parentGui.guiTop + DropOffButtonHandler.buttonY,
+            10,
+            10,
+            "d");
         parent = parentGui;
     }
 
@@ -40,12 +47,17 @@ public class InvButton extends GuiButton {
         Color.setGlColor(BogoSorterConfig.buttonColor);
         BUTTON_BACKGROUND.draw(this.xPosition, this.yPosition, this.width, this.height);
         Color.resetGlColor();
-        this.drawCenteredString(mc.fontRenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + 1, 14737632);
+        this.drawCenteredString(
+            mc.fontRenderer,
+            this.displayString,
+            this.xPosition + this.width / 2,
+            this.yPosition + 1,
+            14737632);
     }
 
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        if (super.mousePressed(mc, mouseX, mouseY)){
+        if (super.mousePressed(mc, mouseX, mouseY)) {
             if (GuiScreen.isCtrlKeyDown() && isMouseOver(mouseX, mouseY)) {
                 hold = true;
             } else {
@@ -90,7 +102,12 @@ public class InvButton extends GuiButton {
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.enabled && this.field_146123_n) {
             GuiScreen guiScreen = Objects.requireNonNull(Minecraft.getMinecraft().currentScreen);
-            guiScreen.func_146283_a(Arrays.asList(I18n.format("key.dropoff").split("\\n")),mouseX, mouseY);
+            guiScreen.func_146283_a(
+                Arrays.asList(
+                    I18n.format("key.dropoff")
+                        .split("\\n")),
+                mouseX,
+                mouseY);
         }
     }
 }

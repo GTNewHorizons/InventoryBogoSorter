@@ -1,5 +1,17 @@
 package com.cleanroommc.bogosorter;
 
+import static com.cleanroommc.bogosorter.ClientEventHandler.*;
+
+import java.time.LocalDate;
+import java.time.Month;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
@@ -15,6 +27,7 @@ import com.cleanroommc.bogosorter.common.sort.ButtonHandler;
 import com.cleanroommc.bogosorter.common.sort.DefaultRules;
 import com.cleanroommc.bogosorter.compat.DefaultCompat;
 import com.cleanroommc.bogosorter.compat.loader.IntegrationLoader;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -22,25 +35,14 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDate;
-import java.time.Month;
-
-import static com.cleanroommc.bogosorter.ClientEventHandler.*;
-
-@Mod(modid = BogoSorter.ID,
-        name = BogoSorter.NAME,
-        version = BogoSorter.VERSION,
-        dependencies = "required-after:gtnhmixins;" +
-                "required-after:modularui2;")
+@Mod(
+    modid = BogoSorter.ID,
+    name = BogoSorter.NAME,
+    version = BogoSorter.VERSION,
+    dependencies = "required-after:gtnhmixins;" + "required-after:modularui2;")
 public class BogoSorter {
 
     public static final String ID = "bogosorter";
@@ -50,11 +52,12 @@ public class BogoSorter {
     public static final XSTR RND = new XSTR();
     public static final Logger LOGGER = LogManager.getLogger();
 
-
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         IntegrationLoader.load();
-        FMLCommonHandler.instance().bus().register(this);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(this);
         MinecraftForge.EVENT_BUS.register(this);
         NetworkHandler.init();
         OreDictHelper.init();
@@ -65,15 +68,18 @@ public class BogoSorter {
         MinecraftForge.EVENT_BUS.register(new RefillHandler());
         if (NetworkUtils.isDedicatedClient()) {
             MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
-            FMLCommonHandler.instance().bus().register(new ClientEventHandler());
+            FMLCommonHandler.instance()
+                .bus()
+                .register(new ClientEventHandler());
             MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
             MinecraftForge.EVENT_BUS.register(new DropOffButtonHandler());
             MinecraftForge.EVENT_BUS.register(new ButtonHandler());
-            FMLCommonHandler.instance().bus().register(new HotbarSwap());
+            FMLCommonHandler.instance()
+                .bus()
+                .register(new HotbarSwap());
             MinecraftForge.EVENT_BUS.register(new HotbarSwap());
         }
     }
-
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
@@ -95,8 +101,9 @@ public class BogoSorter {
             PlayerConfig.syncToServer();
         }
     }
+
     @SubscribeEvent
-    public void onPlayerLogout(FMLNetworkEvent.ClientDisconnectionFromServerEvent ignored){
+    public void onPlayerLogout(FMLNetworkEvent.ClientDisconnectionFromServerEvent ignored) {
         // save config file on logout
         Serializer.saveConfig();
     }

@@ -3,6 +3,7 @@ package com.cleanroommc.bogosorter.common.sort.color;
 import java.awt.Color;
 
 public final class ColorUtil {
+
     private ColorUtil() {
 
     }
@@ -36,16 +37,18 @@ public final class ColorUtil {
 
         final double grey1 = (color1[0] + color1[1] + color1[2]) / 3;
         final double grey2 = (color2[0] + color2[1] + color2[2]) / 3;
-        final double greyDistance1 = Math.abs(grey1 - color1[0]) + Math.abs(grey1 - color1[1]) + Math.abs(grey1 - color1[2]);
-        final double greyDistance2 = Math.abs(grey2 - color2[0]) + Math.abs(grey2 - color2[1]) + Math.abs(grey2 - color2[2]);
+        final double greyDistance1 = Math.abs(grey1 - color1[0]) + Math.abs(grey1 - color1[1])
+            + Math.abs(grey1 - color1[2]);
+        final double greyDistance2 = Math.abs(grey2 - color2[0]) + Math.abs(grey2 - color2[1])
+            + Math.abs(grey2 - color2[2]);
         final double greyDistance = greyDistance1 - greyDistance2;
 
         return colorDistance + (greyDistance * greyDistance / 10.0);
     }
 
     public static double slowPerceptualColorDistanceSquared(Color color1, Color color2) {
-        final int[] colorInts1 = {color1.getRed(), color1.getGreen(), color1.getBlue()};
-        final int[] colorInts2 = {color2.getRed(), color2.getGreen(), color2.getBlue()};
+        final int[] colorInts1 = { color1.getRed(), color1.getGreen(), color1.getBlue() };
+        final int[] colorInts2 = { color2.getRed(), color2.getGreen(), color2.getBlue() };
         return slowPerceptualColorDistanceSquared(colorInts1, colorInts2);
     }
 }

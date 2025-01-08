@@ -1,15 +1,18 @@
 package yalter.mousetweaks;
 
-import com.cleanroommc.modularui.api.event.MouseInputEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import java.util.Set;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
-import java.util.Set;
+import com.cleanroommc.modularui.api.event.MouseInputEvent;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 public class ClientEventHandler {
+
     private static final Set<Class<? extends GuiScreen>> mouseTweaksBlacklist = new ObjectOpenHashSet<>();
     private static final Set<Class<? extends GuiScreen>> wheelTweaksBlacklist = new ObjectOpenHashSet<>();
 

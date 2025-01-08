@@ -1,7 +1,28 @@
 package com.cleanroommc.bogosorter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-import appeng.container.slot.AppEngSlot;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.ICustomInsertable;
 import com.cleanroommc.bogosorter.api.IPosSetter;
@@ -18,44 +39,26 @@ import com.cleanroommc.modularui.factory.ClientGUI;
 import com.cleanroommc.modularui.utils.item.PlayerInvWrapper;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 import com.cleanroommc.modularui.utils.item.SlotItemHandler;
+
+import appeng.container.slot.AppEngSlot;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class BogoSortAPI implements IBogoSortAPI {
 
     public static final BogoSortAPI INSTANCE = new BogoSortAPI();
     public static final SortRule<ItemStack> EMPTY_ITEM_SORT_RULE = new SortRule<ItemStack>("empty", (o1, o2) -> 0) {
+
         @Override
         public boolean isEmpty() {
             return true;
         }
     };
     public static final NbtSortRule EMPTY_NBT_SORT_RULE = new NbtSortRule("empty", null, (o1, o2) -> 0) {
+
         @Override
         public boolean isEmpty() {
             return true;
@@ -64,10 +67,10 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     public static final Function<Slot, ISlot> DEFAULT_SLOT_GETTER = slot -> (ISlot) slot;
 
-    private static final ICustomInsertable DEFAULT_INSERTABLE = (container, slots, stack, emptyOnly) -> ShortcutHandler.insertToSlots(slots, stack, emptyOnly);
+    private static final ICustomInsertable DEFAULT_INSERTABLE = (container, slots, stack, emptyOnly) -> ShortcutHandler
+        .insertToSlots(slots, stack, emptyOnly);
 
-    private BogoSortAPI() {
-    }
+    private BogoSortAPI() {}
 
     private final Map<Class<?>, BiConsumer<Container, ISortingContextBuilder>> COMPAT_MAP = new Object2ObjectOpenHashMap<>();
     private final Map<Class<?>, IPosSetter> playerButtonPos = new Object2ObjectOpenHashMap<>();
@@ -139,7 +142,8 @@ public class BogoSortAPI implements IBogoSortAPI {
     }
 
     @ApiStatus.Internal
-    public void registerClientItemSortingRule(String key, Comparator<ItemStack> comparator, Comparator<ItemSortContainer> serverComparator) {
+    public void registerClientItemSortingRule(String key, Comparator<ItemStack> comparator,
+        Comparator<ItemSortContainer> serverComparator) {
         validateKey(key);
         ClientItemSortRule sortRule = new ClientItemSortRule(key, comparator, serverComparator);
         itemSortRules.put(key, sortRule);
@@ -166,7 +170,8 @@ public class BogoSortAPI implements IBogoSortAPI {
     }
 
     @Override
-    public <T> void registerNbtSortingRule(String key, String tagPath, int expectedType, Comparator<T> comparator, Function<NBTBase, T> converter) {
+    public <T> void registerNbtSortingRule(String key, String tagPath, int expectedType, Comparator<T> comparator,
+        Function<NBTBase, T> converter) {
         validateKey(key);
         NbtSortRule sortRule = new NbtSortRule(key, tagPath, expectedType, comparator, converter);
         nbtSortRules.put(key, sortRule);
@@ -176,7 +181,7 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     public <T extends Container> BiConsumer<T, ISortingContextBuilder> getBuilder(Container container) {
         BiConsumer<Container, ISortingContextBuilder> builder = COMPAT_MAP.get(container.getClass());
-        return builder==null ? null:(BiConsumer<T, ISortingContextBuilder>) builder;
+        return builder == null ? null : (BiConsumer<T, ISortingContextBuilder>) builder;
     }
 
     public IPosSetter getPlayerButtonPos(Container container) {
@@ -198,10 +203,10 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     public SortRule<ItemStack> getItemSortRule(String key) {
         SortRule<ItemStack> sortRule = this.itemSortRules.get(key);
-        if (sortRule==null && this.remappedSortRules.containsKey(key)) {
+        if (sortRule == null && this.remappedSortRules.containsKey(key)) {
             sortRule = this.itemSortRules.get(this.remappedSortRules.get(key));
         }
-        return sortRule==null ? EMPTY_ITEM_SORT_RULE:sortRule;
+        return sortRule == null ? EMPTY_ITEM_SORT_RULE : sortRule;
     }
 
     public SortRule<ItemStack> getItemSortRule(int syncId) {
@@ -214,10 +219,10 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     public NbtSortRule getNbtSortRule(String key) {
         NbtSortRule sortRule = this.nbtSortRules.get(key);
-        if (sortRule==null && this.remappedSortRules.containsKey(key)) {
+        if (sortRule == null && this.remappedSortRules.containsKey(key)) {
             sortRule = this.nbtSortRules.get(this.remappedSortRules.get(key));
         }
-        return sortRule==null ? EMPTY_NBT_SORT_RULE:sortRule;
+        return sortRule == null ? EMPTY_NBT_SORT_RULE : sortRule;
     }
 
     @SideOnly(Side.CLIENT)
@@ -235,7 +240,8 @@ public class BogoSortAPI implements IBogoSortAPI {
     @NotNull
     @Override
     public ISlot getSlot(@NotNull Slot slot) {
-        return this.slotGetterMap.getOrDefault(slot.getClass(), DEFAULT_SLOT_GETTER).apply(slot);
+        return this.slotGetterMap.getOrDefault(slot.getClass(), DEFAULT_SLOT_GETTER)
+            .apply(slot);
     }
 
     @Override
@@ -251,7 +257,8 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     @NotNull
     public ICustomInsertable getInsertable(@NotNull Container container, boolean player) {
-        return player ? DEFAULT_INSERTABLE:this.customInsertableMap.getOrDefault(container.getClass(), DEFAULT_INSERTABLE);
+        return player ? DEFAULT_INSERTABLE
+            : this.customInsertableMap.getOrDefault(container.getClass(), DEFAULT_INSERTABLE);
     }
 
     public static ItemStack insert(Container container, List<ISlot> slots, ItemStack stack) {
@@ -268,7 +275,8 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     public static ItemStack insert(Container container, List<ISlot> slots, ItemStack stack, boolean emptyOnly) {
         if (slots.isEmpty()) return stack;
-        return INSTANCE.getInsertable(container, isPlayerSlot(slots.get(0))).insert(container, slots, stack, emptyOnly);
+        return INSTANCE.getInsertable(container, isPlayerSlot(slots.get(0)))
+            .insert(container, slots, stack, emptyOnly);
     }
 
     public static boolean isValidSortable(Container container) {
@@ -280,10 +288,12 @@ public class BogoSortAPI implements IBogoSortAPI {
     }
 
     public static boolean isPlayerSlot(ISlot slot) {
-        if (slot==null) return false;
-        if (slot.bogo$getInventory() instanceof InventoryPlayer ||
-                (slot instanceof SlotItemHandler && isPlayerInventory((IInventory) ((SlotItemHandler) slot).getItemHandler()))
-            || (Mods.Ae2.isLoaded() && slot instanceof AppEngSlot && isPlayerInventory(((AppEngSlot) slot).inventory))) {
+        if (slot == null) return false;
+        if (slot.bogo$getInventory() instanceof InventoryPlayer
+            || (slot instanceof SlotItemHandler
+                && isPlayerInventory((IInventory) ((SlotItemHandler) slot).getItemHandler()))
+            || (Mods.Ae2.isLoaded() && slot instanceof AppEngSlot
+                && isPlayerInventory(((AppEngSlot) slot).inventory))) {
             return slot.bogo$getSlotIndex() >= 0 && slot.bogo$getSlotIndex() < 36;
         }
         return false;
@@ -302,12 +312,10 @@ public class BogoSortAPI implements IBogoSortAPI {
 
         @Override
         public boolean equals(ItemStack a, ItemStack b) {
-            if (a==b) return true;
-            if (a==null || b==null) return false;
-            return (a == null && b == null) ||
-                    (a.getItem()==b.getItem() &&
-                            a.getItemDamage()==b.getItemDamage() &&
-                            Objects.equals(a.getTagCompound(), b.getTagCompound()));
+            if (a == b) return true;
+            if (a == null || b == null) return false;
+            return (a == null && b == null) || (a.getItem() == b.getItem() && a.getItemDamage() == b.getItemDamage()
+                && Objects.equals(a.getTagCompound(), b.getTagCompound()));
         }
     };
 
@@ -320,10 +328,9 @@ public class BogoSortAPI implements IBogoSortAPI {
 
         @Override
         public boolean equals(ItemStack a, ItemStack b) {
-            if (a==b) return true;
-            if (a==null || b==null) return false;
-            return (a == null && b == null) ||
-                    (a.getItem()==b.getItem() && a.getItemDamage()==b.getItemDamage());
+            if (a == b) return true;
+            if (a == null || b == null) return false;
+            return (a == null && b == null) || (a.getItem() == b.getItem() && a.getItemDamage() == b.getItemDamage());
         }
     };
 

@@ -1,16 +1,19 @@
 package com.cleanroommc.bogosorter.mixins.late.appliedenergistics;
 
-import appeng.client.gui.AEBaseGui;
-import appeng.container.slot.AppEngCraftingSlot;
-import appeng.container.slot.SlotOutput;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+
 import org.spongepowered.asm.mixin.Mixin;
+
+import appeng.client.gui.AEBaseGui;
+import appeng.container.slot.AppEngCraftingSlot;
+import appeng.container.slot.SlotOutput;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 
 @Mixin(AEBaseGui.class)
 public abstract class MixinAEBaseGui extends GuiContainer implements IMTModGuiContainer2 {
+
     public MixinAEBaseGui(Container p_i1072_1_) {
         super(p_i1072_1_);
     }

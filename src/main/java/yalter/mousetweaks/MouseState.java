@@ -1,15 +1,14 @@
 package yalter.mousetweaks;
 
+import java.util.EnumSet;
+
+import org.lwjgl.input.Mouse;
 
 import com.google.common.base.Objects;
-import org.lwjgl.input.Mouse;
+
 import yalter.mousetweaks.config.MTConfig;
 import yalter.mousetweaks.impl.IMouseState;
 import yalter.mousetweaks.impl.MouseButton;
-
-import java.util.EnumSet;
-
-
 
 /**
  * Mouse state based on LWJGL input events.
@@ -20,6 +19,7 @@ import java.util.EnumSet;
  * every render tick) suffers from the mouse scrolling not being very smooth.
  */
 public class MouseState implements IMouseState {
+
     private final EnumSet<MouseButton> pressedButtons = EnumSet.noneOf(MouseButton.class);
     private int scrollAmount = 0;
 
@@ -92,17 +92,17 @@ public class MouseState implements IMouseState {
         if (simpleScrolling) {
             scrollAmount += MTConfig.scrollItemScaling.scale(Mouse.getDWheel());
         }
-            int amountConsumed = scrollAmount / MTConfig.ScrollItemScaling.scrollStep;
-            scrollAmount -= amountConsumed * MTConfig.ScrollItemScaling.scrollStep;
-            return amountConsumed;
+        int amountConsumed = scrollAmount / MTConfig.ScrollItemScaling.scrollStep;
+        scrollAmount -= amountConsumed * MTConfig.ScrollItemScaling.scrollStep;
+        return amountConsumed;
 
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("pressedButtons", pressedButtons.toArray())
-                .add("scrollAmount", scrollAmount)
-                .toString();
+            .add("pressedButtons", pressedButtons.toArray())
+            .add("scrollAmount", scrollAmount)
+            .toString();
     }
 }

@@ -1,27 +1,31 @@
 package com.cleanroommc.bogosorter.common.network;
 
-import com.cleanroommc.bogosorter.core.BogoSorterCore;
-import cpw.mods.fml.common.FMLCommonHandler;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
+
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.function.Consumer;
+import com.cleanroommc.bogosorter.core.BogoSorterCore;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class NetworkUtils {
 
-    public static final Consumer<PacketBuffer> EMPTY_PACKET = buffer -> {
-    };
+    public static final Consumer<PacketBuffer> EMPTY_PACKET = buffer -> {};
 
     public static boolean isDedicatedClient() {
-        return FMLCommonHandler.instance().getSide().isClient();
+        return FMLCommonHandler.instance()
+            .getSide()
+            .isClient();
     }
 
     public static boolean isClient(EntityPlayer player) {
@@ -73,12 +77,13 @@ public class NetworkUtils {
         buffer.writeVarIntToBuffer(bytes.length);
         buffer.writeBytes(bytes);
     }
+
     public static void writeEnumValue(PacketBuffer buffer, Enum<?> value) {
         buffer.writeVarIntToBuffer(value.ordinal());
     }
 
     @SuppressWarnings("unchecked")
     public static <T extends Enum<T>> T readEnumValue(PacketBuffer buffer, Class<T> enumClass) {
-        return (T)((Enum<T>[])enumClass.getEnumConstants())[buffer.readVarIntFromBuffer()];
+        return (T) ((Enum<T>[]) enumClass.getEnumConstants())[buffer.readVarIntFromBuffer()];
     }
 }

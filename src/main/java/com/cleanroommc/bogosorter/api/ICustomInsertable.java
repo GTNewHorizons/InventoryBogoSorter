@@ -1,9 +1,9 @@
 package com.cleanroommc.bogosorter.api;
 
+import java.util.List;
+
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
 
 public interface ICustomInsertable {
 

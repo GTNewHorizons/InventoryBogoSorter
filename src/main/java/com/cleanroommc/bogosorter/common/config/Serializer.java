@@ -1,22 +1,5 @@
 package com.cleanroommc.bogosorter.common.config;
 
-import com.cleanroommc.bogosorter.common.network.NetworkUtils;
-import com.cleanroommc.bogosorter.common.sort.SortHandler;
-
-import com.cleanroommc.bogosorter.core.BogoSorterCore;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import org.apache.commons.lang3.StringUtils;
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,11 +10,32 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
+import net.minecraft.client.Minecraft;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.cleanroommc.bogosorter.common.network.NetworkUtils;
+import com.cleanroommc.bogosorter.common.sort.SortHandler;
+import com.cleanroommc.bogosorter.core.BogoSorterCore;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class Serializer {
 
     public static final JsonParser jsonParser = new JsonParser();
-    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    public static final String cfgPath = Loader.instance().getConfigDir().toString();
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting()
+        .create();
+    public static final String cfgPath = Loader.instance()
+        .getConfigDir()
+        .toString();
     public static final File configJsonPath = new File(cfgPath + path("", "bogosorter", "config.json"));
     public static final File orePrefixJsonPath = new File(cfgPath + path("", "bogosorter", "orePrefix.json"));
 
@@ -39,8 +43,7 @@ public class Serializer {
         return StringUtils.join(path, File.separatorChar);
     }
 
-    private Serializer() {
-    }
+    private Serializer() {}
 
     @SideOnly(Side.CLIENT)
     public static void saveConfig() {
@@ -98,8 +101,10 @@ public class Serializer {
 
     public static boolean saveJson(File file, JsonElement element) {
         try {
-            if (!file.getParentFile().isDirectory()) {
-                if (!file.getParentFile().mkdirs()) {
+            if (!file.getParentFile()
+                .isDirectory()) {
+                if (!file.getParentFile()
+                    .mkdirs()) {
                     BogoSorterCore.LOGGER.error("Failed to create file dirs on path {}", file);
                 }
             }

@@ -1,5 +1,13 @@
 package com.cleanroommc.bogosorter.common.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
@@ -13,17 +21,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class BogoSorterConfig {
 
@@ -42,17 +43,18 @@ public class BogoSorterConfig {
         general.addProperty("enableAutoRefill", playerConfig.enableAutoRefill);
         general.addProperty("refillDmgThreshold", playerConfig.autoRefillDamageThreshold);
         general.addProperty("enableDropoff", DropOffHandler.enableDropOff);
-        general.addProperty("dropoffRender",DropOffHandler.dropoffRender);
-        general.addProperty("dropoffChatMessage",DropOffHandler.dropoffChatMessage);
+        general.addProperty("dropoffRender", DropOffHandler.dropoffRender);
+        general.addProperty("dropoffChatMessage", DropOffHandler.dropoffChatMessage);
         general.addProperty("dropoffQuotaInMS", DropOffHandler.dropoffQuotaInMS);
         general.addProperty("dropoffPacketThrottleInMS", DropOffHandler.dropoffPacketThrottleInMS);
         general.addProperty("dropoffButtonShow", DropOffButtonHandler.showButton);
         general.addProperty("dropoffButtonX", DropOffButtonHandler.buttonX);
-        general.addProperty("dropoffButtonY",DropOffButtonHandler.buttonY);
+        general.addProperty("dropoffButtonY", DropOffButtonHandler.buttonY);
         general.addProperty("enableHotbarSwap", HotbarSwap.isEnabled());
         general.addProperty("sortSound", SortHandler.getSortSoundName());
         general.addProperty("buttonColor", "#" + Integer.toHexString(buttonColor));
-        // general.addProperty("_comment", "By setting the chance below to 0 you agree to have no humor and that you are boring.");
+        // general.addProperty("_comment", "By setting the chance below to 0 you agree to have no humor and that you are
+        // boring.");
 
         json.add("General", general);
 
@@ -95,11 +97,12 @@ public class BogoSorterConfig {
             DropOffButtonHandler.buttonX = JsonHelper.getInt(general, 80, "dropoffButtonX");
             DropOffButtonHandler.buttonY = JsonHelper.getInt(general, 12, "dropoffButtonY");
             HotbarSwap.setEnabled(JsonHelper.getBoolean(general, true, "enableHotbarSwap"));
-            SortHandler.sortSound = JsonHelper.getElement(general, new ResourceLocation("gui.button.press"), element -> {
-                if (element.isJsonNull()) return null;
-                ResourceLocation soundEvent = new ResourceLocation(element.getAsString());
-                return soundEvent != null ? soundEvent : new ResourceLocation("gui.button.press");
-            }, "sortSound");
+            SortHandler.sortSound = JsonHelper
+                .getElement(general, new ResourceLocation("gui.button.press"), element -> {
+                    if (element.isJsonNull()) return null;
+                    ResourceLocation soundEvent = new ResourceLocation(element.getAsString());
+                    return soundEvent != null ? soundEvent : new ResourceLocation("gui.button.press");
+                }, "sortSound");
             buttonColor = JsonHelper.getColor(general, 0xFFFFFFFF, "buttonColor");
         }
         sortRules.clear();
@@ -110,7 +113,8 @@ public class BogoSorterConfig {
                 boolean inverted = false;
                 if (jsonElement.isJsonObject()) {
                     key = JsonHelper.getString(jsonElement.getAsJsonObject(), "", "key", "name");
-                    inverted = JsonHelper.getBoolean(jsonElement.getAsJsonObject(), false, "inverted", "ascending", "asc");
+                    inverted = JsonHelper
+                        .getBoolean(jsonElement.getAsJsonObject(), false, "inverted", "ascending", "asc");
                 } else {
                     key = jsonElement.getAsString();
                 }
@@ -131,7 +135,8 @@ public class BogoSorterConfig {
                 boolean inverted = false;
                 if (jsonElement.isJsonObject()) {
                     key = JsonHelper.getString(jsonElement.getAsJsonObject(), "", "key", "name");
-                    inverted = JsonHelper.getBoolean(jsonElement.getAsJsonObject(), false, "inverted", "ascending", "asc");
+                    inverted = JsonHelper
+                        .getBoolean(jsonElement.getAsJsonObject(), false, "inverted", "ascending", "asc");
                 } else {
                     key = jsonElement.getAsString();
                 }
@@ -159,7 +164,8 @@ public class BogoSorterConfig {
     }
 
     public static void loadOrePrefixes(JsonObject json) {
-        if (json.has("reload") && json.get("reload").getAsBoolean()) {
+        if (json.has("reload") && json.get("reload")
+            .getAsBoolean()) {
             Serializer.saveOrePrefixes();
             return;
         }
@@ -178,14 +184,16 @@ public class BogoSorterConfig {
     }
 
     public static void loadDefaultRules() {
-        String[] itemRules = {"mod", "material", "ore_prefix", "id", "meta", "nbt_has", "nbt_rules"};
-        String[] nbtRules = {"enchantment", "enchantment_book", "potion", "gt_circ_config", "gt_item_damage"};
+        String[] itemRules = { "mod", "material", "ore_prefix", "id", "meta", "nbt_has", "nbt_rules" };
+        String[] nbtRules = { "enchantment", "enchantment_book", "potion", "gt_circ_config", "gt_item_damage" };
 
-        sortRules.addAll(Arrays.stream(itemRules)
+        sortRules.addAll(
+            Arrays.stream(itemRules)
                 .map(BogoSortAPI.INSTANCE::getItemSortRule)
                 .filter(rule -> rule != BogoSortAPI.EMPTY_ITEM_SORT_RULE)
                 .collect(Collectors.toList()));
-        nbtSortRules.addAll(Arrays.stream(nbtRules)
+        nbtSortRules.addAll(
+            Arrays.stream(nbtRules)
                 .map(BogoSortAPI.INSTANCE::getNbtSortRule)
                 .filter(rule -> rule != BogoSortAPI.EMPTY_NBT_SORT_RULE)
                 .collect(Collectors.toList()));

@@ -1,5 +1,11 @@
 package com.cleanroommc.bogosorter.common.config;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.IntConsumer;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.layout.ILayoutWidget;
 import com.cleanroommc.modularui.api.widget.IWidget;
@@ -7,11 +13,6 @@ import com.cleanroommc.modularui.drawable.DrawableArray;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.IntConsumer;
 
 public class AvailableListItem<T> extends Widget<AvailableListItem<T>> implements ILayoutWidget {
 
@@ -31,16 +32,15 @@ public class AvailableListItem<T> extends Widget<AvailableListItem<T>> implement
 
     @Override
     public void onInit() {
-        moveButton = new ButtonWidget<>()
-                .onMousePressed(mouseButton -> {
-                    if (isAvailable()) {
-                        moveConsumer.accept(mouseButton);
-                        setAvailable(false);
-                        return true;
-                    }
-                    return false;
-                })
-                .background(GuiTextures.BUTTON_CLEAN/*, ModularUITextures.ARROW_RIGHT.withFixedSize(10, 10, 0, 5)*/);
+        moveButton = new ButtonWidget<>().onMousePressed(mouseButton -> {
+            if (isAvailable()) {
+                moveConsumer.accept(mouseButton);
+                setAvailable(false);
+                return true;
+            }
+            return false;
+        })
+            .background(GuiTextures.BUTTON_CLEAN/* , ModularUITextures.ARROW_RIGHT.withFixedSize(10, 10, 0, 5) */);
         children.add(content);
         children.add(moveButton);
 
@@ -55,7 +55,8 @@ public class AvailableListItem<T> extends Widget<AvailableListItem<T>> implement
 
     @Override
     public void layoutWidgets() {
-        this.moveButton.getArea().setSize(10, Math.max(content.getArea().height, 20));
+        this.moveButton.getArea()
+            .setSize(10, Math.max(content.getArea().height, 20));
         this.moveButton.getArea().rx = content.getArea().width;
         this.moveButton.getArea().ry = content.getArea().height / 2 - moveButton.getArea().height / 2;
     }

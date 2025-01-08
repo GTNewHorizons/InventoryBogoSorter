@@ -1,10 +1,11 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import com.cleanroommc.bogosorter.api.SortRule;
-import net.minecraft.nbt.NBTBase;
-
 import java.util.Comparator;
 import java.util.function.Function;
+
+import net.minecraft.nbt.NBTBase;
+
+import com.cleanroommc.bogosorter.api.SortRule;
 
 public class NbtSortRule extends SortRule<NBTBase> {
 
@@ -19,7 +20,8 @@ public class NbtSortRule extends SortRule<NBTBase> {
         this(key, tagPath, createComparator(expectedType, ItemCompareHelper::compareNbtBase, nbtBase -> nbtBase));
     }
 
-    public <T> NbtSortRule(String key, String tagPath, int expectedType, Comparator<T> comparator, Function<NBTBase, T> converter) {
+    public <T> NbtSortRule(String key, String tagPath, int expectedType, Comparator<T> comparator,
+        Function<NBTBase, T> converter) {
         this(key, tagPath, createComparator(expectedType, comparator, converter));
     }
 
@@ -32,7 +34,8 @@ public class NbtSortRule extends SortRule<NBTBase> {
         };
     }
 
-    private static <T> Comparator<NBTBase> createComparator(int expectedType, Comparator<T> comparator, Function<NBTBase, T> converter) {
+    private static <T> Comparator<NBTBase> createComparator(int expectedType, Comparator<T> comparator,
+        Function<NBTBase, T> converter) {
         return (o1, o2) -> {
             if (o1 == o2) return 0;
             if (o1 == null) return -1;

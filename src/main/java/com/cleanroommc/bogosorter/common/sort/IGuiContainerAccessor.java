@@ -1,9 +1,9 @@
 package com.cleanroommc.bogosorter.common.sort;
 
+import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Slot;
-
-import java.util.List;
 
 public interface IGuiContainerAccessor {
 

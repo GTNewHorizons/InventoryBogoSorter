@@ -4,6 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.inventory.Slot;
 
 public class GuiContainerCreativeHandler extends GuiContainerHandler {
+
     public GuiContainerCreativeHandler(GuiContainerCreative guiContainerCreative) {
         super(guiContainerCreative);
     }

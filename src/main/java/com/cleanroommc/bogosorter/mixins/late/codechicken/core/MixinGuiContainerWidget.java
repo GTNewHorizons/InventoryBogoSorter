@@ -1,10 +1,11 @@
 package com.cleanroommc.bogosorter.mixins.late.codechicken.core;
 
-
-import codechicken.core.inventory.GuiContainerWidget;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+
 import org.spongepowered.asm.mixin.Mixin;
+
+import codechicken.core.inventory.GuiContainerWidget;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 
 @Mixin(GuiContainerWidget.class)

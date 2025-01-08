@@ -1,15 +1,17 @@
 package com.cleanroommc.bogosorter.common.network;
 
-import com.cleanroommc.bogosorter.BogoSortAPI;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
+
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.cleanroommc.bogosorter.BogoSortAPI;
 
 public class CSlotSync implements IPacket {
 
@@ -28,7 +30,10 @@ public class CSlotSync implements IPacket {
         buf.writeVarIntToBuffer(content.size());
         for (Pair<ItemStack, Integer> pair : content) {
             buf.writeItemStackToBuffer(pair.getKey());
-            buf.writeNBTTagCompoundToBuffer(pair.getKey() == null ? null : pair.getKey().getTagCompound());
+            buf.writeNBTTagCompoundToBuffer(
+                pair.getKey() == null ? null
+                    : pair.getKey()
+                        .getTagCompound());
             buf.writeVarIntToBuffer(pair.getValue());
         }
     }
@@ -48,7 +53,8 @@ public class CSlotSync implements IPacket {
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         for (Pair<ItemStack, Integer> pair : content) {
-            BogoSortAPI.getSlot(handler.playerEntity.openContainer, pair.getValue()).bogo$putStack(pair.getKey());
+            BogoSortAPI.getSlot(handler.playerEntity.openContainer, pair.getValue())
+                .bogo$putStack(pair.getKey());
         }
         handler.playerEntity.openContainer.detectAndSendChanges();
         return null;

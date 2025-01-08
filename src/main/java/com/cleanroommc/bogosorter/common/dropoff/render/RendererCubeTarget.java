@@ -1,9 +1,9 @@
 package com.cleanroommc.bogosorter.common.dropoff.render;
 
-import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
-
 import java.awt.Color;
 import java.util.Objects;
+
+import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
 
 public class RendererCubeTarget {
 
@@ -25,8 +25,7 @@ public class RendererCubeTarget {
 
     @Override
     public String toString() {
-        return "BlockPos: [" + blockPos.toString() + "] " +
-            "Color: [" + color.toString() + "]";
+        return "BlockPos: [" + blockPos.toString() + "] " + "Color: [" + color.toString() + "]";
     }
 
     @Override
@@ -41,8 +40,7 @@ public class RendererCubeTarget {
 
         RendererCubeTarget rendererCubeTarget = (RendererCubeTarget) o;
 
-        return Objects.equals(blockPos, rendererCubeTarget.blockPos) &&
-            Objects.equals(color, rendererCubeTarget.color);
+        return Objects.equals(blockPos, rendererCubeTarget.blockPos) && Objects.equals(color, rendererCubeTarget.color);
     }
 
     @Override

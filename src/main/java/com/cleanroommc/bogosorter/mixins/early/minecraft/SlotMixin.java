@@ -1,6 +1,5 @@
 package com.cleanroommc.bogosorter.mixins.early.minecraft;
 
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

@@ -1,9 +1,10 @@
 package yalter.mousetweaks.config;
 
+import static yalter.mousetweaks.Main.isLwjgl3Loaded;
 
 import com.gtnewhorizon.gtnhlib.config.Config;
+
 import yalter.mousetweaks.MouseTweaks;
-import static yalter.mousetweaks.Main.isLwjgl3Loaded;
 
 @Config(modid = MouseTweaks.MOD_ID)
 public class MTConfig {
@@ -50,7 +51,6 @@ public class MTConfig {
 
         private final String id;
 
-
         ScrollHandling(String id) {
             this.id = id;
         }
@@ -91,12 +91,13 @@ public class MTConfig {
         }
 
         /**
-         * scales the given scroll distance, resulting in the number of items to move, the sign representing the direction
+         * scales the given scroll distance, resulting in the number of items to move, the sign representing the
+         * direction
          */
         public int scale(int scrollDelta) {
             switch (this) {
                 case PROPORTIONAL:
-                    return !isLwjgl3Loaded() ? scrollDelta: Integer.signum(scrollDelta) * scrollStep;
+                    return !isLwjgl3Loaded() ? scrollDelta : Integer.signum(scrollDelta) * scrollStep;
                 case ALWAYS_ONE:
                     return Integer.signum(scrollDelta) * scrollStep;
                 default:
@@ -130,10 +131,14 @@ public class MTConfig {
 
         public static WheelScrollDirection fromId(int ordinal) {
             switch (ordinal) {
-                case 0: return NORMAL;
-                case 1: return INVERTED;
-                case 2: return INVENTORY_POSITION_AWARE;
-                default: return  INVENTORY_POSITION_AWARE_INVERTED;
+                case 0:
+                    return NORMAL;
+                case 1:
+                    return INVERTED;
+                case 2:
+                    return INVENTORY_POSITION_AWARE;
+                default:
+                    return INVENTORY_POSITION_AWARE_INVERTED;
             }
         }
 

@@ -1,16 +1,16 @@
 package yalter.mousetweaks.api;
 
+import java.util.List;
 
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
 
 /**
  * This is the extended version of the interface you want to implement in your GuiScreen to make it compatible
  * with Mouse Tweaks. It has MT_getSlots() instead of MT_getContainer(), and adds MT_clickSlot().
  */
 public interface IMTModGuiContainer2Ex {
+
     /**
      * If you want to disable Mouse Tweaks in your GuiScreen, return true from this method.
      *
@@ -62,13 +62,16 @@ public interface IMTModGuiContainer2Ex {
      * If your container has an RMB dragging functionality (like vanilla containers), disable it inside this method.
      * This method is called every frame (render tick), which is after all mouseClicked / mouseClickMove / mouseReleased
      * events are handled (although note these events are handled every game tick, which is far less frequent than every
-     * render tick).<br><br>
+     * render tick).<br>
+     * <br>
      * <p>
      * If true is returned from this method, Mouse Tweaks (after checking other conditions like isIgnored) will click
      * the slot on which the right mouse button was initially pressed (in most cases this is the slot currently under
-     * mouse). This is needed because the vanilla RMB dragging functionality prevents the initial slot click.<br><br>
+     * mouse). This is needed because the vanilla RMB dragging functionality prevents the initial slot click.<br>
+     * <br>
      * <p>
      * For vanilla containers this method looks like this:
+     * 
      * <pre>
      * this.ignoreMouseUp = true;
      *
@@ -90,11 +93,9 @@ public interface IMTModGuiContainer2Ex {
      * Click the given slot.
      * <p>
      * For vanilla containers this method looks like this (mc is Minecraft):
+     * 
      * <pre>
-     * this.handleMouseClick(slot,
-     *                       slot.slotNumber,
-     *                       mouseButton,
-     *                       clickType);
+     * this.handleMouseClick(slot, slot.slotNumber, mouseButton, clickType);
      * </pre>
      *
      * @param slot        the slot to click
@@ -109,22 +110,25 @@ public interface IMTModGuiContainer2Ex {
      * specific slot. This is used by MouseTweaks to prioritize fuels in the Fuel Slot in the Furnace, for example.
      * <p>
      * An example of how this could be implemented for the Furnace:
+     * 
      * <pre>
-     *     if (stack.getItem().getItemBurnTime(stack) != 0) {
-     *             if (slot instanceof SlotFurnaceFuel) {
-     *                 return 1;
-     *             }
-     *             return 0;
-     *         }
-     *         return -1;
+     * if (stack.getItem()
+     *     .getItemBurnTime(stack) != 0) {
+     *     if (slot instanceof SlotFurnaceFuel) {
+     *         return 1;
+     *     }
+     *     return 0;
+     * }
+     * return -1;
      * </pre>
+     * 
      * <br>
      *
      * @param slot  The Slot to test
      * @param stack The ItemStack attempting to be passed to the slot
      * @return 1 if high-priority,
      *         0 if low priority,
-     *        -1 if priority is to be ignored
+     *         -1 if priority is to be ignored
      */
     int MT_scrollIsItemPrioritizedForSlot(Slot slot, ItemStack stack);
 }

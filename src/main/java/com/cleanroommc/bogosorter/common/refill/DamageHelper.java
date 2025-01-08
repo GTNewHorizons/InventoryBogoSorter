@@ -1,13 +1,11 @@
 package com.cleanroommc.bogosorter.common.refill;
 
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
-import net.minecraft.client.Minecraft;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ISpecialArmor;
 
+import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 
 public class DamageHelper {
 
@@ -24,7 +22,6 @@ public class DamageHelper {
         return false;
     }
 
-
     private static boolean isNotArmor(ItemStack itemStack) {
         if (itemStack.getItem() instanceof ItemArmor || itemStack.getItem() instanceof ISpecialArmor) return false;
         return true;
@@ -40,6 +37,8 @@ public class DamageHelper {
     }
 
     public static boolean isUnbreakable(ItemStack item) {
-        return item != null && item.hasTagCompound() && item.getTagCompound().getBoolean("Unbreakable");
+        return item != null && item.hasTagCompound()
+            && item.getTagCompound()
+                .getBoolean("Unbreakable");
     }
 }

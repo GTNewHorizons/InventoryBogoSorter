@@ -1,15 +1,17 @@
 package yalter.mousetweaks.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import yalter.mousetweaks.api.IMTModGuiContainer;
 import yalter.mousetweaks.impl.IGuiScreenHandler;
 import yalter.mousetweaks.impl.MouseButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class IMTModGuiContainerHandler implements IGuiScreenHandler {
+
     @SuppressWarnings("deprecation")
     protected IMTModGuiContainer modGuiContainer;
 
@@ -34,8 +36,7 @@ public class IMTModGuiContainerHandler implements IGuiScreenHandler {
 
         Object container = modGuiContainer.getModContainer();
         int count = modGuiContainer.getModSlotCount(container);
-        for (int i = 0; i < count; ++i)
-            slots.add((Slot) modGuiContainer.getModSlot(container, i));
+        for (int i = 0; i < count; ++i) slots.add((Slot) modGuiContainer.getModSlot(container, i));
 
         return slots;
     }

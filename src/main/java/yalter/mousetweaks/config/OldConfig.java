@@ -1,11 +1,10 @@
 package yalter.mousetweaks.config;
 
-
-import yalter.mousetweaks.MouseTweaks;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import yalter.mousetweaks.MouseTweaks;
 
 public class OldConfig {
 
@@ -13,7 +12,9 @@ public class OldConfig {
         if (!file.exists()) return;
 
         try {
-            if (Files.readAllLines(file.toPath()).stream().noneMatch(str -> str.contains("general"))) {
+            if (Files.readAllLines(file.toPath())
+                .stream()
+                .noneMatch(str -> str.contains("general"))) {
                 file.delete();
             }
         } catch (IOException e) {

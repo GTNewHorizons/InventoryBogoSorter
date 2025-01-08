@@ -1,9 +1,10 @@
 package com.cleanroommc.bogosorter.common.dropoff;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
 
 import java.util.List;
 import java.util.Objects;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.TileEntity;
 
 public class InventoryData {
 
@@ -37,9 +38,14 @@ public class InventoryData {
 
     @Override
     public String toString() {
-        return "Entities: [" + entities.toString() + "] " +
-            "Inventory: [" + inventory.toString() + "] " +
-            "InteractionResult: [" + interactionResult + "]";
+        return "Entities: [" + entities.toString()
+            + "] "
+            + "Inventory: ["
+            + inventory.toString()
+            + "] "
+            + "InteractionResult: ["
+            + interactionResult
+            + "]";
     }
 
     @Override
@@ -54,9 +60,8 @@ public class InventoryData {
 
         InventoryData inventoryData = (InventoryData) o;
 
-        return Objects.equals(entities, inventoryData.entities) &&
-            Objects.equals(inventory, inventoryData.inventory) &&
-            Objects.equals(interactionResult, inventoryData.interactionResult);
+        return Objects.equals(entities, inventoryData.entities) && Objects.equals(inventory, inventoryData.inventory)
+            && Objects.equals(interactionResult, inventoryData.interactionResult);
     }
 
     @Override

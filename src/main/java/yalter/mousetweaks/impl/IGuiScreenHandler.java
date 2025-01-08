@@ -1,12 +1,12 @@
 package yalter.mousetweaks.impl;
 
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import yalter.mousetweaks.impl.MouseButton;
-
 import java.util.List;
 
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+
 public interface IGuiScreenHandler {
+
     boolean isMouseTweaksDisabled();
 
     boolean isWheelTweakDisabled();

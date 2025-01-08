@@ -1,7 +1,9 @@
 package yalter.mousetweaks.impl;
 
 public enum MouseButton {
-    LEFT(0), RIGHT(1);
+
+    LEFT(0),
+    RIGHT(1);
 
     private final int id;
 

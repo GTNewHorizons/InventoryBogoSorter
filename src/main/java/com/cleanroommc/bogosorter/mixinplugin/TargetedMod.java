@@ -1,6 +1,5 @@
 package com.cleanroommc.bogosorter.mixinplugin;
 
-
 public enum TargetedMod {
 
     VANILLA("Minecraft", null),
@@ -12,8 +11,8 @@ public enum TargetedMod {
     Forestry("Forestry", null, "Forestry"),
     CodeChickenCore("CodeChickenCore", "codechicken.core.launch.CodeChickenCorePlugin", "CodeChickenCore"),
     NEI("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
-    AE2("Applied Energistics 2", "appeng.transformer.AppEngCore", "appliedenergistics2"),
-    ;
+    AE2("Applied Energistics 2", "appeng.transformer.AppEngCore", "appliedenergistics2"),;
+
     /** The "name" in the @Mod annotation */
     public final String modName;
     /** Class that implements the IFMLLoadingPlugin interface */

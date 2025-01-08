@@ -1,13 +1,14 @@
 package com.cleanroommc.bogosorter.compat.screen;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
-import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class WarningScreen extends GuiScreen {
@@ -44,6 +45,11 @@ public class WarningScreen extends GuiScreen {
     @Override
     public void initGui() {
         this.textHeight = this.messages.size() * this.fontRendererObj.FONT_HEIGHT;
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, Math.min(this.height / 2 + this.textHeight / 2 + this.fontRendererObj.FONT_HEIGHT, this.height - 30), I18n.format("gui.toMenu")));
+        this.buttonList.add(
+            new GuiButton(
+                0,
+                this.width / 2 - 100,
+                Math.min(this.height / 2 + this.textHeight / 2 + this.fontRendererObj.FONT_HEIGHT, this.height - 30),
+                I18n.format("gui.toMenu")));
     }
 }
