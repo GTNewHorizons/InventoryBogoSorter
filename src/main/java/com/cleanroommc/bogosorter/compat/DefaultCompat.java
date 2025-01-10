@@ -170,6 +170,74 @@ public class DefaultCompat {
 
                 }
             });
+            api.addCompat(ContainerNaturalistBackpack.class, (container, builder) -> {
+                List<Slot> slots = new ArrayList<>();
+                for (int i = 0; i < 25; i++) {
+                    for (int j = 0; j < 5; j++) {
+                        slots.add(container.getSlot(i * 5 + j + 36));
+                    }
+                }
+                builder.addSlotGroupOf(slots, 5)
+                    .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+            });
+            api.addCompat(ContainerNaturalistInventory.class, (container, builder) -> {
+                List<Slot> slots = new ArrayList<>();
+                for (int i = 0; i < 25; i++) {
+                    for (int j = 0; j < 5; j++) {
+                        slots.add(container.getSlot(i * 5 + j + 36));
+                    }
+                }
+                builder.addSlotGroupOf(slots, 5)
+                    .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+            });
+            api.addPlayerSortButtonPosition(ContainerNaturalistBackpack.class, IPosSetter.TOP_RIGHT_VERTICAL);
+            api.addPlayerSortButtonPosition(ContainerNaturalistInventory.class, IPosSetter.TOP_RIGHT_VERTICAL);
+        }
+
+        if (IC2.isLoaded()) {
+            api.addGenericCompat(ContainerPersonalChest.class);
+            api.addCompat(ContainerToolbox.class, (container, builder) -> { builder.addSlotGroup(0, 9, 9); });
+        }
+
+        if (Bibliocraft.isLoaded()) {
+            api.addCompat(
+                ContainerFramedChest.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(
+                        0,
+                        container.getMainTile()
+                            .getIsDouble() ? 27 * 2 : 27,
+                        9);
+                });
+        }
+
+        if (Energycontrol.isLoaded()) {
+            api.addCompat(ContainerCardHolder.class, (container, builder) -> { builder.addSlotGroup(0, 54, 9); });
+        }
+
+        if (ProjectRed.isLoaded()) {
+            api.addCompat(
+                mrtjp.projectred.exploration.ContainerBackpack.class,
+                (container, builder) -> { builder.addSlotGroup(0, 27, 9); });
+        }
+
+        if (Thebetweenlands.isLoaded()) {
+            api.addCompat(ContainerLurkerSkinPouch.class, (container, builder) -> {
+                IInventory inventory = container.inventory;
+                builder.addSlotGroup(0, inventory.getSizeInventory(), 9);
+            });
+        }
+
+        if (Terrafirmacraft.isLoaded()) {
+            api.addCompat(
+                ContainerChestTFC.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(
+                        0,
+                        container.getLowerChestInventory()
+                            .getSizeInventory(),
+                        9);
+                });
         }
 
         // api.addCompat(ContainerNaturalistBackpack.class, (container, builder) -> {
