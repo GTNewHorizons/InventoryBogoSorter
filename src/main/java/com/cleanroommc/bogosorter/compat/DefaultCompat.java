@@ -240,212 +240,6 @@ public class DefaultCompat {
                 });
         }
 
-        // api.addCompat(ContainerNaturalistBackpack.class, (container, builder) -> {
-        // List<Slot> slots = new ArrayList<>();
-        // for (int i = 0; i < 25; i++) {
-        // for (int j = 0; j < 5; j++) {
-        // slots.add(container.getSlot(i * 5 + j + 36));
-        // }
-        // }
-        // builder.addSlotGroupOf(slots, 5)
-        // .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-        // });
-        // api.addCompat(ContainerNaturalistInventory.class, (container, builder) -> {
-        // List<Slot> slots = new ArrayList<>();
-        // for (int i = 0; i < 25; i++) {
-        // for (int j = 0; j < 5; j++) {
-        // slots.add(container.getSlot(i * 5 + j + 36));
-        // }
-        // }
-        // builder.addSlotGroupOf(slots, 5)
-        // .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-        // });
-        // api.addPlayerSortButtonPosition(ContainerNaturalistBackpack.class, IPosSetter.TOP_RIGHT_VERTICAL);
-        // api.addPlayerSortButtonPosition(ContainerNaturalistInventory.class, IPosSetter.TOP_RIGHT_VERTICAL);
-        // }
-        //
-        // if (BogoSorter.isIc2ExpLoaded()) {
-        // api.addCompat(DynamicContainer.class, (container, builder) -> {
-        // if (container.base instanceof TileEntityStorageBox) {
-        // if (container.base instanceof TileEntityWoodenStorageBox) {
-        // builder.addSlotGroup(0, 27, 9);
-        // } else if (container.base instanceof TileEntityBronzeStorageBox || container.base instanceof
-        // TileEntityIronStorageBox) {
-        // builder.addSlotGroup(0, 45, 9);
-        // } else if (container.base instanceof TileEntitySteelStorageBox) {
-        // builder.addSlotGroup(0, 63, 9);
-        // } else if (container.base instanceof TileEntityIridiumStorageBox) {
-        // builder.addSlotGroup(0, 126, 18);
-        // }
-        // }
-        // // personal safe client side
-        // if (container.base instanceof TileEntityPersonalChest) {
-        // builder.addSlotGroup(0, 54, 9);
-        // }
-        // });
-        // personal safe server side
-        // api.addCompatSimple(getClass("ic2.core.block.personal.TileEntityPersonalChest$2"), (container, builder) -> {
-        // builder.addSlotGroup(0, 54, 9);
-        // });
-        // api.addCompat(ContainerToolbox.class, (container, builder) -> {
-        // builder.addSlotGroup(0, 9, 9);
-        // });
-        // }
-        //
-        // if (BogoSorter.isIc2ClassicLoaded()) {
-        // api.addCompat(ContainerPersonalChest.class, (container, builder) -> {
-        // // make sure player can edit this chest
-        // if (!(container.inventorySlots.get(0) instanceof SlotGhoest)) {
-        // builder.addSlotGroup(0, 54, 9);
-        // }
-        // });
-        // api.addCompat(ContainerToolBox.class, (container, builder) -> {
-        // ToolBoxInventory inv = container.getGuiHolder();
-        // if (inv instanceof ToolBoxInventory.IridiumBoxInventory) {
-        // builder.addSlotGroup(0, 45, 9);
-        // } else if (inv instanceof ToolBoxInventory.CarbonBoxInventory) {
-        // builder.addSlotGroup(0, 15, 5)
-        // .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-        // } else {
-        // builder.addSlotGroup(0, 8, 4)
-        // .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-        // }
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("metalchests")) {
-        // api.addCompat(ContainerMetalChest.class, (container, builder) -> {
-        // builder.addSlotGroup(0, container.type.getInventorySize(), container.type.getColumns());
-        // });
-        // }
-        //
-        // if (BogoSorter.isGTCEuLoaded()) {
-        // api.addCompat(ModularUIContainer.class, (container, builder) -> {
-        // Map<String, List<Slot>> sortableSlots = new Object2ObjectOpenHashMap<>();
-        //
-        // for (Widget widget : container.getModularUI().getFlatVisibleWidgetCollection()) {
-        // if (widget instanceof SortableSlotWidget) {
-        // SortableSlotWidget sortableSlotWidget = (SortableSlotWidget) widget;
-        // if (sortableSlotWidget.getSortArea() != null) {
-        // sortableSlots.computeIfAbsent(sortableSlotWidget.getSortArea(), (key) -> new
-        // ArrayList<>()).add(sortableSlotWidget.getHandle());
-        // }
-        // }
-        // }
-        //
-        // for (Map.Entry<String, List<Slot>> entry : sortableSlots.entrySet()) {
-        // int rowSize = ((IModularSortable) (Object) container.getModularUI()).getRowSize(entry.getKey());
-        // if (rowSize > 0) {
-        // builder.addSlotGroupOf(entry.getValue(), rowSize).buttonPosSetter(null);
-        // }
-        // }
-        // });
-        // api.addPlayerSortButtonPosition(ModularUIContainer.class, null);
-        // }
-        //
-        // if (Loader.isModLoaded("travelersbackpack")) {
-        // api.addCompat(ContainerTravelersBackpack.class, (container, builder) -> {
-        // List<Slot> slots = new ArrayList<>();
-        // for (int i = 0; i < 3; i++) {
-        // for (int j = 0; j < 8; j++) {
-        // slots.add(container.getSlot(i * 8 + j + 10));
-        // }
-        // }
-        // for (int i = 3; i < 6; i++) {
-        // for (int j = 0; j < 5; j++) {
-        // slots.add(container.getSlot((i - 3) * 5 + j + 34));
-        // }
-        // }
-        // builder.addSlotGroupOf(slots, 8);
-        // });
-        // api.addPlayerSortButtonPosition(ContainerTravelersBackpack.class, (slotGroup, buttonPos) -> {
-        // ISlot topRight = slotGroup.getSlots().get(slotGroup.getRowSize() - 1);
-        // buttonPos.setPos(topRight.bogo$getX() + 17, topRight.bogo$getY() - 1);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("colossalchests")) {
-        // api.addCompat(ContainerColossalChest.class, (container, builder) -> {
-        // List<Slot> chestSlots = ((ContainerColossalChestAccessor) container).getChestSlots();
-        // builder.addSlotGroupOf(chestSlots, 9).buttonPosSetter((slotGroup, buttonPos) -> {
-        // buttonPos.setPos(0, 1000);
-        // for (ISlot slot : slotGroup.getSlots()) {
-        // if (slot.bogo$getX() >= 0 && slot.bogo$getY() >= 0 && slot.bogo$isEnabled()) {
-        // buttonPos.setPos(Math.max(buttonPos.getX(), slot.bogo$getX() + 17), Math.min(buttonPos.getY(),
-        // slot.bogo$getY() - 2));
-        // }
-        // }
-        // });
-        // });
-        // api.addPlayerSortButtonPosition(ContainerColossalChest.class, (slotGroup, buttonPos) -> {
-        // ISlot slot = slotGroup.getSlots().get(26);
-        // buttonPos.setPos(slot.bogo$getX() + 19, slot.bogo$getY() - 2);
-        // buttonPos.setTopLeft();
-        // buttonPos.setVertical();
-        // });
-        // api.addCompat(ContainerUncolossalChest.class, (container, builder) -> {
-        // builder.addSlotGroup(0, 5, 5);
-        // });
-        // }
-        //
-        // if (BogoSorter.isQuarkLoaded()) {
-        // api.addCompat(vazkii.quark.oddities.inventory.ContainerBackpack.class, (container, builder) -> {
-        // builder.addSlotGroup(46, 46 + 27, 9)
-        // .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-        // });
-        // api.addPlayerSortButtonPosition(vazkii.quark.oddities.inventory.ContainerBackpack.class,
-        // IPosSetter.TOP_RIGHT_VERTICAL);
-        // }
-        //
-        // if (Loader.isModLoaded("cyclicmagic")) {
-        // api.addCompat(ContainerStorage.class, (container, builder) -> {
-        // builder.addSlotGroup(0, 77, 11);
-        // });
-        // api.addPlayerSortButtonPosition(ContainerStorage.class, (slotGroup, buttonPos) -> {
-        // ISlot topRight = slotGroup.getSlots().get(26);
-        // buttonPos.setVertical();
-        // buttonPos.setTopLeft();
-        // buttonPos.setPos(topRight.bogo$getX() + 18, topRight.bogo$getY() + 3);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("bibliocraft")) {
-        // api.addCompat(ContainerFramedChest.class, (container, builder) -> {
-        // builder.addSlotGroup(0, container.getMainTile().getIsDouble() ? 27 * 2 : 27, 9);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("railcraft")) {
-        // api.addCompat(ContainerRCChest.class, (container, builder) -> {
-        // builder.addSlotGroup(0, container.getInv().getSizeInventory(), 9);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("energycontrol")) {
-        // api.addCompat(ContainerCardHolder.class, (container, builder) -> {
-        // builder.addSlotGroup(0, 54, 9);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("projectred-exploration")) {
-        // api.addCompat(mrtjp.projectred.exploration.ContainerBackpack.class, (container, builder) -> {
-        // builder.addSlotGroup(0, 27, 9);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("thebetweenlands")) {
-        // api.addCompat(ContainerPouch.class, (container, builder) -> {
-        // IInventory inventory = container.getItemInventory();
-        // builder.addSlotGroup(0, inventory.getSizeInventory(), 9);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("tfc")) {
-        // api.addCompat(ContainerChestTFC.class, (container, builder) -> {
-        // builder.addSlotGroup(0, container.getLowerChestInventory().getSizeInventory(), 9);
-        // });
-        // }
-        //
         if (GalacticraftCore.isLoaded()) {
             api.addCompat(ContainerParaChest.class, (container, builder) -> {
                 int slot = container.getparachestInventory()
@@ -456,26 +250,6 @@ public class DefaultCompat {
                 }
             });
         }
-        //
-        // if (Loader.isModLoaded("rustic")) {
-        // api.addCompat(ContainerCabinet.class, (container, builder) -> {
-        // builder.addGenericSlotGroup()
-        // .buttonPosSetter(BogoSorter.isQuarkLoaded() ? IPosSetter.TOP_RIGHT_VERTICAL :
-        // IPosSetter.TOP_RIGHT_HORIZONTAL);
-        // });
-        // api.addCompat(ContainerCabinetDouble.class, (container, builder) -> {
-        // builder.addGenericSlotGroup()
-        // .buttonPosSetter(BogoSorter.isQuarkLoaded() ? IPosSetter.TOP_RIGHT_VERTICAL :
-        // IPosSetter.TOP_RIGHT_HORIZONTAL);
-        // });
-        // api.addCompat(rustic.common.tileentity.ContainerBarrel.class, (container, builder) ->
-        // builder.addGenericSlotGroup()
-        // .buttonPosSetter(BogoSorter.isQuarkLoaded() ? IPosSetter.TOP_RIGHT_VERTICAL :
-        // IPosSetter.TOP_RIGHT_HORIZONTAL));
-        // api.addCompat(ContainerVase.class, (container, builder) -> builder.addGenericSlotGroup()
-        // .buttonPosSetter(BogoSorter.isQuarkLoaded() ? IPosSetter.TOP_RIGHT_VERTICAL :
-        // IPosSetter.TOP_RIGHT_HORIZONTAL));
-        // }
         if (AvaritiaAddons.isLoaded()) {
             api.addCompatSimple(
                 ContainerCompressedChest.class,
@@ -492,71 +266,32 @@ public class DefaultCompat {
             // buttonPos.setPos(topRight.bogo$getX() + 17, topRight.bogo$getY() - 1);
             // });
         }
-        //
-        // if (BogoSorter.isExpandableInventoryLoaded()) {
-        // // mark as sortable
-        // api.addCompat(ContainerExpandedInventory.class, (container, builder) -> {
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("charm")) {
-        // api.addCompat(svenhjol.charm.crafting.container.ContainerBarrel.class, (container, builder) -> {
-        // builder.addSlotGroup(0, 27, 9);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("industrialrenewal")) {
-        // api.addCompat(ContainerStorageChest.class, (container, builder) -> {
-        // builder.addGenericSlotGroup().buttonPosSetter((slotGroup, buttonPos) -> {
-        // buttonPos.setPos(0, 1000);
-        // for (ISlot slot : slotGroup.getSlots()) {
-        // if (slot.bogo$getX() >= 0 && slot.bogo$getY() >= 0 && slot.bogo$isEnabled()) {
-        // buttonPos.setPos(Math.max(buttonPos.getX(), slot.bogo$getX() + 17), Math.min(buttonPos.getY(),
-        // slot.bogo$getY() - 2));
-        // }
-        // }
-        // });
-        // });
-        // api.addPlayerSortButtonPosition(ContainerStorageChest.class, (slotGroup, buttonPos) -> {
-        // ISlot slot = slotGroup.getSlots().get(26);
-        // buttonPos.setPos(slot.bogo$getX() + 19, slot.bogo$getY() - 2);
-        // buttonPos.setTopLeft();
-        // buttonPos.setVertical();
-        // });
-        // }
-        //
+
         if (CookingForBlockheads.isLoaded()) {
             api.addGenericCompat(ContainerCounter.class);
             api.addGenericCompat(ContainerFridge.class);
         }
-        //
-        // if (Loader.isModLoaded("mekanism")) {
-        // api.addGenericCompat(mekanism.common.inventory.container.ContainerPersonalChest.class);
-        // }
-        //
-        // if (Loader.isModLoaded("conarm")) {
-        // api.addGenericCompat(ContainerKnapsack.class);
+
+        if (Mekanism.isLoaded()) {
+            api.addGenericCompat(mekanism.common.inventory.container.ContainerPersonalChest.class);
+        }
+
+        if (Tconstruct.isLoaded()) {
+            api.addGenericCompat(PatternChestContainer.class);
+            api.addCompat(PartCrafterChestContainer.class, (container, builder) -> { builder.addSlotGroup(8, 38, 6); });
+            api.addCompat(CraftingStationContainer.class, (container, builder) -> {
+                builder.addSlotGroup(46, container.inventorySlots.size(), 6)
+                    .buttonPosSetter((slotGroup, buttonPos) -> {
+                        buttonPos.setPos(0, 1000);
+                        for (ISlot slot : slotGroup.getSlots()) {
+                            if (slot.bogo$getX() >= 0 && slot.bogo$getY() >= 0 && slot.bogo$isEnabled()) {
+                                buttonPos.setPos(
+                                    Math.max(buttonPos.getX(), slot.bogo$getX() + 17),
+                                    Math.min(buttonPos.getY(), slot.bogo$getY() - 2));
+                            }
+                        }
+                    });
+            });
+        }
     }
 }
-
-// private static ISlot avaritiaddons$findSlot(List<ISlot> slots, ItemStack itemStack, boolean emptyOnly) {
-// for (ISlot slot : slots) {
-// ItemStack stackInSlot = slot.bogo$getStack();
-// if (stackInSlot != null && ItemHandlerHelper.canItemStacksStack(stackInSlot, itemStack)) {
-// return emptyOnly ? null : slot;
-// }
-// }
-// for (ISlot slot : slots) {
-// if (slot.bogo$getStack()== null) return slot;
-// }
-// return null;
-// }
-//
-// public static Class<?> getClass1(String name){
-// try {
-// return Class.forName(name, false, DefaultCompat.class.getClassLoader());
-// } catch (ClassNotFoundException e) {
-// throw new RuntimeException(e);
-// }
-// }
-// }
