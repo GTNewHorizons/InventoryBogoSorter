@@ -18,7 +18,18 @@ public enum Mods {
     GalacticraftCore("galacticraftcore"),
     AdventureBackpack2("adventurebackpack"),
     ProjectE("ProjectE"),
-    Tconstruct("TConstruct"),;
+    Tconstruct("TConstruct"),
+    Nutrition("nutrition"),
+    Bibliocraft("BiblioCraft"),
+    Mekanism("Mekanism"),
+    ProjectRed("ProjRed|Expansion"),
+    ImmersiveEngineering("ImmersiveEngineering"),
+    Thebetweenlands("thebetweenlands"),
+    Terrafirmacraft("terrafirmacraft"),
+    Energycontrol("energycontrol"),
+    Etfuturum("etfuturum"),
+    IronChest("IronChest"),
+    IC2("IC2");
 
     public final String modid;
     private final Supplier<Boolean> supplier;
