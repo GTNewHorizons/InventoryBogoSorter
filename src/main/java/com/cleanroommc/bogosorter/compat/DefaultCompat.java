@@ -2,24 +2,45 @@ package com.cleanroommc.bogosorter.compat;
 
 import static com.cleanroommc.bogosorter.compat.loader.Mods.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.blay09.mods.cookingforblockheads.container.ContainerCounter;
 import net.blay09.mods.cookingforblockheads.container.ContainerFridge;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 
+import com.bioxx.tfc.Containers.ContainerChestTFC;
 import com.brandon3055.draconicevolution.common.container.ContainerDraconiumChest;
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.IPosSetter;
 import com.cleanroommc.bogosorter.api.ISlot;
+import com.zuxelus.energycontrol.containers.ContainerCardHolder;
 
 import appeng.container.implementations.ContainerSkyChest;
+import blusunrize.immersiveengineering.common.gui.ContainerCrate;
 import codechicken.enderstorage.storage.item.ContainerEnderItemStorage;
-import cpw.mods.fml.common.Loader;
 import de.eydamos.backpack.inventory.container.ContainerAdvanced;
+import forestry.core.gui.ContainerNaturalistInventory;
 import forestry.storage.gui.ContainerBackpack;
+import forestry.storage.gui.ContainerNaturalistBackpack;
+import ganymedes01.etfuturum.inventory.ContainerChestGeneric;
+import ic2.core.block.personal.ContainerPersonalChest;
+import ic2.core.item.tool.ContainerToolbox;
+import jds.bibliocraft.blocks.ContainerFramedChest;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerParaChest;
+import moze_intel.projecte.gameObjs.container.AlchBagContainer;
+import moze_intel.projecte.gameObjs.container.AlchChestContainer;
+import moze_intel.projecte.gameObjs.container.CondenserContainer;
+import moze_intel.projecte.gameObjs.container.CondenserMK2Container;
+import tconstruct.tools.inventory.CraftingStationContainer;
+import tconstruct.tools.inventory.PartCrafterChestContainer;
+import tconstruct.tools.inventory.PatternChestContainer;
+import thebetweenlands.inventory.container.ContainerLurkerSkinPouch;
 import wanion.avaritiaddons.block.chest.compressed.ContainerCompressedChest;
 
 public class DefaultCompat {
@@ -30,7 +51,7 @@ public class DefaultCompat {
             // player slots are automatically added
         });
         api.addPlayerSortButtonPosition(ContainerPlayer.class, (slotGroup, buttonPos) -> {
-            if (Loader.isModLoaded("nutrition")) {
+            if (Nutrition.isLoaded()) {
                 IPosSetter.TOP_RIGHT_VERTICAL.setButtonPos(slotGroup, buttonPos);
             } else {
                 IPosSetter.TOP_RIGHT_HORIZONTAL.setButtonPos(slotGroup, buttonPos);
@@ -91,32 +112,55 @@ public class DefaultCompat {
                 (container, builder) -> { builder.addSlotGroup(36, 84, 8); });
         }
 
-        // if (Loader.isModLoaded("futuremc")) {
-        // api.addCompatSimple(ContainerBarrel.class, (container, builder) -> {
-        // builder.addSlotGroup(0, 27, 9);
-        // });
-        // }
-        //
-        // if (Loader.isModLoaded("projecte")) {
-        // api.addCompat(CondenserContainer.class, (container, builder) -> {
-        // builder.addSlotGroup(1, 92, 13);
-        // });
-        // api.addCompat(CondenserMK2Container.class, (container, builder) -> {
-        // builder.addSlotGroup(1, 43, 6)
-        // .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-        // builder.addSlotGroup(43, 85, 6)
-        // .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-        // });
-        // api.addPlayerSortButtonPosition(CondenserContainer.class, IPosSetter.TOP_RIGHT_VERTICAL);
-        // api.addPlayerSortButtonPosition(CondenserMK2Container.class, IPosSetter.TOP_RIGHT_VERTICAL);
-        // }
-        //
-        // if (Loader.isModLoaded("immersiveengineering")) {
-        // api.addCompat(ContainerCrate.class, (container, builder) -> {
-        // builder.addSlotGroup(0, container.slotCount, 9);
-        // });
-        // }
-        //
+        if (Etfuturum.isLoaded()) {
+            api.addCompat(
+                ContainerChestGeneric.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(
+                        0,
+                        container.getLowerChestInventory()
+                            .getSizeInventory(),
+                        container.getRowSize());
+                });
+            api.addPlayerSortButtonPosition(ContainerChestGeneric.class, (slotGroup, buttonPos) -> {
+                if (IronChest.isLoaded()) {
+                    IPosSetter.TOP_RIGHT_VERTICAL.setButtonPos(slotGroup, buttonPos);
+                } else {
+                    IPosSetter.TOP_RIGHT_HORIZONTAL.setButtonPos(slotGroup, buttonPos);
+                }
+            });
+        }
+
+        if (ProjectE.isLoaded()) {
+            api.addCompat(
+                AlchBagContainer.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(0, 104, 13)
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+                });
+            api.addCompat(
+                AlchChestContainer.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(0, 104, 13)
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+                });
+            api.addCompat(CondenserContainer.class, (container, builder) -> { builder.addSlotGroup(1, 92, 13); });
+            api.addCompat(
+                CondenserMK2Container.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(1, 43, 6)
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+                });
+            api.addPlayerSortButtonPosition(AlchBagContainer.class, IPosSetter.TOP_RIGHT_VERTICAL);
+            api.addPlayerSortButtonPosition(AlchChestContainer.class, IPosSetter.TOP_RIGHT_VERTICAL);
+            api.addPlayerSortButtonPosition(CondenserContainer.class, IPosSetter.TOP_RIGHT_VERTICAL);
+            api.addPlayerSortButtonPosition(CondenserMK2Container.class, IPosSetter.TOP_RIGHT_VERTICAL);
+        }
+
+        if (ImmersiveEngineering.isLoaded()) {
+            api.addCompat(ContainerCrate.class, (container, builder) -> { builder.addSlotGroup(0, 27, 9); });
+        }
+
         if (Forestry.isLoaded()) {
             api.addCompat(ContainerBackpack.class, (container, builder) -> {
                 if (container.inventorySlots.size() == 51) {
