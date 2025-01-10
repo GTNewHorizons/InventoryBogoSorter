@@ -280,17 +280,19 @@ public class DefaultCompat {
             api.addGenericCompat(PatternChestContainer.class);
             api.addCompat(PartCrafterChestContainer.class, (container, builder) -> { builder.addSlotGroup(8, 38, 6); });
             api.addCompat(CraftingStationContainer.class, (container, builder) -> {
-                builder.addSlotGroup(46, container.inventorySlots.size(), 6)
-                    .buttonPosSetter((slotGroup, buttonPos) -> {
-                        buttonPos.setPos(0, 1000);
-                        for (ISlot slot : slotGroup.getSlots()) {
-                            if (slot.bogo$getX() >= 0 && slot.bogo$getY() >= 0 && slot.bogo$isEnabled()) {
-                                buttonPos.setPos(
-                                    Math.max(buttonPos.getX(), slot.bogo$getX() + 17),
-                                    Math.min(buttonPos.getY(), slot.bogo$getY() - 2));
+                if (container.inventorySlots.size() >= 47) {
+                    builder.addSlotGroup(47, container.inventorySlots.size(), 6)
+                        .buttonPosSetter((slotGroup, buttonPos) -> {
+                            buttonPos.setPos(0, 1000);
+                            for (ISlot slot : slotGroup.getSlots()) {
+                                if (slot.bogo$getX() >= 0 && slot.bogo$getY() >= 0 && slot.bogo$isEnabled()) {
+                                    buttonPos.setPos(
+                                        Math.max(buttonPos.getX(), slot.bogo$getX() + 17),
+                                        Math.min(buttonPos.getY(), slot.bogo$getY() - 2));
+                                }
                             }
-                        }
-                    });
+                        });
+                }
             });
         }
     }
