@@ -42,6 +42,8 @@ dependencies {
     api("com.github.GTNewHorizons:ModularUI:1.2.17:dev")
     api("com.github.GTNewHorizons:GTNHLib:0.6.0:dev")
 
+    // used for chunk claim checking
+    compileOnly("com.github.GTNewHorizons:ServerUtilities:2.1.12:dev")
 
 //    api("com.github.GTNewHorizons:AdventureBackpack2:1.2.4-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:AdventureBackpack2:1.2.4-GTNH:dev")
