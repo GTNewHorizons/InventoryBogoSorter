@@ -14,7 +14,7 @@ The Inventory Tweaks code is very unpleasant to work with. I rather write my own
 
 ## Features
 
-- sorting of player inventories in (almost) all moded GUI's (default key is middle mouse button)
+- sorting of player inventories in (almost) all modded GUI's (default key is middle mouse button)
 - sorting of many modded inventories
 - sort buttons for each sortable inventory
 - configuring of sort rules (open config with K by default)
