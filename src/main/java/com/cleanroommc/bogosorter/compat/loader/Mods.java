@@ -18,7 +18,8 @@ public enum Mods {
     GalacticraftCore("galacticraftcore"),
     AdventureBackpack2("adventurebackpack"),
     ProjectE("ProjectE"),
-    Tconstruct("TConstruct"),;
+    Tconstruct("TConstruct"),
+    ServerUtilities("serverutilities");
 
     public final String modid;
     private final Supplier<Boolean> supplier;
