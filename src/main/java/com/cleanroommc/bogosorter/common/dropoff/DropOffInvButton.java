@@ -1,6 +1,7 @@
 package com.cleanroommc.bogosorter.common.dropoff;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
@@ -17,7 +18,7 @@ import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Color;
 
-public class InvButton extends GuiButton {
+public class DropOffInvButton extends GuiButton {
 
     private final GuiContainer parent;
     private boolean hold = false;
@@ -28,7 +29,7 @@ public class InvButton extends GuiButton {
         .adaptable(1)
         .build();
 
-    public InvButton(GuiContainer parentGui) {
+    public DropOffInvButton(GuiContainer parentGui) {
         super(
             394658248,
             parentGui.guiLeft + DropOffButtonHandler.buttonX,
@@ -41,18 +42,34 @@ public class InvButton extends GuiButton {
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        if (hold) {
-            drag(mouseX, mouseY);
+        if (this.visible && this.enabled) {
+            if (hold) {
+                drag(mouseX, mouseY);
+            }
+
+            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition
+                && mouseX < this.xPosition + this.width
+                && mouseY < this.yPosition + this.height;
+
+            Color.setGlColor(BogoSorterConfig.buttonColor);
+            BUTTON_BACKGROUND.draw(this.xPosition, this.yPosition, this.width, this.height);
+            Color.resetGlColor();
+            int color = 14737632;
+
+            if (packedFGColour != 0) {
+                color = packedFGColour;
+            } else if (!this.enabled) {
+                color = 10526880;
+            } else if (this.field_146123_n) {
+                color = 16777120;
+            }
+            this.drawCenteredString(
+                mc.fontRenderer,
+                this.displayString,
+                this.xPosition + this.width / 2,
+                this.yPosition + 1,
+                color);
         }
-        Color.setGlColor(BogoSorterConfig.buttonColor);
-        BUTTON_BACKGROUND.draw(this.xPosition, this.yPosition, this.width, this.height);
-        Color.resetGlColor();
-        this.drawCenteredString(
-            mc.fontRenderer,
-            this.displayString,
-            this.xPosition + this.width / 2,
-            this.yPosition + 1,
-            14737632);
     }
 
     @Override
@@ -99,15 +116,14 @@ public class InvButton extends GuiButton {
         // dont play click sound
     }
 
+    private static final List<String> TOOLTIP = Arrays.asList(
+        I18n.format("key.dropoff")
+            .split(System.lineSeparator()));
+
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.enabled && this.field_146123_n) {
             GuiScreen guiScreen = Objects.requireNonNull(Minecraft.getMinecraft().currentScreen);
-            guiScreen.func_146283_a(
-                Arrays.asList(
-                    I18n.format("key.dropoff")
-                        .split("\\n")),
-                mouseX,
-                mouseY);
+            guiScreen.func_146283_a(TOOLTIP, mouseX, mouseY);
         }
     }
 }

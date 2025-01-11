@@ -15,8 +15,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class DropOffButtonHandler {
 
-    public static int buttonX = 120;
-    public static int buttonY = 12;
+    public static int buttonX = 160;
+    public static int buttonY = 5;
     public static boolean showButton = true;
 
     @SubscribeEvent
@@ -29,7 +29,7 @@ public class DropOffButtonHandler {
         }
         try {
             if (screen instanceof GuiInventory inv) {
-                event.buttonList.add(new InvButton(inv));
+                event.buttonList.add(new DropOffInvButton(inv));
             }
         } catch (NullPointerException e) {
             BogoSorter.LOGGER.error("Erroring adding dropoff button to player inventory \n" + e);
@@ -43,7 +43,7 @@ public class DropOffButtonHandler {
         if (!showButton) return;
         if (screen instanceof GuiInventory) {
             for (GuiButton guiButton : ((IGuiContainerAccessor) event.gui).getButtons()) {
-                if (guiButton instanceof InvButton invButton) {
+                if (guiButton instanceof DropOffInvButton invButton) {
                     invButton.drawTooltip(event.mouseX, event.mouseY);
                 }
             }

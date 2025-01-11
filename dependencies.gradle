@@ -81,4 +81,5 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:industrial-craft-242638:2353971')
     compileOnly rfg.deobf('curse.maven:extra-utilities-225561:2264383')
     compileOnly rfg.deobf('curse.maven:hbms-nuclear-tech-mod-235439:6028711')
+
 }

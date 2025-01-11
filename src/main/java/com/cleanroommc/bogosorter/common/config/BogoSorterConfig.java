@@ -94,8 +94,8 @@ public class BogoSorterConfig {
             DropOffHandler.dropoffQuotaInMS = JsonHelper.getInt(general, 1, "dropoffQuotaInMS");
             DropOffHandler.dropoffPacketThrottleInMS = JsonHelper.getInt(general, 500, "dropoffPacketThrottleInMS");
             DropOffButtonHandler.showButton = JsonHelper.getBoolean(general, true, "dropoffButtonShow");
-            DropOffButtonHandler.buttonX = JsonHelper.getInt(general, 80, "dropoffButtonX");
-            DropOffButtonHandler.buttonY = JsonHelper.getInt(general, 12, "dropoffButtonY");
+            DropOffButtonHandler.buttonX = JsonHelper.getInt(general, 160, "dropoffButtonX");
+            DropOffButtonHandler.buttonY = JsonHelper.getInt(general, 5, "dropoffButtonY");
             HotbarSwap.setEnabled(JsonHelper.getBoolean(general, true, "enableHotbarSwap"));
             SortHandler.sortSound = JsonHelper
                 .getElement(general, new ResourceLocation("gui.button.press"), element -> {
