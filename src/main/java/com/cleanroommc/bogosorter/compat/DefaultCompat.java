@@ -290,8 +290,6 @@ public class DefaultCompat {
 
                 if (container.inventorySlots.size() > 51) {
                     builder.addSlotGroup(46, container.inventorySlots.size(), 6)
-                if (container.inventorySlots.size() >= 47) {
-                    builder.addSlotGroup(47, container.inventorySlots.size(), 6)
                         .buttonPosSetter((slotGroup, buttonPos) -> {
                             buttonPos.setPos(0, 1000);
                             for (ISlot slot : slotGroup.getSlots()) {
