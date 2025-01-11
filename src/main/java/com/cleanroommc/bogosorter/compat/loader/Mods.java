@@ -30,7 +30,9 @@ public enum Mods {
     Energycontrol("energycontrol"),
     Etfuturum("etfuturum"),
     IronChest("IronChest"),
-    IC2("IC2");
+    IC2("IC2"),
+    ExtraUtilities("ExtraUtilities"),
+    HBM("hbm");
 
     public final String modid;
     private final Supplier<Boolean> supplier;
