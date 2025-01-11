@@ -14,7 +14,7 @@ public class DamageHelper {
         if (!playerConfig.enableAutoRefill || playerConfig.autoRefillDamageThreshold <= 0) return false;
 
         if (RefillHandler.shouldHandleRefill(player, itemStack) && isNotArmor(itemStack)
-            && (player.inventory.currentItem < 36)) {
+            && (player.inventory.currentItem < 9)) {
             ItemStack handItem = player.getHeldItem();
             if (handItem != itemStack) {
                 return false;

@@ -57,7 +57,7 @@ public class RefillHandler {
 
         if (event.original.getItem() != null && shouldHandleRefill(event.entityPlayer, event.original)) {
             int index = event.entityPlayer.inventory.currentItem;
-            if (index < 36) {
+            if (index < 9) {
                 handle(index, event.original, event.entityPlayer, false);
             }
         }
