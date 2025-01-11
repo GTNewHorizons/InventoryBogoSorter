@@ -20,6 +20,10 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import com.cleanroommc.bogosorter.compat.loader.Mods;
+
+import serverutils.data.ClaimedChunks;
+
 public class InventoryManager {
 
     private final int SCAN_RADIUS = 4;
@@ -66,9 +70,15 @@ public class InventoryManager {
                     InventoryData currentInvData;
 
                     if (currentEntity instanceof IInventory) {
+                        if (Mods.ServerUtilities.isLoaded()) {
+                            if (ClaimedChunks.blockBlockInteractions(player, x, y, z, 0)) continue;
+                        }
                         // noinspection unchecked
                         currentInvData = getInventoryData((T) currentEntity);
                     } else if (currentEntity instanceof TileEntityEnderChest) {
+                        if (Mods.ServerUtilities.isLoaded()) {
+                            if (ClaimedChunks.blockBlockInteractions(player, x, y, z, 0)) continue;
+                        }
                         currentInvData = getInventoryData((TileEntityEnderChest) currentEntity);
                     } else {
                         continue;
