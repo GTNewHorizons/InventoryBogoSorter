@@ -45,7 +45,7 @@ dependencies {
     // used for chunk claim checking
     compileOnly("com.github.GTNewHorizons:ServerUtilities:2.1.12:dev")
 
-//    api("com.github.GTNewHorizons:AdventureBackpack2:1.2.4-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:ProjectRed:4.11.0-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:AdventureBackpack2:1.2.4-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.5.0-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:Galacticraft:3.3.1-GTNH:dev")
@@ -71,4 +71,12 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:thermal_expansion-69163:2388758')
     compileOnly rfg.deobf('curse.maven:thermal_foundation-222880:2388752')
     compileOnly rfg.deobf('curse.maven:cofh_core-69162:2388750')
+    compileOnly rfg.deobf('curse.maven:et-futurum-requiem-441392:5873837')
+    compileOnly rfg.deobf('curse.maven:bibliocraft-228027:2423369')
+    compileOnly rfg.deobf('curse.maven:mekanism-ce-399904:5988091')
+    compileOnly rfg.deobf('curse.maven:immersive-engineering-231951:2299019')
+    compileOnly rfg.deobf('curse.maven:the-betweenlands-243363:2317389')
+    compileOnly rfg.deobf('curse.maven:terrafirmacraft-302973:2627990')
+    compileOnly rfg.deobf('curse.maven:energy-control-373450:4776055')
+    compileOnly rfg.deobf('curse.maven:industrial-craft-242638:2353971')
 }
