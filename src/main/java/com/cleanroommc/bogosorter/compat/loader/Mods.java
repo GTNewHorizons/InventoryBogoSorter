@@ -19,7 +19,7 @@ public enum Mods {
     AdventureBackpack2("adventurebackpack"),
     ProjectE("ProjectE"),
     Tconstruct("TConstruct"),
-    ServerUtilities("serverutilities");
+    ServerUtilities("serverutilities"),
     Nutrition("nutrition"),
     Bibliocraft("BiblioCraft"),
     Mekanism("Mekanism"),
@@ -31,8 +31,6 @@ public enum Mods {
     Etfuturum("etfuturum"),
     IronChest("IronChest"),
     IC2("IC2");
-   
-
 
     public final String modid;
     private final Supplier<Boolean> supplier;
