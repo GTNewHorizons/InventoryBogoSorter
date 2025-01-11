@@ -9,7 +9,7 @@ import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 
 public class DamageHelper {
 
-    public static boolean damageItemHook(ItemStack itemStack, EntityPlayer player) {
+    public static boolean damageItemHook(EntityPlayer player, ItemStack itemStack) {
         PlayerConfig playerConfig = PlayerConfig.get(player);
         if (!playerConfig.enableAutoRefill || playerConfig.autoRefillDamageThreshold <= 0) return false;
 
