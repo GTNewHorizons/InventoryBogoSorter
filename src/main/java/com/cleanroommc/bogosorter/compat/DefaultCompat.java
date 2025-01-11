@@ -287,7 +287,6 @@ public class DefaultCompat {
             api.addGenericCompat(PatternChestContainer.class);
             api.addCompat(PartCrafterChestContainer.class, (container, builder) -> { builder.addSlotGroup(8, 38, 6); });
             api.addCompat(CraftingStationContainer.class, (container, builder) -> {
-
                 if (container.inventorySlots.size() > 51) {
                     builder.addSlotGroup(46, container.inventorySlots.size(), 6)
                         .buttonPosSetter((slotGroup, buttonPos) -> {
