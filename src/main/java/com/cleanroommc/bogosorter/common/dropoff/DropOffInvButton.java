@@ -117,7 +117,7 @@ public class DropOffInvButton extends GuiButton {
     }
 
     private static final List<String> TOOLTIP = Arrays.asList(
-        I18n.format("key.dropoff")
+        I18n.format("key.dropoff.tooltip")
             .split(System.lineSeparator()));
 
     public void drawTooltip(int mouseX, int mouseY) {
