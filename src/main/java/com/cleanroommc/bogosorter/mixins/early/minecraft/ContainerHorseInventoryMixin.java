@@ -20,7 +20,7 @@ public abstract class ContainerHorseInventoryMixin implements ISortableContainer
     @Override
     public void buildSortingContext(ISortingContextBuilder builder) {
         if (theHorse.isChested()) {
-            builder.addSlotGroup(2, 3, 3);
+            builder.addSlotGroup(2, 17, 5);
         }
     }
 }
