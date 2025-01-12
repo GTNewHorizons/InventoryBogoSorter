@@ -19,6 +19,13 @@ import com.brandon3055.draconicevolution.common.container.ContainerDraconiumChes
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.IPosSetter;
 import com.cleanroommc.bogosorter.api.ISlot;
+import com.hbm.inventory.container.ContainerCrateDesh;
+import com.hbm.inventory.container.ContainerCrateIron;
+import com.hbm.inventory.container.ContainerCrateSteel;
+import com.hbm.inventory.container.ContainerCrateTemplate;
+import com.hbm.inventory.container.ContainerCrateTungsten;
+import com.hbm.inventory.container.ContainerSafe;
+import com.rwtema.extrautils.gui.ContainerHoldingBag;
 import com.zuxelus.energycontrol.containers.ContainerCardHolder;
 
 import appeng.container.implementations.ContainerSkyChest;
@@ -280,8 +287,8 @@ public class DefaultCompat {
             api.addGenericCompat(PatternChestContainer.class);
             api.addCompat(PartCrafterChestContainer.class, (container, builder) -> { builder.addSlotGroup(8, 38, 6); });
             api.addCompat(CraftingStationContainer.class, (container, builder) -> {
-                if (container.inventorySlots.size() >= 47) {
-                    builder.addSlotGroup(47, container.inventorySlots.size(), 6)
+                if (container.inventorySlots.size() > 51) {
+                    builder.addSlotGroup(46, container.inventorySlots.size(), 6)
                         .buttonPosSetter((slotGroup, buttonPos) -> {
                             buttonPos.setPos(0, 1000);
                             for (ISlot slot : slotGroup.getSlots()) {
@@ -295,5 +302,19 @@ public class DefaultCompat {
                 }
             });
         }
+        if (ExtraUtilities.isLoaded()) {
+            api.addCompat(ContainerHoldingBag.class, (container, builder) -> { builder.addSlotGroup(0, 54, 9); });
+
+        }
+        if (HBM.isLoaded()) {
+            api.addCompat(ContainerCrateDesh.class, (container, builder) -> { builder.addSlotGroup(0, 104, 13); });
+            api.addCompat(ContainerCrateSteel.class, (container, builder) -> { builder.addSlotGroup(0, 54, 9); });
+            api.addCompat(ContainerCrateIron.class, (container, builder) -> { builder.addSlotGroup(0, 36, 9); });
+            api.addCompat(ContainerCrateTungsten.class, (container, builder) -> { builder.addSlotGroup(0, 27, 9); });
+            api.addCompat(ContainerCrateTemplate.class, (container, builder) -> { builder.addSlotGroup(0, 27, 9); });
+            api.addCompat(ContainerSafe.class, (container, builder) -> { builder.addSlotGroup(0, 15, 5); });
+
+        }
+
     }
 }

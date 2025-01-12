@@ -79,4 +79,7 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:terrafirmacraft-302973:2627990')
     compileOnly rfg.deobf('curse.maven:energy-control-373450:4776055')
     compileOnly rfg.deobf('curse.maven:industrial-craft-242638:2353971')
+    compileOnly rfg.deobf('curse.maven:extra-utilities-225561:2264383')
+    compileOnly rfg.deobf('curse.maven:hbms-nuclear-tech-mod-235439:6028711')
+
 }
