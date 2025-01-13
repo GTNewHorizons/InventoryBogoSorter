@@ -31,10 +31,6 @@ public enum Mixins {
             "minecraft.GuiEditSignMixin",
             "minecraft.MinecraftMixin")),
 
-    Avaritiaddons(new Builder(" Avaritiaddons").addTargetedMod(TargetedMod.AVARITIADDONS)
-        .setSide(Side.BOTH)
-        .setPhase(Phase.LATE)
-        .addMixinClasses("avaritiaddons.ContainerAvaritiaddonsChestMixin")),
     IronChest(new Builder(" Iron Chests").addTargetedMod(TargetedMod.IRONCHEST)
         .setSide(Side.BOTH)
         .setPhase(Phase.LATE)
