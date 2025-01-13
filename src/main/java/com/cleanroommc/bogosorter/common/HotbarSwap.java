@@ -48,7 +48,9 @@ public class HotbarSwap {
 
     @SubscribeEvent
     public void render(RenderGameOverlayEvent.Post event) {
-        if (enabled && event.type == RenderGameOverlayEvent.ElementType.ALL && show) {
+        if (enabled && Minecraft.getMinecraft().thePlayer.inventory.currentItem < 9
+            && event.type == RenderGameOverlayEvent.ElementType.ALL
+            && show) {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -95,7 +97,9 @@ public class HotbarSwap {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (!enabled || Minecraft.getMinecraft().theWorld == null || Minecraft.getMinecraft().thePlayer == null) {
+        if (!enabled || Minecraft.getMinecraft().theWorld == null
+            || Minecraft.getMinecraft().thePlayer == null
+            || Minecraft.getMinecraft().thePlayer.inventory.currentItem > 8) {
             return;
         }
         if (show) {
@@ -120,7 +124,7 @@ public class HotbarSwap {
 
     @SubscribeEvent
     public void onMouseInput(InputEvent.MouseInputEvent event) {
-        if (!enabled) return;
+        if (!enabled || Minecraft.getMinecraft().thePlayer.inventory.currentItem > 8) return;
         if (show) {
             int scroll = Mouse.getEventDWheel();
             if (scroll != 0) {
