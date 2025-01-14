@@ -14,6 +14,7 @@ import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.api.SortRule;
+import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffButtonHandler;
@@ -288,6 +289,64 @@ public class ConfigGui extends CustomModularScreen {
                             .background(IDrawable.EMPTY))
                     .child(
                         IKey.lang("bogosort.gui.dropoff_chatmessage")
+                            .asWidget()
+                            .height(14)
+                            .marginLeft(10)
+                            .expanded()))
+            .child(
+                new Row().widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(new CycleButtonWidget().value(new BoolValue.Dynamic(() -> UsageTicker.enableModule, val -> {
+                        UsageTicker.enableModule = val;
+                        UsageTicker.reloadElements();
+                    }))
+                        .stateOverlay(TOGGLE_BUTTON)
+                        .disableHoverBackground()
+                        .size(14, 14)
+                        .margin(8, 0)
+                        .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosort.gui.usageticker_enable")
+                            .asWidget()
+                            .height(14)
+                            .marginLeft(10)
+                            .expanded()))
+            .child(
+                new Row().widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(
+                        new CycleButtonWidget().value(new BoolValue.Dynamic(() -> UsageTicker.enableMainHand, val -> {
+                            UsageTicker.enableMainHand = val;
+                            UsageTicker.reloadElements();
+                        }))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosort.gui.usageticker_mainhand")
+                            .asWidget()
+                            .height(14)
+                            .marginLeft(10)
+                            .expanded()))
+            .child(
+                new Row().widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(new CycleButtonWidget().value(new BoolValue.Dynamic(() -> UsageTicker.enableArmor, val -> {
+                        UsageTicker.enableArmor = val;
+                        UsageTicker.reloadElements();
+                    }))
+                        .stateOverlay(TOGGLE_BUTTON)
+                        .disableHoverBackground()
+                        .size(14, 14)
+                        .margin(8, 0)
+                        .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosort.gui.usageticker_armor")
                             .asWidget()
                             .height(14)
                             .marginLeft(10)

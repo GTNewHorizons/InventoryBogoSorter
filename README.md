@@ -41,3 +41,4 @@ The Inventory Tweaks code is very unpleasant to work with. I rather write my own
 
 ### Credits
 Dropoff Feature - https://www.curseforge.com/minecraft/mc-mods/dropoff - https://github.com/SCP002/DropOff/tree/1.7.10
+Usage Ticker - Quark - https://github.com/VazkiiMods/Quark/blob/1.14/src/main/java/vazkii/quark/client/module/UsageTickerModule.java

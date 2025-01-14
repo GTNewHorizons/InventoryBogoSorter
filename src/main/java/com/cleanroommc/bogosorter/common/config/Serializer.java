@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
 import com.cleanroommc.bogosorter.core.BogoSorterCore;
@@ -63,6 +64,7 @@ public class Serializer {
                 BogoSorterCore.LOGGER.error("Error loading config!");
             } else {
                 BogoSorterConfig.load(jsonElement.getAsJsonObject());
+                UsageTicker.reloadElements();
                 SortHandler.cacheItemSortRules.put(Minecraft.getMinecraft().thePlayer, BogoSorterConfig.sortRules);
                 SortHandler.cacheNbtSortRules.put(Minecraft.getMinecraft().thePlayer, BogoSorterConfig.nbtSortRules);
             }

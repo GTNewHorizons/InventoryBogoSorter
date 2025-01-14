@@ -88,11 +88,6 @@ public class Main {
 
         if (oldGuiScreen != currentScreen) {
             oldGuiScreen = currentScreen;
-
-            MouseTweaks.LOGGER.debug(
-                "You have just opened " + currentScreen.getClass()
-                    .getSimpleName() + ".");
-
             handler = findHandler(currentScreen);
 
             // don't handle any mouse inputs that were started from the old gui
@@ -100,9 +95,6 @@ public class Main {
 
             if (handler == null) {
                 disableForThisContainer = true;
-
-                MouseTweaks.LOGGER.debug("No valid handler found; MT is disabled.");
-
                 return;
             } else {
                 disableForThisContainer = handler.isMouseTweaksDisabled();
@@ -110,16 +102,6 @@ public class Main {
 
                 if (isMouseWheelTransferActive() && !disableWheelForThisContainer) Mouse.getDWheel(); // reset the mouse
                                                                                                       // wheel delta
-
-                MouseTweaks.LOGGER.debug(
-                    "Handler: " + handler.getClass()
-                        .getSimpleName()
-                        + "; MT is "
-                        + (disableForThisContainer ? "disabled" : "enabled")
-                        + "; wheel tweak is "
-                        + (disableWheelForThisContainer ? "disabled" : "enabled")
-                        + ".");
-
             }
         }
 
@@ -163,8 +145,6 @@ public class Main {
 
             // Prevent double-clicking.
             if (firstRightClickedSlot == selectedSlot) firstRightClickedSlot = null;
-
-            MouseTweaks.LOGGER.debug("You have selected a new slot, it's slot number is " + selectedSlot.slotNumber);
 
             // Copy stacks, otherwise when we click stuff they get updated and mess up the logic.
             ItemStack targetStack = copyItemStack(selectedSlot.getStack());

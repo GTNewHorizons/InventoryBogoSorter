@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.api.SortRule;
+import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffButtonHandler;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
@@ -79,6 +80,12 @@ public class BogoSorterConfig {
             }
         }
         json.add("NbtSortRules", jsonRules);
+
+        JsonObject usageTicker = new JsonObject();
+        usageTicker.addProperty("enableModule", UsageTicker.enableModule);
+        usageTicker.addProperty("enableMainHand", UsageTicker.enableMainHand);
+        usageTicker.addProperty("enableArmor", UsageTicker.enableArmor);
+        json.add("UsageTicker", usageTicker);
     }
 
     @SideOnly(Side.CLIENT)
@@ -148,6 +155,12 @@ public class BogoSorterConfig {
                     BogoSorterConfig.nbtSortRules.add(rule);
                 }
             }
+        }
+        if (json.has("UsageTicker")) {
+            JsonObject ticker = json.getAsJsonObject("UsageTicker");
+            UsageTicker.enableModule = JsonHelper.getBoolean(ticker, true, "enableModule");
+            UsageTicker.enableMainHand = JsonHelper.getBoolean(ticker, true, "enableMainHand");
+            UsageTicker.enableArmor = JsonHelper.getBoolean(ticker, true, "enableArmor");
         }
     }
 
