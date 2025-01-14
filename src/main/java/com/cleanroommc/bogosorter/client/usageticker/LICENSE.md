@@ -1,4 +1,4 @@
-All code in this directory is under the following license and the entire module can be disable:
+All code in this directory is under the following license and the entire module can be disable in the config file:
 
 # Attribution-NonCommercial-ShareAlike 3.0 Unported
 
