@@ -6,33 +6,34 @@ import cpw.mods.fml.common.Loader;
 
 public enum Mods {
 
-    EnderStorage("EnderStorage"),
-    DraconicEvolution("DraconicEvolution"),
-    AvaritiaAddons("avaritiaddons"),
-    CookingForBlockheads("cookingforblockheads"),
+    AdventureBackpack2("adventurebackpack"),
     Ae2("appliedenergistics2"),
+    AvaritiaAddons("avaritiaddons"),
+    Backpack("Backpack"),
+    Bibliocraft("BiblioCraft"),
+    CookingForBlockheads("cookingforblockheads"),
+    DraconicEvolution("DraconicEvolution"),
+    EnderStorage("EnderStorage"),
+    Energycontrol("energycontrol"),
+    Etfuturum("etfuturum"),
+    ExtraUtilities("ExtraUtilities"),
     Forestry("Forestry"),
     GT5u(() -> Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi")),
     GT6(() -> Loader.isModLoaded("gregtech") && Loader.isModLoaded("gregapi")),
-    Backpack("Backpack"),
     GalacticraftCore("galacticraftcore"),
-    AdventureBackpack2("adventurebackpack"),
-    ProjectE("ProjectE"),
-    Tconstruct("TConstruct"),
-    ServerUtilities("serverutilities"),
-    Nutrition("nutrition"),
-    Bibliocraft("BiblioCraft"),
-    Mekanism("Mekanism"),
-    ProjectRed("ProjRed|Expansion"),
-    ImmersiveEngineering("ImmersiveEngineering"),
-    Thebetweenlands("thebetweenlands"),
-    Terrafirmacraft("terrafirmacraft"),
-    Energycontrol("energycontrol"),
-    Etfuturum("etfuturum"),
-    IronChest("IronChest"),
+    HBM("hbm"),
     IC2("IC2"),
-    ExtraUtilities("ExtraUtilities"),
-    HBM("hbm");
+    ImmersiveEngineering("ImmersiveEngineering"),
+    IronChest("IronChest"),
+    Mekanism("Mekanism"),
+    Nutrition("nutrition"),
+    ProjectE("ProjectE"),
+    ProjectRed("ProjRed|Expansion"),
+    ServerUtilities("serverutilities"),
+    StorageDrawers("StorageDrawers"),
+    Tconstruct("TConstruct"),
+    Terrafirmacraft("terrafirmacraft"),
+    Thebetweenlands("thebetweenlands"),;
 
     public final String modid;
     private final Supplier<Boolean> supplier;
@@ -46,7 +47,6 @@ public enum Mods {
     Mods(Supplier<Boolean> supplier) {
         this.supplier = supplier;
         this.modid = null;
-
     }
 
     public boolean isLoaded() {
