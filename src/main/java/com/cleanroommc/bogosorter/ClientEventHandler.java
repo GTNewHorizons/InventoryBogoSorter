@@ -28,6 +28,7 @@ import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
+import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
@@ -344,7 +345,8 @@ public class ClientEventHandler {
                     .get(0);
             } else {
                 slotGroup = sortingContext.getSlotGroup(slot.bogo$getSlotNumber());
-                if (slotGroup == null || slotGroup.isEmpty()) return false;
+                if (slotGroup == null || slotGroup.isEmpty()
+                    || (slotGroup.isHotbar() && !PlayerConfig.getClient().enableHotbarSort)) return false;
             }
 
             List<SortRule<ItemStack>> sortRules = BogoSorterConfig.sortRules;

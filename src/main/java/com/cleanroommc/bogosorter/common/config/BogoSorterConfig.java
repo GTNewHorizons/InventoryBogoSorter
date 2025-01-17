@@ -41,6 +41,7 @@ public class BogoSorterConfig {
     public static void save(JsonObject json) {
         PlayerConfig playerConfig = PlayerConfig.getClient();
         JsonObject general = new JsonObject();
+        general.addProperty("enableHotbarSort", playerConfig.enableHotbarSort);
         general.addProperty("enableAutoRefill", playerConfig.enableAutoRefill);
         general.addProperty("refillDmgThreshold", playerConfig.autoRefillDamageThreshold);
         general.addProperty("enableDropoff", DropOffHandler.enableDropOff);
@@ -93,6 +94,7 @@ public class BogoSorterConfig {
         PlayerConfig playerConfig = PlayerConfig.getClient();
         if (json.has("General")) {
             JsonObject general = json.getAsJsonObject("General");
+            playerConfig.enableHotbarSort = JsonHelper.getBoolean(general, true, "enableHotbarSort");
             playerConfig.enableAutoRefill = JsonHelper.getBoolean(general, true, "enableAutoRefill");
             playerConfig.autoRefillDamageThreshold = (short) JsonHelper.getInt(general, 1, "refillDmgThreshold");
             DropOffHandler.enableDropOff = JsonHelper.getBoolean(general, true, "enableDropoff");
