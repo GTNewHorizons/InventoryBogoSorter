@@ -4,6 +4,7 @@ import static net.minecraft.item.ItemStack.copyItemStack;
 
 import java.util.List;
 
+import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -175,8 +176,8 @@ public class Main {
                             } else {
                                 // If shift is not down, we need to merge the item stack on the mouse with the one in
                                 // the slot.
-                                if ((stackOnMouse.stackSize + targetStack.stackSize)
-                                    <= stackOnMouse.getMaxStackSize()) {
+                                if ((((IGuiContainerAccessor) currentScreen).getDragSplitting() == false) && (stackOnMouse.stackSize + targetStack.stackSize)
+                                        <= stackOnMouse.getMaxStackSize()) {
                                     // We need to click on the slot so that our item stack gets merged with it, and
                                     // then click again to return the stack to the mouse. However, if the slot is
                                     // crafting output, then the item is added to the mouse stack on the first click
