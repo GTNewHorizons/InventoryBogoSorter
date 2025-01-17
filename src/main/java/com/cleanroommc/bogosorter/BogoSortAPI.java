@@ -36,6 +36,7 @@ import com.cleanroommc.bogosorter.common.sort.ItemSortContainer;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.compat.loader.Mods;
 import com.cleanroommc.modularui.factory.ClientGUI;
+import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.PlayerInvWrapper;
 import com.cleanroommc.modularui.utils.item.PlayerMainInvWrapper;
 import com.cleanroommc.modularui.utils.item.SlotItemHandler;
@@ -290,8 +291,7 @@ public class BogoSortAPI implements IBogoSortAPI {
     public static boolean isPlayerSlot(ISlot slot) {
         if (slot == null) return false;
         if (slot.bogo$getInventory() instanceof InventoryPlayer
-            || (slot instanceof SlotItemHandler
-                && isPlayerInventory((IInventory) ((SlotItemHandler) slot).getItemHandler()))
+            || (slot instanceof SlotItemHandler && isPlayerInventory(((SlotItemHandler) slot).getItemHandler()))
             || (Mods.Ae2.isLoaded() && slot instanceof AppEngSlot
                 && isPlayerInventory(((AppEngSlot) slot).inventory))) {
             return slot.bogo$getSlotIndex() >= 0 && slot.bogo$getSlotIndex() < 36;
@@ -299,8 +299,12 @@ public class BogoSortAPI implements IBogoSortAPI {
         return false;
     }
 
-    public static boolean isPlayerInventory(IInventory itemHandler) {
+    public static boolean isPlayerInventory(IItemHandler itemHandler) {
         return itemHandler instanceof PlayerMainInvWrapper || itemHandler instanceof PlayerInvWrapper;
+    }
+
+    public static boolean isPlayerInventory(IInventory itemHandler) {
+        return itemHandler instanceof InventoryPlayer;
     }
 
     public static final Hash.Strategy<ItemStack> ITEM_META_NBT_HASH_STRATEGY = new Hash.Strategy<ItemStack>() {
