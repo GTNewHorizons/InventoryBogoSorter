@@ -20,6 +20,7 @@ public class PlayerConfig {
 
     private static final Map<EntityPlayerMP, PlayerConfig> playerConfig = new Object2ObjectOpenHashMap<>();
     private static final PlayerConfig CLIENT = new PlayerConfig();
+    public boolean enableHotbarSort = true;
     public boolean enableAutoRefill = true;
     public int autoRefillDamageThreshold = 1;
 
@@ -44,11 +45,13 @@ public class PlayerConfig {
     }
 
     public void writePacket(PacketBuffer buffer) {
+        buffer.writeBoolean(enableHotbarSort);
         buffer.writeBoolean(enableAutoRefill);
         buffer.writeVarIntToBuffer(autoRefillDamageThreshold);
     }
 
     public void readPacket(PacketBuffer buffer) {
+        enableHotbarSort = buffer.readBoolean();
         enableAutoRefill = buffer.readBoolean();
         autoRefillDamageThreshold = buffer.readVarIntFromBuffer();
     }
