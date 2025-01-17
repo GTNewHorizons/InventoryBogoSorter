@@ -4,6 +4,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
+
 public class DropOffHandler {
 
     private final InventoryManager inventoryManager;
@@ -107,6 +110,27 @@ public class DropOffHandler {
             if (inventoryManager.isStacksEqual(toCurrentStack, playerStacks[playerStackIndex])) {
                 hasSameStack = true;
                 int toCurrentStackMaxSize = inventoryManager.getMaxAllowedStackSize(toInventory, toCurrentStack);
+                if (Mods.StorageDrawers.isLoaded() && toInventory instanceof TileEntityDrawers drawer) {
+                    int drawerSlot = drawer.getDrawerInventory()
+                        .getDrawerSlot(i);
+                    // side is ignored
+                    if (drawer.canInsertItem(drawerSlot, playerStacks[playerStackIndex], 0)) {
+                        // handles reducing the player stack size
+                        int countAdded = drawer.putItemsIntoSlot(
+                            drawerSlot,
+                            playerStacks[playerStackIndex],
+                            playerStacks[playerStackIndex].stackSize);
+
+                        if (countAdded == 0) {
+                            continue;
+                        }
+
+                        if (playerStacks[playerStackIndex].stackSize <= 0) {
+                            playerStacks[playerStackIndex] = null;
+                        }
+                    }
+                    return;
+                }
 
                 if (toCurrentStack.stackSize + playerStacks[playerStackIndex].stackSize <= toCurrentStackMaxSize) {
                     toCurrentStack.stackSize += playerStacks[playerStackIndex].stackSize;
