@@ -16,17 +16,21 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.cleanroommc.bogosorter.common.ReadableNumberConverter;
+import com.cleanroommc.bogosorter.compat.loader.Mods;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import xonin.backhand.api.core.BackhandUtils;
 
 // todo: backhand compat
 @EventBusSubscriber(side = { Side.CLIENT })
 public class UsageTicker {
 
     public static boolean enableMainHand = true;
+    public static boolean enableOffHand = true;
     public static boolean enableArmor = true;
     public static boolean enableModule = true;
 
@@ -40,12 +44,18 @@ public class UsageTicker {
         if (enableMainHand) {
             elements.add(new Element(EquipmentSlotType.MAINHAND));
         }
+
+        if (Mods.Backhand.isLoaded() && enableOffHand) {
+            elements.add(new Element(EquipmentSlotType.OFFHAND));
+        }
+
         if (enableArmor) {
             elements.add(new Element(EquipmentSlotType.HEAD));
             elements.add(new Element(EquipmentSlotType.CHEST));
             elements.add(new Element(EquipmentSlotType.LEGS));
             elements.add(new Element(EquipmentSlotType.FEET));
         }
+
     }
 
     @EventBusSubscriber.Condition
@@ -97,31 +107,36 @@ public class UsageTicker {
 
                 float anim = -animProgress * (animProgress - 2) * 19F;
 
-                float x = resolution.getScaledWidth() / 2f;
+                float x = resolution.getScaledWidth() / 2f - (Mods.Backhand.isLoaded() ? 30 : 0);
                 float y = resolution.getScaledHeight() - anim;
 
                 int barWidth = 190;
-                boolean armor = slot != EquipmentSlotType.MAINHAND;
+                boolean armor = !(slot == EquipmentSlotType.MAINHAND || slot == EquipmentSlotType.OFFHAND);
 
-                int slots = armor ? 4 : 1;
+                int slots = armor ? 4 : (Mods.Backhand.isLoaded() && enableOffHand) ? 2 : 1;
                 int index = slots - slot.ordinal() - 1;
 
                 Minecraft mc = Minecraft.getMinecraft();
 
-                x -= (barWidth / 2f) - index * 20;
+                x -= (barWidth / 2f) - index * 22;
                 x -= slots * 20;
 
                 ItemStack stack = getRenderedStack(player);
                 if (stack == null) return;
 
                 RenderItem renderer = new RenderItem();
-
                 GL11.glPushMatrix();
                 GL11.glTranslatef(x, y, 0);
                 GL11.glEnable(GL12.GL_RESCALE_NORMAL);
                 RenderHelper.enableGUIStandardItemLighting();
                 renderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, stack, 0, 0);
-                renderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, stack, 0, 0);
+                renderer.renderItemOverlayIntoGUI(
+                    mc.fontRenderer,
+                    mc.renderEngine,
+                    stack,
+                    0,
+                    0,
+                    stack.stackSize > 1 ? ReadableNumberConverter.INSTANCE.toSlimReadableForm(stack.stackSize) : null);
                 RenderHelper.disableStandardItemLighting();
                 GL11.glDisable(GL12.GL_RESCALE_NORMAL);
                 GL11.glPopMatrix();
@@ -166,7 +181,11 @@ public class UsageTicker {
                 return player.inventory.getCurrentItem();
             }
 
-            return player.inventory.armorItemInSlot(slot.ordinal() - 1);
+            if (slot == EquipmentSlotType.OFFHAND) {
+                return BackhandUtils.getOffhandItem(player);
+            }
+
+            return player.inventory.armorItemInSlot(slot.ordinal() - 2);
         }
 
         public ItemStack getRenderedStack(EntityClientPlayerMP player) {
@@ -189,6 +208,7 @@ public class UsageTicker {
         public ItemStack getDisplayedStack(ItemStack stack, int count) {
             if (stack == null) return null;
             if (slot == EquipmentSlotType.MAINHAND && !stack.isStackable()) return null;
+            if (slot == EquipmentSlotType.OFFHAND && !stack.isStackable()) return null;
             if (count == stack.stackSize) return null;
 
             return stack;
@@ -214,10 +234,11 @@ public class UsageTicker {
 
     public enum EquipmentSlotType {
         MAINHAND,
+        OFFHAND,
         HEAD,
         CHEST,
         LEGS,
-        FEET
+        FEET,
     }
 
 }

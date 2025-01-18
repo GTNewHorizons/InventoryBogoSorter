@@ -62,8 +62,9 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:NotEnoughItems:2.7.22-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.79:dev")
     compileOnly("com.github.GTNewHorizons:Botania:1.12.5-GTNH:dev")
-    devOnlyNonPublishable("com.github.GTNewHorizons:StorageDrawers:2.1.0-GTNH:dev")
-    
+    compileOnly("com.github.GTNewHorizons:StorageDrawers:2.1.0-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Backhand:1.5.16:dev")
+
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:waila:1.8.2:dev")
 
     compileOnly rfg.deobf('curse.maven:projecte-226410:2340786')
