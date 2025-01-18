@@ -85,6 +85,7 @@ public class BogoSorterConfig {
         JsonObject usageTicker = new JsonObject();
         usageTicker.addProperty("enableModule", UsageTicker.enableModule);
         usageTicker.addProperty("enableMainHand", UsageTicker.enableMainHand);
+        usageTicker.addProperty("enableOffHand", UsageTicker.enableOffHand);
         usageTicker.addProperty("enableArmor", UsageTicker.enableArmor);
         json.add("UsageTicker", usageTicker);
     }
@@ -162,6 +163,7 @@ public class BogoSorterConfig {
             JsonObject ticker = json.getAsJsonObject("UsageTicker");
             UsageTicker.enableModule = JsonHelper.getBoolean(ticker, true, "enableModule");
             UsageTicker.enableMainHand = JsonHelper.getBoolean(ticker, true, "enableMainHand");
+            UsageTicker.enableOffHand = JsonHelper.getBoolean(ticker, true, "enableOffHand");
             UsageTicker.enableArmor = JsonHelper.getBoolean(ticker, true, "enableArmor");
         }
     }

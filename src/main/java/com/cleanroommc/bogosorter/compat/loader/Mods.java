@@ -9,6 +9,7 @@ public enum Mods {
     AdventureBackpack2("adventurebackpack"),
     Ae2("appliedenergistics2"),
     AvaritiaAddons("avaritiaddons"),
+    Backhand("backhand"),
     Backpack("Backpack"),
     Bibliocraft("BiblioCraft"),
     CookingForBlockheads("cookingforblockheads"),
