@@ -16,7 +16,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.cleanroommc.bogosorter.common.McUtils;
+import com.cleanroommc.bogosorter.common.ReadableNumberConverter;
 import com.cleanroommc.bogosorter.compat.loader.Mods;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
@@ -136,7 +136,7 @@ public class UsageTicker {
                     stack,
                     0,
                     0,
-                    stack.stackSize > 1 ? McUtils.format(stack.stackSize) : null);
+                    stack.stackSize > 1 ? ReadableNumberConverter.INSTANCE.toSlimReadableForm(stack.stackSize) : null);
                 RenderHelper.disableStandardItemLighting();
                 GL11.glDisable(GL12.GL_RESCALE_NORMAL);
                 GL11.glPopMatrix();
