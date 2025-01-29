@@ -542,7 +542,7 @@ public class ConfigGui extends CustomModularScreen {
                                         new Grid().matrix(availableMatrix)
                                             .scrollable()
                                             .pos(7, 7)
-                                            .right(14)
+                                            .right(17)
                                             .bottom(7));
                             }, true);
                             otherPanel.openPanel();
