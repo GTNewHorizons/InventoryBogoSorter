@@ -35,6 +35,7 @@ import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.BoolValue;
 import com.cleanroommc.modularui.value.IntValue;
 import com.cleanroommc.modularui.widget.ParentWidget;
+import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.CycleButtonWidget;
 import com.cleanroommc.modularui.widgets.Dialog;
@@ -55,7 +56,6 @@ public class ConfigGui extends CustomModularScreen {
     public static final UITexture TOGGLE_BUTTON = UITexture.fullImage("bogosorter:gui/toggle_config", false);
     public static final UITexture ARROW_DOWN_UP = UITexture.fullImage("bogosorter:gui/arrow_down_up", false);
     private static final int DARK_GREY = 0xFF404040;
-    private ModularPanel panel;
 
     public static boolean closeCurrent() {
         ModularScreen screen = ModularScreen.getCurrent();
@@ -76,10 +76,10 @@ public class ConfigGui extends CustomModularScreen {
     }
 
     @Override
-    public @NotNull ModularPanel buildUI(ModularGuiContext guiContext) {
+    public @NotNull ModularPanel buildUI(ModularGuiContext context) {
         this.availableElements = new Object2ObjectOpenHashMap<>();
         this.availableElementsNbt = new Object2ObjectOpenHashMap<>();
-        panel = new ModularPanel("bogo_config") {
+        ModularPanel panel = new ModularPanel("bogo_config") {
 
             @Override
             public boolean shouldAnimate() {
@@ -114,8 +114,8 @@ public class ConfigGui extends CustomModularScreen {
                     .right(4)
                     .top(35)
                     .bottom(4)
-                    .addPage(createGeneralConfigUI(guiContext))
-                    .addPage(createProfilesConfig(guiContext)))
+                    .addPage(createGeneralConfigUI(panel, context))
+                    .addPage(createProfilesConfig(panel, context)))
             .child(
                 new Row().left(4)
                     .right(4)
@@ -132,7 +132,7 @@ public class ConfigGui extends CustomModularScreen {
         return panel;
     }
 
-    public IWidget createGeneralConfigUI(ModularGuiContext context) {
+    public IWidget createGeneralConfigUI(ModularPanel mainPanel, ModularGuiContext context) {
         Row row = new Row();
         return new ListWidget<>().left(5)
             .right(5)
@@ -394,7 +394,7 @@ public class ConfigGui extends CustomModularScreen {
                             .expanded()));
     }
 
-    public IWidget createProfilesConfig(ModularGuiContext context) {
+    public IWidget createProfilesConfig(ModularPanel mainPanel, ModularGuiContext context) {
         PagedWidget.Controller controller = new PagedWidget.Controller();
         return new ParentWidget<>().widthRel(1f)
             .top(2)
@@ -439,51 +439,51 @@ public class ConfigGui extends CustomModularScreen {
                     .right(0)
                     .top(16)
                     .bottom(0)
-                    .addPage(createItemSortConfigUI(context))
-                    .addPage(createNbtSortConfigUI(context)));
+                    .addPage(createItemSortConfigUI(mainPanel, context))
+                    .addPage(createNbtSortConfigUI(mainPanel, context)));
     }
 
-    public IWidget createItemSortConfigUI(ModularGuiContext context) {
-        List<SortRule<ItemStack>> allValues = BogoSortAPI.INSTANCE.getItemSortRuleList();
-        final Map<SortRule<ItemStack>, SortableListWidget.Item<SortRule<ItemStack>>> ref = new Object2ObjectOpenHashMap<>();
-
-        for (SortRule<ItemStack> value : allValues) {
-            TextWidget ruleText = IKey.lang(value.getNameLangKey())
-                .asWidget()
-                .widgetTheme(Theme.BUTTON);
-            ref.put(
-                value,
-                new SortableListWidget.Item<>(value).child(
-                    refs -> new Row().child(
-                        ruleText.paddingLeft(7)
-                            .background(GuiTextures.MC_BUTTON)
-                            .tooltip(
-                                tooltip -> tooltip.addLine(IKey.lang(value.getDescriptionLangKey()))
-                                    .showUpTimer(10))
-                            .size(164, 18))
-                        .child(
-                            new CycleButtonWidget()
-                                .value(new BoolValue.Dynamic(() -> value.isInverted(), val -> value.setInverted(val)))
-                                .stateOverlay(ARROW_DOWN_UP)
-                                .addTooltip(0, IKey.lang("bogosort.gui.descending"))
-                                .addTooltip(1, IKey.lang("bogosort.gui.ascending"))
-                                .heightRel(1f)
-                                .width(14)
-                                .pos(0, 0))
-                        .paddingLeft(14)
-                        .child(
-                            new ButtonWidget<>().onMousePressed(button -> refs.removeSelfFromList())
-                                .overlay(
-                                    GuiTextures.CROSS_TINY.asIcon()
-                                        .size(10))
-                                .width(10))));
-
+    private static <T extends SortRule<?>> Map<T, SortableListWidget.Item<T>> getSortListItemMap(Iterable<T> it) {
+        final Map<T, SortableListWidget.Item<T>> items = new Object2ObjectOpenHashMap<>();
+        for (T sortRule : it) {
+            items
+                .put(
+                    sortRule,
+                    new SortableListWidget.Item<>(sortRule).child(
+                        item -> new Row()
+                            .child(
+                                new Widget<>().addTooltipLine(IKey.lang(sortRule.getDescriptionLangKey()))
+                                    .widgetTheme(Theme.BUTTON)
+                                    // .background(GuiTextures.BUTTON_CLEAN)
+                                    .overlay(IKey.lang(sortRule.getNameLangKey()))
+                                    .expanded()
+                                    .heightRel(1f))
+                            .child(
+                                new CycleButtonWidget()
+                                    .value(new BoolValue.Dynamic(sortRule::isInverted, sortRule::setInverted))
+                                    .stateOverlay(ARROW_DOWN_UP)
+                                    .addTooltip(0, IKey.lang("bogosort.gui.descending"))
+                                    .addTooltip(1, IKey.lang("bogosort.gui.ascending"))
+                                    .heightRel(1f)
+                                    .width(14))
+                            .child(
+                                new ButtonWidget<>().onMousePressed(button -> item.removeSelfFromList())
+                                    .overlay(
+                                        GuiTextures.CROSS_TINY.asIcon()
+                                            .size(10))
+                                    .width(10)
+                                    .heightRel(1f))));
         }
+        return items;
+    }
 
+    public IWidget createItemSortConfigUI(ModularPanel mainPanel, ModularGuiContext context) {
+        List<SortRule<ItemStack>> allValues = BogoSortAPI.INSTANCE.getItemSortRuleList();
+        final Map<SortRule<ItemStack>, SortableListWidget.Item<SortRule<ItemStack>>> items = getSortListItemMap(
+            allValues);
         SortableListWidget<SortRule<ItemStack>> sortableListWidget = new SortableListWidget<SortRule<ItemStack>>()
-            .children(BogoSorterConfig.sortRules, ref::get)
-            .debugName("choose_item_rules");
-
+            .children(BogoSorterConfig.sortRules, items::get)
+            .debugName("sortable item list");
         List<List<AvailableElement>> availableMatrix = Grid.mapToMatrix(2, allValues, (index, value) -> {
             AvailableElement availableElement = new AvailableElement().overlay(IKey.lang(value.getNameLangKey()))
                 .tooltip(
@@ -493,7 +493,7 @@ public class ConfigGui extends CustomModularScreen {
                 .margin(2, 2, 2, 2)
                 .onMousePressed(mouseButton1 -> {
                     if (this.availableElements.get(value).available) {
-                        sortableListWidget.child(ref.get(value));
+                        sortableListWidget.child(items.get(value));
                         this.availableElements.get(value).available = false;
                     }
                     return true;
@@ -504,6 +504,18 @@ public class ConfigGui extends CustomModularScreen {
         for (SortRule<ItemStack> value : allValues) {
             this.availableElements.get(value).available = !BogoSorterConfig.sortRules.contains(value);
         }
+        IPanelHandler secPanel = IPanelHandler.simple(mainPanel, (parentPanel, player) -> {
+            ModularPanel panel = new Dialog<>("choose_item_rules").setDisablePanelsBelow(true)
+                .setDraggable(true)
+                .size(200, 140);
+            return panel.child(ButtonWidget.panelCloseButton())
+                .child(
+                    new Grid().matrix(availableMatrix)
+                        .scrollable()
+                        .pos(7, 7)
+                        .right(17)
+                        .bottom(7));
+        }, true);
 
         return new ParentWidget<>().sizeRel(1f, 1f)
             .child(
@@ -524,72 +536,17 @@ public class ConfigGui extends CustomModularScreen {
                     .leftRel(0.5f)
                     .overlay(GuiTextures.ADD)
                     .onMousePressed(mouseButton -> {
-                        if (!isPanelOpen("choose_item_rules")) {
-                            IPanelHandler otherPanel = IPanelHandler.simple(panel, (mainPanel, player) -> {
-                                ModularPanel panel1 = new Dialog<>("choose_item_rules").setDisablePanelsBelow(true)
-                                    .setDraggable(true)
-                                    .size(200, 140);
-                                return panel1.child(
-                                    new ButtonWidget<>().size(8, 8)
-                                        .top(4)
-                                        .right(4)
-                                        .overlay(GuiTextures.CLOSE)
-                                        .onMousePressed(mouseButton1 -> {
-                                            panel1.animateClose();
-                                            return true;
-                                        }))
-                                    .child(
-                                        new Grid().matrix(availableMatrix)
-                                            .scrollable()
-                                            .pos(7, 7)
-                                            .right(17)
-                                            .bottom(7));
-                            }, true);
-                            otherPanel.openPanel();
-                        }
+                        secPanel.openPanel();
                         return true;
                     }));
     }
 
-    public IWidget createNbtSortConfigUI(ModularGuiContext context) {
+    public IWidget createNbtSortConfigUI(ModularPanel mainPanel, ModularGuiContext context) {
         List<NbtSortRule> allValues = BogoSortAPI.INSTANCE.getNbtSortRuleList();
-        final Map<NbtSortRule, SortableListWidget.Item<NbtSortRule>> ref = new Object2ObjectOpenHashMap<>();
-        for (NbtSortRule value : allValues) {
-            TextWidget ruleText = IKey.lang(value.getNameLangKey())
-                .asWidget()
-                .widgetTheme(Theme.BUTTON);
-            ref.put(
-                value,
-                new SortableListWidget.Item<>(value).child(
-                    refs -> new Row().child(
-                        ruleText.paddingLeft(7)
-                            .background(GuiTextures.MC_BUTTON)
-                            .tooltip(
-                                tooltip -> tooltip.addLine(IKey.lang(value.getDescriptionLangKey()))
-                                    .showUpTimer(10))
-                            .size(164, 18))
-                        .child(
-                            new CycleButtonWidget()
-                                .value(new BoolValue.Dynamic(() -> value.isInverted(), val -> value.setInverted(val)))
-                                .stateOverlay(ARROW_DOWN_UP)
-                                .addTooltip(0, IKey.lang("bogosort.gui.descending"))
-                                .addTooltip(1, IKey.lang("bogosort.gui.ascending"))
-                                .heightRel(1f)
-                                .width(14)
-                                .pos(0, 0))
-                        .paddingLeft(14)
-                        .child(
-                            new ButtonWidget<>().onMousePressed(button -> refs.removeSelfFromList())
-                                .overlay(
-                                    GuiTextures.CROSS_TINY.asIcon()
-                                        .size(10))
-                                .width(10))));
-
-        }
-
+        final Map<NbtSortRule, SortableListWidget.Item<NbtSortRule>> items = getSortListItemMap(allValues);
         SortableListWidget<NbtSortRule> sortableListWidget = new SortableListWidget<NbtSortRule>()
-            .children(BogoSorterConfig.nbtSortRules, ref::get)
-            .debugName("choose_nbt_rules");
+            .children(BogoSorterConfig.nbtSortRules, items::get)
+            .debugName("sortable nbt list");
 
         List<List<AvailableElement>> availableMatrix = Grid.mapToMatrix(2, allValues, (index, value) -> {
             AvailableElement availableElement = new AvailableElement().overlay(IKey.lang(value.getNameLangKey()))
@@ -600,7 +557,7 @@ public class ConfigGui extends CustomModularScreen {
                 .margin(2, 2, 2, 2)
                 .onMousePressed(mouseButton1 -> {
                     if (this.availableElementsNbt.get(value).available) {
-                        sortableListWidget.child(ref.get(value));
+                        sortableListWidget.child(items.get(value));
                         this.availableElementsNbt.get(value).available = false;
                     }
                     return true;
@@ -611,6 +568,19 @@ public class ConfigGui extends CustomModularScreen {
         for (NbtSortRule value : allValues) {
             this.availableElementsNbt.get(value).available = !BogoSorterConfig.nbtSortRules.contains(value);
         }
+
+        IPanelHandler secPanel = IPanelHandler.simple(mainPanel, (parentPanel, player) -> {
+            ModularPanel panel = new Dialog<>("choose_nbt_rules").setDisablePanelsBelow(true)
+                .setDraggable(true)
+                .size(200, 140);
+            return panel.child(ButtonWidget.panelCloseButton())
+                .child(
+                    new Grid().matrix(availableMatrix)
+                        .scrollable()
+                        .pos(7, 7)
+                        .right(17)
+                        .bottom(7));
+        }, true);
         return new ParentWidget<>().sizeRel(1f, 1f)
             .child(
                 sortableListWidget
@@ -630,29 +600,7 @@ public class ConfigGui extends CustomModularScreen {
                     .leftRel(0.5f)
                     .overlay(GuiTextures.ADD)
                     .onMousePressed(mouseButton -> {
-                        if (!isPanelOpen("choose_nbt_rules")) {
-                            IPanelHandler otherPanel = IPanelHandler.simple(panel, (mainPanel, player) -> {
-                                ModularPanel panel1 = new Dialog<>("choose_nbt_rules").setDisablePanelsBelow(true)
-                                    .setDraggable(true)
-                                    .size(200, 140);
-                                return panel1.child(
-                                    new ButtonWidget<>().size(8, 8)
-                                        .top(4)
-                                        .right(4)
-                                        .overlay(GuiTextures.CLOSE)
-                                        .onMousePressed(mouseButton1 -> {
-                                            panel1.animateClose();
-                                            return true;
-                                        }))
-                                    .child(
-                                        new Grid().matrix(availableMatrix)
-                                            .scrollable()
-                                            .pos(7, 7)
-                                            .right(17)
-                                            .bottom(7));
-                            }, true);
-                            otherPanel.openPanel();
-                        }
+                        secPanel.openPanel();
                         return true;
                     }));
     }
