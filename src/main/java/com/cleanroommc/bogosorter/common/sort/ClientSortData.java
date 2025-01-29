@@ -19,7 +19,8 @@ public class ClientSortData {
     @SideOnly(Side.CLIENT)
     public static ClientSortData of(ItemStack itemStack, boolean getColor, boolean getName) {
         int color = getColor ? ItemColorHelper.getItemColorHue(itemStack) : 0;
-        String name = getName ? itemStack.getDisplayName() : StringUtils.EMPTY;
+        String name = getName ? (itemStack != null ? itemStack.getDisplayName() : StringUtils.EMPTY)
+            : StringUtils.EMPTY;
         return new ClientSortData(color, name);
     }
 
