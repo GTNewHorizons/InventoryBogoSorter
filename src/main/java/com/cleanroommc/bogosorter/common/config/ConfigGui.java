@@ -29,7 +29,6 @@ import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.screen.CustomModularScreen;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.ModularScreen;
-import com.cleanroommc.modularui.screen.viewport.GuiContext;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.Theme;
 import com.cleanroommc.modularui.utils.Alignment;
@@ -133,7 +132,7 @@ public class ConfigGui extends CustomModularScreen {
         return panel;
     }
 
-    public IWidget createGeneralConfigUI(GuiContext context) {
+    public IWidget createGeneralConfigUI(ModularGuiContext context) {
         Row row = new Row();
         return new ListWidget<>().left(5)
             .right(5)
@@ -395,7 +394,7 @@ public class ConfigGui extends CustomModularScreen {
                             .expanded()));
     }
 
-    public IWidget createProfilesConfig(GuiContext context) {
+    public IWidget createProfilesConfig(ModularGuiContext context) {
         PagedWidget.Controller controller = new PagedWidget.Controller();
         return new ParentWidget<>().widthRel(1f)
             .top(2)
@@ -444,7 +443,7 @@ public class ConfigGui extends CustomModularScreen {
                     .addPage(createNbtSortConfigUI(context)));
     }
 
-    public IWidget createItemSortConfigUI(GuiContext context) {
+    public IWidget createItemSortConfigUI(ModularGuiContext context) {
         List<SortRule<ItemStack>> allValues = BogoSortAPI.INSTANCE.getItemSortRuleList();
         final Map<SortRule<ItemStack>, SortableListWidget.Item<SortRule<ItemStack>>> ref = new Object2ObjectOpenHashMap<>();
 
@@ -552,7 +551,7 @@ public class ConfigGui extends CustomModularScreen {
                     }));
     }
 
-    public IWidget createNbtSortConfigUI(GuiContext context) {
+    public IWidget createNbtSortConfigUI(ModularGuiContext context) {
         List<NbtSortRule> allValues = BogoSortAPI.INSTANCE.getNbtSortRuleList();
         final Map<NbtSortRule, SortableListWidget.Item<NbtSortRule>> ref = new Object2ObjectOpenHashMap<>();
         for (NbtSortRule value : allValues) {
