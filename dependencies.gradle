@@ -38,7 +38,7 @@
  * For more details, see https://docs.gradle.org/8.4/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    api("com.github.GTNewHorizons:ModularUI2:2.2.1-1.7.10:dev")
+    api("com.github.GTNewHorizons:ModularUI2:2.2.2-1.7.10:dev")
     api("com.github.GTNewHorizons:ModularUI:1.2.17:dev")
     api("com.github.GTNewHorizons:GTNHLib:0.6.8:dev")
 
@@ -60,7 +60,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.13.8-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:CodeChickenCore:1.4.1:dev")
     compileOnly("com.github.GTNewHorizons:NotEnoughItems:2.7.27-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.101:dev")
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.105:dev")
     compileOnly("com.github.GTNewHorizons:Botania:1.12.5-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:StorageDrawers:2.1.0-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:Backhand:1.6.7:dev")
