@@ -44,6 +44,7 @@ import moze_intel.projecte.gameObjs.container.AlchBagContainer;
 import moze_intel.projecte.gameObjs.container.AlchChestContainer;
 import moze_intel.projecte.gameObjs.container.CondenserContainer;
 import moze_intel.projecte.gameObjs.container.CondenserMK2Container;
+import tconstruct.armor.inventory.KnapsackContainer;
 import tconstruct.tools.inventory.CraftingStationContainer;
 import tconstruct.tools.inventory.PartCrafterChestContainer;
 import tconstruct.tools.inventory.PatternChestContainer;
@@ -285,6 +286,7 @@ public class DefaultCompat {
 
         if (Tconstruct.isLoaded()) {
             api.addGenericCompat(PatternChestContainer.class);
+            api.addGenericCompat(KnapsackContainer.class);
             api.addCompat(PartCrafterChestContainer.class, (container, builder) -> { builder.addSlotGroup(8, 38, 6); });
             api.addCompat(CraftingStationContainer.class, (container, builder) -> {
                 if (container.inventorySlots.size() > 51) {
