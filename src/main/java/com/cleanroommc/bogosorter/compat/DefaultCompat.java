@@ -7,6 +7,8 @@ import java.util.List;
 
 import net.blay09.mods.cookingforblockheads.container.ContainerCounter;
 import net.blay09.mods.cookingforblockheads.container.ContainerFridge;
+import net.mcft.copy.betterstorage.container.ContainerBetterStorage;
+import net.mcft.copy.betterstorage.container.ContainerCraftingStation;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerHopper;
@@ -317,6 +319,20 @@ public class DefaultCompat {
             api.addCompat(ContainerSafe.class, (container, builder) -> { builder.addSlotGroup(0, 15, 5); });
 
         }
-
+        if (BetterStorage.isLoaded()) {
+            api.addCompat(
+                ContainerCraftingStation.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(18, 36, 9)
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+                });
+            api.addCompat(
+                net.mcft.copy.betterstorage.container.ContainerCrate.class,
+                (container, builder) -> {
+                    builder.addGenericSlotGroup()
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+                });
+            api.addGenericCompat(ContainerBetterStorage.class);
+        }
     }
 }

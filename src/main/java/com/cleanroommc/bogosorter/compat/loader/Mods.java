@@ -11,6 +11,7 @@ public enum Mods {
     AvaritiaAddons("avaritiaddons"),
     Backhand("backhand"),
     Backpack("Backpack"),
+    BetterStorage("betterstorage"),
     Bibliocraft("BiblioCraft"),
     CodeChickenCore("CodeChickenCore"),
     CookingForBlockheads("cookingforblockheads"),
