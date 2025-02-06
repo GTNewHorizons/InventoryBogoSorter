@@ -14,8 +14,10 @@ import com.cleanroommc.bogosorter.common.network.CShortcut;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
 import com.cleanroommc.bogosorter.common.sort.SlotGroup;
+import com.cleanroommc.bogosorter.compat.loader.Mods;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
+import codechicken.lib.inventory.SlotDummy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -56,7 +58,7 @@ public class ShortcutHandler {
             List<ISlot> otherSlots = new ArrayList<>();
             boolean isPlayer = BogoSortAPI.isPlayerSlot(slot);
             for (Slot slot1 : container.inventorySlots) {
-                if (isPlayer != BogoSortAPI.isPlayerSlot(slot1)) {
+                if (isPlayer != BogoSortAPI.isPlayerSlot(slot1) && isPlayer != SlotDummy(slot1)) {
                     otherSlots.add(BogoSortAPI.INSTANCE.getSlot(slot1));
                 }
             }
@@ -179,5 +181,12 @@ public class ShortcutHandler {
             return stack.stackSize == 0 ? null : stack;
         }
         return stack;
+    }
+
+    public static boolean SlotDummy(Slot slot) {
+        if (Mods.CodeChickenCore.isLoaded() && slot instanceof SlotDummy) {
+            return true;
+        }
+        return false;
     }
 }

@@ -12,6 +12,7 @@ public enum Mods {
     Backhand("backhand"),
     Backpack("Backpack"),
     Bibliocraft("BiblioCraft"),
+    CodeChickenCore("CodeChickenCore"),
     CookingForBlockheads("cookingforblockheads"),
     DraconicEvolution("DraconicEvolution"),
     EnderStorage("EnderStorage"),
