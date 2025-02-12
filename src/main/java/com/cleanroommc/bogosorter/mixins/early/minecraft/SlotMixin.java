@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter.mixins.early.minecraft;
 
+import static com.cleanroommc.bogosorter.ShortcutHandler.SetCanTakeStack;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -8,8 +10,10 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
 
 import com.cleanroommc.bogosorter.api.ISlot;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(Slot.class)
 public abstract class SlotMixin implements ISlot {
@@ -105,6 +109,15 @@ public abstract class SlotMixin implements ISlot {
     @Override
     public void bogo$onTake(EntityPlayer player, ItemStack itemStack) {
         bogo$this().onPickupFromSlot(player, itemStack);
+    }
+
+    // Temporary fix #45 until we determine the cause of the issue
+    @ModifyReturnValue(method = "canTakeStack", at = @At("RETURN"))
+    private boolean modifyCanTakeStack(boolean original, EntityPlayer p_82869_1_) {
+        if (!SetCanTakeStack) {
+            return false;
+        }
+        return original;
     }
 
     public Slot bogo$this() {

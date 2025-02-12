@@ -7,6 +7,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.bogosorter.api.ISlot;
@@ -22,6 +23,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ShortcutHandler {
+
+    public static boolean SetCanTakeStack;
 
     @SideOnly(Side.CLIENT)
     public static boolean moveSingleItem(GuiContainer guiContainer, boolean emptySlot) {
@@ -39,6 +42,9 @@ public class ShortcutHandler {
     public static void moveItemStack(EntityPlayer player, Container container, ISlot slot, boolean emptySlot,
         int amount) {
         if (slot == null || slot.bogo$getStack() == null) return;
+        if (!slot.bogo$canTakeStack(player)) {
+            return;
+        }
         ItemStack stack = slot.bogo$getStack();
         amount = Math.min(amount, stack.getMaxStackSize());
         ItemStack toInsert = stack.copy();
@@ -88,6 +94,7 @@ public class ShortcutHandler {
         if (slot == null || !BogoSortAPI.isValidSortable(container)) return false;
         ISlot iSlot = BogoSortAPI.INSTANCE.getSlot(slot);
         if (sameItemOnly && iSlot.bogo$getStack() == null) return false;
+        SetCanTakeStack = false;
         NetworkHandler.sendToServer(
             new CShortcut(
                 sameItemOnly ? CShortcut.Type.MOVE_ALL_SAME : CShortcut.Type.MOVE_ALL,
@@ -185,6 +192,10 @@ public class ShortcutHandler {
 
     public static boolean SlotDummy(Slot slot) {
         if (Mods.CodeChickenCore.isLoaded() && slot instanceof SlotDummy) {
+            return true;
+        }
+        // Prevent items from being moved into the output slot, which leads to them vanishing
+        if (slot instanceof SlotCrafting) {
             return true;
         }
         return false;

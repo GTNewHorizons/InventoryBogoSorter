@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter;
 
+import static com.cleanroommc.bogosorter.ShortcutHandler.SetCanTakeStack;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -279,6 +281,7 @@ public class ClientEventHandler {
                 shortcutAction();
                 return true;
             }
+            SetCanTakeStack = true;
         }
         if (container != null && Keypress(sortKey)) {
             long t = Minecraft.getSystemTime();
