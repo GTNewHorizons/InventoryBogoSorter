@@ -11,10 +11,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.cleanroommc.bogosorter.api.ISlot;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(Slot.class)
 public abstract class SlotMixin implements ISlot {
@@ -113,11 +112,12 @@ public abstract class SlotMixin implements ISlot {
     }
 
     // Temporary fix #45 until we determine the cause of the issue
-    @Inject(method = "canTakeStack", at = @At("HEAD"), cancellable = true)
-    private void modifyCanTakeStack(EntityPlayer p_82869_1_, CallbackInfoReturnable<Boolean> cir) {
+    @ModifyReturnValue(method = "canTakeStack", at = @At("RETURN"))
+    private boolean modifyCanTakeStack(boolean original, EntityPlayer p_82869_1_) {
         if (!SetCanTakeStack) {
-            cir.setReturnValue(false);
+            return false;
         }
+        return original;
     }
 
     public Slot bogo$this() {
