@@ -112,6 +112,7 @@ public abstract class SlotMixin implements ISlot {
         bogo$this().onPickupFromSlot(player, itemStack);
     }
 
+    // Temporary fix #45 until we determine the cause of the issue
     @Inject(method = "canTakeStack", at = @At("HEAD"), cancellable = true)
     private void modifyCanTakeStack(EntityPlayer p_82869_1_, CallbackInfoReturnable<Boolean> cir) {
         if (!SetCanTakeStack) {

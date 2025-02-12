@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ShortcutHandler {
 
-    public static boolean SetCanTakeStack = false;
+    public static boolean SetCanTakeStack;
 
     @SideOnly(Side.CLIENT)
     public static boolean moveSingleItem(GuiContainer guiContainer, boolean emptySlot) {
@@ -42,6 +42,9 @@ public class ShortcutHandler {
     public static void moveItemStack(EntityPlayer player, Container container, ISlot slot, boolean emptySlot,
         int amount) {
         if (slot == null || slot.bogo$getStack() == null) return;
+        if (!slot.bogo$canTakeStack(player)) {
+            return;
+        }
         ItemStack stack = slot.bogo$getStack();
         amount = Math.min(amount, stack.getMaxStackSize());
         ItemStack toInsert = stack.copy();
@@ -191,7 +194,8 @@ public class ShortcutHandler {
         if (Mods.CodeChickenCore.isLoaded() && slot instanceof SlotDummy) {
             return true;
         }
-        if (slot instanceof SlotCrafting){
+        // Prevent items from being moved into the output slot, which leads to them vanishing
+        if (slot instanceof SlotCrafting) {
             return true;
         }
         return false;
