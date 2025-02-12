@@ -39,9 +39,9 @@ public class CShortcut implements IPacket {
         Container container = handler.playerEntity.openContainer;
         if (container == null) throw new IllegalStateException("Expected open container on server");
         ISlot slot = BogoSortAPI.getSlot(container, slotNumber);// container.getSlot(slotNumber);
-        if (!slot.bogo$canTakeStack(handler.playerEntity)) {
-            return null;
-        }
+         if (!slot.bogo$canTakeStack(handler.playerEntity)) {
+         return null;
+         }
         switch (type) {
             case MOVE_ALL:
                 ShortcutHandler.moveAllItems(handler.playerEntity, container, slot, false);
