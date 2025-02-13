@@ -24,6 +24,7 @@ import gregtech.api.items.MetaGeneratedTool;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntListIterator;
+import vazkii.botania.common.item.brew.ItemBrewBase;
 
 public class RefillHandler {
 
@@ -110,12 +111,11 @@ public class RefillHandler {
             return findItem(false);
         } else if (brokenItem.isItemStackDamageable()
             || (Mods.GT5u.isLoaded() && brokenItem.getItem() instanceof GTGenericItem)) {
-                if (Mods.GT5u.isLoaded() && brokenItem.getItem() instanceof MetaGeneratedTool) {
+                if (isExactItem(brokenItem)) {
                     exactItemMatcher = (stack, stack2) -> {
                         if (stack.hasTagCompound() != stack2.hasTagCompound()) return false;
                         if (!stack.hasTagCompound()) return true;
-                        return OreDictHelper.getGtToolMaterial(stack)
-                            .equals(OreDictHelper.getGtToolMaterial(stack2));
+                        return OreDictHelper.getModCompoundTag(brokenItem, stack, stack2);
                     };
                 } else {
                     similarItemMatcher = (stack, stack2) -> stack.getItem() == stack2.getItem();
@@ -125,6 +125,16 @@ public class RefillHandler {
             } else {
                 return findItem(true);
             }
+    }
+
+    private static boolean isExactItem(ItemStack itemStack) {
+        if (Mods.GT5u.isLoaded() && itemStack.getItem() instanceof MetaGeneratedTool) {
+            return true;
+        }
+        if (Mods.Botania.isLoaded() && itemStack.getItem() instanceof ItemBrewBase) {
+            return true;
+        }
+        return false;
     }
 
     private boolean findItem(boolean exactOnly) {

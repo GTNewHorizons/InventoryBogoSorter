@@ -25,6 +25,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import tconstruct.library.util.IToolPart;
+import vazkii.botania.common.item.brew.ItemBrewBase;
 
 public class OreDictHelper {
 
@@ -93,6 +94,18 @@ public class OreDictHelper {
         return MATERIALS.get(item);
     }
 
+    public static boolean getModCompoundTag(ItemStack brokenItem, ItemStack stack, ItemStack stack2) {
+        if (Mods.GT5u.isLoaded() && brokenItem.getItem() instanceof MetaGeneratedTool) {
+            return OreDictHelper.getGtToolMaterial(stack)
+                .equals(OreDictHelper.getGtToolMaterial(stack2));
+        }
+        if (Mods.Botania.isLoaded() && brokenItem.getItem() instanceof ItemBrewBase) {
+            return OreDictHelper.getBotaniabrew(stack)
+                .equals(OreDictHelper.getBotaniabrew(stack2));
+        }
+        return false;
+    }
+
     @Optional.Method(modid = "gregtech")
     @NotNull
     public static String getGtToolMaterial(ItemStack itemStack) {
@@ -102,6 +115,19 @@ public class OreDictHelper {
         }
         if (statsTag.hasKey("PrimaryMaterial")) {
             return statsTag.getString("PrimaryMaterial");
+        }
+        return "";
+    }
+
+    @Optional.Method(modid = "Botania")
+    @NotNull
+    public static String getBotaniabrew(ItemStack itemStack) {
+        NBTTagCompound statsTag = itemStack.stackTagCompound.getCompoundTag("");
+        if (statsTag == null) {
+            return "";
+        }
+        if (statsTag.hasKey("brewKey")) {
+            return statsTag.getString("brewKey");
         }
         return "";
     }

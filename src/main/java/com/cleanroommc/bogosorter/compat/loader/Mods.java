@@ -13,6 +13,7 @@ public enum Mods {
     Backpack("Backpack"),
     BetterStorage("betterstorage"),
     Bibliocraft("BiblioCraft"),
+    Botania("Botania"),
     CodeChickenCore("CodeChickenCore"),
     CookingForBlockheads("cookingforblockheads"),
     DraconicEvolution("DraconicEvolution"),

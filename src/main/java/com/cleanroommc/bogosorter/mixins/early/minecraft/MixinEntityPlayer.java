@@ -1,5 +1,4 @@
-package com.cleanroommc.bogosorter.mixins.early.minecraft;// package
-                                                          // com.cleanroommc.bogosorter.core.mixins.early.minecraft;
+package com.cleanroommc.bogosorter.mixins.early.minecraft;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -10,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.cleanroommc.bogosorter.common.McUtils;
 import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.refill.RefillHandler;
 import com.cleanroommc.bogosorter.core.BogoSorterCore;
@@ -36,14 +36,12 @@ public abstract class MixinEntityPlayer {
         if (!PlayerConfig.get(player).enableAutoRefill) return;
 
         // used in cases where a modded item returns itself with a different durability (AA coffee, Botania Vials, etc)
-        // bug: once it empties, it wont refill with the same type
-        if (returnedItem != null && (returnedItem.getItem() == itemInUse.getItem())) {
+        if (McUtils.areItemsEqualIgnoreDurability(returnedItem, itemInUse)) {
             return;
         }
 
         if (RefillHandler.shouldHandleRefill(player, itemInUse, true)) {
             boolean didSwap = RefillHandler.handle(player.inventory.currentItem, itemInUse, player, false);
-            // new RefillHandler(player.inventory.currentItem, activeItemStackCopy, player).handleRefill();
             if (didSwap && returnedItem != null) {
                 if (!player.inventory.addItemStackToInventory(returnedItem)) {
                     BogoSorterCore.LOGGER.info("Dropping item that does not fit");
