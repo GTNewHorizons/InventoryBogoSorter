@@ -122,14 +122,12 @@ public class OreDictHelper {
     @Optional.Method(modid = "Botania")
     @NotNull
     public static String getBotaniabrew(ItemStack itemStack) {
-        NBTTagCompound statsTag = itemStack.stackTagCompound.getCompoundTag("");
+        NBTTagCompound statsTag = itemStack.getTagCompound();
         if (statsTag == null) {
             return "";
         }
-        if (statsTag.hasKey("brewKey")) {
-            return statsTag.getString("brewKey");
-        }
-        return "";
+        String Tag = statsTag.getString("brewKey");
+        return Tag;
     }
 
     public static String getOrePrefix(ItemStack item) {
