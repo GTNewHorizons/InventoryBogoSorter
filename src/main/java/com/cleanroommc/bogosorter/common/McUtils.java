@@ -104,4 +104,21 @@ public class McUtils {
 
         soundHandler.playSound(record);
     }
+
+    public static boolean areItemsEqualIgnoreDurability(ItemStack stackA, ItemStack stackB) {
+        if (stackA == stackB) {
+            return true;
+        } else {
+            return stackA != null && stackB != null ? isItemEqualIgnoreDurability(stackA, stackB) : false;
+        }
+    }
+
+    public static boolean isItemEqualIgnoreDurability(ItemStack stackA, ItemStack stackB) {
+        if (!stackA.isItemStackDamageable()) {
+            return stackA.isItemEqual(stackB);
+        } else {
+            return stackA != null && stackB != null && stackA.field_151002_e == stackB.field_151002_e;
+        }
+    }
+
 }

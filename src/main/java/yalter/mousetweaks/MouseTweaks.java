@@ -27,7 +27,7 @@ import yalter.mousetweaks.config.OldConfig;
     modid = MouseTweaks.MOD_ID,
     name = MouseTweaks.MOD_NAME,
     version = BogoSorter.VERSION,
-    dependencies = "required-after:gtnhlib@[0.5.16,);",
+    dependencies = "required-after:gtnhlib@[0.6.1,);",
     acceptedMinecraftVersions = "[1.7.10]",
     acceptableRemoteVersions = "*")
 public class MouseTweaks {
