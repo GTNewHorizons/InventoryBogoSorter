@@ -222,7 +222,8 @@ public class UsageTicker {
                 ItemStack invStack = player.inventory.getStackInSlot(i);
                 if (invStack == null) continue;
 
-                if (invStack.isItemEqual(stack) && invStack.getItemDamage() == stack.getItemDamage()) {
+                if (invStack.isItemEqual(stack) && invStack.areItemStackTagsEqual(invStack, stack)
+                    && invStack.getItemDamage() == stack.getItemDamage()) {
                     total += invStack.stackSize;
                 }
             }
