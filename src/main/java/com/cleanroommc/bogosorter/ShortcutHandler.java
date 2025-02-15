@@ -42,9 +42,6 @@ public class ShortcutHandler {
     public static void moveItemStack(EntityPlayer player, Container container, ISlot slot, boolean emptySlot,
         int amount) {
         if (slot == null || slot.bogo$getStack() == null) return;
-        if (!slot.bogo$canTakeStack(player)) {
-            return;
-        }
         ItemStack stack = slot.bogo$getStack();
         amount = Math.min(amount, stack.getMaxStackSize());
         ItemStack toInsert = stack.copy();
