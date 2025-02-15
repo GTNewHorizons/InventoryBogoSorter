@@ -114,7 +114,7 @@ public abstract class SlotMixin implements ISlot {
     // Temporary fix #45 until we determine the cause of the issue
     @ModifyReturnValue(method = "canTakeStack", at = @At("RETURN"))
     private boolean modifyCanTakeStack(boolean original, EntityPlayer p_82869_1_) {
-        if (!SetCanTakeStack) {
+        if (p_82869_1_.worldObj.isRemote && !SetCanTakeStack) {
             return false;
         }
         return original;
