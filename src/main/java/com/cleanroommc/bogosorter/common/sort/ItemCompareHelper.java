@@ -18,7 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
@@ -40,6 +39,8 @@ public class ItemCompareHelper {
     private static final Pattern PIPE_PATTERN = Pattern.compile(".*Pipe([A-Z].*)?");
     private static final Pattern CABLE_PATTERN = Pattern.compile(".*Cable([A-Z].*)?");
     private static final Pattern WIRE_PATTERN = Pattern.compile(".*Wire([A-Z].*)?");
+    private static final Pattern FORMATTING_PATTERN = Pattern
+        .compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
 
     public static String getMod(ItemStack item) {
         String loc = item.getItem().delegate.name();
@@ -109,8 +110,14 @@ public class ItemCompareHelper {
 
     @SuppressWarnings("all")
     public static int compareFormattedString(String s1, String s2) {
-        return EnumChatFormatting.getTextWithoutFormattingCodes(s1)
-            .compareTo(EnumChatFormatting.getTextWithoutFormattingCodes(s2));
+        return getTextWithoutFormattingCodes(s1).compareTo(getTextWithoutFormattingCodes(s2));
+    }
+
+    // used for display name formatting on client AND server; 1.7 is client only, 1.12 is on both
+    private static String getTextWithoutFormattingCodes(String str) {
+        return str == null ? null
+            : FORMATTING_PATTERN.matcher(str)
+                .replaceAll("");
     }
 
     public static int compareMeta(ItemStack stack1, ItemStack stack2) {
