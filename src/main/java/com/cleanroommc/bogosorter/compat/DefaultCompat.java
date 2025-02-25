@@ -209,6 +209,10 @@ public class DefaultCompat {
             api.addCompat(ContainerToolbox.class, (container, builder) -> { builder.addSlotGroup(0, 9, 9); });
         }
 
+        if (IC2Classic.isLoaded()) {
+            api.addGenericCompat(ContainerPersonalChest.class);
+        }
+
         if (Bibliocraft.isLoaded()) {
             api.addCompat(
                 ContainerFramedChest.class,
