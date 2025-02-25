@@ -26,7 +26,16 @@ public enum Mods {
     GT6(() -> Loader.isModLoaded("gregtech") && Loader.isModLoaded("gregapi")),
     GalacticraftCore("galacticraftcore"),
     HBM("hbm"),
-    IC2("IC2"),
+    IC2(() -> Loader.isModLoaded("IC2") && !Loader.instance()
+        .getIndexedModList()
+        .get("IC2")
+        .getName()
+        .endsWith("Classic")),
+    IC2Classic(() -> Loader.isModLoaded("IC2") && Loader.instance()
+        .getIndexedModList()
+        .get("IC2")
+        .getName()
+        .endsWith("Classic")),
     ImmersiveEngineering("ImmersiveEngineering"),
     IronChest("IronChest"),
     Mekanism("Mekanism"),
