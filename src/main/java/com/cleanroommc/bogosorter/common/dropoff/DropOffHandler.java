@@ -21,6 +21,7 @@ public class DropOffHandler {
     public static boolean dropoffChatMessage = true;
     public static int dropoffQuotaInMS = 1;
     public static int dropoffPacketThrottleInMS = 500;
+    public static String dropoffTargetNames = "*Chest*, *Barrel*, *Drawer*, *Crate*";
 
     public DropOffHandler(InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;

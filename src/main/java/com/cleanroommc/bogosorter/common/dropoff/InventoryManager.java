@@ -175,10 +175,7 @@ public class InventoryManager {
     }
 
     private boolean isInventoryNameValid(String name) {
-        List<String> containerNames = new ArrayList<>();
-        containerNames.add("*Chest*");
-        containerNames.add("*Barrel*");
-        containerNames.add("*Drawer*");
+        String[] containerNames = DropOffHandler.dropoffTargetNames.split(",");
 
         for (String containerName : containerNames) {
             String regex = containerName.replace("*", ".*")
