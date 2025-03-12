@@ -71,16 +71,15 @@ public enum Mixins {
         .setPhase(Phase.LATE)
         .addMixinClasses("appliedenergistics.MixinAEBaseGui")),
 
-    CompactStorage(new Builder(" Compact Storage").addTargetedMod(TargetedMod.CompactStorage)
+    CompactStorage(new Builder("Compact Storage").addTargetedMod(TargetedMod.CompactStorage)
         .setSide(Side.BOTH)
         .setPhase(Phase.LATE)
         .addMixinClasses("compactstorage.MixinContainerChest", "compactstorage.MixinContainerChestBuilder")),
 
-    EtFuturum(new Builder(" EtFuturum").addTargetedMod(TargetedMod.Etfuturum)
+    EtFuturum(new Builder("EtFuturum").addTargetedMod(TargetedMod.Etfuturum)
         .setSide(Side.BOTH)
         .setPhase(Phase.LATE)
-        .addMixinClasses("etfuturum.MixinContainerChestGeneric")),
-    ;
+        .addMixinClasses("etfuturum.MixinContainerChestGeneric")),;
 
     private final List<String> mixinClasses;
     private final Supplier<Boolean> applyIf;
