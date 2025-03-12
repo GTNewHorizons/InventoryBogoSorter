@@ -37,7 +37,6 @@ import de.eydamos.backpack.inventory.container.ContainerAdvanced;
 import forestry.core.gui.ContainerNaturalistInventory;
 import forestry.storage.gui.ContainerBackpack;
 import forestry.storage.gui.ContainerNaturalistBackpack;
-import ganymedes01.etfuturum.inventory.ContainerChestGeneric;
 import ic2.core.block.personal.ContainerPersonalChest;
 import ic2.core.item.tool.ContainerToolbox;
 import jds.bibliocraft.blocks.ContainerFramedChest;
@@ -120,25 +119,6 @@ public class DefaultCompat {
             api.addCompat(
                 com.darkona.adventurebackpack.inventory.ContainerBackpack.class,
                 (container, builder) -> { builder.addSlotGroup(36, 84, 8); });
-        }
-
-        if (Etfuturum.isLoaded()) {
-            api.addCompat(
-                ContainerChestGeneric.class,
-                (container, builder) -> {
-                    builder.addSlotGroup(
-                        0,
-                        container.getLowerChestInventory()
-                            .getSizeInventory(),
-                        container.getRowSize());
-                });
-            api.addPlayerSortButtonPosition(ContainerChestGeneric.class, (slotGroup, buttonPos) -> {
-                if (IronChest.isLoaded()) {
-                    IPosSetter.TOP_RIGHT_VERTICAL.setButtonPos(slotGroup, buttonPos);
-                } else {
-                    IPosSetter.TOP_RIGHT_HORIZONTAL.setButtonPos(slotGroup, buttonPos);
-                }
-            });
         }
 
         if (ProjectE.isLoaded()) {
