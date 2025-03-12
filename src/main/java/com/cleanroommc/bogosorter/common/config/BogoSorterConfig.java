@@ -104,7 +104,8 @@ public class BogoSorterConfig {
             DropOffHandler.dropoffChatMessage = JsonHelper.getBoolean(general, true, "dropoffChatMessage");
             DropOffHandler.dropoffQuotaInMS = JsonHelper.getInt(general, 1, "dropoffQuotaInMS");
             DropOffHandler.dropoffPacketThrottleInMS = JsonHelper.getInt(general, 500, "dropoffPacketThrottleInMS");
-            DropOffHandler.dropoffTargetNames = JsonHelper.getString(general, "*Chest*, *Barrel*, *Drawer*, *Crate*", "dropoffTargetNames");
+            DropOffHandler.dropoffTargetNames = JsonHelper
+                .getString(general, "*Chest*, *Barrel*, *Drawer*, *Crate*", "dropoffTargetNames");
             DropOffButtonHandler.showButton = JsonHelper.getBoolean(general, true, "dropoffButtonShow");
             DropOffButtonHandler.buttonX = JsonHelper.getInt(general, 160, "dropoffButtonX");
             DropOffButtonHandler.buttonY = JsonHelper.getInt(general, 5, "dropoffButtonY");
