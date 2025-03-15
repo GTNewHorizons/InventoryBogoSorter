@@ -23,7 +23,7 @@ public class LocalizationHelper {
     /**
      * Gets the English translation (name) for an ItemStack, checking mod translations first.
      */
-    public static String getEnglishNameForItemStack(ItemStack itemStack) {
+    public static String getDisplayNameEnglish(ItemStack itemStack) {
         String unlocalizedName = itemStack.getUnlocalizedName() + ".name";
 
         // Check each mod's language file for the translation
