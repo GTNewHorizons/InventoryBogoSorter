@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter.common.dropoff;
 
+import static com.cleanroommc.bogosorter.common.dropoff.LocalizationHelper.getDisplayNameEnglish;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -145,8 +147,8 @@ public class InventoryManager {
         if (inventory instanceof TileEntity) {
             TileEntity entity = (TileEntity) inventory;
             ItemStack itemStack = new ItemStack(entity.getBlockType(), 1, entity.getBlockMetadata());
-
-            return itemStack.getDisplayName();
+            // Always return English name for blocks even if the game is in another language
+            return getDisplayNameEnglish(itemStack);
         }
 
         return StatCollector.translateToLocal(inventory.getInventoryName());
