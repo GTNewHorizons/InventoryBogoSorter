@@ -1,5 +1,6 @@
 package net.blay09.mods.craftingtweaks.client;
 
+import java.awt.Point;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -19,8 +20,7 @@ public class GuiTweakButton extends GuiImageButton implements ITooltipProvider {
     private final TweakOption tweakOption;
     private final int tweakId;
     private final GuiContainer parentGui;
-    private int lastGuiLeft;
-    private int lastGuiTop;
+    private final Point relativePosition;
 
     public GuiTweakButton(GuiContainer parentGui, int xPosition, int yPosition, int texCoordX, int texCoordY,
         TweakOption tweakOption, int tweakId) {
@@ -28,6 +28,12 @@ public class GuiTweakButton extends GuiImageButton implements ITooltipProvider {
         this.parentGui = parentGui;
         this.tweakOption = tweakOption;
         this.tweakId = tweakId;
+        this.relativePosition = new Point(xPosition, yPosition);
+
+        if (this.parentGui != null) {
+            this.xPosition = this.relativePosition.x + parentGui.guiLeft;
+            this.yPosition = this.relativePosition.y + parentGui.guiTop;
+        }
     }
 
     public TweakOption getTweakOption() {
@@ -39,41 +45,21 @@ public class GuiTweakButton extends GuiImageButton implements ITooltipProvider {
     }
 
     @Override
-    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        int oldX = xPosition;
-        int oldY = yPosition;
-        // If parentGui is set, we only store the relative position in the button for mods that do hacky things where
-        // guiLeft/guiTop constantly changes
-        if (parentGui != null) {
-            xPosition += lastGuiLeft;
-            yPosition += lastGuiTop;
-        }
-        boolean result = super.mousePressed(mc, mouseX, mouseY);
-        xPosition = oldX;
-        yPosition = oldY;
-        return result;
-    }
-
-    @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        int oldX = xPosition;
-        int oldY = yPosition;
         // If parentGui is set, we only store the relative position in the button for mods that do hacky things where
         // guiLeft/guiTop constantly changes
         if (parentGui != null) {
-            lastGuiLeft = parentGui.guiLeft;
-            lastGuiTop = parentGui.guiTop;
-            xPosition += lastGuiLeft;
-            yPosition += lastGuiTop;
+            this.xPosition = this.relativePosition.x + parentGui.guiLeft;
+            this.yPosition = this.relativePosition.y + parentGui.guiTop;
         }
+
         int oldTexCoordX = texCoordX;
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
             texCoordX += 48;
         }
+
         super.drawButton(mc, mouseX, mouseY);
         texCoordX = oldTexCoordX;
-        xPosition = oldX;
-        yPosition = oldY;
     }
 
     @Override
