@@ -334,8 +334,8 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public void onActionPerformed(GuiScreenEvent.ActionPerformedEvent.Pre event) {
-        if (event.button instanceof GuiTweakButton) {
-            event.button.func_146113_a(
+        if (event.button instanceof GuiTweakButton tweakButton) {
+            tweakButton.func_146113_a(
                 Minecraft.getMinecraft()
                     .getSoundHandler());
             EntityPlayer entityPlayer = FMLClientHandler.instance()
@@ -343,53 +343,34 @@ public class ClientProxy extends CommonProxy {
             Container container = entityPlayer.openContainer;
             TweakProvider provider = CraftingTweaks.instance.getProvider(container);
             boolean isShiftDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
-            switch (((GuiTweakButton) event.button).getTweakOption()) {
+            switch (tweakButton.getTweakOption()) {
                 case Rotate:
                     if (CraftingTweaks.isServerSideInstalled) {
-                        NetworkHandler.instance
-                            .sendToServer(new MessageRotate(((GuiTweakButton) event.button).getTweakId(), isShiftDown));
+                        NetworkHandler.instance.sendToServer(new MessageRotate(tweakButton.getTweakId(), isShiftDown));
                     } else {
-                        clientProvider.rotateGrid(
-                            provider,
-                            entityPlayer,
-                            container,
-                            ((GuiTweakButton) event.button).getTweakId(),
-                            isShiftDown);
+                        clientProvider
+                            .rotateGrid(provider, entityPlayer, container, tweakButton.getTweakId(), isShiftDown);
                     }
                     event.setCanceled(true);
                     break;
                 case Balance:
                     if (CraftingTweaks.isServerSideInstalled) {
-                        NetworkHandler.instance.sendToServer(
-                            new MessageBalance(((GuiTweakButton) event.button).getTweakId(), isShiftDown));
+                        NetworkHandler.instance.sendToServer(new MessageBalance(tweakButton.getTweakId(), isShiftDown));
                     } else {
                         if (isShiftDown) {
-                            clientProvider.spreadGrid(
-                                provider,
-                                entityPlayer,
-                                container,
-                                ((GuiTweakButton) event.button).getTweakId());
+                            clientProvider.spreadGrid(provider, entityPlayer, container, tweakButton.getTweakId());
                         } else {
-                            clientProvider.balanceGrid(
-                                provider,
-                                entityPlayer,
-                                container,
-                                ((GuiTweakButton) event.button).getTweakId());
+                            clientProvider.balanceGrid(provider, entityPlayer, container, tweakButton.getTweakId());
                         }
                     }
                     event.setCanceled(true);
                     break;
                 case Clear:
                     if (CraftingTweaks.isServerSideInstalled) {
-                        NetworkHandler.instance
-                            .sendToServer(new MessageClear(((GuiTweakButton) event.button).getTweakId(), isShiftDown));
+                        NetworkHandler.instance.sendToServer(new MessageClear(tweakButton.getTweakId(), isShiftDown));
                     } else {
-                        clientProvider.clearGrid(
-                            provider,
-                            entityPlayer,
-                            container,
-                            ((GuiTweakButton) event.button).getTweakId(),
-                            isShiftDown);
+                        clientProvider
+                            .clearGrid(provider, entityPlayer, container, tweakButton.getTweakId(), isShiftDown);
                     }
                     event.setCanceled(true);
                     break;
