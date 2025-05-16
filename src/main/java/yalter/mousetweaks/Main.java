@@ -119,13 +119,13 @@ public class Main {
         if (mouseState.isButtonPressed(MouseButton.RIGHT)) {
             if (!oldRMBDown) firstRightClickedSlot = selectedSlot;
 
-            if (MTConfig.rmbTweak && handler.disableRMBDraggingFunctionality()) {
+            if (MTConfig.rmbTweak && !handler.isCraftingOutput(firstRightClickedSlot)
+                && handler.disableRMBDraggingFunctionality()) {
                 // Check some conditions to see if we really need to click the first slot.
                 if (firstRightClickedSlot != null
                     // This condition is here to prevent double-clicking.
                     && (firstRightClickedSlot != selectedSlot || oldSelectedSlot == selectedSlot)
-                    && !handler.isIgnored(firstRightClickedSlot)
-                    && !handler.isCraftingOutput(firstRightClickedSlot)) {
+                    && !handler.isIgnored(firstRightClickedSlot)) {
                     ItemStack targetStack = firstRightClickedSlot.getStack();
                     ItemStack stackOnMouse = Minecraft.getMinecraft().thePlayer.inventory.getItemStack();
 
@@ -199,7 +199,6 @@ public class Main {
                 }
             }
         }
-
         handleWheel(selectedSlot);
     }
 
@@ -207,6 +206,7 @@ public class Main {
         if (!isMouseWheelTransferActive() || disableWheelForThisContainer) {
             return;
         }
+
         int wheel = mouseState.consumeScrollAmount();
         if ((wheel != 0) && (selectedSlot != null)) {
             int numItemsToMove = Math.abs(wheel);
