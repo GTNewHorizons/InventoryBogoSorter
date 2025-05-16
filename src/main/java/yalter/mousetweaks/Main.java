@@ -119,12 +119,12 @@ public class Main {
         if (mouseState.isButtonPressed(MouseButton.RIGHT)) {
             if (!oldRMBDown) firstRightClickedSlot = selectedSlot;
 
-            if (MTConfig.rmbTweak && !handler.isCraftingOutput(firstRightClickedSlot)
+            if (MTConfig.rmbTweak && firstRightClickedSlot != null
+                && !handler.isCraftingOutput(firstRightClickedSlot)
                 && handler.disableRMBDraggingFunctionality()) {
                 // Check some conditions to see if we really need to click the first slot.
-                if (firstRightClickedSlot != null
-                    // This condition is here to prevent double-clicking.
-                    && (firstRightClickedSlot != selectedSlot || oldSelectedSlot == selectedSlot)
+                // This condition is here to prevent double-clicking.
+                if ((firstRightClickedSlot != selectedSlot || oldSelectedSlot == selectedSlot)
                     && !handler.isIgnored(firstRightClickedSlot)) {
                     ItemStack targetStack = firstRightClickedSlot.getStack();
                     ItemStack stackOnMouse = Minecraft.getMinecraft().thePlayer.inventory.getItemStack();
