@@ -206,7 +206,6 @@ public class Main {
         if (!isMouseWheelTransferActive() || disableWheelForThisContainer) {
             return;
         }
-
         int wheel = mouseState.consumeScrollAmount();
         if ((wheel != 0) && (selectedSlot != null)) {
             int numItemsToMove = Math.abs(wheel);
