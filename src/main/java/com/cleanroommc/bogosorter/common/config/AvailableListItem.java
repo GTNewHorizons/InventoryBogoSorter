@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.layout.ILayoutWidget;
 import com.cleanroommc.modularui.api.widget.IWidget;
-import com.cleanroommc.modularui.drawable.DrawableArray;
+import com.cleanroommc.modularui.drawable.DrawableStack;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
@@ -81,7 +81,7 @@ public class AvailableListItem<T> extends Widget<AvailableListItem<T>> implement
         } else if (unavailableTexture.length == 1) {
             this.unavailableTexture = unavailableTexture[0];
         } else {
-            this.unavailableTexture = new DrawableArray(unavailableTexture);
+            this.unavailableTexture = new DrawableStack(unavailableTexture);
         }
         return this;
     }
@@ -92,7 +92,7 @@ public class AvailableListItem<T> extends Widget<AvailableListItem<T>> implement
         } else if (availableTexture.length == 1) {
             this.availableTexture = availableTexture[0];
         } else {
-            this.availableTexture = new DrawableArray(availableTexture);
+            this.availableTexture = new DrawableStack(availableTexture);
         }
         return this;
     }
