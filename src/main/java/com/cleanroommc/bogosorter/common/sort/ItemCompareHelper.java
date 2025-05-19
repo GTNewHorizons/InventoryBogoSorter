@@ -44,13 +44,13 @@ public class ItemCompareHelper {
 
     public static String getMod(ItemStack item) {
         String loc = item.getItem().delegate.name();
-        if (loc == null) throw new IllegalStateException("Item doesn't have a registry name!");
+        if (loc == null) return "";
         return loc.split(":")[0].toLowerCase();
     }
 
     public static String getId(ItemStack item) {
         String loc = item.getItem().delegate.name();
-        if (loc == null) throw new IllegalStateException("Item doesn't have a registry name!");
+        if (loc == null) return "";
         return loc.split(":")[1].toLowerCase();
     }
 
