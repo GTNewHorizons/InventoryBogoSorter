@@ -60,12 +60,12 @@ public class ClientEventHandler {
     public static final List<ItemStack> allItems = new ArrayList<>();
     public static final KeyBinding configGuiKey = new KeyBinding(
         "key.sort_config",
-        Keyboard.KEY_K,
+        Keyboard.KEY_NONE,
         "key.categories.bogosorter");
     public static final KeyBinding sortKey = new KeyBinding("key.sort", -98, "key.categories.bogosorter");
     public static final KeyBinding dropoffKey = new KeyBinding(
         "key.dropoff",
-        Keyboard.KEY_SEMICOLON,
+        Keyboard.KEY_NONE,
         "key.categories.bogosorter");
     public static final boolean isDeobfuscatedEnvironment = (boolean) Launch.blackboard
         .get("fml.deobfuscatedEnvironment");
