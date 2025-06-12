@@ -1,6 +1,7 @@
 package com.cleanroommc.bogosorter.common.sort;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
@@ -8,7 +9,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 import org.jetbrains.annotations.NotNull;
@@ -151,10 +154,17 @@ public class ButtonHandler {
         public void drawTooltip(int mouseX, int mouseY) {
             if (this.enabled && this.field_146123_n) {
                 GuiScreen guiScreen = Objects.requireNonNull(Minecraft.getMinecraft().currentScreen);
-                guiScreen.func_146283_a(
-                    Collections.singletonList(I18n.format(this.sort ? "key.sort" : "key.sort_config")),
-                    mouseX,
-                    mouseY);
+                final List<String> tooltipLines = new ArrayList<>(2);
+                if (this.sort) {
+                    tooltipLines.add(I18n.format("key.sort"));
+                    tooltipLines.add(
+                        EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
+                            + " : "
+                            + GameSettings.getKeyDisplayString(ClientEventHandler.sortKey.getKeyCode()));
+                } else {
+                    tooltipLines.add(I18n.format("key.sort_config"));
+                }
+                guiScreen.func_146283_a(tooltipLines, mouseX, mouseY);
             }
         }
     }
