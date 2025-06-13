@@ -1,6 +1,6 @@
 package com.cleanroommc.bogosorter.common.dropoff;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,8 +10,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.util.EnumChatFormatting;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
@@ -116,14 +119,17 @@ public class DropOffInvButton extends GuiButton {
         // dont play click sound
     }
 
-    private static final List<String> TOOLTIP = Arrays.asList(
-        I18n.format("key.dropoff.tooltip")
-            .split(System.lineSeparator()));
-
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.enabled && this.field_146123_n) {
+            final List<String> tooltipLines = new ArrayList<>(3);
+            tooltipLines.add(I18n.format("key.dropoff.tooltip1"));
+            tooltipLines.add(I18n.format("key.dropoff.tooltip2"));
+            tooltipLines.add(
+                EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
+                    + " : "
+                    + GameSettings.getKeyDisplayString(ClientEventHandler.dropoffKey.getKeyCode()));
             GuiScreen guiScreen = Objects.requireNonNull(Minecraft.getMinecraft().currentScreen);
-            guiScreen.func_146283_a(TOOLTIP, mouseX, mouseY);
+            guiScreen.func_146283_a(tooltipLines, mouseX, mouseY);
         }
     }
 }
