@@ -14,10 +14,7 @@ import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
-import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
-import com.cleanroommc.bogosorter.common.dropoff.DropOffButtonHandler;
-import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
@@ -47,6 +44,7 @@ import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
+import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
@@ -90,7 +88,6 @@ public class ConfigGui extends CustomModularScreen {
             public void onClose() {
                 super.onClose();
                 Serializer.saveConfig();
-                PlayerConfig.syncToServer();
                 MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
             }
         }.size(300, 250)
@@ -152,8 +149,8 @@ public class ConfigGui extends CustomModularScreen {
                         new CycleButtonWidget()
                             .value(
                                 new BoolValue.Dynamic(
-                                    () -> PlayerConfig.getClient().enableHotbarSort,
-                                    val -> PlayerConfig.getClient().enableHotbarSort = val))
+                                    () -> BogoSorterConfig.enableHotbarSort,
+                                    val -> BogoSorterConfig.enableHotbarSort = val))
                             .stateOverlay(TOGGLE_BUTTON)
                             .disableHoverBackground()
                             .size(14, 14)
@@ -173,8 +170,8 @@ public class ConfigGui extends CustomModularScreen {
                         new CycleButtonWidget()
                             .value(
                                 new BoolValue.Dynamic(
-                                    () -> PlayerConfig.getClient().enableAutoRefill,
-                                    val -> PlayerConfig.getClient().enableAutoRefill = val))
+                                    () -> BogoSorterConfig.enableAutoRefill,
+                                    val -> BogoSorterConfig.enableAutoRefill = val))
                             .stateOverlay(TOGGLE_BUTTON)
                             .disableHoverBackground()
                             .size(14, 14)
@@ -198,8 +195,8 @@ public class ConfigGui extends CustomModularScreen {
                         new TextFieldWidget()
                             .value(
                                 new IntValue.Dynamic(
-                                    () -> PlayerConfig.getClient().autoRefillDamageThreshold,
-                                    val -> PlayerConfig.getClient().autoRefillDamageThreshold = val))
+                                    () -> BogoSorterConfig.autoRefillDamageThreshold,
+                                    val -> BogoSorterConfig.autoRefillDamageThreshold = val))
                             .setNumbers(0, Short.MAX_VALUE)
                             .setTextAlignment(Alignment.Center)
                             .setTextColor(IKey.TEXT_COLOR)
@@ -216,7 +213,10 @@ public class ConfigGui extends CustomModularScreen {
                     .margin(0, 2)
                     .child(
                         new CycleButtonWidget()
-                            .value(new BoolValue.Dynamic(HotbarSwap::isEnabled, HotbarSwap::setEnabled))
+                            .value(
+                                new BoolValue.Dynamic(
+                                    () -> BogoSorterConfig.enableHotbarSwap,
+                                    val -> BogoSorterConfig.enableHotbarSwap = val))
                             .stateOverlay(TOGGLE_BUTTON)
                             .disableHoverBackground()
                             .addTooltipLine(IKey.lang("bogosort.gui.hotbar_scrolling.tooltip"))
@@ -239,8 +239,8 @@ public class ConfigGui extends CustomModularScreen {
                         new CycleButtonWidget()
                             .value(
                                 new BoolValue.Dynamic(
-                                    () -> DropOffHandler.enableDropOff,
-                                    val -> DropOffHandler.enableDropOff = val))
+                                    () -> BogoSorterConfig.dropOff.enableDropOff,
+                                    val -> BogoSorterConfig.dropOff.enableDropOff = val))
                             .stateOverlay(TOGGLE_BUTTON)
                             .disableHoverBackground()
                             .size(14, 14)
@@ -260,8 +260,8 @@ public class ConfigGui extends CustomModularScreen {
                         new CycleButtonWidget()
                             .value(
                                 new BoolValue.Dynamic(
-                                    () -> DropOffButtonHandler.showButton,
-                                    val -> DropOffButtonHandler.showButton = val))
+                                    () -> BogoSorterConfig.dropOff.button.showButton,
+                                    val -> BogoSorterConfig.dropOff.button.showButton = val))
                             .stateOverlay(TOGGLE_BUTTON)
                             .disableHoverBackground()
                             .size(14, 14)
@@ -281,8 +281,8 @@ public class ConfigGui extends CustomModularScreen {
                         new CycleButtonWidget()
                             .value(
                                 new BoolValue.Dynamic(
-                                    () -> DropOffHandler.dropoffRender,
-                                    val -> DropOffHandler.dropoffRender = val))
+                                    () -> BogoSorterConfig.dropOff.dropoffRender,
+                                    val -> BogoSorterConfig.dropOff.dropoffRender = val))
                             .stateOverlay(TOGGLE_BUTTON)
                             .disableHoverBackground()
                             .size(14, 14)
@@ -302,8 +302,8 @@ public class ConfigGui extends CustomModularScreen {
                         new CycleButtonWidget()
                             .value(
                                 new BoolValue.Dynamic(
-                                    () -> DropOffHandler.dropoffChatMessage,
-                                    val -> DropOffHandler.dropoffChatMessage = val))
+                                    () -> BogoSorterConfig.dropOff.dropoffChatMessage,
+                                    val -> BogoSorterConfig.dropOff.dropoffChatMessage = val))
                             .stateOverlay(TOGGLE_BUTTON)
                             .disableHoverBackground()
                             .size(14, 14)
@@ -319,15 +319,17 @@ public class ConfigGui extends CustomModularScreen {
                 new Row().widthRel(1f)
                     .height(14)
                     .margin(0, 2)
-                    .child(new CycleButtonWidget().value(new BoolValue.Dynamic(() -> UsageTicker.enableModule, val -> {
-                        UsageTicker.enableModule = val;
-                        UsageTicker.reloadElements();
-                    }))
-                        .stateOverlay(TOGGLE_BUTTON)
-                        .disableHoverBackground()
-                        .size(14, 14)
-                        .margin(8, 0)
-                        .background(IDrawable.EMPTY))
+                    .child(
+                        new CycleButtonWidget()
+                            .value(new BoolValue.Dynamic(() -> BogoSorterConfig.usageTicker.enableModule, val -> {
+                                BogoSorterConfig.usageTicker.enableModule = val;
+                                UsageTicker.reloadElements();
+                            }))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
                     .child(
                         IKey.lang("bogosort.gui.usageticker_enable")
                             .asWidget()
@@ -339,10 +341,11 @@ public class ConfigGui extends CustomModularScreen {
                     .height(14)
                     .margin(0, 2)
                     .child(
-                        new CycleButtonWidget().value(new BoolValue.Dynamic(() -> UsageTicker.enableMainHand, val -> {
-                            UsageTicker.enableMainHand = val;
-                            UsageTicker.reloadElements();
-                        }))
+                        new CycleButtonWidget()
+                            .value(new BoolValue.Dynamic(() -> BogoSorterConfig.usageTicker.enableMainHand, val -> {
+                                BogoSorterConfig.usageTicker.enableMainHand = val;
+                                UsageTicker.reloadElements();
+                            }))
                             .stateOverlay(TOGGLE_BUTTON)
                             .disableHoverBackground()
                             .size(14, 14)
@@ -358,15 +361,17 @@ public class ConfigGui extends CustomModularScreen {
                 new Row().widthRel(1f)
                     .height(14)
                     .margin(0, 2)
-                    .child(new CycleButtonWidget().value(new BoolValue.Dynamic(() -> UsageTicker.enableOffHand, val -> {
-                        UsageTicker.enableOffHand = val;
-                        UsageTicker.reloadElements();
-                    }))
-                        .stateOverlay(TOGGLE_BUTTON)
-                        .disableHoverBackground()
-                        .size(14, 14)
-                        .margin(8, 0)
-                        .background(IDrawable.EMPTY))
+                    .child(
+                        new CycleButtonWidget()
+                            .value(new BoolValue.Dynamic(() -> BogoSorterConfig.usageTicker.enableOffHand, val -> {
+                                BogoSorterConfig.usageTicker.enableOffHand = val;
+                                UsageTicker.reloadElements();
+                            }))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
                     .child(
                         IKey.lang("bogosort.gui.usageticker_offhand")
                             .asWidget()
@@ -377,15 +382,17 @@ public class ConfigGui extends CustomModularScreen {
                 new Row().widthRel(1f)
                     .height(14)
                     .margin(0, 2)
-                    .child(new CycleButtonWidget().value(new BoolValue.Dynamic(() -> UsageTicker.enableArmor, val -> {
-                        UsageTicker.enableArmor = val;
-                        UsageTicker.reloadElements();
-                    }))
-                        .stateOverlay(TOGGLE_BUTTON)
-                        .disableHoverBackground()
-                        .size(14, 14)
-                        .margin(8, 0)
-                        .background(IDrawable.EMPTY))
+                    .child(
+                        new CycleButtonWidget()
+                            .value(new BoolValue.Dynamic(() -> BogoSorterConfig.usageTicker.enableArmor, val -> {
+                                BogoSorterConfig.usageTicker.enableArmor = val;
+                                UsageTicker.reloadElements();
+                            }))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
                     .child(
                         IKey.lang("bogosort.gui.usageticker_armor")
                             .asWidget()
@@ -482,7 +489,7 @@ public class ConfigGui extends CustomModularScreen {
         final Map<SortRule<ItemStack>, SortableListWidget.Item<SortRule<ItemStack>>> items = getSortListItemMap(
             allValues);
         SortableListWidget<SortRule<ItemStack>> sortableListWidget = new SortableListWidget<SortRule<ItemStack>>()
-            .children(BogoSorterConfig.sortRules, items::get)
+            .children(SortRulesConfig.sortRules, items::get)
             .debugName("sortable item list");
         List<List<AvailableElement>> availableMatrix = Grid.mapToMatrix(2, allValues, (index, value) -> {
             AvailableElement availableElement = new AvailableElement().overlay(IKey.lang(value.getNameLangKey()))
@@ -502,7 +509,7 @@ public class ConfigGui extends CustomModularScreen {
             return availableElement;
         });
         for (SortRule<ItemStack> value : allValues) {
-            this.availableElements.get(value).available = !BogoSorterConfig.sortRules.contains(value);
+            this.availableElements.get(value).available = !SortRulesConfig.sortRules.contains(value);
         }
         IPanelHandler secPanel = IPanelHandler.simple(mainPanel, (parentPanel, player) -> {
             ModularPanel panel = new Dialog<>("choose_item_rules").setDisablePanelsBelow(true)
@@ -523,8 +530,8 @@ public class ConfigGui extends CustomModularScreen {
                     .onRemove(
                         stringItem -> { this.availableElements.get(stringItem.getWidgetValue()).available = true; })
                     .onChange(list -> {
-                        BogoSorterConfig.sortRules.clear();
-                        BogoSorterConfig.sortRules.addAll(list);
+                        SortRulesConfig.sortRules.clear();
+                        SortRulesConfig.sortRules.addAll(list);
                     })
                     .left(7)
                     .right(7)
@@ -545,7 +552,7 @@ public class ConfigGui extends CustomModularScreen {
         List<NbtSortRule> allValues = BogoSortAPI.INSTANCE.getNbtSortRuleList();
         final Map<NbtSortRule, SortableListWidget.Item<NbtSortRule>> items = getSortListItemMap(allValues);
         SortableListWidget<NbtSortRule> sortableListWidget = new SortableListWidget<NbtSortRule>()
-            .children(BogoSorterConfig.nbtSortRules, items::get)
+            .children(SortRulesConfig.nbtSortRules, items::get)
             .debugName("sortable nbt list");
 
         List<List<AvailableElement>> availableMatrix = Grid.mapToMatrix(2, allValues, (index, value) -> {
@@ -566,7 +573,7 @@ public class ConfigGui extends CustomModularScreen {
             return availableElement;
         });
         for (NbtSortRule value : allValues) {
-            this.availableElementsNbt.get(value).available = !BogoSorterConfig.nbtSortRules.contains(value);
+            this.availableElementsNbt.get(value).available = !SortRulesConfig.nbtSortRules.contains(value);
         }
 
         IPanelHandler secPanel = IPanelHandler.simple(mainPanel, (parentPanel, player) -> {
@@ -587,8 +594,8 @@ public class ConfigGui extends CustomModularScreen {
                     .onRemove(
                         stringItem -> { this.availableElementsNbt.get(stringItem.getWidgetValue()).available = true; })
                     .onChange(list -> {
-                        BogoSorterConfig.nbtSortRules.clear();
-                        BogoSorterConfig.nbtSortRules.addAll(list);
+                        SortRulesConfig.nbtSortRules.clear();
+                        SortRulesConfig.nbtSortRules.addAll(list);
                     })
                     .left(7)
                     .right(7)
@@ -608,14 +615,18 @@ public class ConfigGui extends CustomModularScreen {
     @Override
     public void onClose() {
         super.onClose();
+        saveForgeConfig();
         Serializer.saveConfig();
-        PlayerConfig.syncToServer();
         MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
         wasOpened = false;
         if (this.old != null) {
             // open next tick, otherwise infinite loop
             ClientEventHandler.openNextTick(this.old);
         }
+    }
+
+    public static void saveForgeConfig() {
+        ConfigurationManager.save(BogoSorterConfig.class);
     }
 
     private static class AvailableElement extends ButtonWidget<AvailableElement> {

@@ -20,6 +20,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CHotbarSwap;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 
@@ -30,7 +31,6 @@ public class HotbarSwap {
 
     private static final ResourceLocation WIDGETS_TEX_PATH = new ResourceLocation("textures/gui/widgets.png");
 
-    private static boolean enabled = true;
     private static boolean show;
     private static int verticalIndex = 0;
 
@@ -38,17 +38,9 @@ public class HotbarSwap {
         return show;
     }
 
-    public static void setEnabled(boolean enabled) {
-        HotbarSwap.enabled = enabled;
-    }
-
-    public static boolean isEnabled() {
-        return enabled;
-    }
-
     @SubscribeEvent
     public void render(RenderGameOverlayEvent.Post event) {
-        if (enabled && Minecraft.getMinecraft().thePlayer.inventory.currentItem < 9
+        if (BogoSorterConfig.enableHotbarSwap && Minecraft.getMinecraft().thePlayer.inventory.currentItem < 9
             && event.type == RenderGameOverlayEvent.ElementType.ALL
             && show) {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -97,7 +89,7 @@ public class HotbarSwap {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (!enabled || Minecraft.getMinecraft().theWorld == null
+        if (!BogoSorterConfig.enableHotbarSwap || Minecraft.getMinecraft().theWorld == null
             || Minecraft.getMinecraft().thePlayer == null
             || Minecraft.getMinecraft().thePlayer.inventory.currentItem > 8) {
             return;
@@ -124,7 +116,7 @@ public class HotbarSwap {
 
     @SubscribeEvent
     public void onMouseInput(InputEvent.MouseInputEvent event) {
-        if (!enabled || Minecraft.getMinecraft().thePlayer.inventory.currentItem > 8) return;
+        if (!BogoSorterConfig.enableHotbarSwap || Minecraft.getMinecraft().thePlayer.inventory.currentItem > 8) return;
         if (show) {
             int scroll = Mouse.getEventDWheel();
             if (scroll != 0) {

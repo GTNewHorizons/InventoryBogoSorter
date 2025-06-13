@@ -16,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
 import com.cleanroommc.bogosorter.common.dropoff.InteractionResult;
 import com.cleanroommc.bogosorter.common.dropoff.InventoryData;
@@ -47,7 +48,7 @@ public class CDropOff implements IPacket {
             long lastPlayerTime = playerThrottles.computeIfAbsent(player.getPersistentID(), p -> 0L);
             final long throttleTime = System.nanoTime();
             if ((throttleTime - lastPlayerTime)
-                < TimeUnit.MILLISECONDS.toNanos(DropOffHandler.dropoffPacketThrottleInMS)) {
+                < TimeUnit.MILLISECONDS.toNanos(BogoSorterConfig.dropOff.dropoffPacketThrottleInMS)) {
                 return new SDropOffThrottled();
             }
             playerThrottles.replace(player.getPersistentID(), throttleTime);
@@ -84,7 +85,7 @@ public class CDropOff implements IPacket {
             inventory.markDirty();
 
             long elapsedTime = System.nanoTime() - startTime;
-            if (elapsedTime >= TimeUnit.MILLISECONDS.toNanos(DropOffHandler.dropoffQuotaInMS)) {
+            if (elapsedTime >= TimeUnit.MILLISECONDS.toNanos(BogoSorterConfig.dropOff.dropoffQuotaInMS)) {
                 timeLimitExceeded = true;
             }
         }

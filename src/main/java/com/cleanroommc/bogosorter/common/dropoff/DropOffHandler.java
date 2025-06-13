@@ -16,13 +16,6 @@ public class DropOffHandler {
     private int startSlot;
     private int endSlot;
 
-    public static boolean enableDropOff = true;
-    public static boolean dropoffRender = true;
-    public static boolean dropoffChatMessage = true;
-    public static int dropoffQuotaInMS = 1;
-    public static int dropoffPacketThrottleInMS = 500;
-    public static String dropoffTargetNames = "*Chest*, *Barrel*, *Drawer*, *Crate*";
-
     public DropOffHandler(InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;
         this.playerInventory = inventoryManager.getPlayer().inventory;

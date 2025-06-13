@@ -7,6 +7,7 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -15,16 +16,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class DropOffButtonHandler {
 
-    public static int buttonX = 160;
-    public static int buttonY = 5;
-    public static boolean showButton = true;
-
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (!DropOffHandler.enableDropOff) return;
+        if (!BogoSorterConfig.dropOff.enableDropOff) return;
         GuiScreen screen = event.gui;
-        if (!showButton || screen instanceof GuiContainerCreative) {
+        if (!BogoSorterConfig.dropOff.button.showButton || screen instanceof GuiContainerCreative) {
             return;
         }
         try {
@@ -38,9 +35,9 @@ public class DropOffButtonHandler {
 
     @SubscribeEvent
     public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
-        if (!DropOffHandler.enableDropOff) return;
+        if (!BogoSorterConfig.dropOff.enableDropOff) return;
         GuiScreen screen = event.gui;
-        if (!showButton) return;
+        if (!BogoSorterConfig.dropOff.button.showButton) return;
         if (screen instanceof GuiInventory) {
             for (GuiButton guiButton : ((IGuiContainerAccessor) event.gui).getButtons()) {
                 if (guiButton instanceof DropOffInvButton invButton) {

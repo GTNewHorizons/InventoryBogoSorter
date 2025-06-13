@@ -30,8 +30,7 @@ import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
-import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
+import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.CSort;
@@ -186,8 +185,8 @@ public class ClientEventHandler {
         }
         if (Keypress(dropoffKey)) {
             long t = Minecraft.getSystemTime();
-            if (t - timeDropoff > DropOffHandler.dropoffPacketThrottleInMS) {
-                if (DropOffHandler.enableDropOff) {
+            if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
+                if (BogoSorterConfig.dropOff.enableDropOff) {
                     NetworkHandler.sendToServer(new CDropOff());
                 }
                 timeDropoff = t;
@@ -248,7 +247,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderWorldLastEvent(RenderWorldLastEvent event) {
-        if (DropOffHandler.dropoffRender) {
+        if (BogoSorterConfig.dropOff.dropoffRender) {
             RendererCube.INSTANCE.tryToRender(event);
         }
     }
@@ -349,17 +348,17 @@ public class ClientEventHandler {
             } else {
                 slotGroup = sortingContext.getSlotGroup(slot.bogo$getSlotNumber());
                 if (slotGroup == null || slotGroup.isEmpty()
-                    || (slotGroup.isHotbar() && !PlayerConfig.getClient().enableHotbarSort)) return false;
+                    || (slotGroup.isHotbar() && !BogoSorterConfig.enableHotbarSort)) return false;
             }
 
-            List<SortRule<ItemStack>> sortRules = BogoSorterConfig.sortRules;
+            List<SortRule<ItemStack>> sortRules = SortRulesConfig.sortRules;
             boolean color = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("color"));
             boolean name = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("display_name"));
             NetworkHandler.sendToServer(
                 new CSort(
                     createSortData(slotGroup, color, name),
-                    BogoSorterConfig.sortRules,
-                    BogoSorterConfig.nbtSortRules,
+                    SortRulesConfig.sortRules,
+                    SortRulesConfig.nbtSortRules,
                     slot.bogo$getSlotNumber(),
                     slotGroup.isPlayerInventory()));
             SortHandler.playSortSound();
