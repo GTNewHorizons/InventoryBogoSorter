@@ -29,6 +29,7 @@ import com.cleanroommc.bogosorter.api.ISlot;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.McUtils;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.common.network.CSlotSync;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 
@@ -46,29 +47,36 @@ public class SortHandler {
         Collections.emptyList());
 
     @Nullable
-    public static ResourceLocation sortSound = new ResourceLocation("gui.button.press");
+    private static ResourceLocation sortSound = new ResourceLocation(BogoSorterConfig.sortSound);
+    private static ResourceLocation FallbacksortSound = new ResourceLocation("gui.button.press");
     private static List<ResourceLocation> foolsSounds = null;
-    private static long foolsBuildTime = 0;
-
-    public static String getSortSoundName() {
-        return sortSound == null ? "null" : sortSound.toString();
-    }
+    private static int foolsSortCounter = 0;
 
     @SideOnly(Side.CLIENT)
     public static void playSortSound() {
-        ResourceLocation sound;
-        SoundHandler soundHandler = Minecraft.getMinecraft()
+        ResourceLocation sound = null;
+        Minecraft mc = Minecraft.getMinecraft();
+        SoundHandler soundHandler = mc
             .getSoundHandler();
         if (BogoSorter.isAprilFools()) {
-            if (foolsSounds == null || foolsBuildTime - Minecraft.getSystemTime() > 300000) {
-                List<ResourceLocation> sounds = getResourceLocations(soundHandler);
-                foolsSounds = sounds;
-                foolsBuildTime = Minecraft.getSystemTime();
+            foolsSortCounter++;
+            if (foolsSortCounter >= BogoSorter.RND.nextInt(100)) {
+                if (foolsSounds == null) {
+                    List<ResourceLocation> sounds = getResourceLocations(soundHandler);
+                    foolsSounds = sounds;
+                }
+                foolsSortCounter = 0;
+                sound = foolsSounds.get(BogoSorter.RND.nextInt(foolsSounds.size()));
             }
-            sound = foolsSounds.get(BogoSorter.RND.nextInt(foolsSounds.size()));
         } else {
             sound = sortSound;
         }
+
+        // Fallback check in case something went wrong
+        if (!soundHandler.sndRegistry.containsKey(sound)) {
+            sound = FallbacksortSound;
+        }
+
         if (sound != null) {
             soundHandler.playSound(PositionedSoundRecord.func_147674_a(sound, 1f));
         }
@@ -265,7 +273,7 @@ public class SortHandler {
     public static Comparator<ItemStack> getClientItemComparator() {
         return (stack1, stack2) -> {
             int result = 0;
-            for (SortRule<ItemStack> sortRule : BogoSorterConfig.sortRules) {
+            for (SortRule<ItemStack> sortRule : SortRulesConfig.sortRules) {
                 result = sortRule.compare(stack1, stack2);
                 if (result != 0) return result;
             }

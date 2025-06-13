@@ -26,21 +26,21 @@ public interface TweakProvider {
 
     /**
      * This is called upon registering the provider if the mod id returned in getModId() is loaded
-     * 
+     *
      * @return true if this provider was successfully loaded
      */
     boolean load();
 
     /**
      * Defaults to true.
-     * 
+     *
      * @return true if this provider is unable to run on client-only instances (i.e. uses phantom items in its grid)
      */
     boolean requiresServerSide();
 
     /**
      * Defaults to 1.
-     * 
+     *
      * @param entityPlayer the player who's looking at the grid
      * @param container    the container the grid is part of
      * @param id           the crafting grid ID this is checked for (usually 0 unless there's more grids in one GUI)
@@ -51,7 +51,7 @@ public interface TweakProvider {
 
     /**
      * Defaults to 9.
-     * 
+     *
      * @param entityPlayer the player who's looking at the grid
      * @param container    the container the grid is part of
      * @param id           the crafting grid ID this is checked for (usually 0 unless there's more grids in one GUI)
@@ -61,7 +61,7 @@ public interface TweakProvider {
 
     /**
      * Clears the grid, transferring items from it into the player inventory.
-     * 
+     *
      * @param entityPlayer the player who's clearing the grid
      * @param container    the container the grid is part of
      * @param forced       if true, drop items to the ground if necessary
@@ -71,7 +71,7 @@ public interface TweakProvider {
 
     /**
      * Rotates the grid clockwise.
-     * 
+     *
      * @param entityPlayer     the player who's rotating the grid
      * @param container        the container the grid is part of
      * @param id               the crafting grid ID that is being rotated (usually 0 unless there's more grids in one
@@ -82,7 +82,7 @@ public interface TweakProvider {
 
     /**
      * Balances the grid.
-     * 
+     *
      * @param entityPlayer the player who's balancing the grid
      * @param container    the container the grid is part of
      * @param id           the crafting grid ID that is being balanced (usually 0 unless there's more grids in one GUI)
@@ -91,7 +91,7 @@ public interface TweakProvider {
 
     /**
      * Spreads the items in the grid out.
-     * 
+     *
      * @param entityPlayer the player who's spreading the grid
      * @param container    the container the grid is part of
      * @param id           the crafting grid ID that is being spread (usually 0 unless there's more grids in one GUI)
@@ -100,7 +100,7 @@ public interface TweakProvider {
 
     /**
      * Checks if the transfer-to-grid feature can be used from the sourceSlot.
-     * 
+     *
      * @param entityPlayer the player who's attempting to transfer items
      * @param container    the container the grid is part of
      * @param id           the crafting grid ID that is being transferred into (usually 0 unless there's more grids in
@@ -112,7 +112,7 @@ public interface TweakProvider {
 
     /**
      * Transfers items from sourceSlot into the grid (similar to shift-clicking items into a chest).
-     * 
+     *
      * @param entityPlayer the player who's transferring items
      * @param container    the container the grid is part of
      * @param id           the crafting grid ID that is being transferred into (usually 0 unless there's more grids in
@@ -124,7 +124,7 @@ public interface TweakProvider {
 
     /**
      * Puts an item into the grid.
-     * 
+     *
      * @param entityPlayer the player who's putting an item in
      * @param container    the container the grid is part of
      * @param id           the crafting grid ID that is being put into (usually 0 unless there's more grids in one GUI)
@@ -144,8 +144,8 @@ public interface TweakProvider {
 
     /**
      * Called to add buttons to the GUI. May not be called if buttons are disabled in the configuration.
-     * Use CraftingTweaksAPI.create***Button() to create tweak buttons, then add them to the buttonList.
-     * 
+     * Use CraftingTweaksAPI.create***button() to create tweak buttons, then add them to the buttonList.
+     *
      * @param guiContainer the gui container the buttons are being added to
      * @param buttonList   the button list of this gui container
      */

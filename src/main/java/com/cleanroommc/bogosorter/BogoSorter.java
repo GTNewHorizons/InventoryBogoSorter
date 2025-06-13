@@ -5,9 +5,7 @@ import static com.cleanroommc.bogosorter.ClientEventHandler.*;
 import java.time.LocalDate;
 import java.time.Month;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +15,6 @@ import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
 import com.cleanroommc.bogosorter.common.XSTR;
 import com.cleanroommc.bogosorter.common.config.BogoSortCommandTree;
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.config.Serializer;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffButtonHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
@@ -35,7 +32,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 @Mod(
@@ -97,23 +93,9 @@ public class BogoSorter {
     }
 
     @SubscribeEvent
-    public void onPlayerJoin(EntityJoinWorldEvent event) {
-        if (event.world.isRemote && event.entity instanceof EntityPlayer) {
-            PlayerConfig.syncToServer();
-        }
-    }
-
-    @SubscribeEvent
     public void onPlayerLogout(FMLNetworkEvent.ClientDisconnectionFromServerEvent ignored) {
         // save config file on logout
         Serializer.saveConfig();
-    }
-
-    @SubscribeEvent
-    public void onServerTick(TickEvent.WorldTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.world.getTotalWorldTime() % 100 == 0) {
-            PlayerConfig.checkPlayers();
-        }
     }
 
     public static boolean isAprilFools() {
