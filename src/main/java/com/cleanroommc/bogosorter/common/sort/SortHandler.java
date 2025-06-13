@@ -56,8 +56,7 @@ public class SortHandler {
     public static void playSortSound() {
         ResourceLocation sound = null;
         Minecraft mc = Minecraft.getMinecraft();
-        SoundHandler soundHandler = mc
-            .getSoundHandler();
+        SoundHandler soundHandler = mc.getSoundHandler();
         if (BogoSorter.isAprilFools()) {
             foolsSortCounter++;
             if (foolsSortCounter >= BogoSorter.RND.nextInt(100)) {
