@@ -5,13 +5,12 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ISpecialArmor;
 
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 
 public class DamageHelper {
 
     public static boolean damageItemHook(EntityPlayer player, ItemStack itemStack) {
-        PlayerConfig playerConfig = PlayerConfig.get(player);
-        if (!playerConfig.enableAutoRefill || playerConfig.autoRefillDamageThreshold <= 0) return false;
+        if (!BogoSorterConfig.enableAutoRefill || BogoSorterConfig.autoRefillDamageThreshold <= 0) return false;
 
         if (RefillHandler.shouldHandleRefill(player, itemStack) && isNotArmor(itemStack)
             && (player.inventory.currentItem < 9)) {
@@ -20,7 +19,7 @@ public class DamageHelper {
                 return false;
             }
             int durabilityLeft = itemStack.getMaxDamage() - itemStack.getItemDamage();
-            if (durabilityLeft >= 0 && durabilityLeft < playerConfig.autoRefillDamageThreshold) {
+            if (durabilityLeft >= 0 && durabilityLeft < BogoSorterConfig.autoRefillDamageThreshold) {
                 return RefillHandler.handle(player.inventory.currentItem, itemStack, player, true);
             }
         }

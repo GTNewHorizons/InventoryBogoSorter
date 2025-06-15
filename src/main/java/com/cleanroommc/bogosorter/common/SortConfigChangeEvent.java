@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Unmodifiable;
 
 import com.cleanroommc.bogosorter.api.SortRule;
-import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
 
@@ -25,8 +25,8 @@ public class SortConfigChangeEvent extends Event {
     public final List<NbtSortRule> configuredNbtSortRules;
 
     public SortConfigChangeEvent() {
-        this.configuredItemSortRules = Collections.unmodifiableList(BogoSorterConfig.sortRules);
-        this.configuredNbtSortRules = Collections.unmodifiableList(BogoSorterConfig.nbtSortRules);
+        this.configuredItemSortRules = Collections.unmodifiableList(SortRulesConfig.sortRules);
+        this.configuredNbtSortRules = Collections.unmodifiableList(SortRulesConfig.nbtSortRules);
     }
 
     @SideOnly(Side.CLIENT)

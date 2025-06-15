@@ -14,7 +14,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import com.cleanroommc.bogosorter.BogoSorter;
-import com.cleanroommc.bogosorter.common.dropoff.DropOffHandler;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCubeTarget;
 import com.gtnewhorizon.gtnhlib.blockpos.BlockPos;
@@ -91,7 +91,7 @@ public class SDropOffMessage implements IPacket {
     @SideOnly(Side.CLIENT)
     @Override
     public IPacket executeClient(NetHandlerPlayClient handler) {
-        if (DropOffHandler.dropoffRender) {
+        if (BogoSorterConfig.dropOff.dropoffRender) {
             RendererCube.INSTANCE.draw(rendererCubeTargets);
         }
 
@@ -106,7 +106,7 @@ public class SDropOffMessage implements IPacket {
             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
         }
 
-        if (DropOffHandler.dropoffChatMessage) {
+        if (BogoSorterConfig.dropOff.dropoffChatMessage) {
             String message = "[" + EnumChatFormatting.BLUE
                 + BogoSorter.NAME
                 + EnumChatFormatting.RESET
