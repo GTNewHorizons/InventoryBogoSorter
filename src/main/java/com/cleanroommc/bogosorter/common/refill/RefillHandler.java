@@ -11,6 +11,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
+import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
@@ -55,6 +56,11 @@ public class RefillHandler {
         if (event.entityPlayer == null || event.entityPlayer.worldObj == null
             || event.entityPlayer.worldObj.isRemote
             || !PlayerConfig.get(event.entityPlayer).enableAutoRefill) return;
+
+        if (event.original == null) {
+            BogoSorter.LOGGER.info("Cannot refill destroyed item as it is now null");
+            return;
+        }
 
         if (event.original.getItem() != null && shouldHandleRefill(event.entityPlayer, event.original)) {
             int index = event.entityPlayer.inventory.currentItem;
