@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
-import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
 
 import cpw.mods.fml.common.Loader;
