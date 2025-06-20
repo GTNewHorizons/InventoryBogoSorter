@@ -4,7 +4,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
-import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 
 public class DropOffHandler {

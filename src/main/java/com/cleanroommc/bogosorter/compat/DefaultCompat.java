@@ -1,6 +1,6 @@
 package com.cleanroommc.bogosorter.compat;
 
-import static com.cleanroommc.bogosorter.compat.loader.Mods.*;
+import static com.cleanroommc.bogosorter.compat.Mods.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,13 @@ import com.zuxelus.energycontrol.containers.ContainerCardHolder;
 import appeng.container.implementations.ContainerSkyChest;
 import blusunrize.immersiveengineering.common.gui.ContainerCrate;
 import codechicken.enderstorage.storage.item.ContainerEnderItemStorage;
+import de.ellpeck.actuallyadditions.mod.inventory.ContainerGiantChest;
 import de.eydamos.backpack.inventory.container.ContainerAdvanced;
 import forestry.core.gui.ContainerNaturalistInventory;
 import forestry.storage.gui.ContainerBackpack;
 import forestry.storage.gui.ContainerNaturalistBackpack;
+import gregapi.gui.ContainerCommonChest;
+import gregapi.gui.ContainerCommonDefault;
 import ic2.core.block.personal.ContainerPersonalChest;
 import ic2.core.item.tool.ContainerToolbox;
 import jds.bibliocraft.blocks.ContainerFramedChest;
@@ -317,6 +320,29 @@ public class DefaultCompat {
                         .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
                 });
             api.addGenericCompat(ContainerBetterStorage.class);
+        }
+
+        if (ActuallyAdditions.isLoaded()) {
+            api.addCompat(
+                ContainerGiantChest.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(0, 117, 13)
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+                });
+            api.addPlayerSortButtonPosition(ContainerGiantChest.class, IPosSetter.TOP_RIGHT_VERTICAL);
+        }
+
+        if (GT6.isLoaded()) {
+            api.addCompat(
+                ContainerCommonChest.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(container.getStartIndex(), container.getSlotCount(), 9);
+                });
+            api.addCompat(ContainerCommonDefault.class, (container, builder) -> {
+                builder.addSlotGroup(container.getStartIndex(), container.getSlotCount(), 9)
+                    .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+            });
+            api.addPlayerSortButtonPosition(ContainerCommonDefault.class, IPosSetter.TOP_RIGHT_VERTICAL);
         }
     }
 }
