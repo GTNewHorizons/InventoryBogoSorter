@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.cleanroommc.bogosorter.common.ReadableNumberConverter;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.compat.loader.Mods;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
@@ -29,27 +30,22 @@ import xonin.backhand.api.core.BackhandUtils;
 @EventBusSubscriber(side = { Side.CLIENT })
 public class UsageTicker {
 
-    public static boolean enableMainHand = true;
-    public static boolean enableOffHand = true;
-    public static boolean enableArmor = true;
-    public static boolean enableModule = true;
-
     private static List<Element> elements = new ArrayList<>();
 
     public static void reloadElements() {
         elements = new ArrayList<>();
 
-        if (!enableModule) return;
+        if (!BogoSorterConfig.usageTicker.enableModule) return;
 
-        if (enableMainHand) {
+        if (BogoSorterConfig.usageTicker.enableMainHand) {
             elements.add(new Element(EquipmentSlotType.MAINHAND));
         }
 
-        if (Mods.Backhand.isLoaded() && enableOffHand) {
+        if (Mods.Backhand.isLoaded() && BogoSorterConfig.usageTicker.enableOffHand) {
             elements.add(new Element(EquipmentSlotType.OFFHAND));
         }
 
-        if (enableArmor) {
+        if (BogoSorterConfig.usageTicker.enableArmor) {
             elements.add(new Element(EquipmentSlotType.HEAD));
             elements.add(new Element(EquipmentSlotType.CHEST));
             elements.add(new Element(EquipmentSlotType.LEGS));
@@ -60,7 +56,7 @@ public class UsageTicker {
 
     @EventBusSubscriber.Condition
     public static boolean enableModule() {
-        return enableModule;
+        return BogoSorterConfig.usageTicker.enableModule;
     }
 
     @SubscribeEvent
@@ -113,7 +109,8 @@ public class UsageTicker {
                 int barWidth = 190;
                 boolean armor = !(slot == EquipmentSlotType.MAINHAND || slot == EquipmentSlotType.OFFHAND);
 
-                int slots = armor ? 4 : (Mods.Backhand.isLoaded() && enableOffHand) ? 2 : 1;
+                int slots = armor ? 4
+                    : (Mods.Backhand.isLoaded() && BogoSorterConfig.usageTicker.enableOffHand) ? 2 : 1;
                 int index = slots - slot.ordinal() - 1;
 
                 Minecraft mc = Minecraft.getMinecraft();

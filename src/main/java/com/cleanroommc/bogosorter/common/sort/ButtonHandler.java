@@ -132,7 +132,7 @@ public class ButtonHandler {
                 this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition
                     && mouseX < this.xPosition + this.width
                     && mouseY < this.yPosition + this.height;
-                Color.setGlColor(BogoSorterConfig.buttonColor);
+                Color.setGlColor(BogoSorterConfig.getButtonColor());
                 BUTTON_BACKGROUND.draw(this.xPosition, this.yPosition, this.width, this.height);
                 Color.resetGlColor();
                 this.mouseDragged(mc, mouseX, mouseY);

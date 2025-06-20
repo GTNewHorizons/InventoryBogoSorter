@@ -23,7 +23,6 @@ public class NetworkHandler {
     public static void init() {
         registerC2S(CSlotSync.class);
         registerC2S(CShortcut.class);
-        registerC2S(CConfigSync.class);
         registerC2S(CSort.class);
         registerC2S(CHotbarSwap.class);
         registerS2C(SReloadConfig.class);
