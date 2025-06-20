@@ -34,6 +34,7 @@ import appeng.container.implementations.ContainerSkyChest;
 import blusunrize.immersiveengineering.common.gui.ContainerCrate;
 import codechicken.enderstorage.storage.item.ContainerEnderItemStorage;
 import de.ellpeck.actuallyadditions.mod.inventory.ContainerGiantChest;
+import de.eydamos.backpack.inventory.container.Boundaries;
 import de.eydamos.backpack.inventory.container.ContainerAdvanced;
 import forestry.core.gui.ContainerNaturalistInventory;
 import forestry.storage.gui.ContainerBackpack;
@@ -115,7 +116,13 @@ public class DefaultCompat {
         }
 
         if (Backpack.isLoaded()) {
-            api.addCompat(ContainerAdvanced.class, (container, builder) -> { builder.addGenericSlotGroup(); });
+            api.addCompat(ContainerAdvanced.class, (container, builder) -> {
+                int rowSize = getRowSize(container.getBoundary(Boundaries.BACKPACK_END));
+                builder.addSlotGroup(
+                    container.getBoundary(Boundaries.BACKPACK),
+                    container.getBoundary(Boundaries.BACKPACK_END),
+                    rowSize);
+            });
         }
 
         if (AdventureBackpack2.isLoaded()) {
@@ -344,5 +351,20 @@ public class DefaultCompat {
             });
             api.addPlayerSortButtonPosition(ContainerCommonDefault.class, IPosSetter.TOP_RIGHT_VERTICAL);
         }
+    }
+
+    private static int getRowSize(int size) {
+        if (size < 64) {
+            return 9;
+        } else {
+            // Find the smallest columns value that fits within 7 rows
+            for (int columns = 9; columns <= 19; columns++) {
+                int rows = (size + columns - 1) / columns;
+                if (rows <= 7) {
+                    return columns;
+                }
+            }
+        }
+        return 1; // Fallback to 1 column if no suitable size is found
     }
 }
