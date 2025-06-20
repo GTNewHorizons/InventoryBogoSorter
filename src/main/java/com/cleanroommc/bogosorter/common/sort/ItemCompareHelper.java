@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
-import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.cleanroommc.bogosorter.compat.Mods;
 
 import gregtech.api.interfaces.IFoodStat;
 import gregtech.api.items.MetaGeneratedItem;

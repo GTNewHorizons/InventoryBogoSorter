@@ -67,6 +67,9 @@ dependencies {
 
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:waila:1.8.8:dev")
 
+    compileOnly("com.gregoriust.gregtech:gregtech_1.7.10:6.17.05:dev") { transitive = false }
+
+
     compileOnly rfg.deobf('curse.maven:projecte-226410:2340786')
     compileOnly rfg.deobf('curse.maven:rftools-224641:2287287')
     compileOnly rfg.deobf("curse.maven:mcjtylib-233105:2272449")
@@ -86,5 +89,5 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:hbms-nuclear-tech-mod-235439:6028711')
     compileOnly rfg.deobf('curse.maven:better-storage-232919:2248061')
     compileOnly rfg.deobf('curse.maven:compact-storage-223703:2276736')
-
+    compileOnly rfg.deobf('curse.maven:actually-additions-228404:2274681')
 }
