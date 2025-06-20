@@ -23,7 +23,6 @@ import com.cleanroommc.bogosorter.common.refill.RefillHandler;
 import com.cleanroommc.bogosorter.common.sort.ButtonHandler;
 import com.cleanroommc.bogosorter.common.sort.DefaultRules;
 import com.cleanroommc.bogosorter.compat.DefaultCompat;
-import com.cleanroommc.bogosorter.compat.loader.IntegrationLoader;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -51,7 +50,6 @@ public class BogoSorter {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        IntegrationLoader.load();
         FMLCommonHandler.instance()
             .bus()
             .register(this);

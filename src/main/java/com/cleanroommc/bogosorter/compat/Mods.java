@@ -1,4 +1,4 @@
-package com.cleanroommc.bogosorter.compat.loader;
+package com.cleanroommc.bogosorter.compat;
 
 import java.util.function.Supplier;
 
@@ -46,7 +46,10 @@ public enum Mods {
     StorageDrawers("StorageDrawers"),
     Tconstruct("TConstruct"),
     Terrafirmacraft("terrafirmacraft"),
-    Thebetweenlands("thebetweenlands"),;
+    Thebetweenlands("thebetweenlands"),
+    ActuallyAdditions("ActuallyAdditions"),
+
+    ;
 
     public final String modid;
     private final Supplier<Boolean> supplier;

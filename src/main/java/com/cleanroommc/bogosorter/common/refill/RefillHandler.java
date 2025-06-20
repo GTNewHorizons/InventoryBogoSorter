@@ -17,7 +17,7 @@ import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.network.SRefillSound;
-import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.cleanroommc.bogosorter.compat.Mods;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import gregtech.api.items.GTGenericItem;

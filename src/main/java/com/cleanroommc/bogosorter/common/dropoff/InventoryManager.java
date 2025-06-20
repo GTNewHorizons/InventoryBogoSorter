@@ -23,7 +23,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.cleanroommc.bogosorter.compat.Mods;
 
 import serverutils.data.ClaimedChunks;
 

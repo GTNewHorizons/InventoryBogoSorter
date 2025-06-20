@@ -15,7 +15,7 @@ import com.cleanroommc.bogosorter.common.network.CShortcut;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
 import com.cleanroommc.bogosorter.common.sort.SlotGroup;
-import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
 import codechicken.lib.inventory.SlotDummy;
