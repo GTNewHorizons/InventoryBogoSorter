@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
 
 import cpw.mods.fml.common.Loader;
@@ -45,7 +45,7 @@ public class OreDictHelper {
 
         String oreName = event.Name;
         // and try to transform registration name into OrePrefix + Material pair
-        if (!BogoSorterConfig.ORE_PREFIXES.containsKey(oreName)) {
+        if (!SortRulesConfig.ORE_PREFIXES.containsKey(oreName)) {
             String material = null;
             String prefix = null;
             // split ore dict name to parts
@@ -69,11 +69,11 @@ public class OreDictHelper {
             for (int i = 0; i < splits.size(); i++) {
                 buffer.append(splits.get(i));
                 String tryPrefix = buffer.toString();
-                if (!BogoSorterConfig.ORE_PREFIXES.containsKey(tryPrefix)) continue;
+                if (!SortRulesConfig.ORE_PREFIXES.containsKey(tryPrefix)) continue;
                 prefix = tryPrefix;
                 material = StringUtils.join(splits.subList(i + 1, splits.size()), StringUtils.EMPTY); // BasalticMineralSand
             }
-            if (prefix != null && BogoSorterConfig.ORE_PREFIXES.containsKey(prefix)) {
+            if (prefix != null && SortRulesConfig.ORE_PREFIXES.containsKey(prefix)) {
                 MATERIALS.put(event.Ore, material);
                 PREFIXES.put(event.Ore, prefix);
             }
@@ -135,7 +135,7 @@ public class OreDictHelper {
     }
 
     public static int getOrePrefixIndex(String prefix) {
-        return BogoSorterConfig.ORE_PREFIXES.containsKey(prefix) ? BogoSorterConfig.ORE_PREFIXES.getInt(prefix)
+        return SortRulesConfig.ORE_PREFIXES.containsKey(prefix) ? SortRulesConfig.ORE_PREFIXES.getInt(prefix)
             : Integer.MAX_VALUE;
     }
 
@@ -286,13 +286,13 @@ public class OreDictHelper {
             "ore", "oreGranite", "oreDiorite", "oreAndesite", "oreBlackgranite", "oreRedgranite", "oreMarble",
             "oreBasalt", "oreSand", "oreRedSand", "oreNetherrack", "oreEndstone", "oreCrystal", "log", "rod" };
 
-        BogoSorterConfig.ORE_PREFIXES.clear();
-        BogoSorterConfig.ORE_PREFIXES_LIST.clear();
+        SortRulesConfig.ORE_PREFIXES.clear();
+        SortRulesConfig.ORE_PREFIXES_LIST.clear();
         int i = 0;
         for (String orePrefix : defaultOrePrefixOrder) {
             if (isPrefixLoaded(orePrefix)) {
-                BogoSorterConfig.ORE_PREFIXES.put(orePrefix, i++);
-                BogoSorterConfig.ORE_PREFIXES_LIST.add(orePrefix);
+                SortRulesConfig.ORE_PREFIXES.put(orePrefix, i++);
+                SortRulesConfig.ORE_PREFIXES_LIST.add(orePrefix);
             }
         }
     }

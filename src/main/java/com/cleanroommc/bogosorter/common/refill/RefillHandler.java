@@ -13,7 +13,7 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.network.SRefillSound;
@@ -55,7 +55,7 @@ public class RefillHandler {
     public void onDestroyItem(PlayerDestroyItemEvent event) {
         if (event.entityPlayer == null || event.entityPlayer.worldObj == null
             || event.entityPlayer.worldObj.isRemote
-            || !PlayerConfig.get(event.entityPlayer).enableAutoRefill) return;
+            || !BogoSorterConfig.enableAutoRefill) return;
 
         if (event.original == null) {
             BogoSorter.LOGGER.info("Cannot refill destroyed item as it is now null");
@@ -93,7 +93,6 @@ public class RefillHandler {
     private ItemStack brokenItem;
     private EntityPlayer player;
     private InventoryPlayer inventory;
-    private PlayerConfig playerConfig;
     private boolean swapItems;
     private boolean isDamageable;
 
@@ -104,7 +103,6 @@ public class RefillHandler {
         this.brokenItem = brokenItem;
         this.player = player;
         this.inventory = player.inventory;
-        this.playerConfig = PlayerConfig.get(player);
         this.swapItems = swapItems;
     }
 
@@ -151,7 +149,7 @@ public class RefillHandler {
             int slot = slotsIterator.next();
             ItemStack found = inventory.mainInventory[slot];
             if (found == null || (this.swapItems && this.isDamageable
-                && DamageHelper.getDurability(found) <= playerConfig.autoRefillDamageThreshold)) {
+                && DamageHelper.getDurability(found) <= BogoSorterConfig.autoRefillDamageThreshold)) {
                 slotsIterator.remove();
                 continue;
             }

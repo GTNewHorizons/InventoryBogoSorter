@@ -37,7 +37,7 @@ public class Serializer {
     public static final String cfgPath = Loader.instance()
         .getConfigDir()
         .toString();
-    public static final File configJsonPath = new File(cfgPath + path("", "bogosorter", "config.json"));
+    public static final File configJsonPath = new File(cfgPath + path("", "bogosorter", "sortRulesConfig.json"));
     public static final File orePrefixJsonPath = new File(cfgPath + path("", "bogosorter", "orePrefix.json"));
 
     private static String path(String... path) {
@@ -49,24 +49,24 @@ public class Serializer {
     @SideOnly(Side.CLIENT)
     public static void saveConfig() {
         JsonObject json = new JsonObject();
-        BogoSorterConfig.save(json);
+        SortRulesConfig.save(json);
         saveJson(configJsonPath, json);
     }
 
     public static void loadConfig() {
         if (NetworkUtils.isDedicatedClient()) {
             if (!Files.exists(configJsonPath.toPath())) {
-                BogoSorterConfig.loadDefaultRules();
+                SortRulesConfig.loadDefaultRules();
                 saveConfig();
             }
             JsonElement jsonElement = loadJson(configJsonPath);
             if (jsonElement == null || !jsonElement.isJsonObject()) {
                 BogoSorterCore.LOGGER.error("Error loading config!");
             } else {
-                BogoSorterConfig.load(jsonElement.getAsJsonObject());
+                SortRulesConfig.load(jsonElement.getAsJsonObject());
                 UsageTicker.reloadElements();
-                SortHandler.cacheItemSortRules.put(Minecraft.getMinecraft().thePlayer, BogoSorterConfig.sortRules);
-                SortHandler.cacheNbtSortRules.put(Minecraft.getMinecraft().thePlayer, BogoSorterConfig.nbtSortRules);
+                SortHandler.cacheItemSortRules.put(Minecraft.getMinecraft().thePlayer, SortRulesConfig.sortRules);
+                SortHandler.cacheNbtSortRules.put(Minecraft.getMinecraft().thePlayer, SortRulesConfig.nbtSortRules);
             }
         }
 
@@ -79,12 +79,12 @@ public class Serializer {
             BogoSorterCore.LOGGER.error("Error loading ore prefix config!");
             return;
         }
-        BogoSorterConfig.loadOrePrefixes(jsonElement.getAsJsonObject());
+        SortRulesConfig.loadOrePrefixes(jsonElement.getAsJsonObject());
     }
 
     public static void saveOrePrefixes() {
         JsonObject json = new JsonObject();
-        BogoSorterConfig.saveOrePrefixes(json);
+        SortRulesConfig.saveOrePrefixes(json);
         saveJson(orePrefixJsonPath, json);
     }
 

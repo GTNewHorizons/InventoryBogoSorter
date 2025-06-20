@@ -22,13 +22,12 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
 
 import serverutils.data.ClaimedChunks;
 
 public class InventoryManager {
-
-    private final int SCAN_RADIUS = 4;
 
     private final EntityPlayerMP player;
     private final World world;
@@ -43,14 +42,14 @@ public class InventoryManager {
     }
 
     public <T extends TileEntity & IInventory> List<InventoryData> getNearbyInventories() {
-        int minX = (int) (player.posX - SCAN_RADIUS);
-        int maxX = (int) (player.posX + SCAN_RADIUS);
+        int minX = (int) (player.posX - BogoSorterConfig.dropOff.dropoffRadius);
+        int maxX = (int) (player.posX + BogoSorterConfig.dropOff.dropoffRadius);
 
-        int minY = (int) (player.posY - SCAN_RADIUS);
-        int maxY = (int) (player.posY + SCAN_RADIUS);
+        int minY = (int) (player.posY - BogoSorterConfig.dropOff.dropoffRadius);
+        int maxY = (int) (player.posY + BogoSorterConfig.dropOff.dropoffRadius);
 
-        int minZ = (int) (player.posZ - SCAN_RADIUS);
-        int maxZ = (int) (player.posZ + SCAN_RADIUS);
+        int minZ = (int) (player.posZ - BogoSorterConfig.dropOff.dropoffRadius);
+        int maxZ = (int) (player.posZ + BogoSorterConfig.dropOff.dropoffRadius);
 
         List<InventoryData> inventoryDataList = new ArrayList<>();
 
@@ -177,17 +176,13 @@ public class InventoryManager {
     }
 
     private boolean isInventoryNameValid(String name) {
-        String[] containerNames = DropOffHandler.dropoffTargetNames.split(",");
-
+        String[] containerNames = BogoSorterConfig.dropOff.dropoffTargetNames;
         for (String containerName : containerNames) {
-            String regex = containerName.replace("*", ".*")
-                .trim();
-
-            if (name.matches(regex)) {
+            if (name.toLowerCase()
+                .contains(containerName.toLowerCase())) {
                 return true;
             }
         }
-
         return false;
     }
 

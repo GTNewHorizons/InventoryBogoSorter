@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.cleanroommc.bogosorter.common.McUtils;
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.refill.RefillHandler;
 import com.cleanroommc.bogosorter.core.BogoSorterCore;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -33,7 +33,7 @@ public abstract class MixinEntityPlayer {
             shift = At.Shift.BEFORE))
     private void onItemUseFinish(CallbackInfo ci, @Local(name = "itemstack") ItemStack returnedItem) {
         EntityPlayer player = bogosorter$EntityPlayer();
-        if (!PlayerConfig.get(player).enableAutoRefill) return;
+        if (!BogoSorterConfig.enableAutoRefill) return;
 
         // used in cases where a modded item returns itself with a different durability (AA coffee, Botania Vials, etc)
         if (McUtils.areItemsEqualIgnoreDurability(returnedItem, itemInUse)) {

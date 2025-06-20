@@ -7,7 +7,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
-import com.cleanroommc.bogosorter.common.config.PlayerConfig;
 import com.cleanroommc.bogosorter.common.config.Serializer;
 
 import cpw.mods.fml.relauncher.Side;
@@ -25,7 +24,6 @@ public class SReloadConfig implements IPacket {
     @Override
     public IPacket executeClient(NetHandlerPlayClient handler) {
         Serializer.loadConfig();
-        PlayerConfig.syncToServer();
         MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
         return null;
     }

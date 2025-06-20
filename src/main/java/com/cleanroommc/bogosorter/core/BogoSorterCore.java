@@ -8,7 +8,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.mixinplugin.Mixins;
+import com.gtnewhorizon.gtnhlib.config.ConfigException;
+import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
@@ -23,6 +26,15 @@ public class BogoSorterCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     public static boolean isDevEnv() {
         return isDevEnv;
+    }
+
+    static {
+        // Register config here because then it's available during mixins.
+        try {
+            ConfigurationManager.registerConfig(BogoSorterConfig.class);
+        } catch (ConfigException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

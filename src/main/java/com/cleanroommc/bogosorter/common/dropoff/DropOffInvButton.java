@@ -35,8 +35,8 @@ public class DropOffInvButton extends GuiButton {
     public DropOffInvButton(GuiContainer parentGui) {
         super(
             394658248,
-            parentGui.guiLeft + DropOffButtonHandler.buttonX,
-            parentGui.guiTop + DropOffButtonHandler.buttonY,
+            parentGui.guiLeft + BogoSorterConfig.dropOff.button.buttonX,
+            parentGui.guiTop + BogoSorterConfig.dropOff.button.buttonY,
             10,
             10,
             "d");
@@ -54,7 +54,7 @@ public class DropOffInvButton extends GuiButton {
                 && mouseX < this.xPosition + this.width
                 && mouseY < this.yPosition + this.height;
 
-            Color.setGlColor(BogoSorterConfig.buttonColor);
+            Color.setGlColor(BogoSorterConfig.getButtonColor());
             BUTTON_BACKGROUND.draw(this.xPosition, this.yPosition, this.width, this.height);
             Color.resetGlColor();
             int color = 14737632;
@@ -82,7 +82,7 @@ public class DropOffInvButton extends GuiButton {
                 hold = true;
             } else {
                 long t = Minecraft.getSystemTime();
-                if (t - timeDropoff > DropOffHandler.dropoffPacketThrottleInMS) {
+                if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
                     NetworkHandler.sendToServer(new CDropOff());
                     timeDropoff = t;
                 }
@@ -97,8 +97,8 @@ public class DropOffInvButton extends GuiButton {
     public void mouseReleased(int mouseX, int mouseY) {
         if (hold) {
             hold = false;
-            DropOffButtonHandler.buttonX = xPosition - parent.guiLeft;
-            DropOffButtonHandler.buttonY = yPosition - parent.guiTop;
+            BogoSorterConfig.dropOff.button.buttonX = xPosition - parent.guiLeft;
+            BogoSorterConfig.dropOff.button.buttonY = yPosition - parent.guiTop;
         }
         super.mouseReleased(mouseX, mouseY);
     }
