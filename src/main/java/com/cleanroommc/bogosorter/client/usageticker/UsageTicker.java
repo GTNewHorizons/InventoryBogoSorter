@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import com.cleanroommc.bogosorter.common.ReadableNumberConverter;
-import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

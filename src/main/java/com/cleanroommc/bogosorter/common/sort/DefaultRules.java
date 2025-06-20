@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.cleanroommc.bogosorter.compat.Mods;
 
 public class DefaultRules {
 

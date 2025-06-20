@@ -34,7 +34,7 @@ import com.cleanroommc.bogosorter.common.config.ConfigGui;
 import com.cleanroommc.bogosorter.common.sort.ClientItemSortRule;
 import com.cleanroommc.bogosorter.common.sort.ItemSortContainer;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
-import com.cleanroommc.bogosorter.compat.loader.Mods;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.modularui.factory.ClientGUI;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.PlayerInvWrapper;
