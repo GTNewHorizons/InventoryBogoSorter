@@ -55,27 +55,27 @@ public class ClientProxy extends CommonProxy {
     private final ClientProvider clientProvider = new ClientProvider();
     private final KeyBinding keyRotate = new KeyBinding(
         "key.craftingtweaks.rotate",
-        Keyboard.KEY_R,
+        Keyboard.KEY_NONE,
         "key.categories.craftingtweaks");
     private final KeyBinding keyBalance = new KeyBinding(
         "key.craftingtweaks.balance",
-        Keyboard.KEY_B,
+        Keyboard.KEY_NONE,
         "key.categories.craftingtweaks");
     private final KeyBinding keyClear = new KeyBinding(
         "key.craftingtweaks.clear",
-        Keyboard.KEY_C,
+        Keyboard.KEY_NONE,
         "key.categories.craftingtweaks");
     private final KeyBinding keyToggleButtons = new KeyBinding(
         "key.craftingtweaks.toggleButtons",
-        0,
+        Keyboard.KEY_NONE,
         "key.categories.craftingtweaks");
     private final KeyBinding keyCompress = new KeyBinding(
         "key.craftingtweaks.compress",
-        Keyboard.KEY_K,
+        Keyboard.KEY_NONE,
         "key.categories.craftingtweaks");
     private final KeyBinding keyDecompress = new KeyBinding(
         "key.craftingtweaks.decompress",
-        0,
+        Keyboard.KEY_NONE,
         "key.categories.craftingtweaks");
     private KeyBinding keyTransferStack;
 
