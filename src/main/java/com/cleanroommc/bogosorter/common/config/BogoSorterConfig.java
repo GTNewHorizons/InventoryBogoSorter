@@ -35,7 +35,9 @@ public class BogoSorterConfig {
     public static int autoRefillDamageThreshold;
 
     @Config.DefaultInt(0xFFFFFFFF)
-    @Config.Comment("The color of the sort button in hex format (e.g. 0xFFFFFFFF).")
+    @Config.Comment({ "The color of the sort button.",
+        "Display format: 0xAARRGGBB (e.g. 0xFFFFFFFF for white, 0xFF0000FF for red).",
+        "Value is displayed in decimal here but interpreted as hex internally." })
     @Config.LangKey("bogosorter.config.button.color")
     public static int buttonColor;
 
