@@ -54,7 +54,7 @@ public class SortHandler {
 
     @SideOnly(Side.CLIENT)
     public static void playSortSound() {
-        ResourceLocation sound = null;
+        ResourceLocation sound = sortSound;
         Minecraft mc = Minecraft.getMinecraft();
         SoundHandler soundHandler = mc.getSoundHandler();
         if (BogoSorter.isAprilFools()) {
@@ -67,8 +67,6 @@ public class SortHandler {
                 foolsSortCounter = 0;
                 sound = foolsSounds.get(BogoSorter.RND.nextInt(foolsSounds.size()));
             }
-        } else {
-            sound = sortSound;
         }
 
         // Fallback check in case something went wrong
