@@ -1,8 +1,9 @@
 package com.cleanroommc.bogosorter.mixinplugin;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
-import org.jetbrains.annotations.NotNull;
 
 public enum Mixins implements IMixins {
 

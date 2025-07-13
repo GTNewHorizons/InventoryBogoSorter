@@ -1,8 +1,9 @@
 package com.cleanroommc.bogosorter.mixinplugin;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
 import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
-import org.jetbrains.annotations.NotNull;
 
 public enum TargetedMod implements ITargetMod {
 
@@ -21,7 +22,8 @@ public enum TargetedMod implements ITargetMod {
     private final TargetModBuilder builder;
 
     TargetedMod(String coreModClass, String modId) {
-        this.builder = new TargetModBuilder().setCoreModClass(coreModClass).setModId(modId);
+        this.builder = new TargetModBuilder().setCoreModClass(coreModClass)
+            .setModId(modId);
     }
 
     @NotNull
