@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,12 +45,12 @@ public class BogoSorterCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
-        return Mixins.getEarlyMixins(loadedCoreMods);
+        return IMixins.getEarlyMixins(Mixins.class, loadedCoreMods);
     }
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[0];
+        return null;
     }
 
     @Override

@@ -1,39 +1,32 @@
 package com.cleanroommc.bogosorter.mixinplugin;
 
-public enum TargetedMod {
+import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
+import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
+import org.jetbrains.annotations.NotNull;
 
-    VANILLA("Minecraft", null),
-    AVARITIADDONS("Avaritiaddons", null, "avaritiaddons"),
-    IRONCHEST("Iron Chests", null, "IronChest"),
-    ENDERIO("Ender IO", null, "EnderIO"),
-    GALACTICRAFTCORE("Galacticraft Core", "micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
-    THERMALEXPANSION("Thermal Expansion", null, "ThermalExpansion"),
-    Forestry("Forestry", null, "Forestry"),
-    CodeChickenCore("CodeChickenCore", "codechicken.core.launch.CodeChickenCorePlugin", "CodeChickenCore"),
-    NEI("NotEnoughItems", "codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
-    AE2("Applied Energistics 2", "appeng.transformer.AppEngCore", "appliedenergistics2"),
-    CompactStorage("Compact Storage", null, "compactstorage"),
-    Etfuturum("Et Futurum Requiem", null, "etfuturum"),;
+public enum TargetedMod implements ITargetMod {
 
-    /** The "name" in the @Mod annotation */
-    public final String modName;
-    /** Class that implements the IFMLLoadingPlugin interface */
-    public final String coreModClass;
-    /** The "modid" in the @Mod annotation */
-    public final String modId;
+    AVARITIADDONS(null, "avaritiaddons"),
+    IRONCHEST(null, "IronChest"),
+    ENDERIO(null, "EnderIO"),
+    GALACTICRAFTCORE("micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
+    THERMALEXPANSION(null, "ThermalExpansion"),
+    Forestry(null, "Forestry"),
+    CodeChickenCore("codechicken.core.launch.CodeChickenCorePlugin", "CodeChickenCore"),
+    NEI("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
+    AE2("appeng.transformer.AppEngCore", "appliedenergistics2"),
+    CompactStorage(null, "compactstorage"),
+    Etfuturum(null, "etfuturum");
 
-    TargetedMod(String modName, String coreModClass) {
-        this(modName, coreModClass, null);
+    private final TargetModBuilder builder;
+
+    TargetedMod(String coreModClass, String modId) {
+        this.builder = new TargetModBuilder().setCoreModClass(coreModClass).setModId(modId);
     }
 
-    TargetedMod(String modName, String coreModClass, String modId) {
-        this.modName = modName;
-        this.coreModClass = coreModClass;
-        this.modId = modId;
-    }
-
+    @NotNull
     @Override
-    public String toString() {
-        return "TargetedMod{modName='" + modName + "', coreModClass='" + coreModClass + "', modId='" + modId + "'}";
+    public TargetModBuilder getBuilder() {
+        return builder;
     }
 }
