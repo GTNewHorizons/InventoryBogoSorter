@@ -1,8 +1,9 @@
 package com.cleanroommc.bogosorter.mixinplugin;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
-import org.jetbrains.annotations.NotNull;
 
 public enum Mixins implements IMixins {
 
@@ -42,11 +43,11 @@ public enum Mixins implements IMixins {
             "thermal.MixinContainerSatchel",
             "thermal.MixinContainerStrongbox")),
     Forestry(new MixinBuilder()
-        .addRequiredMod(TargetedMod.Forestry)
+        .addRequiredMod(TargetedMod.FORESTRY)
         .setPhase(Phase.LATE)
         .addClientMixins("forestry.MixinGuiForestry")),
     CodeChickenCore(new MixinBuilder()
-        .addRequiredMod(TargetedMod.CodeChickenCore)
+        .addRequiredMod(TargetedMod.CODECHICKENCORE)
         .setPhase(Phase.LATE)
         .addClientMixins("codechicken.core.MixinGuiContainerWidget")),
     NEI(new MixinBuilder()
@@ -58,13 +59,13 @@ public enum Mixins implements IMixins {
         .setPhase(Phase.LATE)
         .addClientMixins("appliedenergistics.MixinAEBaseGui")),
     CompactStorage(new MixinBuilder()
-        .addRequiredMod(TargetedMod.CompactStorage)
+        .addRequiredMod(TargetedMod.COMPACTSTORAGE)
         .setPhase(Phase.LATE)
         .addCommonMixins(
             "compactstorage.MixinContainerChest",
             "compactstorage.MixinContainerChestBuilder")),
     EtFuturum(new MixinBuilder()
-        .addRequiredMod(TargetedMod.Etfuturum)
+        .addRequiredMod(TargetedMod.ETFUTURUM)
         .setPhase(Phase.LATE)
         .addCommonMixins("etfuturum.MixinContainerChestGeneric"));
     // spotless:on
