@@ -360,6 +360,7 @@ public class SortHandler {
     // Prevents splitting of non-stackable items (e.g., tools, armor) with stack size > 1
     // to avoid filling the inventory unnecessarily.
     private static boolean preventSplit(ItemStack stack) {
+        if (!BogoSorterConfig.preventSplit) return false;
         return stack.getMaxStackSize() == 1;
     }
 }

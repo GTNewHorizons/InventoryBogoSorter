@@ -34,6 +34,13 @@ public class BogoSorterConfig {
     @Config.Sync
     public static int autoRefillDamageThreshold;
 
+    @Config.DefaultBoolean(true)
+    @Config.Comment({ "If enabled, items with max stack size of 1 (e.g., tools, armor, etc.)",
+        "will not be split when sorting. This helps avoid cluttering the inventory with duplicate single-item stacks." })
+    @Config.LangKey("bogosorter.config.preventSplit")
+    @Config.Sync
+    public static boolean preventSplit;
+
     @Config.DefaultString("#FFFFFFFF")
     @Config.Comment("The color of the sort button in hex format (e.g. #FFFFFFFF or 0xFFFFFFFF).")
     @Config.LangKey("bogosorter.config.button.color")
