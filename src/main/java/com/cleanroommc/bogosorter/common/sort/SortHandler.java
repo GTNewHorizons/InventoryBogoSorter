@@ -61,8 +61,7 @@ public class SortHandler {
             foolsSortCounter++;
             if (foolsSortCounter >= BogoSorter.RND.nextInt(100)) {
                 if (foolsSounds == null) {
-                    List<ResourceLocation> sounds = getResourceLocations(soundHandler);
-                    foolsSounds = sounds;
+                    foolsSounds = getResourceLocations(soundHandler);
                 }
                 foolsSortCounter = 0;
                 sound = foolsSounds.get(BogoSorter.RND.nextInt(foolsSounds.size()));
@@ -82,9 +81,8 @@ public class SortHandler {
     private static @NotNull List<ResourceLocation> getResourceLocations(SoundHandler soundHandler) {
         List<ResourceLocation> sounds = new ArrayList<>(256);
         for (Object key : soundHandler.sndRegistry.getKeys()) {
-            if (key instanceof ResourceLocation) {
-                ResourceLocation soundEvent = (ResourceLocation) key;
-                if (soundEvent != null && !soundEvent.getResourcePath()
+            if (key instanceof ResourceLocation soundEvent) {
+                if (!soundEvent.getResourcePath()
                     .contains("music.")
                     && !soundEvent.getResourcePath()
                         .contains("records.")) {
@@ -167,18 +165,28 @@ public class SortHandler {
                 continue;
             }
 
-            int max = Math.min(
-                slot.bogo$getItemStackLimit(itemSortContainer.getItemStack()),
-                slot.bogo$getMaxStackSize(itemSortContainer.getItemStack()));
+            ItemStack stack = itemSortContainer.getItemStack();
+            int max = Math.min(slot.bogo$getItemStackLimit(stack), slot.bogo$getMaxStackSize(stack));
             if (max <= 0) continue;
+
+            if (preventSplit(stack)) {
+                slot.bogo$putStack(stack);
+                itemSortContainer = itemList.pollFirst();
+                continue;
+            }
 
             slot.bogo$putStack(itemSortContainer.makeStack(max));
 
             if (!itemSortContainer.canMakeStack()) {
                 itemSortContainer = itemList.pollFirst();
-
             }
         }
+
+        // Remaining items that cannot fit are dropped to the player.
+        if (itemSortContainer != null) {
+            itemList.addFirst(itemSortContainer);
+        }
+
         if (!itemList.isEmpty()) {
             McUtils.giveItemsToPlayer(this.player, prepareDropList(itemList));
         }
@@ -240,13 +248,20 @@ public class SortHandler {
         for (ISlot slot : getSortableSlots(slotGroup)) {
             ItemStack stack = slot.bogo$getStack();
             if (stack != null) {
-                ItemSortContainer container1 = items.get(stack);
-                if (container1 == null) {
-                    container1 = new ItemSortContainer(stack, clientSortData.get(slot.bogo$getSlotNumber()));
-                    items.put(stack, container1);
-                    list.add(container1);
+                ItemSortContainer container = new ItemSortContainer(
+                    stack,
+                    clientSortData.get(slot.bogo$getSlotNumber()));
+                if (preventSplit(stack)) {
+                    list.add(container);
                 } else {
-                    container1.grow(stack.stackSize);
+                    ItemSortContainer container1 = items.get(stack);
+                    if (container1 == null) {
+                        container1 = container;
+                        items.put(stack, container1);
+                        list.add(container1);
+                    } else {
+                        container1.grow(stack.stackSize);
+                    }
                 }
             }
         }
@@ -269,7 +284,7 @@ public class SortHandler {
     @SideOnly(Side.CLIENT)
     public static Comparator<ItemStack> getClientItemComparator() {
         return (stack1, stack2) -> {
-            int result = 0;
+            int result;
             for (SortRule<ItemStack> sortRule : SortRulesConfig.sortRules) {
                 result = sortRule.compare(stack1, stack2);
                 if (result != 0) return result;
@@ -340,5 +355,12 @@ public class SortHandler {
         }
         return result;
 
+    }
+
+    // Prevents splitting of non-stackable items (e.g., tools, armor) with stack size > 1
+    // to avoid filling the inventory unnecessarily.
+    private static boolean preventSplit(ItemStack stack) {
+        if (!BogoSorterConfig.preventSplit) return false;
+        return stack.getMaxStackSize() == 1;
     }
 }
