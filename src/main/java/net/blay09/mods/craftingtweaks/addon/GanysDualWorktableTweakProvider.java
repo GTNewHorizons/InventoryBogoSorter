@@ -12,6 +12,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -84,26 +86,16 @@ public class GanysDualWorktableTweakProvider implements TweakProvider {
     @SuppressWarnings("unchecked")
     @SideOnly(Side.CLIENT)
     public void initGui(GuiContainer guiContainer, List buttonList) {
+        // spotless:off
         final int paddingTop = 16;
-        buttonList
-            .add(CraftingTweaksAPI.createRotateButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop));
-        buttonList.add(
-            CraftingTweaksAPI.createBalanceButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 18));
-        buttonList.add(
-            CraftingTweaksAPI.createClearButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 36));
-        buttonList.add(
-            CraftingTweaksAPI
-                .createRotateButton(1, guiContainer.guiLeft + guiContainer.xSize, guiContainer.guiTop + paddingTop));
-        buttonList.add(
-            CraftingTweaksAPI.createBalanceButton(
-                1,
-                guiContainer.guiLeft + guiContainer.xSize,
-                guiContainer.guiTop + paddingTop + 18));
-        buttonList.add(
-            CraftingTweaksAPI.createClearButton(
-                1,
-                guiContainer.guiLeft + guiContainer.xSize,
-                guiContainer.guiTop + paddingTop + 36));
+        final int xSize = ((GuiContainerAccessor) guiContainer).getXSize();
+        buttonList.add(CraftingTweaksAPI.createRotateButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop));
+        buttonList.add(CraftingTweaksAPI.createBalanceButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 18));
+        buttonList.add(CraftingTweaksAPI.createClearButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 36));
+        buttonList.add(CraftingTweaksAPI.createRotateButton(1, guiContainer.guiLeft + xSize, guiContainer.guiTop + paddingTop));
+        buttonList.add(CraftingTweaksAPI.createBalanceButton(1, guiContainer.guiLeft + xSize, guiContainer.guiTop + paddingTop + 18));
+        buttonList.add(CraftingTweaksAPI.createClearButton(1, guiContainer.guiLeft + xSize, guiContainer.guiTop + paddingTop + 36));
+        // spotless:on
     }
 
     @Override

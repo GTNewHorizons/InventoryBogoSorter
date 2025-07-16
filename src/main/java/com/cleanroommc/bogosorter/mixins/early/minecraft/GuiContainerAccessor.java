@@ -11,10 +11,16 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface GuiContainerAccessor extends GuiScreenAccessor {
 
     @Accessor
-    int getGuiTop();
+    int getXSize();
+
+    @Accessor
+    int getYSize();
 
     @Accessor
     int getGuiLeft();
+
+    @Accessor
+    int getGuiTop();
 
     @Accessor(value = "field_146995_H")
     void setIgnoreMouseUp(boolean ignoreMouseUp);
