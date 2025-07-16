@@ -128,9 +128,11 @@ public class TerraFirmaCraftTweakProvider implements TweakProvider {
         final int paddingLeft = 1;
         final int paddingTop = -16;
         final int xSize = ((GuiContainerAccessor) guiContainer).getXSize();
-        buttonList.add(CraftingTweaksAPI.createRotateButton(0, guiContainer.guiLeft + xSize / 2 + paddingLeft, guiContainer.guiTop + paddingTop));
-        buttonList.add(CraftingTweaksAPI.createBalanceButton(0, guiContainer.guiLeft + xSize / 2 + paddingLeft + 18, guiContainer.guiTop + paddingTop));
-        buttonList.add(CraftingTweaksAPI.createClearButton(0, guiContainer.guiLeft + xSize / 2 + paddingLeft + 36, guiContainer.guiTop + paddingTop));
+        final int guiLeft = ((GuiContainerAccessor) guiContainer).getGuiLeft();
+        final int guiTop = ((GuiContainerAccessor) guiContainer).getGuiTop();
+        buttonList.add(CraftingTweaksAPI.createRotateButton(0, guiLeft + xSize / 2 + paddingLeft, guiTop + paddingTop));
+        buttonList.add(CraftingTweaksAPI.createBalanceButton(0, guiLeft + xSize / 2 + paddingLeft + 18, guiTop + paddingTop));
+        buttonList.add(CraftingTweaksAPI.createClearButton(0, guiLeft + xSize / 2 + paddingLeft + 36, guiTop + paddingTop));
         // spotless:on
     }
 

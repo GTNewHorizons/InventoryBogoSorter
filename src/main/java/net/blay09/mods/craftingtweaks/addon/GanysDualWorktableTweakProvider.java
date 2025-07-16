@@ -89,12 +89,14 @@ public class GanysDualWorktableTweakProvider implements TweakProvider {
         // spotless:off
         final int paddingTop = 16;
         final int xSize = ((GuiContainerAccessor) guiContainer).getXSize();
-        buttonList.add(CraftingTweaksAPI.createRotateButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop));
-        buttonList.add(CraftingTweaksAPI.createBalanceButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 18));
-        buttonList.add(CraftingTweaksAPI.createClearButton(0, guiContainer.guiLeft - 16, guiContainer.guiTop + paddingTop + 36));
-        buttonList.add(CraftingTweaksAPI.createRotateButton(1, guiContainer.guiLeft + xSize, guiContainer.guiTop + paddingTop));
-        buttonList.add(CraftingTweaksAPI.createBalanceButton(1, guiContainer.guiLeft + xSize, guiContainer.guiTop + paddingTop + 18));
-        buttonList.add(CraftingTweaksAPI.createClearButton(1, guiContainer.guiLeft + xSize, guiContainer.guiTop + paddingTop + 36));
+        final int guiLeft = ((GuiContainerAccessor) guiContainer).getGuiLeft();
+        final int guiTop = ((GuiContainerAccessor) guiContainer).getGuiTop();
+        buttonList.add(CraftingTweaksAPI.createRotateButton(0, guiLeft - 16, guiTop + paddingTop));
+        buttonList.add(CraftingTweaksAPI.createBalanceButton(0, guiLeft - 16, guiTop + paddingTop + 18));
+        buttonList.add(CraftingTweaksAPI.createClearButton(0, guiLeft - 16, guiTop + paddingTop + 36));
+        buttonList.add(CraftingTweaksAPI.createRotateButton(1, guiLeft + xSize, guiTop + paddingTop));
+        buttonList.add(CraftingTweaksAPI.createBalanceButton(1, guiLeft + xSize, guiTop + paddingTop + 18));
+        buttonList.add(CraftingTweaksAPI.createClearButton(1, guiLeft + xSize, guiTop + paddingTop + 36));
         // spotless:on
     }
 
