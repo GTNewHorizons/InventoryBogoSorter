@@ -6,6 +6,8 @@ import net.minecraft.inventory.Slot;
 
 import org.spongepowered.asm.mixin.Mixin;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
+
 import forestry.core.gui.GuiForestry;
 import forestry.factory.gui.ContainerCarpenter;
 import forestry.factory.gui.ContainerCentrifuge;
@@ -80,7 +82,7 @@ public abstract class MixinGuiForestry extends GuiContainer implements IMTModGui
             field_147007_t = false;
             // Don't ignoreMouseUp on slots that can't accept the item. (crafting output, ME slot, etc.)
             if (theSlot != null && theSlot.isItemValid(mc.thePlayer.inventory.getItemStack())) {
-                field_146995_H = true;
+                ((GuiContainerAccessor) this).setIgnoreMouseUp(true);
             }
             return true;
         }
