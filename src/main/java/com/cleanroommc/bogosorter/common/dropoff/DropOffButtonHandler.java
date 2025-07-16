@@ -8,7 +8,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -39,7 +39,7 @@ public class DropOffButtonHandler {
         GuiScreen screen = event.gui;
         if (!BogoSorterConfig.dropOff.button.showButton) return;
         if (screen instanceof GuiInventory) {
-            for (GuiButton guiButton : ((IGuiContainerAccessor) event.gui).getButtons()) {
+            for (GuiButton guiButton : ((GuiContainerAccessor) event.gui).getButtons()) {
                 if (guiButton instanceof DropOffInvButton invButton) {
                     invButton.drawTooltip(event.mouseX, event.mouseY);
                 }

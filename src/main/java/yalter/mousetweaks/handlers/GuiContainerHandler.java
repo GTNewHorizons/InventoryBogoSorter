@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Mouse;
 
-import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 
 import yalter.mousetweaks.ClientEventHandler;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
@@ -27,12 +27,12 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     protected Minecraft mc;
     protected GuiContainer guiContainer;
-    protected IGuiContainerAccessor mixinGuiContainer;
+    protected GuiContainerAccessor mixinGuiContainer;
 
     public GuiContainerHandler(GuiContainer guiContainer) {
         this.mc = Minecraft.getMinecraft();
         this.guiContainer = guiContainer;
-        this.mixinGuiContainer = (IGuiContainerAccessor) guiContainer;
+        this.mixinGuiContainer = (GuiContainerAccessor) guiContainer;
     }
 
     private int getDisplayWidth() {

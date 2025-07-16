@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 import yalter.mousetweaks.impl.IGuiScreenHandler;
@@ -16,12 +16,12 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
     protected Minecraft mc;
     protected IMTModGuiContainer2 modGuiContainer;
-    protected IGuiContainerAccessor mixinGuiContainer;
+    protected GuiContainerAccessor mixinGuiContainer;
 
     public IMTModGuiContainer2Handler(IMTModGuiContainer2 modGuiContainer) {
         this.mc = Minecraft.getMinecraft();
         this.modGuiContainer = modGuiContainer;
-        this.mixinGuiContainer = (IGuiContainerAccessor) modGuiContainer;
+        this.mixinGuiContainer = (GuiContainerAccessor) modGuiContainer;
 
     }
 
