@@ -28,6 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.google.common.collect.Lists;
 
@@ -114,9 +115,12 @@ public class ClientProxy extends CommonProxy {
         if (entityPlayer != null) {
             Container container = entityPlayer.openContainer;
             if (container != null) {
-                Slot mouseSlot = event.gui instanceof GuiContainer
-                    ? ((GuiContainer) event.gui).getSlotAtPosition(event.mouseX, event.mouseY)
-                    : null;
+                final Slot mouseSlot;
+                if (event.gui instanceof GuiContainerAccessor) {
+                    mouseSlot = ((GuiContainerAccessor) event.gui).getSlotAt(event.mouseX, event.mouseY);
+                } else {
+                    mouseSlot = null;
+                }
                 TweakProvider provider = CraftingTweaks.instance.getProvider(container);
                 if (provider != null) {
                     if (keyTransferStack.getKeyCode() > 0 && Keyboard.isKeyDown(keyTransferStack.getKeyCode())) {
@@ -307,8 +311,8 @@ public class ClientProxy extends CommonProxy {
             // WAILA somehow breaks DrawScreenEvent when exiting its menu
             return;
         }
-        if (event.gui instanceof GuiContainer) {
-            mouseSlot = ((GuiContainer) event.gui).getSlotAtPosition(event.mouseX, event.mouseY);
+        if (event.gui instanceof GuiContainerAccessor) {
+            mouseSlot = ((GuiContainerAccessor) event.gui).getSlotAt(event.mouseX, event.mouseY);
         } else {
             mouseSlot = null;
         }
