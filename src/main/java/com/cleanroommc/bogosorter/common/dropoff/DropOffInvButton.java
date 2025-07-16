@@ -2,7 +2,6 @@ package com.cleanroommc.bogosorter.common.dropoff;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
@@ -18,6 +17,7 @@ import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Color;
 
@@ -128,8 +128,9 @@ public class DropOffInvButton extends GuiButton {
                 EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
                     + " : "
                     + GameSettings.getKeyDisplayString(ClientEventHandler.dropoffKey.getKeyCode()));
-            GuiScreen guiScreen = Objects.requireNonNull(Minecraft.getMinecraft().currentScreen);
-            guiScreen.func_146283_a(tooltipLines, mouseX, mouseY);
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiScreenAccessor accessor) {
+                accessor.drawHoveringText(tooltipLines, mouseX, mouseY);
+            }
         }
     }
 }

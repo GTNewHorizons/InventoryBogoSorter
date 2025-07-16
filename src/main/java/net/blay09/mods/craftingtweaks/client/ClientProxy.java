@@ -325,7 +325,7 @@ public class ClientProxy extends CommonProxy {
                 }
             }
             if (!tooltipList.isEmpty()) {
-                event.gui.func_146283_a(tooltipList, event.mouseX, event.mouseY);
+                ((GuiScreenAccessor) event.gui).drawHoveringText(tooltipList, event.mouseX, event.mouseY);
             }
         }
     }

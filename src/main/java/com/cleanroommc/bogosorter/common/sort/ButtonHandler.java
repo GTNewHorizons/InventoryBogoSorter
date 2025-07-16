@@ -2,11 +2,9 @@ package com.cleanroommc.bogosorter.common.sort;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
@@ -21,6 +19,7 @@ import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.screen.GuiScreenWrapper;
@@ -154,7 +153,6 @@ public class ButtonHandler {
 
         public void drawTooltip(int mouseX, int mouseY) {
             if (this.enabled && this.field_146123_n) {
-                GuiScreen guiScreen = Objects.requireNonNull(Minecraft.getMinecraft().currentScreen);
                 final List<String> tooltipLines = new ArrayList<>(2);
                 if (this.sort) {
                     tooltipLines.add(I18n.format("key.sort"));
@@ -165,7 +163,9 @@ public class ButtonHandler {
                 } else {
                     tooltipLines.add(I18n.format("key.sort_config"));
                 }
-                guiScreen.func_146283_a(tooltipLines, mouseX, mouseY);
+                if (Minecraft.getMinecraft().currentScreen instanceof GuiScreenAccessor accessor) {
+                    accessor.drawHoveringText(tooltipLines, mouseX, mouseY);
+                }
             }
         }
     }
