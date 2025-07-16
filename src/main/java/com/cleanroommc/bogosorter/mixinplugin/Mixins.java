@@ -15,7 +15,8 @@ public enum Mixins implements IMixins {
             "minecraft.MixinEntityPlayer",
             "minecraft.MixinItemStack",
             "minecraft.SlotMixin",
-            "minecraft.SlotAccessor")
+            "minecraft.SlotAccessor",
+            "minecraft.NBTTagCompoundMixin")
         .addClientMixins(
             "minecraft.CreativeSlotMixin",
             "minecraft.GuiScreenAccessor",
