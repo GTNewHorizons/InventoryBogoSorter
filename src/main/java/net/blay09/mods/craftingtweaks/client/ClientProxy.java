@@ -1,6 +1,5 @@
 package net.blay09.mods.craftingtweaks.client;
 
-import java.util.Iterator;
 import java.util.List;
 
 import net.blay09.mods.craftingtweaks.CommonProxy;
@@ -29,6 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -226,12 +226,8 @@ public class ClientProxy extends CommonProxy {
                             if (!wasToggleButtons) {
                                 CraftingTweaks.hideButtons = !CraftingTweaks.hideButtons;
                                 if (CraftingTweaks.hideButtons) {
-                                    Iterator it = guiScreen.buttonList.iterator();
-                                    while (it.hasNext()) {
-                                        if (it.next() instanceof GuiTweakButton) {
-                                            it.remove();
-                                        }
-                                    }
+                                    ((GuiScreenAccessor) guiScreen).getButtons()
+                                        .removeIf(o -> o instanceof GuiTweakButton);
                                 } else {
                                     initGui((GuiContainer) guiScreen);
                                 }
@@ -285,14 +281,13 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void initGui(GuiContainer guiContainer) {
         TweakProvider provider = CraftingTweaks.instance.getProvider(guiContainer.inventorySlots);
         if (provider != null) {
             CraftingTweaks.ModSupportState config = CraftingTweaks.instance.getModSupportState(provider.getModId());
             if (config == CraftingTweaks.ModSupportState.ENABLED
                 || config == CraftingTweaks.ModSupportState.BUTTONS_ONLY) {
-                provider.initGui(guiContainer, guiContainer.buttonList);
+                provider.initGui(guiContainer, ((GuiScreenAccessor) guiContainer).getButtons());
             }
         }
     }
@@ -319,8 +314,7 @@ public class ClientProxy extends CommonProxy {
         }
         if (!CraftingTweaks.hideButtonTooltips) {
             tooltipList.clear();
-            for (Object obj : event.gui.buttonList) {
-                GuiButton button = (GuiButton) obj;
+            for (GuiButton button : ((GuiScreenAccessor) event.gui).getButtons()) {
                 if (button instanceof ITooltipProvider && button.func_146115_a()) {
                     ((ITooltipProvider) button).addInformation(tooltipList);
                     break;
