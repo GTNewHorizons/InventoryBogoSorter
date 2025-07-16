@@ -52,7 +52,7 @@ public abstract class MixinAEBaseGui extends GuiContainer implements IMTModGuiCo
 
     @Override
     public boolean MT_disableRMBDraggingFunctionality() {
-        if (field_147007_t && field_146988_G == 1) {
+        if (field_147007_t && ((GuiContainerAccessor) this).getDragSplittingButton() == 1) {
             field_147007_t = false;
             // Don't ignoreMouseUp on slots that can't accept the item. (crafting output, ME slot, etc.)
             if (theSlot != null && theSlot.isItemValid(mc.thePlayer.inventory.getItemStack())) {
