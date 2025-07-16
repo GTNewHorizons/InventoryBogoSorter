@@ -8,7 +8,7 @@ import net.minecraft.network.PacketBuffer;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.ShortcutHandler;
-import com.cleanroommc.bogosorter.api.ISlot;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 
 public class CShortcut implements IPacket {
 
@@ -38,7 +38,7 @@ public class CShortcut implements IPacket {
     public IPacket executeServer(NetHandlerPlayServer handler) {
         Container container = handler.playerEntity.openContainer;
         if (container == null) throw new IllegalStateException("Expected open container on server");
-        ISlot slot = BogoSortAPI.getSlot(container, slotNumber);// container.getSlot(slotNumber);
+        SlotAccessor slot = BogoSortAPI.getSlot(container, slotNumber);// container.getSlot(slotNumber);
 
         switch (type) {
             case MOVE_ALL:

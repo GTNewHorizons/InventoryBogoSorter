@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,13 +29,13 @@ public interface IBogoSortAPI {
     }
 
     /**
-     * Register a function that converts a {@link Slot} to a {@link ISlot}. Useful if modders messed up.
+     * Register a function that converts a {@link Slot} to a {@link SlotAccessor}. Useful if modders messed up.
      *
      * @param clazz    slot class
      * @param function converter function
      * @param <T>      slot type
      */
-    <T extends Slot> void addSlotGetter(Class<T> clazz, Function<T, ISlot> function);
+    <T extends Slot> void addSlotGetter(Class<T> clazz, Function<T, SlotAccessor> function);
 
     /**
      * Registers a function which handles slot insertions in a custom way.
@@ -153,7 +154,7 @@ public interface IBogoSortAPI {
      * @param slot slot
      * @return generic slot
      */
-    ISlot getSlot(Slot slot);
+    SlotAccessor getSlot(Slot slot);
 
     /**
      * Transforms a list of slots using {@link #getSlot(Slot)}
@@ -161,5 +162,5 @@ public interface IBogoSortAPI {
      * @param slots list of slots
      * @return list of generic slots
      */
-    List<ISlot> getSlots(@NotNull List<Slot> slots);
+    List<SlotAccessor> getSlots(@NotNull List<Slot> slots);
 }

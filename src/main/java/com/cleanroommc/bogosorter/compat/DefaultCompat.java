@@ -20,7 +20,7 @@ import com.bioxx.tfc.Containers.ContainerChestTFC;
 import com.brandon3055.draconicevolution.common.container.ContainerDraconiumChest;
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.IPosSetter;
-import com.cleanroommc.bogosorter.api.ISlot;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.hbm.inventory.container.ContainerCrateDesh;
 import com.hbm.inventory.container.ContainerCrateIron;
 import com.hbm.inventory.container.ContainerCrateSteel;
@@ -107,7 +107,7 @@ public class DefaultCompat {
                 ContainerDraconiumChest.class,
                 (container, builder) -> { builder.addSlotGroup(0, 260, 26); });
             api.addPlayerSortButtonPosition(ContainerDraconiumChest.class, (slotGroup, buttonPos) -> {
-                ISlot topRight = slotGroup.getSlots()
+                SlotAccessor topRight = slotGroup.getSlots()
                     .get(slotGroup.getRowSize() - 1);
                 buttonPos.setVertical();
                 buttonPos.setTopLeft();
@@ -264,7 +264,7 @@ public class DefaultCompat {
             // builder.addSlotGroup(0, 9 * 27, 27);
             // });
             // api.addPlayerSortButtonPosition(ContainerInfinityChest.class, (slotGroup, buttonPos) -> {
-            // ISlot topRight = slotGroup.getSlots().get(slotGroup.getRowSize() - 1);
+            // SlotAccessor topRight = slotGroup.getSlots().get(slotGroup.getRowSize() - 1);
             // buttonPos.setVertical();
             // buttonPos.setTopLeft();
             // buttonPos.setPos(topRight.bogo$getX() + 17, topRight.bogo$getY() - 1);
@@ -289,7 +289,7 @@ public class DefaultCompat {
                     builder.addSlotGroup(46, container.inventorySlots.size(), 6)
                         .buttonPosSetter((slotGroup, buttonPos) -> {
                             buttonPos.setPos(0, 1000);
-                            for (ISlot slot : slotGroup.getSlots()) {
+                            for (SlotAccessor slot : slotGroup.getSlots()) {
                                 if (slot.bogo$getX() >= 0 && slot.bogo$getY() >= 0 && slot.bogo$isEnabled()) {
                                     buttonPos.setPos(
                                         Math.max(buttonPos.getX(), slot.bogo$getX() + 17),

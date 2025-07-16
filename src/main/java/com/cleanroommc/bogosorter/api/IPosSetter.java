@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter.api;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
+
 /**
  * A function to set the sort button pos of {@link ISlotGroup}'s.
  */
@@ -11,7 +13,7 @@ public interface IPosSetter {
             .size() < slotGroup.getRowSize()) {
             buttonPos.setPos(-1000, -1000);
         } else {
-            ISlot topRight = slotGroup.getSlots()
+            SlotAccessor topRight = slotGroup.getSlots()
                 .get(slotGroup.getRowSize() - 1);
             buttonPos.setPos(topRight.bogo$getX() + 17, topRight.bogo$getY() - 2);
         }
@@ -22,7 +24,7 @@ public interface IPosSetter {
             .size() < slotGroup.getRowSize()) {
             buttonPos.setPos(-1000, -1000);
         } else {
-            ISlot topRight = slotGroup.getSlots()
+            SlotAccessor topRight = slotGroup.getSlots()
                 .get(slotGroup.getRowSize() - 1);
             buttonPos.setVertical();
             buttonPos.setTopLeft();
