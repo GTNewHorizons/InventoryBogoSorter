@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.cleanroommc.bogosorter.api.ISlot;
@@ -120,7 +121,8 @@ public abstract class SlotMixin implements ISlot {
         return original;
     }
 
-    public Slot bogo$this() {
+    @Unique
+    private Slot bogo$this() {
         return (Slot) (Object) this;
     }
 }
