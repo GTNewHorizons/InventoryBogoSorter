@@ -20,6 +20,7 @@ import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.IWidget;
+import com.cleanroommc.modularui.drawable.GuiDraw;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.drawable.Rectangle;
 import com.cleanroommc.modularui.drawable.UITexture;
@@ -34,6 +35,7 @@ import com.cleanroommc.modularui.value.IntValue;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.ColorPickerDialog;
 import com.cleanroommc.modularui.widgets.CycleButtonWidget;
 import com.cleanroommc.modularui.widgets.Dialog;
 import com.cleanroommc.modularui.widgets.ListWidget;
@@ -41,6 +43,7 @@ import com.cleanroommc.modularui.widgets.PageButton;
 import com.cleanroommc.modularui.widgets.PagedWidget;
 import com.cleanroommc.modularui.widgets.SortableListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
@@ -131,6 +134,14 @@ public class ConfigGui extends CustomModularScreen {
 
     public IWidget createGeneralConfigUI(ModularPanel mainPanel, ModularGuiContext context) {
         Row row = new Row();
+        IPanelHandler colorPicker = IPanelHandler.simple(
+            mainPanel,
+            (parent,
+                player) -> new ColorPickerDialog(
+                    val -> BogoSorterConfig.buttonColor = val,
+                    BogoSorterConfig.buttonColor,
+                    true).setDraggable(true),
+            true);
         return new ListWidget<>().left(5)
             .right(5)
             .top(2)
@@ -140,7 +151,7 @@ public class ConfigGui extends CustomModularScreen {
                     .asWidget()
                     .top(1)
                     .left(32)
-                    .size(1, 56))
+                    .size(1, 250))
             .child(
                 new Row().widthRel(1f)
                     .height(14)
@@ -230,6 +241,55 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .height(14)
                             .addTooltipLine(IKey.lang("bogosort.gui.hotbar_scrolling.tooltip"))
+                            .tooltipShowUpTimer(10)))
+            .child(
+                Flow.row()
+                    .widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(
+                        new CycleButtonWidget()
+                            .value(
+                                new BoolValue.Dynamic(
+                                    () -> BogoSorterConfig.buttonEnabled,
+                                    val -> BogoSorterConfig.buttonEnabled = val))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .addTooltipLine(IKey.lang("bogosort.gui.button.enabled"))
+                            .tooltipShowUpTimer(10)
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosort.gui.button.enabled")
+                            .asWidget()
+                            .marginLeft(10)
+                            .height(14)
+                            .addTooltipLine(IKey.lang("bogosort.gui.button.enabled"))
+                            .tooltipShowUpTimer(10)))
+            .child(
+                Flow.row()
+                    .widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(
+                        new ButtonWidget<>().size(14)
+                            .margin(8, 0)
+                            .background(((context1, x, y, width, height, widgetTheme) -> {
+                                GuiDraw.drawRect(0, 0, 14, 14, 0xFF000000);
+                                GuiDraw.drawRect(1, 1, 12, 12, BogoSorterConfig.buttonColor);
+                            }))
+                            .disableHoverBackground()
+                            .onMousePressed(mouseButton -> {
+                                colorPicker.openPanel();
+                                return true;
+                            }))
+                    .child(
+                        IKey.lang("bogosort.gui.button.color")
+                            .asWidget()
+                            .marginLeft(10)
+                            .height(14)
+                            .addTooltipLine(IKey.lang("bogosort.gui.button.color"))
                             .tooltipShowUpTimer(10)))
             .child(
                 new Row().widthRel(1f)
