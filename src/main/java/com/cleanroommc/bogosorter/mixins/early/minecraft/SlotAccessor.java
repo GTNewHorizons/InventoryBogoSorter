@@ -9,6 +9,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 @Mixin(Slot.class)
 public interface SlotAccessor {
 
@@ -36,6 +39,7 @@ public interface SlotAccessor {
     @Invoker
     int callGetSlotStackLimit();
 
+    @SideOnly(Side.CLIENT)
     @Invoker(value = "func_111238_b")
     boolean callIsEnabled();
 
