@@ -21,7 +21,7 @@ public interface SlotAccessor {
     @Accessor(value = "slotNumber")
     int bogo$getSlotNumber();
 
-    @Invoker(value = "getSlotIndex")
+    @Invoker(value = "getSlotIndex", remap = false)
     int bogo$getSlotIndex();
 
     @Accessor(value = "inventory")
