@@ -14,10 +14,13 @@ public enum Mixins implements IMixins {
             "minecraft.ContainerHorseInventoryMixin",
             "minecraft.MixinEntityPlayer",
             "minecraft.MixinItemStack",
-            "minecraft.SlotMixin")
+            "minecraft.SlotMixin",
+            "minecraft.SlotAccessor",
+            "minecraft.NBTTagCompoundMixin")
         .addClientMixins(
             "minecraft.CreativeSlotMixin",
-            "minecraft.GuiContainerMixin",
+            "minecraft.GuiScreenAccessor",
+            "minecraft.GuiContainerAccessor",
             "minecraft.GuiEditSignMixin",
             "minecraft.MinecraftMixin")),
     IronChest(new MixinBuilder()

@@ -1,6 +1,5 @@
 package net.blay09.mods.craftingtweaks.client;
 
-import java.util.Iterator;
 import java.util.List;
 
 import net.blay09.mods.craftingtweaks.CommonProxy;
@@ -29,6 +28,8 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -114,9 +115,12 @@ public class ClientProxy extends CommonProxy {
         if (entityPlayer != null) {
             Container container = entityPlayer.openContainer;
             if (container != null) {
-                Slot mouseSlot = event.gui instanceof GuiContainer
-                    ? ((GuiContainer) event.gui).getSlotAtPosition(event.mouseX, event.mouseY)
-                    : null;
+                final Slot mouseSlot;
+                if (event.gui instanceof GuiContainerAccessor) {
+                    mouseSlot = ((GuiContainerAccessor) event.gui).callGetSlotAtPosition(event.mouseX, event.mouseY);
+                } else {
+                    mouseSlot = null;
+                }
                 TweakProvider provider = CraftingTweaks.instance.getProvider(container);
                 if (provider != null) {
                     if (keyTransferStack.getKeyCode() > 0 && Keyboard.isKeyDown(keyTransferStack.getKeyCode())) {
@@ -226,12 +230,8 @@ public class ClientProxy extends CommonProxy {
                             if (!wasToggleButtons) {
                                 CraftingTweaks.hideButtons = !CraftingTweaks.hideButtons;
                                 if (CraftingTweaks.hideButtons) {
-                                    Iterator it = guiScreen.buttonList.iterator();
-                                    while (it.hasNext()) {
-                                        if (it.next() instanceof GuiTweakButton) {
-                                            it.remove();
-                                        }
-                                    }
+                                    ((GuiScreenAccessor) guiScreen).getButtonList()
+                                        .removeIf(o -> o instanceof GuiTweakButton);
                                 } else {
                                     initGui((GuiContainer) guiScreen);
                                 }
@@ -285,14 +285,13 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void initGui(GuiContainer guiContainer) {
         TweakProvider provider = CraftingTweaks.instance.getProvider(guiContainer.inventorySlots);
         if (provider != null) {
             CraftingTweaks.ModSupportState config = CraftingTweaks.instance.getModSupportState(provider.getModId());
             if (config == CraftingTweaks.ModSupportState.ENABLED
                 || config == CraftingTweaks.ModSupportState.BUTTONS_ONLY) {
-                provider.initGui(guiContainer, guiContainer.buttonList);
+                provider.initGui(guiContainer, ((GuiScreenAccessor) guiContainer).getButtonList());
             }
         }
     }
@@ -312,22 +311,21 @@ public class ClientProxy extends CommonProxy {
             // WAILA somehow breaks DrawScreenEvent when exiting its menu
             return;
         }
-        if (event.gui instanceof GuiContainer) {
-            mouseSlot = ((GuiContainer) event.gui).getSlotAtPosition(event.mouseX, event.mouseY);
+        if (event.gui instanceof GuiContainerAccessor) {
+            mouseSlot = ((GuiContainerAccessor) event.gui).callGetSlotAtPosition(event.mouseX, event.mouseY);
         } else {
             mouseSlot = null;
         }
         if (!CraftingTweaks.hideButtonTooltips) {
             tooltipList.clear();
-            for (Object obj : event.gui.buttonList) {
-                GuiButton button = (GuiButton) obj;
+            for (GuiButton button : ((GuiScreenAccessor) event.gui).getButtonList()) {
                 if (button instanceof ITooltipProvider && button.func_146115_a()) {
                     ((ITooltipProvider) button).addInformation(tooltipList);
                     break;
                 }
             }
             if (!tooltipList.isEmpty()) {
-                event.gui.func_146283_a(tooltipList, event.mouseX, event.mouseY);
+                ((GuiScreenAccessor) event.gui).drawHoveringText(tooltipList, event.mouseX, event.mouseY);
             }
         }
     }

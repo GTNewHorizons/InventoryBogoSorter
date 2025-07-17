@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import com.cleanroommc.bogosorter.api.IPosSetter;
-import com.cleanroommc.bogosorter.api.ISlot;
 import com.cleanroommc.bogosorter.api.ISlotGroup;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 
 public class SlotGroup implements ISlotGroup {
 
@@ -16,16 +16,16 @@ public class SlotGroup implements ISlotGroup {
 
     private final boolean player;
     private final boolean hotbar;
-    private final List<ISlot> slots;
+    private final List<SlotAccessor> slots;
     private final int rowSize;
     private int priority;
     private IPosSetter posSetter;
 
-    public SlotGroup(List<ISlot> slots, int rowSize) {
+    public SlotGroup(List<SlotAccessor> slots, int rowSize) {
         this(false, false, slots, rowSize);
     }
 
-    public SlotGroup(boolean player, boolean hotbar, List<ISlot> slots, int rowSize) {
+    public SlotGroup(boolean player, boolean hotbar, List<SlotAccessor> slots, int rowSize) {
         this.player = player;
         this.hotbar = player && hotbar;
         this.slots = Collections.unmodifiableList(slots);
@@ -35,7 +35,7 @@ public class SlotGroup implements ISlotGroup {
     }
 
     @Override
-    public @UnmodifiableView List<ISlot> getSlots() {
+    public @UnmodifiableView List<SlotAccessor> getSlots() {
         return this.slots;
     }
 
@@ -76,8 +76,8 @@ public class SlotGroup implements ISlotGroup {
     }
 
     public boolean hasSlot(int slotNumber) {
-        for (ISlot slot : getSlots()) {
-            if (slot.bogo$getSlotNumber() == slotNumber) return true;
+        for (SlotAccessor slot : getSlots()) {
+            if (slot.getSlotNumber() == slotNumber) return true;
         }
         return false;
     }

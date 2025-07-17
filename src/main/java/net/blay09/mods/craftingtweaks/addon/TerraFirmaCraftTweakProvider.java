@@ -14,6 +14,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -122,23 +124,16 @@ public class TerraFirmaCraftTweakProvider implements TweakProvider {
     @SuppressWarnings("unchecked")
     @SideOnly(Side.CLIENT)
     public void initGui(GuiContainer guiContainer, List buttonList) {
+        // spotless:off
         final int paddingLeft = 1;
         final int paddingTop = -16;
-        buttonList.add(
-            CraftingTweaksAPI.createRotateButton(
-                0,
-                guiContainer.guiLeft + guiContainer.xSize / 2 + paddingLeft,
-                guiContainer.guiTop + paddingTop));
-        buttonList.add(
-            CraftingTweaksAPI.createBalanceButton(
-                0,
-                guiContainer.guiLeft + guiContainer.xSize / 2 + paddingLeft + 18,
-                guiContainer.guiTop + paddingTop));
-        buttonList.add(
-            CraftingTweaksAPI.createClearButton(
-                0,
-                guiContainer.guiLeft + guiContainer.xSize / 2 + paddingLeft + 36,
-                guiContainer.guiTop + paddingTop));
+        final int xSize = ((GuiContainerAccessor) guiContainer).getXSize();
+        final int guiLeft = ((GuiContainerAccessor) guiContainer).getGuiLeft();
+        final int guiTop = ((GuiContainerAccessor) guiContainer).getGuiTop();
+        buttonList.add(CraftingTweaksAPI.createRotateButton(0, guiLeft + xSize / 2 + paddingLeft, guiTop + paddingTop));
+        buttonList.add(CraftingTweaksAPI.createBalanceButton(0, guiLeft + xSize / 2 + paddingLeft + 18, guiTop + paddingTop));
+        buttonList.add(CraftingTweaksAPI.createClearButton(0, guiLeft + xSize / 2 + paddingLeft + 36, guiTop + paddingTop));
+        // spotless:on
     }
 
     @Override

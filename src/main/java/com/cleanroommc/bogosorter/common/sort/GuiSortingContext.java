@@ -11,10 +11,10 @@ import net.minecraft.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
-import com.cleanroommc.bogosorter.api.ISlot;
 import com.cleanroommc.bogosorter.api.ISlotGroup;
 import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.ISortingContextBuilder;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 
@@ -122,7 +122,7 @@ public class GuiSortingContext {
         }
 
         @Override
-        public ISlotGroup addSlotGroup(List<ISlot> slots, int rowSize) {
+        public ISlotGroup addSlotGroup(List<SlotAccessor> slots, int rowSize) {
             if (slots.size() < rowSize) {
                 throw new IllegalArgumentException(
                     "Slots must at least fill 1 row! Expected at least " + rowSize
@@ -144,13 +144,13 @@ public class GuiSortingContext {
 
         @Override
         public ISlotGroup addGenericSlotGroup() {
-            List<ISlot> slots = new ArrayList<>();
+            List<SlotAccessor> slots = new ArrayList<>();
             IntArraySet xValues = new IntArraySet();
             for (Slot slot : this.container.inventorySlots) {
-                ISlot iSlot = BogoSortAPI.INSTANCE.getSlot(slot);
-                if (!BogoSortAPI.isPlayerSlot(iSlot)) {
-                    slots.add(iSlot);
-                    xValues.add(iSlot.bogo$getX());
+                SlotAccessor slotAccessor = BogoSortAPI.INSTANCE.getSlot(slot);
+                if (!BogoSortAPI.isPlayerSlot(slotAccessor)) {
+                    slots.add(slotAccessor);
+                    xValues.add(slotAccessor.bogo$getX());
                 }
             }
             if (slots.size() < 2) {
@@ -170,8 +170,8 @@ public class GuiSortingContext {
     }
 
     private static void addPlayerInventory(GuiSortingContext.Builder builder, Container container) {
-        List<ISlot> slots = new ArrayList<>();
-        List<ISlot> hotbar = new ArrayList<>();
+        List<SlotAccessor> slots = new ArrayList<>();
+        List<SlotAccessor> hotbar = new ArrayList<>();
         for (Slot slot : container.inventorySlots) {
             if (BogoSortAPI.isPlayerSlot(slot)) {
                 if (slot.getSlotIndex() < 9) hotbar.add(BogoSortAPI.INSTANCE.getSlot(slot));

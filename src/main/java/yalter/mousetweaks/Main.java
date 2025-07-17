@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.cleanroommc.bogosorter.common.sort.IGuiContainerAccessor;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 
 import cpw.mods.fml.common.Loader;
 import yalter.mousetweaks.api.IMTModGuiContainer;
@@ -177,7 +177,7 @@ public class Main {
                             } else {
                                 // If shift is not down, we need to merge the item stack on the mouse with the one in
                                 // the slot.
-                                if ((((IGuiContainerAccessor) currentScreen).getDragSplitting() == false)
+                                if ((((GuiContainerAccessor) currentScreen).getDragSplitting() == false)
                                     && (stackOnMouse.stackSize + targetStack.stackSize)
                                         <= stackOnMouse.getMaxStackSize()) {
                                     // We need to click on the slot so that our item stack gets merged with it, and

@@ -5,6 +5,8 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
+
 /**
  * A slot group is a list of slots which is organized in a rectangle.
  * It doesn't necessarily need to be a rectangle, but you might run into issues if the shape is more complex.
@@ -17,7 +19,7 @@ public interface ISlotGroup {
      * @return all slots
      */
     @UnmodifiableView
-    List<ISlot> getSlots();
+    List<SlotAccessor> getSlots();
 
     /**
      * Returns how many slots are in row. This is mostly used to determine the button position with

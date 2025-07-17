@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Unmodifiable;
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.ICustomInsertable;
 import com.cleanroommc.bogosorter.api.IPosSetter;
-import com.cleanroommc.bogosorter.api.ISlot;
 import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.ISortingContextBuilder;
 import com.cleanroommc.bogosorter.api.SortRule;
@@ -35,6 +34,7 @@ import com.cleanroommc.bogosorter.common.sort.ClientItemSortRule;
 import com.cleanroommc.bogosorter.common.sort.ItemSortContainer;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.compat.Mods;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.cleanroommc.modularui.factory.ClientGUI;
 import com.cleanroommc.modularui.utils.item.IItemHandler;
 import com.cleanroommc.modularui.utils.item.PlayerInvWrapper;
@@ -66,7 +66,7 @@ public class BogoSortAPI implements IBogoSortAPI {
         }
     };
 
-    public static final Function<Slot, ISlot> DEFAULT_SLOT_GETTER = slot -> (ISlot) slot;
+    public static final Function<Slot, SlotAccessor> DEFAULT_SLOT_GETTER = slot -> (SlotAccessor) slot;
 
     private static final ICustomInsertable DEFAULT_INSERTABLE = (container, slots, stack, emptyOnly) -> ShortcutHandler
         .insertToSlots(slots, stack, emptyOnly);
@@ -75,7 +75,7 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     private final Map<Class<?>, BiConsumer<Container, ISortingContextBuilder>> COMPAT_MAP = new Object2ObjectOpenHashMap<>();
     private final Map<Class<?>, IPosSetter> playerButtonPos = new Object2ObjectOpenHashMap<>();
-    private final Map<Class<?>, Function<Slot, ISlot>> slotGetterMap = new Object2ObjectOpenHashMap<>();
+    private final Map<Class<?>, Function<Slot, SlotAccessor>> slotGetterMap = new Object2ObjectOpenHashMap<>();
     private final Map<Class<?>, ICustomInsertable> customInsertableMap = new Object2ObjectOpenHashMap<>();
     private final Map<String, SortRule<ItemStack>> itemSortRules = new Object2ObjectOpenHashMap<>();
     private final Map<String, NbtSortRule> nbtSortRules = new Object2ObjectOpenHashMap<>();
@@ -92,8 +92,8 @@ public class BogoSortAPI implements IBogoSortAPI {
     }
 
     @Override
-    public <T extends Slot> void addSlotGetter(Class<T> clazz, Function<T, ISlot> function) {
-        this.slotGetterMap.put(clazz, (Function<Slot, ISlot>) function);
+    public <T extends Slot> void addSlotGetter(Class<T> clazz, Function<T, SlotAccessor> function) {
+        this.slotGetterMap.put(clazz, (Function<Slot, SlotAccessor>) function);
     }
 
     @Override
@@ -240,19 +240,19 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     @NotNull
     @Override
-    public ISlot getSlot(@NotNull Slot slot) {
+    public SlotAccessor getSlot(@NotNull Slot slot) {
         return this.slotGetterMap.getOrDefault(slot.getClass(), DEFAULT_SLOT_GETTER)
             .apply(slot);
     }
 
     @Override
-    public List<ISlot> getSlots(@NotNull List<Slot> slots) {
-        List<ISlot> iSlots = new ArrayList<>();
-        for (Slot slot : slots) iSlots.add(getSlot(slot));
-        return iSlots;
+    public List<SlotAccessor> getSlots(@NotNull List<Slot> slots) {
+        List<SlotAccessor> slotAccessors = new ArrayList<>();
+        for (Slot slot : slots) slotAccessors.add(getSlot(slot));
+        return slotAccessors;
     }
 
-    public static ISlot getSlot(@NotNull Container container, int index) {
+    public static SlotAccessor getSlot(@NotNull Container container, int index) {
         return INSTANCE.getSlot(container.getSlot(index));
     }
 
@@ -262,7 +262,7 @@ public class BogoSortAPI implements IBogoSortAPI {
             : this.customInsertableMap.getOrDefault(container.getClass(), DEFAULT_INSERTABLE);
     }
 
-    public static ItemStack insert(Container container, List<ISlot> slots, ItemStack stack) {
+    public static ItemStack insert(Container container, List<SlotAccessor> slots, ItemStack stack) {
         if (slots.isEmpty()) return stack;
         ICustomInsertable insertable = INSTANCE.getInsertable(container, isPlayerSlot(slots.get(0)));
         if (stack.isStackable()) {
@@ -274,7 +274,7 @@ public class BogoSortAPI implements IBogoSortAPI {
         return stack;
     }
 
-    public static ItemStack insert(Container container, List<ISlot> slots, ItemStack stack, boolean emptyOnly) {
+    public static ItemStack insert(Container container, List<SlotAccessor> slots, ItemStack stack, boolean emptyOnly) {
         if (slots.isEmpty()) return stack;
         return INSTANCE.getInsertable(container, isPlayerSlot(slots.get(0)))
             .insert(container, slots, stack, emptyOnly);
@@ -285,15 +285,15 @@ public class BogoSortAPI implements IBogoSortAPI {
     }
 
     public static boolean isPlayerSlot(Slot slot) {
-        return isPlayerSlot((ISlot) slot);
+        return isPlayerSlot((SlotAccessor) slot);
     }
 
-    public static boolean isPlayerSlot(ISlot slot) {
+    public static boolean isPlayerSlot(SlotAccessor slot) {
         if (slot == null) return false;
-        if (slot.bogo$getInventory() instanceof InventoryPlayer
+        if (slot.getInventory() instanceof InventoryPlayer
             || (slot instanceof SlotItemHandler handler && isPlayerInventory(handler.getItemHandler()))
             || (Mods.Ae2.isLoaded() && slot instanceof AppEngSlot AppEng && isPlayerInventory(AppEng.inventory))) {
-            return slot.bogo$getSlotIndex() >= 0 && slot.bogo$getSlotIndex() < 36;
+            return slot.callGetSlotIndex() >= 0 && slot.callGetSlotIndex() < 36;
         }
         return false;
     }
