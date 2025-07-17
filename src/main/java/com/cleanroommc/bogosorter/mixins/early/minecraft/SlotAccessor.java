@@ -18,39 +18,39 @@ public interface SlotAccessor {
     @Accessor(value = "yDisplayPosition")
     int bogo$getY();
 
-    @Accessor(value = "slotNumber")
-    int bogo$getSlotNumber();
+    @Accessor
+    int getSlotNumber();
 
-    @Invoker(value = "getSlotIndex", remap = false)
-    int bogo$getSlotIndex();
+    @Invoker(remap = false)
+    int callGetSlotIndex();
 
-    @Accessor(value = "inventory")
-    IInventory bogo$getInventory();
+    @Accessor
+    IInventory getInventory();
 
-    @Invoker(value = "putStack")
-    void bogo$putStack(ItemStack itemStack);
+    @Invoker
+    void callPutStack(ItemStack itemStack);
 
-    @Invoker(value = "getStack")
-    ItemStack bogo$getStack();
+    @Invoker
+    ItemStack callGetStack();
 
-    @Invoker(value = "getSlotStackLimit")
-    int bogo$getItemStackLimit();
+    @Invoker
+    int callGetSlotStackLimit();
 
     @Invoker(value = "func_111238_b")
-    boolean bogo$isEnabled();
+    boolean callIsEnabled();
 
-    @Invoker(value = "isItemValid")
-    boolean bogo$isItemValid(ItemStack stack);
+    @Invoker
+    boolean callIsItemValid(ItemStack stack);
 
-    @Invoker(value = "canTakeStack")
-    boolean bogo$canTakeStack(EntityPlayer player);
+    @Invoker
+    boolean callCanTakeStack(EntityPlayer player);
 
-    @Invoker(value = "onSlotChanged")
-    void bogo$onSlotChanged();
+    @Invoker
+    void callOnSlotChanged();
 
-    @Invoker(value = "onSlotChange")
-    void bogo$onSlotChanged(ItemStack oldItem, ItemStack newItem);
+    @Invoker
+    void callOnSlotChange(ItemStack oldItem, ItemStack newItem);
 
-    @Invoker(value = "onPickupFromSlot")
-    void bogo$onTake(EntityPlayer player, ItemStack itemStack);
+    @Invoker
+    void callOnPickupFromSlot(EntityPlayer player, ItemStack itemStack);
 }

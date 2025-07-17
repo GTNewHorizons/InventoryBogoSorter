@@ -290,10 +290,10 @@ public class BogoSortAPI implements IBogoSortAPI {
 
     public static boolean isPlayerSlot(SlotAccessor slot) {
         if (slot == null) return false;
-        if (slot.bogo$getInventory() instanceof InventoryPlayer
+        if (slot.getInventory() instanceof InventoryPlayer
             || (slot instanceof SlotItemHandler handler && isPlayerInventory(handler.getItemHandler()))
             || (Mods.Ae2.isLoaded() && slot instanceof AppEngSlot AppEng && isPlayerInventory(AppEng.inventory))) {
-            return slot.bogo$getSlotIndex() >= 0 && slot.bogo$getSlotIndex() < 36;
+            return slot.callGetSlotIndex() >= 0 && slot.callGetSlotIndex() < 36;
         }
         return false;
     }

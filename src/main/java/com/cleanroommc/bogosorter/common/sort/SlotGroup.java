@@ -77,7 +77,7 @@ public class SlotGroup implements ISlotGroup {
 
     public boolean hasSlot(int slotNumber) {
         for (SlotAccessor slot : getSlots()) {
-            if (slot.bogo$getSlotNumber() == slotNumber) return true;
+            if (slot.getSlotNumber() == slotNumber) return true;
         }
         return false;
     }

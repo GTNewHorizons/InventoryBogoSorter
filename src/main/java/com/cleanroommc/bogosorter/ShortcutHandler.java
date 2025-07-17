@@ -41,8 +41,8 @@ public class ShortcutHandler {
 
     public static void moveItemStack(EntityPlayer player, Container container, SlotAccessor slot, boolean emptySlot,
         int amount) {
-        if (slot == null || slot.bogo$getStack() == null) return;
-        ItemStack stack = slot.bogo$getStack();
+        if (slot == null || slot.callGetStack() == null) return;
+        ItemStack stack = slot.callGetStack();
         amount = Math.min(amount, stack.getMaxStackSize());
         ItemStack toInsert = stack.copy();
         toInsert.stackSize = (amount);
@@ -50,7 +50,7 @@ public class ShortcutHandler {
         if (BogoSortAPI.isValidSortable(container)) {
             GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
 
-            SlotGroup slots = sortingContext.getSlotGroup(slot.bogo$getSlotNumber());
+            SlotGroup slots = sortingContext.getSlotGroup(slot.getSlotNumber());
             SlotGroup otherSlots = BogoSortAPI.isPlayerSlot(slot) ? sortingContext.getNonPlayerSlotGroup()
                 : sortingContext.getPlayerSlotGroup();
             if (otherSlots == null || slots == otherSlots) return;
@@ -74,13 +74,13 @@ public class ShortcutHandler {
             if (toInsert.stackSize == 0) {
                 toInsert = null;
             }
-            slot.bogo$putStack(toInsert);
+            slot.callPutStack(toInsert);
             // needed for crafting tables
-            slot.bogo$onSlotChanged(stack, toInsert);
+            slot.callOnSlotChange(stack, toInsert);
             // I hope im doing this right
             toInsert = stack.copy();
             toInsert.stackSize = (amount);
-            slot.bogo$onTake(player, toInsert);
+            slot.callOnPickupFromSlot(player, toInsert);
         }
     }
 
@@ -90,38 +90,38 @@ public class ShortcutHandler {
         Slot slot = guiContainer.theSlot;
         if (slot == null || !BogoSortAPI.isValidSortable(container)) return false;
         SlotAccessor slotAccessor = BogoSortAPI.INSTANCE.getSlot(slot);
-        if (sameItemOnly && slotAccessor.bogo$getStack() == null) return false;
+        if (sameItemOnly && slotAccessor.callGetStack() == null) return false;
         SetCanTakeStack = false;
         NetworkHandler.sendToServer(
             new CShortcut(
                 sameItemOnly ? CShortcut.Type.MOVE_ALL_SAME : CShortcut.Type.MOVE_ALL,
-                slotAccessor.bogo$getSlotNumber()));
+                slotAccessor.getSlotNumber()));
         return true;
     }
 
     public static void moveAllItems(EntityPlayer player, Container container, SlotAccessor slot, boolean sameItemOnly) {
         if (slot == null || !BogoSortAPI.isValidSortable(container)) return;
-        if (slot.bogo$getStack() != null) {
-            ItemStack stack = slot.bogo$getStack()
+        if (slot.callGetStack() != null) {
+            ItemStack stack = slot.callGetStack()
                 .copy();
             if (sameItemOnly && stack == null) return;
             GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
 
-            SlotGroup slots = sortingContext.getSlotGroup(slot.bogo$getSlotNumber());
+            SlotGroup slots = sortingContext.getSlotGroup(slot.getSlotNumber());
             SlotGroup otherSlots = BogoSortAPI.isPlayerSlot(slot) ? sortingContext.getNonPlayerSlotGroup()
                 : sortingContext.getPlayerSlotGroup();
             if (slots == null || otherSlots == null || slots == otherSlots) return;
             for (SlotAccessor slot1 : slots.getSlots()) {
-                ItemStack stackInSlot = slot1.bogo$getStack();
+                ItemStack stackInSlot = slot1.callGetStack();
                 if (stackInSlot == null || (sameItemOnly && !stackInSlot.isItemEqual(stack))) continue;
                 ItemStack copy = stackInSlot.copy();
                 ItemStack remainder = BogoSortAPI.insert(container, otherSlots.getSlots(), copy);
                 if (remainder == null) {
-                    slot1.bogo$putStack(null);
+                    slot1.callPutStack(null);
                 } else {
                     int inserted = stackInSlot.stackSize - remainder.stackSize;
                     if (inserted > 0) {
-                        slot1.bogo$putStack(remainder.copy());
+                        slot1.callPutStack(remainder.copy());
                     }
                 }
             }
@@ -139,15 +139,15 @@ public class ShortcutHandler {
     }
 
     public static void dropItems(EntityPlayer player, Container container, SlotAccessor slot, boolean onlySameType) {
-        ItemStack stack = slot.bogo$getStack();
+        ItemStack stack = slot.callGetStack();
         if (onlySameType && stack == null) return;
         SlotGroup slots = GuiSortingContext.getOrCreate(container)
-            .getSlotGroup(slot.bogo$getSlotNumber());
+            .getSlotGroup(slot.getSlotNumber());
         if (slots == null) return;
         for (SlotAccessor slot1 : slots.getSlots()) {
-            ItemStack stackInSlot = slot1.bogo$getStack();
+            ItemStack stackInSlot = slot1.callGetStack();
             if (stackInSlot != null && (!onlySameType || stackInSlot.isItemEqual(stack))) {
-                slot1.bogo$putStack(null);
+                slot1.callPutStack(null);
                 player.dropPlayerItemWithRandomChoice(stackInSlot, true);
             }
         }
@@ -163,25 +163,25 @@ public class ShortcutHandler {
     }
 
     public static ItemStack insert(SlotAccessor slot, ItemStack stack, boolean emptyOnly) {
-        ItemStack stackInSlot = slot.bogo$getStack();
+        ItemStack stackInSlot = slot.callGetStack();
         if (emptyOnly) {
-            if (stackInSlot != null || !slot.bogo$isItemValid(stack)) return stack;
-            int amount = Math.min(stack.stackSize, slot.bogo$getItemStackLimit());
+            if (stackInSlot != null || !slot.callIsItemValid(stack)) return stack;
+            int amount = Math.min(stack.stackSize, slot.callGetSlotStackLimit());
             if (amount <= 0) return stack;
             ItemStack newStack = stack.copy();
             newStack.stackSize = (amount);
             stack.stackSize -= (amount);
-            slot.bogo$putStack(newStack);
+            slot.callPutStack(newStack);
             return stack.stackSize == 0 ? null : stack;
         }
         if (stackInSlot != null && ItemHandlerHelper.canItemStacksStack(stackInSlot, stack)) {
             int amount = Math.min(
-                slot.bogo$getItemStackLimit(),
+                slot.callGetSlotStackLimit(),
                 Math.min(stack.stackSize, stack.getMaxStackSize() - stackInSlot.stackSize));
             if (amount <= 0) return stack;
             stack.stackSize -= (amount);
             stackInSlot.stackSize += (amount);
-            slot.bogo$putStack(stackInSlot);
+            slot.callPutStack(stackInSlot);
             return stack.stackSize == 0 ? null : stack;
         }
         return stack;

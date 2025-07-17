@@ -299,7 +299,7 @@ public class ClientEventHandler {
     private static boolean canSort(@Nullable SlotAccessor slot) {
         return !Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode
             || (Minecraft.getMinecraft().thePlayer.inventory.getItemStack() == null
-                && (slot == null || slot.bogo$getStack() == null));
+                && (slot == null || slot.callGetStack() == null));
     }
 
     private static boolean isButtonPressed(int button) {
@@ -346,7 +346,7 @@ public class ClientEventHandler {
                 slot = slotGroup.getSlots()
                     .get(0);
             } else {
-                slotGroup = sortingContext.getSlotGroup(slot.bogo$getSlotNumber());
+                slotGroup = sortingContext.getSlotGroup(slot.getSlotNumber());
                 if (slotGroup == null || slotGroup.isEmpty()
                     || (slotGroup.isHotbar() && !BogoSorterConfig.enableHotbarSort)) return false;
             }
@@ -359,7 +359,7 @@ public class ClientEventHandler {
                     createSortData(slotGroup, color, name),
                     SortRulesConfig.sortRules,
                     SortRulesConfig.nbtSortRules,
-                    slot.bogo$getSlotNumber(),
+                    slot.getSlotNumber(),
                     slotGroup.isPlayerInventory()));
             SortHandler.playSortSound();
 
@@ -374,9 +374,9 @@ public class ClientEventHandler {
         Map<ItemStack, ClientSortData> map = new Object2ObjectOpenCustomHashMap<>(
             BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
         for (SlotAccessor slot1 : slotGroup.getSlots()) {
-            map.computeIfAbsent(slot1.bogo$getStack(), stack -> ClientSortData.of(stack, color, name))
+            map.computeIfAbsent(slot1.callGetStack(), stack -> ClientSortData.of(stack, color, name))
                 .getSlotNumbers()
-                .add(slot1.bogo$getSlotNumber());
+                .add(slot1.getSlotNumber());
         }
         return map.values();
     }

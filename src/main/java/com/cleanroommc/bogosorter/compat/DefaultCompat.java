@@ -290,7 +290,7 @@ public class DefaultCompat {
                         .buttonPosSetter((slotGroup, buttonPos) -> {
                             buttonPos.setPos(0, 1000);
                             for (SlotAccessor slot : slotGroup.getSlots()) {
-                                if (slot.bogo$getX() >= 0 && slot.bogo$getY() >= 0 && slot.bogo$isEnabled()) {
+                                if (slot.bogo$getX() >= 0 && slot.bogo$getY() >= 0 && slot.callIsEnabled()) {
                                     buttonPos.setPos(
                                         Math.max(buttonPos.getX(), slot.bogo$getX() + 17),
                                         Math.min(buttonPos.getY(), slot.bogo$getY() - 2));
