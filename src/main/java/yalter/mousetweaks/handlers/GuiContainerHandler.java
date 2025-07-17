@@ -27,12 +27,12 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     protected Minecraft mc;
     protected GuiContainer guiContainer;
-    protected GuiContainerAccessor mixinGuiContainer;
+    protected GuiContainerAccessor guiContainerAccessor;
 
     public GuiContainerHandler(GuiContainer guiContainer) {
         this.mc = Minecraft.getMinecraft();
         this.guiContainer = guiContainer;
-        this.mixinGuiContainer = (GuiContainerAccessor) guiContainer;
+        this.guiContainerAccessor = (GuiContainerAccessor) guiContainer;
     }
 
     private int getDisplayWidth() {
@@ -54,7 +54,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
     @Override
     public boolean isMouseTweaksDisabled() {
         return guiContainer.getClass()
-            .isAnnotationPresent(MouseTweaksIgnore.class) || (mixinGuiContainer == null)
+            .isAnnotationPresent(MouseTweaksIgnore.class) || (guiContainerAccessor == null)
             || ClientEventHandler.isMouseTweakDisabled(guiContainer.getClass());
     }
 
@@ -72,16 +72,16 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     @Override
     public Slot getSlotUnderMouse() {
-        return mixinGuiContainer.getSlotAt(getRequiredMouseX(), getRequiredMouseY());
+        return guiContainerAccessor.getSlotAt(getRequiredMouseX(), getRequiredMouseY());
     }
 
     @Override
     public boolean disableRMBDraggingFunctionality() {
-        mixinGuiContainer.setIgnoreMouseUp(true);
+        guiContainerAccessor.setIgnoreMouseUp(true);
 
-        if (mixinGuiContainer.getDragSplitting()) {
-            if (mixinGuiContainer.getDragSplittingButton() == 1) {
-                mixinGuiContainer.setDragSplitting(false);
+        if (guiContainerAccessor.getDragSplitting()) {
+            if (guiContainerAccessor.getDragSplittingButton() == 1) {
+                guiContainerAccessor.setDragSplitting(false);
                 return true;
             }
         }
@@ -91,7 +91,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     @Override
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-        mixinGuiContainer.mouseClick(slot, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0);
+        guiContainerAccessor.mouseClick(slot, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0);
     }
 
     @Override
