@@ -52,7 +52,7 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
     @Override
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-        mixinGuiContainer.mouseClick(slot, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0);
+        mixinGuiContainer.callHandleMouseClick(slot, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0);
     }
 
     @Override

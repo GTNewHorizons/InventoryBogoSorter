@@ -39,7 +39,7 @@ public class DropOffButtonHandler {
         GuiScreen screen = event.gui;
         if (!BogoSorterConfig.dropOff.button.showButton) return;
         if (screen instanceof GuiInventory) {
-            for (GuiButton guiButton : ((GuiContainerAccessor) event.gui).getButtons()) {
+            for (GuiButton guiButton : ((GuiContainerAccessor) event.gui).getButtonList()) {
                 if (guiButton instanceof DropOffInvButton invButton) {
                     invButton.drawTooltip(event.mouseX, event.mouseY);
                 }

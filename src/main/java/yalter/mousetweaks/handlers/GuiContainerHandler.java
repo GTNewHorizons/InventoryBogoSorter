@@ -72,7 +72,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     @Override
     public Slot getSlotUnderMouse() {
-        return guiContainerAccessor.getSlotAt(getRequiredMouseX(), getRequiredMouseY());
+        return guiContainerAccessor.callGetSlotAtPosition(getRequiredMouseX(), getRequiredMouseY());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     @Override
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-        guiContainerAccessor.mouseClick(slot, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0);
+        guiContainerAccessor.callHandleMouseClick(slot, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0);
     }
 
     @Override

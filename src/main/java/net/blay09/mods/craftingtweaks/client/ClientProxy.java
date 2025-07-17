@@ -117,7 +117,7 @@ public class ClientProxy extends CommonProxy {
             if (container != null) {
                 final Slot mouseSlot;
                 if (event.gui instanceof GuiContainerAccessor) {
-                    mouseSlot = ((GuiContainerAccessor) event.gui).getSlotAt(event.mouseX, event.mouseY);
+                    mouseSlot = ((GuiContainerAccessor) event.gui).callGetSlotAtPosition(event.mouseX, event.mouseY);
                 } else {
                     mouseSlot = null;
                 }
@@ -230,7 +230,7 @@ public class ClientProxy extends CommonProxy {
                             if (!wasToggleButtons) {
                                 CraftingTweaks.hideButtons = !CraftingTweaks.hideButtons;
                                 if (CraftingTweaks.hideButtons) {
-                                    ((GuiScreenAccessor) guiScreen).getButtons()
+                                    ((GuiScreenAccessor) guiScreen).getButtonList()
                                         .removeIf(o -> o instanceof GuiTweakButton);
                                 } else {
                                     initGui((GuiContainer) guiScreen);
@@ -291,7 +291,7 @@ public class ClientProxy extends CommonProxy {
             CraftingTweaks.ModSupportState config = CraftingTweaks.instance.getModSupportState(provider.getModId());
             if (config == CraftingTweaks.ModSupportState.ENABLED
                 || config == CraftingTweaks.ModSupportState.BUTTONS_ONLY) {
-                provider.initGui(guiContainer, ((GuiScreenAccessor) guiContainer).getButtons());
+                provider.initGui(guiContainer, ((GuiScreenAccessor) guiContainer).getButtonList());
             }
         }
     }
@@ -312,13 +312,13 @@ public class ClientProxy extends CommonProxy {
             return;
         }
         if (event.gui instanceof GuiContainerAccessor) {
-            mouseSlot = ((GuiContainerAccessor) event.gui).getSlotAt(event.mouseX, event.mouseY);
+            mouseSlot = ((GuiContainerAccessor) event.gui).callGetSlotAtPosition(event.mouseX, event.mouseY);
         } else {
             mouseSlot = null;
         }
         if (!CraftingTweaks.hideButtonTooltips) {
             tooltipList.clear();
-            for (GuiButton button : ((GuiScreenAccessor) event.gui).getButtons()) {
+            for (GuiButton button : ((GuiScreenAccessor) event.gui).getButtonList()) {
                 if (button instanceof ITooltipProvider && button.func_146115_a()) {
                     ((ITooltipProvider) button).addInformation(tooltipList);
                     break;

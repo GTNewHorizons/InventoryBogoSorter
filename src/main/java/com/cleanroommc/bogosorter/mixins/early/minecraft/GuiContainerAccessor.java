@@ -34,9 +34,9 @@ public interface GuiContainerAccessor extends GuiScreenAccessor {
     @Accessor(value = "field_146988_G")
     int getDragSplittingButton();
 
-    @Invoker(value = "getSlotAtPosition")
-    Slot getSlotAt(int x, int y);
+    @Invoker
+    Slot callGetSlotAtPosition(int x, int y);
 
-    @Invoker(value = "handleMouseClick")
-    void mouseClick(Slot slot, int slotId, int mouseButton, int clickType);
+    @Invoker
+    void callHandleMouseClick(Slot slot, int slotId, int mouseButton, int clickType);
 }

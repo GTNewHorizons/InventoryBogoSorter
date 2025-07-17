@@ -64,7 +64,7 @@ public class ButtonHandler {
             for (SlotGroup slotGroup : context.getSlotGroups()) {
                 if (slotGroup.getPosSetter() == null) continue;
                 SortButton sortButton = null, settingsButton = null;
-                for (GuiButton guiButton : guiAccess.getButtons()) {
+                for (GuiButton guiButton : guiAccess.getButtonList()) {
                     if (guiButton instanceof SortButton) {
                         SortButton button = (SortButton) guiButton;
                         if (button.slotGroup == slotGroup) {
@@ -90,7 +90,7 @@ public class ButtonHandler {
     @SubscribeEvent
     public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (ClientEventHandler.isSortableContainer(event.gui) && !(event.gui instanceof GuiScreenWrapper)) {
-            for (GuiButton guiButton : ((GuiContainerAccessor) event.gui).getButtons()) {
+            for (GuiButton guiButton : ((GuiContainerAccessor) event.gui).getButtonList()) {
                 if (guiButton instanceof SortButton) {
                     ((SortButton) guiButton).drawTooltip(event.mouseX, event.mouseY);
                 }
