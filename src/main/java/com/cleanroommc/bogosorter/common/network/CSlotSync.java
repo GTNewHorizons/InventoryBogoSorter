@@ -54,7 +54,7 @@ public class CSlotSync implements IPacket {
     public IPacket executeServer(NetHandlerPlayServer handler) {
         for (Pair<ItemStack, Integer> pair : content) {
             BogoSortAPI.getSlot(handler.playerEntity.openContainer, pair.getValue())
-                .bogo$putStack(pair.getKey());
+                .callPutStack(pair.getKey());
         }
         handler.playerEntity.openContainer.detectAndSendChanges();
         return null;

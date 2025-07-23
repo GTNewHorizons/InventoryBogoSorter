@@ -7,6 +7,8 @@ import net.minecraft.inventory.Slot;
 
 import org.jetbrains.annotations.ApiStatus;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
+
 /**
  * A helper interface to create {@link ISlotGroup} instances.
  * Meant to be used in {@link ISortableContainer#buildSortingContext(ISortingContextBuilder)}
@@ -34,7 +36,7 @@ public interface ISortingContextBuilder {
      *                try to use the row size of the first row.
      * @return the created slot group
      */
-    ISlotGroup addSlotGroup(List<ISlot> slots, int rowSize);
+    ISlotGroup addSlotGroup(List<SlotAccessor> slots, int rowSize);
 
     /**
      * Creates and registers a slot group based on a start and end index.

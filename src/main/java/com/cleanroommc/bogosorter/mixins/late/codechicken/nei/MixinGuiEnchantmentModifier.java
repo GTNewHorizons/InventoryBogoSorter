@@ -6,6 +6,8 @@ import net.minecraft.inventory.Slot;
 
 import org.spongepowered.asm.mixin.Mixin;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
+
 import codechicken.nei.GuiEnchantmentModifier;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 
@@ -48,11 +50,11 @@ public abstract class MixinGuiEnchantmentModifier extends GuiContainer implement
 
     @Override
     public boolean MT_disableRMBDraggingFunctionality() {
-        if (field_147007_t && field_146988_G == 1) {
+        if (field_147007_t && ((GuiContainerAccessor) this).getDragSplittingButton() == 1) {
             field_147007_t = false;
             // Don't ignoreMouseUp on slots that can't accept the item. (crafting output, ME slot, etc.)
             if (theSlot != null && theSlot.isItemValid(mc.thePlayer.inventory.getItemStack())) {
-                field_146995_H = true;
+                ((GuiContainerAccessor) this).setIgnoreMouseUp(true);
             }
             return true;
         }
