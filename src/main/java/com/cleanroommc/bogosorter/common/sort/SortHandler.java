@@ -25,13 +25,13 @@ import org.jetbrains.annotations.Nullable;
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.ClientEventHandler;
-import com.cleanroommc.bogosorter.api.ISlot;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.McUtils;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.common.network.CSlotSync;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -159,23 +159,23 @@ public class SortHandler {
 
         ItemSortContainer itemSortContainer = itemList.pollFirst();
         if (itemSortContainer == null) return;
-        for (ISlot slot : getSortableSlots(slotGroup)) {
+        for (SlotAccessor slot : getSortableSlots(slotGroup)) {
             if (itemSortContainer == null) {
-                slot.bogo$putStack(null);
+                slot.callPutStack(null);
                 continue;
             }
 
             ItemStack stack = itemSortContainer.getItemStack();
-            int max = Math.min(slot.bogo$getItemStackLimit(stack), slot.bogo$getMaxStackSize(stack));
+            int max = Math.min(slot.callGetSlotStackLimit(), stack.getMaxStackSize());
             if (max <= 0) continue;
 
             if (preventSplit(stack)) {
-                slot.bogo$putStack(stack);
+                slot.callPutStack(stack);
                 itemSortContainer = itemList.pollFirst();
                 continue;
             }
 
-            slot.bogo$putStack(itemSortContainer.makeStack(max));
+            slot.callPutStack(itemSortContainer.makeStack(max));
 
             if (!itemSortContainer.canMakeStack()) {
                 itemSortContainer = itemList.pollFirst();
@@ -229,15 +229,15 @@ public class SortHandler {
 
     public void sortBogo(SlotGroup slotGroup) {
         List<ItemStack> items = new ArrayList<>();
-        for (ISlot slot : getSortableSlots(slotGroup)) {
-            ItemStack stack = slot.bogo$getStack();
+        for (SlotAccessor slot : getSortableSlots(slotGroup)) {
+            ItemStack stack = slot.callGetStack();
             items.add(stack);
         }
         Collections.shuffle(items);
-        List<ISlot> slots = getSortableSlots(slotGroup);
+        List<SlotAccessor> slots = getSortableSlots(slotGroup);
         for (int i = 0; i < slots.size(); i++) {
-            ISlot slot = slots.get(i);
-            slot.bogo$putStack(items.get(i));
+            SlotAccessor slot = slots.get(i);
+            slot.callPutStack(items.get(i));
         }
     }
 
@@ -245,12 +245,10 @@ public class SortHandler {
         LinkedList<ItemSortContainer> list = new LinkedList<>();
         Object2ObjectOpenCustomHashMap<ItemStack, ItemSortContainer> items = new Object2ObjectOpenCustomHashMap<>(
             BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
-        for (ISlot slot : getSortableSlots(slotGroup)) {
-            ItemStack stack = slot.bogo$getStack();
+        for (SlotAccessor slot : getSortableSlots(slotGroup)) {
+            ItemStack stack = slot.callGetStack();
             if (stack != null) {
-                ItemSortContainer container = new ItemSortContainer(
-                    stack,
-                    clientSortData.get(slot.bogo$getSlotNumber()));
+                ItemSortContainer container = new ItemSortContainer(stack, clientSortData.get(slot.getSlotNumber()));
                 if (preventSplit(stack)) {
                     list.add(container);
                 } else {
@@ -296,32 +294,32 @@ public class SortHandler {
         };
     }
 
-    public void clearAllItems(ISlot slot1) {
-        SlotGroup slotGroup = context.getSlotGroup(slot1.bogo$getSlotNumber());
+    public void clearAllItems(SlotAccessor slot1) {
+        SlotGroup slotGroup = context.getSlotGroup(slot1.getSlotNumber());
         if (slotGroup != null) {
             List<Pair<ItemStack, Integer>> slots = new ArrayList<>();
-            for (ISlot slot : getSortableSlots(slotGroup)) {
-                if (slot.bogo$getStack() != null) {
-                    slot.bogo$putStack(null);
-                    slots.add(Pair.of(null, slot.bogo$getSlotNumber()));
+            for (SlotAccessor slot : getSortableSlots(slotGroup)) {
+                if (slot.callGetStack() != null) {
+                    slot.callPutStack(null);
+                    slots.add(Pair.of(null, slot.getSlotNumber()));
                 }
             }
             NetworkHandler.sendToServer(new CSlotSync(slots));
         }
     }
 
-    public void randomizeItems(ISlot slot1) {
-        SlotGroup slotGroup = context.getSlotGroup(slot1.bogo$getSlotNumber());
+    public void randomizeItems(SlotAccessor slot1) {
+        SlotGroup slotGroup = context.getSlotGroup(slot1.getSlotNumber());
         if (slotGroup != null) {
             List<Pair<ItemStack, Integer>> slots = new ArrayList<>();
             Random random = new Random();
-            for (ISlot slot : getSortableSlots(slotGroup)) {
+            for (SlotAccessor slot : getSortableSlots(slotGroup)) {
                 if (random.nextFloat() < 0.3f) {
                     ItemStack randomItem = ClientEventHandler.allItems
                         .get(random.nextInt(ClientEventHandler.allItems.size()))
                         .copy();
-                    slot.bogo$putStack(randomItem.copy());
-                    slots.add(Pair.of(randomItem, slot.bogo$getSlotNumber()));
+                    slot.callPutStack(randomItem.copy());
+                    slots.add(Pair.of(randomItem, slot.getSlotNumber()));
                 }
 
             }
@@ -329,10 +327,10 @@ public class SortHandler {
         }
     }
 
-    public List<ISlot> getSortableSlots(SlotGroup slotGroup) {
-        List<ISlot> result = new ArrayList<>();
+    public List<SlotAccessor> getSortableSlots(SlotGroup slotGroup) {
+        List<SlotAccessor> result = new ArrayList<>();
 
-        for (ISlot slot : slotGroup.getSlots()) {
+        for (SlotAccessor slot : slotGroup.getSlots()) {
             /*
              * Logic being used to check if we cannot access the slot:
              * 1. Can the player take the stack?
@@ -346,11 +344,11 @@ public class SortHandler {
              * empty.
              * The slot should only be marked as inaccessible if all three conditions return false.
              */
-            boolean canTake = slot.bogo$canTakeStack(player);
-            boolean canInsert = (slot.bogo$getStack() != null) && slot.bogo$isItemValid(
-                slot.bogo$getStack()
+            boolean canTake = slot.callCanTakeStack(player);
+            boolean canInsert = (slot.callGetStack() != null) && slot.callIsItemValid(
+                slot.callGetStack()
                     .copy());
-            boolean isEmpty = slot.bogo$getStack() == null;
+            boolean isEmpty = slot.callGetStack() == null;
             if (canTake || canInsert || isEmpty) result.add(slot);
         }
         return result;

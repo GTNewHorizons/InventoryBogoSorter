@@ -2,7 +2,6 @@ package com.cleanroommc.bogosorter.common.dropoff;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
@@ -18,6 +17,8 @@ import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Color;
 
@@ -40,8 +41,8 @@ public class DropOffInvButton extends GuiButton {
     public DropOffInvButton(GuiContainer parentGui) {
         super(
             394658248,
-            parentGui.guiLeft + BogoSorterConfig.dropOff.button.buttonX,
-            parentGui.guiTop + BogoSorterConfig.dropOff.button.buttonY,
+            ((GuiContainerAccessor) parentGui).getGuiLeft() + BogoSorterConfig.dropOff.button.buttonX,
+            ((GuiContainerAccessor) parentGui).getGuiTop() + BogoSorterConfig.dropOff.button.buttonY,
             10,
             10,
             "d");
@@ -98,8 +99,8 @@ public class DropOffInvButton extends GuiButton {
     public void mouseReleased(int mouseX, int mouseY) {
         if (hold) {
             hold = false;
-            BogoSorterConfig.dropOff.button.buttonX = xPosition - parent.guiLeft;
-            BogoSorterConfig.dropOff.button.buttonY = yPosition - parent.guiTop;
+            BogoSorterConfig.dropOff.button.buttonX = xPosition - ((GuiContainerAccessor) parent).getGuiLeft();
+            BogoSorterConfig.dropOff.button.buttonY = yPosition - ((GuiContainerAccessor) parent).getGuiTop();
         }
         super.mouseReleased(mouseX, mouseY);
     }
@@ -129,8 +130,9 @@ public class DropOffInvButton extends GuiButton {
                 EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
                     + " : "
                     + GameSettings.getKeyDisplayString(ClientEventHandler.dropoffKey.getKeyCode()));
-            GuiScreen guiScreen = Objects.requireNonNull(Minecraft.getMinecraft().currentScreen);
-            guiScreen.func_146283_a(tooltipLines, mouseX, mouseY);
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiScreenAccessor accessor) {
+                accessor.drawHoveringText(tooltipLines, mouseX, mouseY);
+            }
         }
     }
 }

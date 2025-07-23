@@ -9,6 +9,8 @@ import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Keyboard;
 
+import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
+
 public class GuiTweakButton extends GuiImageButton implements ITooltipProvider {
 
     public enum TweakOption {
@@ -31,8 +33,8 @@ public class GuiTweakButton extends GuiImageButton implements ITooltipProvider {
         this.relativePosition = new Point(xPosition, yPosition);
 
         if (this.parentGui != null) {
-            this.xPosition = this.relativePosition.x + parentGui.guiLeft;
-            this.yPosition = this.relativePosition.y + parentGui.guiTop;
+            this.xPosition = this.relativePosition.x + ((GuiContainerAccessor) parentGui).getGuiLeft();
+            this.yPosition = this.relativePosition.y + ((GuiContainerAccessor) parentGui).getGuiTop();
         }
     }
 
@@ -49,8 +51,8 @@ public class GuiTweakButton extends GuiImageButton implements ITooltipProvider {
         // If parentGui is set, we only store the relative position in the button for mods that do hacky things where
         // guiLeft/guiTop constantly changes
         if (parentGui != null) {
-            this.xPosition = this.relativePosition.x + parentGui.guiLeft;
-            this.yPosition = this.relativePosition.y + parentGui.guiTop;
+            this.xPosition = this.relativePosition.x + ((GuiContainerAccessor) parentGui).getGuiLeft();
+            this.yPosition = this.relativePosition.y + ((GuiContainerAccessor) parentGui).getGuiTop();
         }
 
         int oldTexCoordX = texCoordX;

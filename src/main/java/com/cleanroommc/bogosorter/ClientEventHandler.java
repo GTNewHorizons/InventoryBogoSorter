@@ -18,6 +18,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
@@ -25,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.cleanroommc.bogosorter.api.ISlot;
 import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
@@ -40,11 +40,11 @@ import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
 import com.cleanroommc.bogosorter.common.sort.SlotGroup;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
 import com.cleanroommc.bogosorter.compat.screen.WarningScreen;
+import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
 import com.cleanroommc.modularui.api.event.MouseInputEvent;
 import com.cleanroommc.modularui.factory.ClientGUI;
 import com.google.common.collect.Lists;
-import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -155,7 +155,7 @@ public class ClientEventHandler {
                 warnings.add("Consider removing the mod and reload the game.");
             }
             if (!warnings.isEmpty()) {
-                warnings.add(0, ChatFormatting.BOLD + "! Warning from Inventory Bogosorter !");
+                warnings.add(0, EnumChatFormatting.BOLD + "! Warning from Inventory Bogosorter !");
                 warnings.add(1, "");
                 event.gui = new WarningScreen(warnings);
             }
@@ -212,7 +212,7 @@ public class ClientEventHandler {
         if (isDeobfuscatedEnvironment) {
             // clear
             if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1)) {
-                ISlot slot = getSlot(event.gui);
+                SlotAccessor slot = getSlot(event.gui);
                 SortHandler sortHandler = createSortHandler(event.gui, slot);
                 if (sortHandler == null) return;
                 sortHandler.clearAllItems(slot);
@@ -229,7 +229,7 @@ public class ClientEventHandler {
                         allItems.addAll(subItems);
                     }
                 }
-                ISlot slot = getSlot(event.gui);
+                SlotAccessor slot = getSlot(event.gui);
                 SortHandler sortHandler = createSortHandler(event.gui, slot);
                 if (sortHandler == null) return;
                 sortHandler.randomizeItems(slot);
@@ -285,7 +285,7 @@ public class ClientEventHandler {
         if (container != null && Keypress(sortKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
-                ISlot slot = getSlot(container);
+                SlotAccessor slot = getSlot(container);
                 if (!canSort(slot) || !sort(container, slot)) {
                     return false;
                 }
@@ -296,10 +296,10 @@ public class ClientEventHandler {
         return false;
     }
 
-    private static boolean canSort(@Nullable ISlot slot) {
+    private static boolean canSort(@Nullable SlotAccessor slot) {
         return !Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode
             || (Minecraft.getMinecraft().thePlayer.inventory.getItemStack() == null
-                && (slot == null || slot.bogo$getStack() == null));
+                && (slot == null || slot.callGetStack() == null));
     }
 
     private static boolean isButtonPressed(int button) {
@@ -323,14 +323,14 @@ public class ClientEventHandler {
     }
 
     @Nullable
-    public static ISlot getSlot(GuiScreen guiScreen) {
+    public static SlotAccessor getSlot(GuiScreen guiScreen) {
         if (guiScreen instanceof GuiContainer) {
-            return (ISlot) ((GuiContainer) guiScreen).theSlot;
+            return (SlotAccessor) ((GuiContainer) guiScreen).theSlot;
         }
         return null;
     }
 
-    public static boolean sort(GuiScreen guiScreen, @Nullable ISlot slot) {
+    public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot) {
         if (guiScreen instanceof GuiContainer) {
             Container container = ((GuiContainer) guiScreen).inventorySlots;
             GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
@@ -346,7 +346,7 @@ public class ClientEventHandler {
                 slot = slotGroup.getSlots()
                     .get(0);
             } else {
-                slotGroup = sortingContext.getSlotGroup(slot.bogo$getSlotNumber());
+                slotGroup = sortingContext.getSlotGroup(slot.getSlotNumber());
                 if (slotGroup == null || slotGroup.isEmpty()
                     || (slotGroup.isHotbar() && !BogoSorterConfig.enableHotbarSort)) return false;
             }
@@ -359,7 +359,7 @@ public class ClientEventHandler {
                     createSortData(slotGroup, color, name),
                     SortRulesConfig.sortRules,
                     SortRulesConfig.nbtSortRules,
-                    slot.bogo$getSlotNumber(),
+                    slot.getSlotNumber(),
                     slotGroup.isPlayerInventory()));
             SortHandler.playSortSound();
 
@@ -373,15 +373,15 @@ public class ClientEventHandler {
         if (!color && !name) return Collections.emptyList();
         Map<ItemStack, ClientSortData> map = new Object2ObjectOpenCustomHashMap<>(
             BogoSortAPI.ITEM_META_NBT_HASH_STRATEGY);
-        for (ISlot slot1 : slotGroup.getSlots()) {
-            map.computeIfAbsent(slot1.bogo$getStack(), stack -> ClientSortData.of(stack, color, name))
+        for (SlotAccessor slot1 : slotGroup.getSlots()) {
+            map.computeIfAbsent(slot1.callGetStack(), stack -> ClientSortData.of(stack, color, name))
                 .getSlotNumbers()
-                .add(slot1.bogo$getSlotNumber());
+                .add(slot1.getSlotNumber());
         }
         return map.values();
     }
 
-    public static SortHandler createSortHandler(GuiScreen guiScreen, @Nullable ISlot slot) {
+    public static SortHandler createSortHandler(GuiScreen guiScreen, @Nullable SlotAccessor slot) {
         if (slot != null && guiScreen instanceof GuiContainer) {
 
             Container container = ((GuiContainer) guiScreen).inventorySlots;
