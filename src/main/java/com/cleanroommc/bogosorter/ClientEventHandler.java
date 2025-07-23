@@ -18,6 +18,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
@@ -44,7 +45,6 @@ import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
 import com.cleanroommc.modularui.api.event.MouseInputEvent;
 import com.cleanroommc.modularui.factory.ClientGUI;
 import com.google.common.collect.Lists;
-import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -155,7 +155,7 @@ public class ClientEventHandler {
                 warnings.add("Consider removing the mod and reload the game.");
             }
             if (!warnings.isEmpty()) {
-                warnings.add(0, ChatFormatting.BOLD + "! Warning from Inventory Bogosorter !");
+                warnings.add(0, EnumChatFormatting.BOLD + "! Warning from Inventory Bogosorter !");
                 warnings.add(1, "");
                 event.gui = new WarningScreen(warnings);
             }
