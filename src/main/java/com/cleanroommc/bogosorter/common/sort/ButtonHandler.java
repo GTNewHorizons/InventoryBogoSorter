@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.ClientEventHandler;
-import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.api.widget.Interactable;
