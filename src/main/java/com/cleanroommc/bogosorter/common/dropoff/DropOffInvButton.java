@@ -33,6 +33,11 @@ public class DropOffInvButton extends GuiButton {
         .adaptable(1)
         .build();
 
+    public static final UITexture BUTTON_DROPOFF = UITexture.builder()
+        .location(BogoSorter.ID, "gui/dropoff")
+        .fullImage()
+        .build();
+
     public DropOffInvButton(GuiContainer parentGui) {
         super(
             394658248,
@@ -55,7 +60,7 @@ public class DropOffInvButton extends GuiButton {
                 && mouseX < this.xPosition + this.width
                 && mouseY < this.yPosition + this.height;
 
-            Color.setGlColor(BogoSorterConfig.getButtonColor());
+            Color.setGlColor(BogoSorterConfig.buttonColor);
             BUTTON_BACKGROUND.draw(this.xPosition, this.yPosition, this.width, this.height);
             Color.resetGlColor();
             int color = 14737632;
@@ -67,12 +72,8 @@ public class DropOffInvButton extends GuiButton {
             } else if (this.field_146123_n) {
                 color = 16777120;
             }
-            this.drawCenteredString(
-                mc.fontRenderer,
-                this.displayString,
-                this.xPosition + this.width / 2,
-                this.yPosition + 1,
-                color);
+            Color.setGlColor(color);
+            BUTTON_DROPOFF.draw(this.xPosition, this.yPosition, this.width, this.height);
         }
     }
 
