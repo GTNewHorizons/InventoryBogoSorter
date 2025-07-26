@@ -41,10 +41,17 @@ public class BogoSorterConfig {
     @Config.Sync
     public static boolean preventSplit;
 
-    @Config.DefaultString("#FFFFFFFF")
-    @Config.Comment("The color of the sort button in hex format (e.g. #FFFFFFFF or 0xFFFFFFFF).")
+    @Config.DefaultInt(0xFFFFFFFF)
+    @Config.Comment({ "The color of the sort button.",
+        "Display format: 0xAARRGGBB (e.g. 0xFFFFFFFF for white, 0xFF0000FF for red).",
+        "Value is displayed in decimal here but interpreted as hex internally." })
     @Config.LangKey("bogosorter.config.button.color")
-    public static String buttonColor;
+    public static int buttonColor;
+
+    @Config.DefaultBoolean(true)
+    @Config.Comment("Enable the sort button in the player inventory.")
+    @Config.LangKey("bogosorter.config.button.enable")
+    public static boolean buttonEnabled;
 
     @Config.DefaultBoolean(true)
     @Config.Comment("Enable the hotbar swap feature.")
@@ -134,24 +141,6 @@ public class BogoSorterConfig {
             @Config.Comment("Show the drop-off button in the player inventory.")
             @Config.LangKey("bogosorter.config.dropoff.button.visible")
             public boolean showButton;
-        }
-    }
-
-    /**
-     * Converts the button color from hex string to an integer.
-     * The format is expected to be "#RRGGBBAA" or "0xAARRGGBB".
-     * If the format is incorrect, it returns a fallback color (white).
-     *
-     * @return the button color as an integer.
-     */
-    public static int getButtonColor() {
-        try {
-            return (int) Long.parseLong(
-                buttonColor.replace("#", "")
-                    .replace("0x", ""),
-                16);
-        } catch (NumberFormatException e) {
-            return 0xFFFAAFFF; // fallback white
         }
     }
 }
