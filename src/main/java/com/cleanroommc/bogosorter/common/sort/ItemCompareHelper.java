@@ -27,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
 import com.cleanroommc.bogosorter.compat.Mods;
-import com.cleanroommc.bogosorter.mixins.interfaces.NBTTagCompoundExt;
 
 import gregtech.api.interfaces.IFoodStat;
 import gregtech.api.items.MetaGeneratedItem;
@@ -255,10 +254,8 @@ public class ItemCompareHelper {
     }
 
     public static int compareNbtSize(@NotNull NBTTagCompound nbt1, @NotNull NBTTagCompound nbt2) {
-        final int nbt1Size = ((NBTTagCompoundExt) nbt1).bogo$getSize();
-        final int nbt2Size = ((NBTTagCompoundExt) nbt2).bogo$getSize();
-        if (nbt1Size < nbt2Size) return -1;
-        if (nbt1Size > nbt2Size) return 1;
+        if (nbt1.tagMap.size() < nbt2.tagMap.size()) return -1;
+        if (nbt1.tagMap.size() > nbt2.tagMap.size()) return 1;
         List<NBTTagCompound> subTags1 = new ArrayList<>();
         List<NBTTagCompound> subTags2 = new ArrayList<>();
         subTags1.add(nbt1);
@@ -301,7 +298,7 @@ public class ItemCompareHelper {
     private static int getTotalSubTags(List<NBTTagCompound> tags) {
         int sum = 0;
         for (NBTTagCompound nbt : tags) {
-            sum += ((NBTTagCompoundExt) nbt).bogo$getSize();
+            sum += nbt.tagMap.size();
         }
         return sum;
     }
