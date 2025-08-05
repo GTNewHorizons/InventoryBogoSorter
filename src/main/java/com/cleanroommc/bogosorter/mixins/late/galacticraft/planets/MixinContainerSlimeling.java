@@ -14,7 +14,8 @@ public abstract class MixinContainerSlimeling implements ISortableContainer {
 
     @Override
     public void buildSortingContext(ISortingContextBuilder builder) {
-        builder.addSlotGroup(37, 64, 9);
+        builder.addGenericSlotGroup()
+            .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
     }
 
     @Override
