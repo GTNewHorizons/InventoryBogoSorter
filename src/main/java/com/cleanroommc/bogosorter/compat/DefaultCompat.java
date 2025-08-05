@@ -354,15 +354,13 @@ public class DefaultCompat {
         }
 
         if (GT6.isLoaded()) {
+            api.addCompat(ContainerCommonChest.class, (container, builder) -> { builder.addGenericSlotGroup(); });
             api.addCompat(
-                ContainerCommonChest.class,
+                ContainerCommonDefault.class,
                 (container, builder) -> {
-                    builder.addSlotGroup(container.getStartIndex(), container.getSlotCount(), 9);
+                    builder.addGenericSlotGroup()
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
                 });
-            api.addCompat(ContainerCommonDefault.class, (container, builder) -> {
-                builder.addSlotGroup(container.getStartIndex(), container.getSlotCount(), 9)
-                    .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-            });
             api.addPlayerSortButtonPosition(ContainerCommonDefault.class, IPosSetter.TOP_RIGHT_VERTICAL);
         }
     }
