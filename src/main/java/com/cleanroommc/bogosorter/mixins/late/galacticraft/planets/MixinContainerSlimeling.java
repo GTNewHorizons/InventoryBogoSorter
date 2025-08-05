@@ -14,8 +14,12 @@ public abstract class MixinContainerSlimeling implements ISortableContainer {
 
     @Override
     public void buildSortingContext(ISortingContextBuilder builder) {
-        builder.addGenericSlotGroup()
-            .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+        int inventorySize = builder.getContainer().inventorySlots.size();
+        if (inventorySize > 37) {
+            builder.addSlotGroup(37, inventorySize, 9)
+                .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+        }
+
     }
 
     @Override
