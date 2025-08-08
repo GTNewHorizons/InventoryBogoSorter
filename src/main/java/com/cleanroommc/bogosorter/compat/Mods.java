@@ -1,17 +1,20 @@
 package com.cleanroommc.bogosorter.compat;
 
-import java.util.function.Supplier;
+import java.util.function.Predicate;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 
 public enum Mods {
 
+    // spotless:off
     AdventureBackpack2("adventurebackpack"),
     Ae2("appliedenergistics2"),
     AvaritiaAddons("avaritiaddons"),
     Backhand("backhand"),
     Backpack("Backpack"),
-    BetterStorage("betterstorage"),
+    BetterStorage("betterstorage", mod -> mod.getVersion().startsWith("0.13")),
+    BetterStorageFixed("betterstorage", mod -> mod.getVersion().startsWith("0.14")),
     Bibliocraft("BiblioCraft"),
     Botania("Botania"),
     CodeChickenCore("CodeChickenCore"),
@@ -22,20 +25,12 @@ public enum Mods {
     Etfuturum("etfuturum"),
     ExtraUtilities("ExtraUtilities"),
     Forestry("Forestry"),
-    GT5u(() -> Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi")),
-    GT6(() -> Loader.isModLoaded("gregtech") && Loader.isModLoaded("gregapi")),
+    GT5u("gregtech", mod -> !Loader.isModLoaded("gregapi")),
+    GT6("gregtech", mod -> Loader.isModLoaded("gregapi")),
     GalacticraftCore("galacticraftcore"),
     HBM("hbm"),
-    IC2(() -> Loader.isModLoaded("IC2") && !Loader.instance()
-        .getIndexedModList()
-        .get("IC2")
-        .getName()
-        .endsWith("Classic")),
-    IC2Classic(() -> Loader.isModLoaded("IC2") && Loader.instance()
-        .getIndexedModList()
-        .get("IC2")
-        .getName()
-        .endsWith("Classic")),
+    IC2("IC2", mod -> !mod.getName().endsWith("Classic")),
+    IC2Classic("IC2", mod -> mod.getName().endsWith("Classic")),
     ImmersiveEngineering("ImmersiveEngineering"),
     IronChest("IronChest"),
     Mekanism("Mekanism"),
@@ -50,29 +45,27 @@ public enum Mods {
     ActuallyAdditions("ActuallyAdditions"),
 
     ;
+    //spotless:on
 
-    public final String modid;
-    private final Supplier<Boolean> supplier;
+    private final String modid;
+    private final Predicate<ModContainer> modPredicate;
     private Boolean loaded;
 
     Mods(String modid) {
-        this.modid = modid;
-        this.supplier = null;
+        this(modid, mod -> true); // Default: any version is OK
     }
 
-    Mods(Supplier<Boolean> supplier) {
-        this.supplier = supplier;
-        this.modid = null;
+    Mods(String modid, Predicate<ModContainer> predicate) {
+        this.modid = modid;
+        this.modPredicate = predicate;
     }
 
     public boolean isLoaded() {
-        if (loaded == null) {
-            if (supplier != null) {
-                loaded = supplier.get();
-            } else if (modid != null) {
-                loaded = Loader.isModLoaded(modid);
-            } else loaded = false;
-        }
-        return loaded;
+        if (loaded != null) return loaded;
+        ModContainer mod = Loader.instance()
+            .getIndexedModList()
+            .get(modid);
+        if (mod == null) return loaded = false;
+        return loaded = Loader.isModLoaded(modid) && modPredicate.test(mod);
     }
 }

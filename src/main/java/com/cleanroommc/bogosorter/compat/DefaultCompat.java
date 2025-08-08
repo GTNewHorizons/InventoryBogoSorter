@@ -7,8 +7,6 @@ import java.util.List;
 
 import net.blay09.mods.cookingforblockheads.container.ContainerCounter;
 import net.blay09.mods.cookingforblockheads.container.ContainerFridge;
-import net.mcft.copy.betterstorage.container.ContainerBetterStorage;
-import net.mcft.copy.betterstorage.container.ContainerCraftingStation;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerHopper;
@@ -315,7 +313,7 @@ public class DefaultCompat {
         }
         if (BetterStorage.isLoaded()) {
             api.addCompat(
-                ContainerCraftingStation.class,
+                net.mcft.copy.betterstorage.container.ContainerCraftingStation.class,
                 (container, builder) -> {
                     builder.addSlotGroup(18, 36, 9)
                         .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
@@ -326,7 +324,23 @@ public class DefaultCompat {
                     builder.addGenericSlotGroup()
                         .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
                 });
-            api.addGenericCompat(ContainerBetterStorage.class);
+            api.addGenericCompat(net.mcft.copy.betterstorage.container.ContainerBetterStorage.class);
+        }
+
+        if (BetterStorageFixed.isLoaded()) {
+            api.addCompat(
+                net.mcft.betterstorage.container.ContainerCraftingStation.class,
+                (container, builder) -> {
+                    builder.addSlotGroup(18, 36, 9)
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+                });
+            api.addCompat(
+                net.mcft.betterstorage.container.ContainerCrate.class,
+                (container, builder) -> {
+                    builder.addGenericSlotGroup()
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
+                });
+            api.addGenericCompat(net.mcft.betterstorage.container.ContainerBetterStorage.class);
         }
 
         if (ActuallyAdditions.isLoaded()) {
@@ -340,15 +354,13 @@ public class DefaultCompat {
         }
 
         if (GT6.isLoaded()) {
+            api.addCompat(ContainerCommonChest.class, (container, builder) -> { builder.addGenericSlotGroup(); });
             api.addCompat(
-                ContainerCommonChest.class,
+                ContainerCommonDefault.class,
                 (container, builder) -> {
-                    builder.addSlotGroup(container.getStartIndex(), container.getSlotCount(), 9);
+                    builder.addGenericSlotGroup()
+                        .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
                 });
-            api.addCompat(ContainerCommonDefault.class, (container, builder) -> {
-                builder.addSlotGroup(container.getStartIndex(), container.getSlotCount(), 9)
-                    .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
-            });
             api.addPlayerSortButtonPosition(ContainerCommonDefault.class, IPosSetter.TOP_RIGHT_VERTICAL);
         }
     }
