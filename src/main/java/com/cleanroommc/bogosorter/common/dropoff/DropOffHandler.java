@@ -47,8 +47,13 @@ public class DropOffHandler {
             endSlot = toInventory.getSizeInventory();
         }
 
+        int offhandSlot = -1;
+        if (Mods.Backhand.isLoaded()) {
+            offhandSlot = BackhandUtils.getOffhandSlot(inventoryManager.getPlayer());
+        }
+
         for (int i = InventoryManager.Slots.PLAYER_INVENTORY_FIRST; i < playerStacks.length; ++i) {
-            if (Mods.Backhand.isLoaded() && i == BackhandUtils.getOffhandSlot(inventoryManager.getPlayer())) {
+            if (Mods.Backhand.isLoaded() && i == offhandSlot) {
                 // Dont take the offhand item
                 continue;
             }
