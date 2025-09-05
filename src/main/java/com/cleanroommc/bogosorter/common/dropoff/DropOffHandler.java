@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import com.cleanroommc.bogosorter.compat.Mods;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 
+import xonin.backhand.api.core.BackhandUtils;
+
 public class DropOffHandler {
 
     private final InventoryManager inventoryManager;
@@ -46,6 +48,10 @@ public class DropOffHandler {
         }
 
         for (int i = InventoryManager.Slots.PLAYER_INVENTORY_FIRST; i < playerStacks.length; ++i) {
+            if (Mods.Backhand.isLoaded() && i == BackhandUtils.getOffhandSlot(inventoryManager.getPlayer())) {
+                // Dont take the offhand item
+                continue;
+            }
             if (playerStacks[i] != null && isItemValid(playerStacks[i].getDisplayName())) {
                 // if (DropOffConfig.INSTANCE.dropOffOnlyFullStacks &&
                 // playerStacks[i].stackSize <
