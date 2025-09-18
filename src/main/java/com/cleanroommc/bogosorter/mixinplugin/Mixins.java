@@ -69,7 +69,11 @@ public enum Mixins implements IMixins {
     EtFuturum(new MixinBuilder()
         .addRequiredMod(TargetedMod.ETFUTURUM)
         .setPhase(Phase.LATE)
-        .addCommonMixins("etfuturum.MixinContainerChestGeneric"));
+        .addCommonMixins("etfuturum.MixinContainerChestGeneric")),
+    CraftingTweaks(new MixinBuilder()
+        .setPhase(Phase.EARLY)
+        .addClientMixins("minecraft.MixinGuiScreen_CraftingTweaks")
+    );
     // spotless:on
 
     private final MixinBuilder builder;
