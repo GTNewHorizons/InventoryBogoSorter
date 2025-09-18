@@ -17,6 +17,7 @@ public enum Mods {
     BetterStorageFixed("betterstorage", mod -> mod.getVersion().startsWith("0.14")),
     Bibliocraft("BiblioCraft"),
     Botania("Botania"),
+    Buildcraft("BuildCraft|Core"),
     CodeChickenCore("CodeChickenCore"),
     CookingForBlockheads("cookingforblockheads"),
     DraconicEvolution("DraconicEvolution"),
