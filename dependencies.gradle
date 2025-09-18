@@ -62,6 +62,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.456:dev")
     compileOnly("com.github.GTNewHorizons:Botania:1.12.25-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:StorageDrawers:2.1.7-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:BuildCraft:7.1.44:dev")
     compileOnly("com.github.GTNewHorizons:Backhand:1.7.1:dev")
 
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:waila:1.8.13:dev")

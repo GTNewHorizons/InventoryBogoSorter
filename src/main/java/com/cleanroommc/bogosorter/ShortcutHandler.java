@@ -18,9 +18,11 @@ import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
+import buildcraft.factory.gui.SlotWorkbench;
 import codechicken.lib.inventory.SlotDummy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import forestry.core.gui.slots.SlotCraftMatrix;
 
 public class ShortcutHandler {
 
@@ -191,6 +193,13 @@ public class ShortcutHandler {
         if (Mods.CodeChickenCore.isLoaded() && slot instanceof SlotDummy) {
             return true;
         }
+        if (Mods.Forestry.isLoaded() && slot instanceof SlotCraftMatrix) {
+            return true;
+        }
+        if (Mods.Buildcraft.isLoaded() && slot instanceof SlotWorkbench) {
+            return true;
+        }
+
         // Prevent items from being moved into the output slot, which leads to them vanishing
         if (slot instanceof SlotCrafting) {
             return true;
