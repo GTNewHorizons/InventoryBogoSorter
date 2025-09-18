@@ -13,10 +13,9 @@ import com.llamalad7.mixinextras.sugar.Local;
 @Mixin(GuiScreen.class)
 public class MixinGuiScreen_CraftingTweaks {
 
-    // Ignore the warning saying the mapping was not found
     @Inject(
         method = "handleMouseInput",
-        at = @At(value = "INVOKE_ASSIGN", target = "Lorg/lwjgl/input/Mouse;getEventButton()I"),
+        at = @At(value = "INVOKE_ASSIGN", target = "Lorg/lwjgl/input/Mouse;getEventButton()I", remap = false),
         cancellable = true)
     private void bogosorter$handleMouseInput(CallbackInfo ci, @Local(ordinal = 0) int mouseX,
         @Local(ordinal = 1) int mouseY, @Local(ordinal = 2) int btn) {
