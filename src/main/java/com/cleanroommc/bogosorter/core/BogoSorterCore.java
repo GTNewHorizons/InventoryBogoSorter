@@ -50,7 +50,7 @@ public class BogoSorterCore implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public String[] getASMTransformerClass() {
-        return null;
+        return new String[] { "net.blay09.mods.craftingtweaks.coremod.GuiScreenClassTransformer" };
     }
 
     @Override
