@@ -61,6 +61,7 @@ public class DefaultCompat {
         api.addCompat(ContainerPlayer.class, (container, builder) -> {
             // player slots are automatically added
         });
+        // vanilla crafting table has issues with ctrl+click, so its not here
         api.addPlayerSortButtonPosition(ContainerPlayer.class, (slotGroup, buttonPos) -> {
             if (Nutrition.isLoaded()) {
                 IPosSetter.TOP_RIGHT_VERTICAL.setButtonPos(slotGroup, buttonPos);
