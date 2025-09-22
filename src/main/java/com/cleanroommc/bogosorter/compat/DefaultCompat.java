@@ -11,7 +11,6 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerPlayer;
-import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 
@@ -68,11 +67,6 @@ public class DefaultCompat {
             } else {
                 IPosSetter.TOP_RIGHT_HORIZONTAL.setButtonPos(slotGroup, buttonPos);
             }
-        });
-        api.addCompat(ContainerWorkbench.class, (container, builder) -> {
-            // dont show buttons
-            builder.addSlotGroup(0, 9, 3)
-                .buttonPosSetter(null);
         });
         api.addCompat(ContainerChest.class, (container, builder) -> {
             // quark adds a search bar
