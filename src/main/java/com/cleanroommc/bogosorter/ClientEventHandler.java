@@ -290,7 +290,7 @@ public class ClientEventHandler {
                     return false;
                 }
                 timeSort = t;
-                return true;
+                return sortKey.getKeyCode() != NEIKeyboardUtils.unhash(NEIClientConfig.getKeyBinding("gui.recipe");
             }
         }
         return false;
