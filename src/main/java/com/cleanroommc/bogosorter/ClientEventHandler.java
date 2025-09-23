@@ -282,7 +282,7 @@ public class ClientEventHandler {
             }
             SetCanTakeStack = true;
         }
-        if (container != null && Keypress(sortKey)) {
+        if (container != null && isKeyDown(sortKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 SlotAccessor slot = getSlot(container);
