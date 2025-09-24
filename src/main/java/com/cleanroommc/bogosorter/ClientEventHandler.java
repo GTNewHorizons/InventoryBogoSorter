@@ -282,12 +282,17 @@ public class ClientEventHandler {
             }
             SetCanTakeStack = true;
         }
-        if (container != null && Keypress(sortKey)) {
+        if (isKeyDown(sortKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
-                SlotAccessor slot = getSlot(container);
-                if (!canSort(slot) || !sort(container, slot)) {
-                    return false;
+                if (container != null) {
+                    SlotAccessor slot = getSlot(container);
+                    if (!canSort(slot) || !sort(container, slot)) {
+                        return false;
+                    }
+                } else if (BogoSorterConfig.enableNoGuiSort) {
+                    sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
+                    sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36); // hotbar
                 }
                 timeSort = t;
                 return true;
@@ -332,41 +337,44 @@ public class ClientEventHandler {
 
     public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot) {
         if (guiScreen instanceof GuiContainer) {
-            Container container = ((GuiContainer) guiScreen).inventorySlots;
-            GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
-            if (sortingContext.isEmpty()) return false;
-            SlotGroup slotGroup = null;
-            if (slot == null) {
-                if (sortingContext.getNonPlayerSlotGroupAmount() == 1) {
-                    slotGroup = sortingContext.getNonPlayerSlotGroup();
-                } else if (sortingContext.hasPlayer() && sortingContext.getNonPlayerSlotGroupAmount() == 0) {
-                    slotGroup = sortingContext.getPlayerSlotGroup();
-                }
-                if (slotGroup == null || slotGroup.isEmpty()) return false;
-                slot = slotGroup.getSlots()
-                    .get(0);
-            } else {
-                slotGroup = sortingContext.getSlotGroup(slot.getSlotNumber());
-                if (slotGroup == null || slotGroup.isEmpty()
-                    || (slotGroup.isHotbar() && !BogoSorterConfig.enableHotbarSort)) return false;
-            }
-
-            List<SortRule<ItemStack>> sortRules = SortRulesConfig.sortRules;
-            boolean color = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("color"));
-            boolean name = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("display_name"));
-            NetworkHandler.sendToServer(
-                new CSort(
-                    createSortData(slotGroup, color, name),
-                    SortRulesConfig.sortRules,
-                    SortRulesConfig.nbtSortRules,
-                    slot.getSlotNumber(),
-                    slotGroup.isPlayerInventory()));
-            SortHandler.playSortSound();
-
-            return true;
-
+            return sort(((GuiContainer) guiScreen).inventorySlots, slot, -1);
         }
         return false;
+    }
+
+    public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber) {
+        GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
+        if (sortingContext.isEmpty()) return false;
+        SlotGroup slotGroup = null;
+        if (slot == null && slotNumber == -1) {
+            if (sortingContext.getNonPlayerSlotGroupAmount() == 1) {
+                slotGroup = sortingContext.getNonPlayerSlotGroup();
+            } else if (sortingContext.hasPlayer() && sortingContext.getNonPlayerSlotGroupAmount() == 0) {
+                slotGroup = sortingContext.getPlayerSlotGroup();
+            }
+            if (slotGroup == null || slotGroup.isEmpty()) return false;
+            slot = slotGroup.getSlots()
+                .get(0);
+        } else {
+            slotGroup = sortingContext.getSlotGroup(slot != null ? slot.getSlotNumber() : slotNumber);
+            if (slotGroup == null || slotGroup.isEmpty()
+                || (slotGroup.isHotbar() && !BogoSorterConfig.enableHotbarSort)) return false;
+        }
+
+        List<SortRule<ItemStack>> sortRules = SortRulesConfig.sortRules;
+        boolean color = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("color"));
+        boolean name = sortRules.contains(BogoSortAPI.INSTANCE.getItemSortRule("display_name"));
+        NetworkHandler.sendToServer(
+            new CSort(
+                createSortData(slotGroup, color, name),
+                SortRulesConfig.sortRules,
+                SortRulesConfig.nbtSortRules,
+                slot != null ? slot.getSlotNumber() : slotNumber,
+                slotGroup.isPlayerInventory()));
+        SortHandler.playSortSound();
+
+        return true;
+
     }
 
     public static Collection<ClientSortData> createSortData(SlotGroup slotGroup, boolean color, boolean name) {
