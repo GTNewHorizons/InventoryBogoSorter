@@ -45,6 +45,11 @@ public class ShortcutHandler {
         int amount) {
         if (slot == null || slot.callGetStack() == null) return;
         ItemStack stack = slot.callGetStack();
+        Slot currentSlot = container.getSlot(slot.getSlotNumber());
+        if (currentSlot == null) return;
+        if (SlotDummyOrCrafting(currentSlot)) {
+            return;
+        }
         amount = Math.min(amount, stack.getMaxStackSize());
         ItemStack toInsert = stack.copy();
         toInsert.stackSize = (amount);
@@ -63,7 +68,7 @@ public class ShortcutHandler {
             List<SlotAccessor> otherSlots = new ArrayList<>();
             boolean isPlayer = BogoSortAPI.isPlayerSlot(slot);
             for (Slot slot1 : container.inventorySlots) {
-                if (isPlayer != BogoSortAPI.isPlayerSlot(slot1) && isPlayer != SlotDummy(slot1)) {
+                if (isPlayer != BogoSortAPI.isPlayerSlot(slot1) && isPlayer != SlotDummyOrCrafting(slot1)) {
                     otherSlots.add(BogoSortAPI.INSTANCE.getSlot(slot1));
                 }
             }
@@ -103,6 +108,11 @@ public class ShortcutHandler {
 
     public static void moveAllItems(EntityPlayer player, Container container, SlotAccessor slot, boolean sameItemOnly) {
         if (slot == null || !BogoSortAPI.isValidSortable(container)) return;
+        Slot currentSlot = container.getSlot(slot.getSlotNumber());
+        if (currentSlot == null) return;
+        if (SlotDummyOrCrafting(currentSlot)) {
+            return;
+        }
         if (slot.callGetStack() != null) {
             ItemStack stack = slot.callGetStack()
                 .copy();
@@ -143,6 +153,11 @@ public class ShortcutHandler {
     public static void dropItems(EntityPlayer player, Container container, SlotAccessor slot, boolean onlySameType) {
         ItemStack stack = slot.callGetStack();
         if (onlySameType && stack == null) return;
+        Slot currentSlot = container.getSlot(slot.getSlotNumber());
+        if (currentSlot == null) return;
+        if (SlotDummyOrCrafting(currentSlot)) {
+            return;
+        }
         SlotGroup slots = GuiSortingContext.getOrCreate(container)
             .getSlotGroup(slot.getSlotNumber());
         if (slots == null) return;
@@ -189,7 +204,7 @@ public class ShortcutHandler {
         return stack;
     }
 
-    public static boolean SlotDummy(Slot slot) {
+    public static boolean SlotDummyOrCrafting(Slot slot) {
         if (Mods.CodeChickenCore.isLoaded() && slot instanceof SlotDummy) {
             return true;
         }
