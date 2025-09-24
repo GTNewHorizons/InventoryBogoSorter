@@ -17,10 +17,15 @@ public class BogoSorterConfig {
     @Config.LangKey("bogosorter.config.sort.sound")
     public static String sortSound;
 
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.Comment("Enable the hotbar sort feature.")
     @Config.LangKey("bogosorter.config.hotbarsort.enable")
     public static boolean enableHotbarSort;
+
+    @Config.DefaultBoolean(true)
+    @Config.Comment("Sort inventory when keybind is pressed while no GUI is open.")
+    @Config.LangKey("bogosorter.config.noguisort.enable")
+    public static boolean enableNoGuiSort;
 
     @Config.DefaultBoolean(true)
     @Config.Comment("Enable the auto-refill feature.")
