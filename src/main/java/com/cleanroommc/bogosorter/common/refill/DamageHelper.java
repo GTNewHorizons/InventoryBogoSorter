@@ -10,7 +10,7 @@ import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 public class DamageHelper {
 
     public static boolean damageItemHook(EntityPlayer player, ItemStack itemStack) {
-        if (!BogoSorterConfig.enableAutoRefill || BogoSorterConfig.autoRefillDamageThreshold <= 0) return false;
+        if (!BogoSorterConfig.enableAutoRefill_server || !BogoSorterConfig.enableAutoRefill || BogoSorterConfig.autoRefillDamageThreshold <= 0) return false;
 
         if (RefillHandler.shouldHandleRefill(player, itemStack) && isNotArmor(itemStack)
             && (player.inventory.currentItem < 9)) {
