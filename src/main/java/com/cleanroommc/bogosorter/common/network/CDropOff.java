@@ -42,8 +42,6 @@ public class CDropOff implements IPacket {
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        if (!BogoSorterConfig.enableAutoRefill_server) return null;
-
         EntityPlayerMP player = handler.playerEntity;
         if (MinecraftServer.getServer()
             .isDedicatedServer()) {
