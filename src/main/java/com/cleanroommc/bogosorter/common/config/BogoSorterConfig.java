@@ -28,15 +28,19 @@ public class BogoSorterConfig {
     public static boolean enableNoGuiSort;
 
     @Config.DefaultBoolean(true)
-    @Config.Comment("Enable the auto-refill feature.")
+    @Config.Comment("Enable the auto-refill feature (Client Side Toggle).")
     @Config.LangKey("bogosorter.config.autorefill.enable")
-    @Config.Sync
     public static boolean enableAutoRefill;
+
+    @Config.DefaultBoolean(true)
+    @Config.Comment("Enable the auto-refill feature. (Server Side Toggle)")
+    @Config.LangKey("bogosorter.config.autorefill.enable_server")
+    @Config.Sync
+    public static boolean enableAutoRefill_server;
 
     @Config.DefaultInt(1)
     @Config.Comment("The damage threshold for auto-refill. If the item has less than this amount of durability, it will be refilled.")
     @Config.LangKey("bogosorter.config.autorefill.damage_threshold")
-    @Config.Sync
     public static int autoRefillDamageThreshold;
 
     @Config.DefaultBoolean(true)
