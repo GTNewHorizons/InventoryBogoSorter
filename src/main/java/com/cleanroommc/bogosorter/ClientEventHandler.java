@@ -295,7 +295,7 @@ public class ClientEventHandler {
                     sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36); // hotbar
                 }
                 timeSort = t;
-                return true;
+                return false;
             }
         }
         return false;
