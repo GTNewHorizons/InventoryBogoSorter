@@ -313,6 +313,7 @@ public class ClientEventHandler {
     }
 
     private static boolean isKeyDown(KeyBinding key) {
+        if (key.getKeyCode() == 0) return false;
 
         if (key.getKeyCode() < 0) {
             return isButtonPressed(key.getKeyCode() + 100);
