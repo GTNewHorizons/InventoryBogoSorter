@@ -290,12 +290,13 @@ public class ClientEventHandler {
                     if (!canSort(slot) || !sort(container, slot)) {
                         return false;
                     }
+                    timeSort = t;
+                    return true;
                 } else if (BogoSorterConfig.enableNoGuiSort) {
                     sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
                     sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36); // hotbar
+                    timeSort = t;
                 }
-                timeSort = t;
-                return true;
             }
         }
         return false;
