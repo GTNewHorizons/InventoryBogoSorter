@@ -1,9 +1,13 @@
 package com.cleanroommc.bogosorter;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import net.minecraft.client.Minecraft;
 
 import org.lwjgl.input.Keyboard;
@@ -129,6 +133,25 @@ public class KeyBind {
 
         public Builder mustNotPress(int... keys) {
             for (int key : keys) this.notKeys.add(key);
+            return this;
+        }
+
+        public Builder addKeysFromConfig() {
+            Optional<Field> field = Arrays.stream(BogoSorterConfig.shortCutKeys.getClass().getDeclaredFields())
+                .filter((x) -> x.getName().equals(this.name))
+                .findFirst();
+            if (!field.isPresent()) {
+                BogoSorter.LOGGER.debug("ops: field not found");
+            }
+            try {
+                String sequence = (String) field.get().get(BogoSorterConfig.shortCutKeys);
+                String[] sequenceKeys = sequence.split("\\+");
+                for(String key : sequenceKeys) {
+                    add(true, Keyboard.getKeyIndex(key));
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
             return this;
         }
 

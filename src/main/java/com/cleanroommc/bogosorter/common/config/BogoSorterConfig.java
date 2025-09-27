@@ -12,6 +12,9 @@ public class BogoSorterConfig {
     @Config.Comment("Usage Ticker Configuration")
     public static final UsageTicker usageTicker = new UsageTicker();
 
+    @Config.Comment("ShortCutKeys Configuration")
+    public static final ShortCutKeys shortCutKeys = new ShortCutKeys();
+
     @Config.DefaultString("gui.button.press")
     @Config.Comment("Sound played when the sort button is pressed.")
     @Config.LangKey("bogosorter.config.sort.sound")
@@ -40,16 +43,16 @@ public class BogoSorterConfig {
     public static int autoRefillDamageThreshold;
 
     @Config.DefaultBoolean(true)
-    @Config.Comment({ "If enabled, items with max stack size of 1 (e.g., tools, armor, etc.)",
-        "will not be split when sorting. This helps avoid cluttering the inventory with duplicate single-item stacks." })
+    @Config.Comment({"If enabled, items with max stack size of 1 (e.g., tools, armor, etc.)",
+        "will not be split when sorting. This helps avoid cluttering the inventory with duplicate single-item stacks."})
     @Config.LangKey("bogosorter.config.preventSplit")
     @Config.Sync
     public static boolean preventSplit;
 
     @Config.DefaultInt(0xFFFFFFFF)
-    @Config.Comment({ "The color of the sort button.",
+    @Config.Comment({"The color of the sort button.",
         "Display format: 0xAARRGGBB (e.g. 0xFFFFFFFF for white, 0xFF0000FF for red).",
-        "Value is displayed in decimal here but interpreted as hex internally." })
+        "Value is displayed in decimal here but interpreted as hex internally."})
     @Config.LangKey("bogosorter.config.button.color")
     public static int buttonColor;
 
@@ -125,7 +128,7 @@ public class BogoSorterConfig {
         @Config.LangKey("bogosorter.config.dropoff.throttle")
         public int dropoffPacketThrottleInMS;
 
-        @Config.DefaultStringList({ "Chest", "Barrel", "Drawer", "Crate" })
+        @Config.DefaultStringList({"Chest", "Barrel", "Drawer", "Crate"})
         @Config.Comment("Valid inventory names for drop-off targeting (substring match).")
         @Config.LangKey("bogosorter.config.dropoff.targets")
         public String[] dropoffTargetNames;
@@ -147,5 +150,24 @@ public class BogoSorterConfig {
             @Config.LangKey("bogosorter.config.dropoff.button.visible")
             public boolean showButton;
         }
+    }
+
+    @Config.LangKey("bogosorter.config.shortcutkeys")
+    @Config.Comment("All Key names can be found here: http://www.lwjgl.org/javadoc/org/lwjgl/input/Keyboard.html")
+    public static class ShortCutKeys {
+        @Config.DefaultString("LCONTROL+LSHIFT")
+        @Config.Comment("Key Combo to pick All possible items of the same kind")
+        @Config.LangKey("bogosorter.config.shortcutkeys.moveallsame")
+        public String moveAllSame;
+
+        @Config.DefaultString("SPACE")
+        @Config.Comment("Key Combo to pick All possible items")
+        @Config.LangKey("bogosorter.config.shortcutkeys.moveall")
+        public String moveAll;
+
+        @Config.DefaultString("LCONTROL")
+        @Config.Comment("Key Combo to pick One Item")
+        @Config.LangKey("bogosorter.config.shortcutkeys.movesingle")
+        public String moveSingle;
     }
 }
