@@ -170,11 +170,11 @@ public class ButtonHandler {
             if (this.enabled && this.field_146123_n) {
                 final List<String> tooltipLines = new ArrayList<>(2);
                 if (this.sort) {
-                    tooltipLines.add(I18n.format("key.sort"));
+                    tooltipLines.add(I18n.format("key.sort_gui"));
                     tooltipLines.add(
                         EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
                             + " : "
-                            + GameSettings.getKeyDisplayString(ClientEventHandler.sortKey.getKeyCode()));
+                            + GameSettings.getKeyDisplayString(ClientEventHandler.sortKeyInGUI.getKeyCode()));
                 } else {
                     tooltipLines.add(I18n.format("key.sort_config"));
                     tooltipLines.add(
