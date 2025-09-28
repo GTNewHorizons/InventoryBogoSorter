@@ -61,8 +61,8 @@ public class ClientEventHandler {
         "key.sort_config",
         Keyboard.KEY_NONE,
         "key.categories.bogosorter");
-    public static final KeyBinding sortKey = new KeyBinding("key.sort", -98, "key.categories.bogosorter");
-    public static final KeyBinding sortKeyInGUI = new KeyBinding("key.sort_gui", 0, "key.categories.bogosorter");
+    public static final KeyBinding sortKeyInGUI = new KeyBinding("key.sort_gui", -98, "key.categories.bogosorter");
+    public static final KeyBinding sortKeyOutsideGUI = new KeyBinding("key.sort", 0, "key.categories.bogosorter");
     public static final KeyBinding dropoffKey = new KeyBinding(
         "key.dropoff",
         Keyboard.KEY_NONE,
@@ -283,7 +283,7 @@ public class ClientEventHandler {
             }
             SetCanTakeStack = true;
         }
-        if (isKeyDown(sortKey)) {
+        if (isKeyDown(sortKeyOutsideGUI)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory

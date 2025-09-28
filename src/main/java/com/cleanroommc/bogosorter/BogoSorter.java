@@ -80,7 +80,7 @@ public class BogoSorter {
     public void onPostInit(FMLPostInitializationEvent event) {
         if (NetworkUtils.isDedicatedClient()) {
             ClientRegistry.registerKeyBinding(configGuiKey);
-            ClientRegistry.registerKeyBinding(sortKey);
+            ClientRegistry.registerKeyBinding(sortKeyOutsideGUI);
             ClientRegistry.registerKeyBinding(sortKeyInGUI);
             ClientRegistry.registerKeyBinding(dropoffKey);
         }
