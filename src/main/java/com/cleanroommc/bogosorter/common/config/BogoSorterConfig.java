@@ -22,7 +22,7 @@ public class BogoSorterConfig {
     @Config.LangKey("bogosorter.config.hotbarsort.enable")
     public static boolean enableHotbarSort;
 
-    @Config.DefaultBoolean(true)
+    @Config.DefaultBoolean(false)
     @Config.Comment("Sort inventory when keybind is pressed while no GUI is open.")
     @Config.LangKey("bogosorter.config.noguisort.enable")
     public static boolean enableNoGuiSort;
