@@ -62,7 +62,7 @@ public class ClientEventHandler {
         Keyboard.KEY_NONE,
         "key.categories.bogosorter");
     public static final KeyBinding sortKeyInGUI = new KeyBinding("key.sort_gui", -98, "key.categories.bogosorter");
-    public static final KeyBinding sortKeyOutsideGUI = new KeyBinding("key.sort", 0, "key.categories.bogosorter");
+    public static final KeyBinding sortKeyOutsideGUI = new KeyBinding("key.sort_nogui", 0, "key.categories.bogosorter");
     public static final KeyBinding dropoffKey = new KeyBinding(
         "key.dropoff",
         Keyboard.KEY_NONE,
