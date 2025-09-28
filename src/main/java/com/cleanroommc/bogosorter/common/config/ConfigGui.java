@@ -181,27 +181,6 @@ public class ConfigGui extends CustomModularScreen {
                         new CycleButtonWidget()
                             .value(
                                 new BoolValue.Dynamic(
-                                    () -> BogoSorterConfig.enableNoGuiSort,
-                                    val -> BogoSorterConfig.enableNoGuiSort = val))
-                            .stateOverlay(TOGGLE_BUTTON)
-                            .disableHoverBackground()
-                            .size(14, 14)
-                            .margin(8, 0)
-                            .background(IDrawable.EMPTY))
-                    .child(
-                        IKey.lang("bogosort.gui.enable_noguiSort")
-                            .asWidget()
-                            .height(14)
-                            .marginLeft(10)
-                            .expanded()))
-            .child(
-                new Row().widthRel(1f)
-                    .height(14)
-                    .margin(0, 2)
-                    .child(
-                        new CycleButtonWidget()
-                            .value(
-                                new BoolValue.Dynamic(
                                     () -> BogoSorterConfig.enableAutoRefill,
                                     val -> BogoSorterConfig.enableAutoRefill = val))
                             .stateOverlay(TOGGLE_BUTTON)

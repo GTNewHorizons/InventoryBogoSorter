@@ -1,6 +1,7 @@
 key.categories.bogosorter=Inventory Bogo Sorter
 key.sort_config=Open Sort Config
-key.sort=Sort Inventory
+key.sort=Sort Inventory Outside GUIs
+key.sort_gui=Sort Inventory In GUIs
 key.dropoff=Dropoff
 key.dropoff.tooltip1=Dropoff To Nearby Inventories
 key.dropoff.tooltip2=Control + Drag To Move

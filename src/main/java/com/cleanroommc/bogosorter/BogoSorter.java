@@ -81,6 +81,7 @@ public class BogoSorter {
         if (NetworkUtils.isDedicatedClient()) {
             ClientRegistry.registerKeyBinding(configGuiKey);
             ClientRegistry.registerKeyBinding(sortKey);
+            ClientRegistry.registerKeyBinding(sortKeyInGUI);
             ClientRegistry.registerKeyBinding(dropoffKey);
         }
     }
