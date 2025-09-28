@@ -61,7 +61,8 @@ public class ClientEventHandler {
         "key.sort_config",
         Keyboard.KEY_NONE,
         "key.categories.bogosorter");
-    public static final KeyBinding sortKey = new KeyBinding("key.sort", -98, "key.categories.bogosorter");
+    public static final KeyBinding sortKeyInGUI = new KeyBinding("key.sort_gui", -98, "key.categories.bogosorter");
+    public static final KeyBinding sortKeyOutsideGUI = new KeyBinding("key.sort_nogui", 0, "key.categories.bogosorter");
     public static final KeyBinding dropoffKey = new KeyBinding(
         "key.dropoff",
         Keyboard.KEY_NONE,
@@ -282,7 +283,17 @@ public class ClientEventHandler {
             }
             SetCanTakeStack = true;
         }
-        if (isKeyDown(sortKey)) {
+        if (isKeyDown(sortKeyOutsideGUI)) {
+            long t = Minecraft.getSystemTime();
+            if (t - timeSort > 500) {
+                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
+                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36); // hotbar
+
+                timeSort = t;
+                return true;
+            }
+        }
+        if (isKeyDown(sortKeyInGUI)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 if (container != null) {
@@ -290,12 +301,9 @@ public class ClientEventHandler {
                     if (!canSort(slot) || !sort(container, slot)) {
                         return false;
                     }
-                } else if (BogoSorterConfig.enableNoGuiSort) {
-                    sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
-                    sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36); // hotbar
+                    timeSort = t;
+                    return true;
                 }
-                timeSort = t;
-                return true;
             }
         }
         return false;
