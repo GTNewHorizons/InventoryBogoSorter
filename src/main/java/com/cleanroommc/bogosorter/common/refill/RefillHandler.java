@@ -55,6 +55,7 @@ public class RefillHandler {
     public void onDestroyItem(PlayerDestroyItemEvent event) {
         if (event.entityPlayer == null || event.entityPlayer.worldObj == null
             || event.entityPlayer.worldObj.isRemote
+            || !BogoSorterConfig.enableAutoRefill_server
             || !BogoSorterConfig.enableAutoRefill) return;
 
         if (event.original == null) {
