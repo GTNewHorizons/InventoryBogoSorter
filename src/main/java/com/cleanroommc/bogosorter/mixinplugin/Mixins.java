@@ -8,7 +8,7 @@ import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
 public enum Mixins implements IMixins {
 
     // spotless:off
-    Vanilla_BOTH(new MixinBuilder()
+    Vanilla(new MixinBuilder()
         .setPhase(Phase.EARLY)
         .addCommonMixins(
             "minecraft.ContainerHorseInventoryMixin",

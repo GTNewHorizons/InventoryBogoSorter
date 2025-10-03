@@ -44,6 +44,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 public class ClientProxy extends CommonProxy {
 
     private static final List<String> tooltipList = Lists.newArrayList();
+    private static List<GuiButton> buttonList;
 
     private boolean missingMessageSent;
     private boolean wasRotated;
@@ -230,8 +231,7 @@ public class ClientProxy extends CommonProxy {
                             if (!wasToggleButtons) {
                                 CraftingTweaks.hideButtons = !CraftingTweaks.hideButtons;
                                 if (CraftingTweaks.hideButtons) {
-                                    ((GuiScreenAccessor) guiScreen).getButtonList()
-                                        .removeIf(o -> o instanceof GuiTweakButton);
+                                    buttonList.removeIf(o -> o instanceof GuiTweakButton);
                                 } else {
                                     initGui((GuiContainer) guiScreen);
                                 }
@@ -291,13 +291,14 @@ public class ClientProxy extends CommonProxy {
             CraftingTweaks.ModSupportState config = CraftingTweaks.instance.getModSupportState(provider.getModId());
             if (config == CraftingTweaks.ModSupportState.ENABLED
                 || config == CraftingTweaks.ModSupportState.BUTTONS_ONLY) {
-                provider.initGui(guiContainer, ((GuiScreenAccessor) guiContainer).getButtonList());
+                provider.initGui(guiContainer, buttonList);
             }
         }
     }
 
     @SubscribeEvent
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
+        buttonList = event.buttonList;
         if (!CraftingTweaks.hideButtons) {
             if (event.gui instanceof GuiContainer) {
                 initGui((GuiContainer) event.gui);
@@ -318,7 +319,7 @@ public class ClientProxy extends CommonProxy {
         }
         if (!CraftingTweaks.hideButtonTooltips) {
             tooltipList.clear();
-            for (GuiButton button : ((GuiScreenAccessor) event.gui).getButtonList()) {
+            for (GuiButton button : buttonList) {
                 if (button instanceof ITooltipProvider && button.func_146115_a()) {
                     ((ITooltipProvider) button).addInformation(tooltipList);
                     break;
