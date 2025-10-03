@@ -231,8 +231,7 @@ public class ClientProxy extends CommonProxy {
                             if (!wasToggleButtons) {
                                 CraftingTweaks.hideButtons = !CraftingTweaks.hideButtons;
                                 if (CraftingTweaks.hideButtons) {
-                                    buttonList
-                                        .removeIf(o -> o instanceof GuiTweakButton);
+                                    buttonList.removeIf(o -> o instanceof GuiTweakButton);
                                 } else {
                                     initGui((GuiContainer) guiScreen);
                                 }
