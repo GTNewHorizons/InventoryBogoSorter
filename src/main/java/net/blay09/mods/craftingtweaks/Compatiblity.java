@@ -260,7 +260,7 @@ public class Compatiblity {
     }
 
     public static void forestry() {
-        SimpleTweakProvider provider = registerSimpleProvider("Forestry", "forestry.core.gui.ContainerWorktable");
+        SimpleTweakProvider provider = registerSimpleProvider("Forestry", "forestry.factory.gui.ContainerWorktable");
         if (provider != null) {
             provider.setGrid(54, 9);
             provider.setTweakRotate(true, true, 0, 0);
