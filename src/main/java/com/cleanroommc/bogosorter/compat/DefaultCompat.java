@@ -104,7 +104,7 @@ public class DefaultCompat {
         if (DraconicEvolution.isLoaded()) {
             api.addCompatSimple(
                 ContainerDraconiumChest.class,
-                (container, builder) -> { builder.addSlotGroup(0, 260, 26); });
+                (container, builder) -> { builder.addSlotGroup(0, 234, 26); });
             api.addPlayerSortButtonPosition(ContainerDraconiumChest.class, (slotGroup, buttonPos) -> {
                 SlotAccessor topRight = slotGroup.getSlots()
                     .get(slotGroup.getRowSize() - 1);

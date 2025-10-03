@@ -53,7 +53,7 @@ public class ButtonHandler {
 
     @SubscribeEvent
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (ClientEventHandler.isSortableContainer(event.gui) && !(event.gui instanceof GuiScreenWrapper)) {
+        if (buttonEnabled && ClientEventHandler.isSortableContainer(event.gui) && !(event.gui instanceof GuiScreenWrapper)) {
             Container container = ((GuiContainer) event.gui).inventorySlots;
             GuiSortingContext context = GuiSortingContext.getOrCreate(container);
             event.buttonList.removeIf(guiButton -> guiButton instanceof SortButton);
