@@ -9,24 +9,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.bogosorter.compat.Mods;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import tconstruct.library.weaponry.ProjectileWeapon;
-import tconstruct.weaponry.weapons.Crossbow;
-import tconstruct.weaponry.weapons.LongBow;
-import tconstruct.weaponry.weapons.ShortBow;
+import tconstruct.weaponry.TinkerWeaponry;
 
 /**
  * A registry to handle the logic for different types of weapons that use ammunition.
  * This provides a centralized place to add compatibility for various items.
  */
+@SideOnly(Side.CLIENT)
 public class AmmoHandlerRegistry {
 
-    private static final Map<Class<? extends Item>, AmmoHandler> HANDLERS = new LinkedHashMap<>();
+    private static final Map<Item, AmmoHandler> HANDLERS = new LinkedHashMap<>();
 
     /**
      * Registers a new handler for a specific weapon item class.
@@ -34,7 +34,7 @@ public class AmmoHandlerRegistry {
      * @param weaponClass The class of the weapon Item.
      * @param handler     The handler containing the logic for this weapon.
      */
-    public static void register(Class<? extends Item> weaponClass, AmmoHandler handler) {
+    public static void register(Item weaponClass, AmmoHandler handler) {
         if (weaponClass != null && handler != null) {
             HANDLERS.put(weaponClass, handler);
         }
@@ -51,15 +51,13 @@ public class AmmoHandlerRegistry {
         if (stack == null) {
             return null;
         }
-        AmmoHandler handler = HANDLERS.get(
-            stack.getItem()
-                .getClass());
+        AmmoHandler handler = HANDLERS.get(stack.getItem());
         if (handler != null) {
             return handler;
         }
-        for (Map.Entry<Class<? extends Item>, AmmoHandler> entry : HANDLERS.entrySet()) {
+        for (Map.Entry<Item, AmmoHandler> entry : HANDLERS.entrySet()) {
             if (entry.getKey()
-                .isInstance(stack.getItem())) {
+                .equals(stack.getItem())) {
                 return entry.getValue();
             }
         }
@@ -121,9 +119,9 @@ public class AmmoHandlerRegistry {
 
         public static void register() {
             TConstructAmmoHandler handler = new TConstructAmmoHandler();
-            AmmoHandlerRegistry.register(ShortBow.class, handler);
-            AmmoHandlerRegistry.register(LongBow.class, handler);
-            AmmoHandlerRegistry.register(Crossbow.class, handler);
+            AmmoHandlerRegistry.register(TinkerWeaponry.shortbow, handler);
+            AmmoHandlerRegistry.register(TinkerWeaponry.longbow, handler);
+            AmmoHandlerRegistry.register(TinkerWeaponry.crossbow, handler);
         }
 
         private static class TConstructAmmoHandler extends AmmoHandler {
@@ -154,7 +152,7 @@ public class AmmoHandlerRegistry {
 
     static {
         // Register vanilla handlers directly
-        register(ItemBow.class, new SimpleAmmoHandler(Items.arrow));
+        register(Items.bow, new SimpleAmmoHandler(Items.arrow));
 
         // Register mod compatibility handlers safely
         if (Mods.Tconstruct.isLoaded()) {
