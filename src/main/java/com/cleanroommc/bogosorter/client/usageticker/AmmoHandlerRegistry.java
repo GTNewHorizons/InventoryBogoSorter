@@ -94,7 +94,7 @@ public class AmmoHandlerRegistry {
 
         @Override
         int getAmmoCount(EntityClientPlayerMP player, ItemStack weaponStack) {
-            if (EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, weaponStack) > 0){
+            if (EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, weaponStack) > 0) {
                 return 0;
             }
             int count = 0;
@@ -111,7 +111,7 @@ public class AmmoHandlerRegistry {
         ItemStack getDisplayStack(ItemStack weaponStack) {
             if (this.validAmmo != null && !this.validAmmo.isEmpty()) {
                 for (ItemStack invStack : Minecraft.getMinecraft().thePlayer.inventory.mainInventory) {
-                    if (invStack != null && this.validAmmo.contains(invStack.getItem())){
+                    if (invStack != null && this.validAmmo.contains(invStack.getItem())) {
                         return invStack;
                     }
                 }
@@ -164,16 +164,15 @@ public class AmmoHandlerRegistry {
         SimpleAmmoHandler simpleHandler = new SimpleAmmoHandler();
         simpleHandler.addAmmo(Items.arrow);
         // add mod arrows
-//        if (Mods.Etfuturum.isLoaded()) simpleHandler.addAmmo(ganymedes01.etfuturum.ModItems.TIPPED_ARROW.get());
+        // if (Mods.Etfuturum.isLoaded()) simpleHandler.addAmmo(ganymedes01.etfuturum.ModItems.TIPPED_ARROW.get());
         register(Items.bow, simpleHandler);
 
-        if(Mods.DraconicEvolution.isLoaded()){
-            register(com.brandon3055.draconicevolution.common.ModItems.wyvernBow,simpleHandler);
-            register(com.brandon3055.draconicevolution.common.ModItems.draconicBow,simpleHandler);
+        if (Mods.DraconicEvolution.isLoaded()) {
+            register(com.brandon3055.draconicevolution.common.ModItems.wyvernBow, simpleHandler);
+            register(com.brandon3055.draconicevolution.common.ModItems.draconicBow, simpleHandler);
         }
 
-
-        if (Mods.Botania.isLoaded()){
+        if (Mods.Botania.isLoaded()) {
             register(ModItems.livingwoodBow, simpleHandler);
         }
         if (Mods.Tconstruct.isLoaded()) {
