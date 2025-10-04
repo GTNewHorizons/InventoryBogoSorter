@@ -204,6 +204,12 @@ public class UsageTicker {
 
         public ItemStack getDisplayedStack(ItemStack stack, int count) {
             if (stack == null) return null;
+
+            AmmoHandlerRegistry.AmmoHandler handler = AmmoHandlerRegistry.getHandler(stack);
+            if (handler != null) {
+                return count > 0 ? handler.getDisplayStack(stack) : null;
+            }
+
             if (slot == EquipmentSlotType.MAINHAND && !stack.isStackable()) return null;
             if (slot == EquipmentSlotType.OFFHAND && !stack.isStackable()) return null;
             if (count == stack.stackSize) return null;
@@ -213,6 +219,11 @@ public class UsageTicker {
 
         private int getStackCount(EntityClientPlayerMP player, ItemStack stack) {
             if (stack == null) return 0;
+
+            AmmoHandlerRegistry.AmmoHandler handler = AmmoHandlerRegistry.getHandler(stack);
+            if (handler != null) {
+                return handler.getAmmoCount(player, stack);
+            }
 
             int total = 0;
             for (int i = 0; i < player.inventory.mainInventory.length; i++) {
