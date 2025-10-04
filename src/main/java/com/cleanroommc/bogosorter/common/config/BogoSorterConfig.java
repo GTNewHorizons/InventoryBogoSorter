@@ -84,6 +84,12 @@ public class BogoSorterConfig {
         @Config.Comment("Show usage ticker for armor.")
         @Config.LangKey("bogosorter.config.usage_ticker.armor")
         public boolean enableArmor;
+
+        @Config.DefaultBoolean(true)
+        @Config.Comment("Show usage ticker for arrow/ammo.")
+        @Config.LangKey("bogosorter.config.usage_ticker.ammo")
+        public boolean enableAmmo;
+
     }
 
     @Config.LangKey("bogosorter.config.dropoff")
