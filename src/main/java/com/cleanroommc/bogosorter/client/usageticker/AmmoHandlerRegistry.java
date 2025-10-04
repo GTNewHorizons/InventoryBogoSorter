@@ -1,12 +1,16 @@
 package com.cleanroommc.bogosorter.client.usageticker;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,6 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import tconstruct.library.weaponry.ProjectileWeapon;
 import tconstruct.weaponry.TinkerWeaponry;
+import vazkii.botania.common.item.ModItems;
 
 /**
  * A registry to handle the logic for different types of weapons that use ammunition.
@@ -29,14 +34,14 @@ public class AmmoHandlerRegistry {
     private static final Map<Item, AmmoHandler> HANDLERS = new LinkedHashMap<>();
 
     /**
-     * Registers a new handler for a specific weapon item class.
+     * Registers a new handler for a specific weapon item.
      *
-     * @param weaponClass The class of the weapon Item.
-     * @param handler     The handler containing the logic for this weapon.
+     * @param weapon  The of the weapon Item.
+     * @param handler The handler containing the logic for this weapon.
      */
-    public static void register(Item weaponClass, AmmoHandler handler) {
-        if (weaponClass != null && handler != null) {
-            HANDLERS.put(weaponClass, handler);
+    public static void register(Item weapon, AmmoHandler handler) {
+        if (weapon != null && handler != null) {
+            HANDLERS.put(weapon, handler);
         }
     }
 
@@ -79,33 +84,37 @@ public class AmmoHandlerRegistry {
      */
     private static class SimpleAmmoHandler extends AmmoHandler {
 
-        private final Item[] validAmmo;
+        private List<Item> validAmmo = new ArrayList<>();
 
-        public SimpleAmmoHandler(Item... validAmmo) {
-            this.validAmmo = validAmmo;
+        public SimpleAmmoHandler() {}
+
+        public void addAmmo(Item validAmmo) {
+            this.validAmmo.add(validAmmo);
         }
 
         @Override
         int getAmmoCount(EntityClientPlayerMP player, ItemStack weaponStack) {
+            if (EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, weaponStack) > 0){
+                return 0;
+            }
             int count = 0;
             for (ItemStack invStack : player.inventory.mainInventory) {
-                if (invStack != null && validAmmo[0] != null) {
-                    for (Item ammo : validAmmo) {
-                        if (invStack.getItem() == ammo) {
-                            count += invStack.stackSize;
-                            break;
-                        }
-                    }
+                if (invStack != null && this.validAmmo.contains(invStack.getItem())) {
+                    count += invStack.stackSize;
                 }
+
             }
             return count;
         }
 
         @Override
         ItemStack getDisplayStack(ItemStack weaponStack) {
-            if (validAmmo[0] != null && validAmmo.length > 0) {
-                ItemStack validarrow = new ItemStack(validAmmo[0]);
-                return validarrow;
+            if (this.validAmmo != null && !this.validAmmo.isEmpty()) {
+                for (ItemStack invStack : Minecraft.getMinecraft().thePlayer.inventory.mainInventory) {
+                    if (invStack != null && this.validAmmo.contains(invStack.getItem())){
+                        return invStack;
+                    }
+                }
             }
             return null;
         }
@@ -152,9 +161,21 @@ public class AmmoHandlerRegistry {
 
     static {
         // Register vanilla handlers directly
-        register(Items.bow, new SimpleAmmoHandler(Items.arrow));
+        SimpleAmmoHandler simpleHandler = new SimpleAmmoHandler();
+        simpleHandler.addAmmo(Items.arrow);
+        // add mod arrows
+//        if (Mods.Etfuturum.isLoaded()) simpleHandler.addAmmo(ganymedes01.etfuturum.ModItems.TIPPED_ARROW.get());
+        register(Items.bow, simpleHandler);
 
-        // Register mod compatibility handlers safely
+        if(Mods.DraconicEvolution.isLoaded()){
+            register(com.brandon3055.draconicevolution.common.ModItems.wyvernBow,simpleHandler);
+            register(com.brandon3055.draconicevolution.common.ModItems.draconicBow,simpleHandler);
+        }
+
+
+        if (Mods.Botania.isLoaded()){
+            register(ModItems.livingwoodBow, simpleHandler);
+        }
         if (Mods.Tconstruct.isLoaded()) {
             TConstructCompat.register();
         }
