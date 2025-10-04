@@ -30,21 +30,19 @@ public class AmmoHandlerRegistry {
 
     /**
      * Registers a new handler for a specific weapon item class.
-     * 
+     *
      * @param weaponClass The class of the weapon Item.
      * @param handler     The handler containing the logic for this weapon.
      */
-    public static void register(Class<? extends Item>[] weaponClass, AmmoHandler handler) {
+    public static void register(Class<? extends Item> weaponClass, AmmoHandler handler) {
         if (weaponClass != null && handler != null) {
-            for (Class<? extends Item> wc : weaponClass) {
-                HANDLERS.put(wc, handler);
-            }
+            HANDLERS.put(weaponClass, handler);
         }
     }
 
     /**
      * Finds the appropriate handler for a given ItemStack.
-     * 
+     *
      * @param stack The ItemStack to check.
      * @return The corresponding AmmoHandler, or null if none is found.
      */
@@ -69,31 +67,35 @@ public class AmmoHandlerRegistry {
     }
 
     /**
-     * An abstract base class for weapon and ammo logic.
+     * An abstract base class for weapon and ammo logic. Each handler must provide its own implementation.
      */
-    public static class AmmoHandler {
+    public static abstract class AmmoHandler {
 
-        public int getAmmoCount(EntityClientPlayerMP player, ItemStack weaponStack) {
+        abstract int getAmmoCount(EntityClientPlayerMP player, ItemStack weaponStack);
+
+        abstract ItemStack getDisplayStack(ItemStack weaponStack);
+    }
+
+    /**
+     * A simple handler for weapons that use a specific, countable item as ammunition.
+     */
+    private static class SimpleAmmoHandler extends AmmoHandler {
+
+        private final Item[] validAmmo;
+
+        public SimpleAmmoHandler(Item... validAmmo) {
+            this.validAmmo = validAmmo;
+        }
+
+        @Override
+        int getAmmoCount(EntityClientPlayerMP player, ItemStack weaponStack) {
             int count = 0;
-            if (Mods.Tconstruct.isLoaded()) {
-                if (weaponStack.getItem() instanceof ProjectileWeapon PW) {
-                    ItemStack ammo = PW.searchForAmmo(player, weaponStack);
-                    if (ammo != null) {
-                        NBTTagCompound tags = ammo.getTagCompound()
-                            .getCompoundTag("InfiTool");
-                        count += tags.getInteger("Ammo");
-                    }
-                }
-            }
-
-            for (AmmoWeaponDefinition def : AmmoWeaponDefinition.values()) {
-                for (ItemStack invStack : player.inventory.mainInventory) {
-                    if (invStack != null && def.validAmmo != null) {
-                        for (Item ammo : def.validAmmo) {
-                            if (invStack.getItem() == ammo) {
-                                count += invStack.stackSize;
-                                break;
-                            }
+            for (ItemStack invStack : player.inventory.mainInventory) {
+                if (invStack != null && validAmmo[0] != null) {
+                    for (Item ammo : validAmmo) {
+                        if (invStack.getItem() == ammo) {
+                            count += invStack.stackSize;
+                            break;
                         }
                     }
                 }
@@ -101,64 +103,62 @@ public class AmmoHandlerRegistry {
             return count;
         }
 
-        public ItemStack getDisplayStack(ItemStack weaponStack) {
-            if (Mods.Tconstruct.isLoaded()) {
-                if (weaponStack.getItem() instanceof ProjectileWeapon PW) {
-                    ItemStack ammo = PW.searchForAmmo(Minecraft.getMinecraft().thePlayer, weaponStack);
-                    if (ammo != null) {
-                        return ammo;
-                    }
-                }
-            }
-
-            for (AmmoWeaponDefinition def : AmmoWeaponDefinition.values()) {
-                Item arrow = def.validAmmo != null && def.validAmmo.length > 0 ? def.validAmmo[0] : Items.arrow;
-                ItemStack ammo = new ItemStack(arrow);
-                return ammo;
+        @Override
+        ItemStack getDisplayStack(ItemStack weaponStack) {
+            if (validAmmo[0] != null && validAmmo.length > 0) {
+                ItemStack validarrow = new ItemStack(validAmmo[0]);
+                return validarrow;
             }
             return null;
         }
     }
 
     /**
-     * A declarative enum for defining and registering all known weapon compatibilities.
+     * A dedicated compatibility class for Tinker's Construct.
+     * This class is only loaded if TConstruct is present, preventing crashes.
      */
-    public enum AmmoWeaponDefinition {
+    private static class TConstructCompat {
 
-        VANILLA_BOW(true, new Class[] { ItemBow.class }, Items.arrow),
-        TINKERS_BOW(Mods.Tconstruct.isLoaded(), Crossbow.class, LongBow.class, ShortBow.class),
-        // ExampleMod(true, com.examplemod.items.ItemModBow.class, com.examplemod.items.ItemModArrow);
-        ;
-
-        private final boolean shouldRegister;
-        private final Class<? extends Item>[] weaponClasses;
-        private final Item[] validAmmo;
-
-        // get the ammo from the weapon's data
-        AmmoWeaponDefinition(boolean shouldRegister, Class<? extends Item>... weaponClasses) {
-            this(shouldRegister, weaponClasses, null);
+        public static void register() {
+            TConstructAmmoHandler handler = new TConstructAmmoHandler();
+            AmmoHandlerRegistry.register(ShortBow.class, handler);
+            AmmoHandlerRegistry.register(LongBow.class, handler);
+            AmmoHandlerRegistry.register(Crossbow.class, handler);
         }
 
-        AmmoWeaponDefinition(boolean shouldRegister, Class<? extends Item>[] weaponClasses, Item... validAmmo) {
-            this.shouldRegister = shouldRegister;
-            this.weaponClasses = weaponClasses;
-            this.validAmmo = validAmmo;
-        }
+        private static class TConstructAmmoHandler extends AmmoHandler {
 
-        public static void registerAll() {
-            for (AmmoWeaponDefinition def : values()) {
-                if (!def.shouldRegister) continue;
-
-                AmmoHandler handler = new AmmoHandler();
-
-                if (def.weaponClasses != null) {
-                    register(def.weaponClasses, handler);
+            // This is to refresh the counter for the usage ticker
+            @Override
+            int getAmmoCount(EntityClientPlayerMP player, ItemStack weaponStack) {
+                if (weaponStack.getItem() instanceof ProjectileWeapon projectileWeapon) {
+                    ItemStack ammo = projectileWeapon.searchForAmmo(player, weaponStack);
+                    if (ammo != null && ammo.hasTagCompound()) {
+                        NBTTagCompound tags = ammo.getTagCompound()
+                            .getCompoundTag("InfiTool");
+                        return tags.getInteger("Ammo");
+                    }
                 }
+                return 0;
+            }
+
+            @Override
+            ItemStack getDisplayStack(ItemStack weaponStack) {
+                if (weaponStack.getItem() instanceof ProjectileWeapon projectileWeapon) {
+                    return projectileWeapon.searchForAmmo(Minecraft.getMinecraft().thePlayer, weaponStack);
+                }
+                return null;
             }
         }
     }
 
     static {
-        AmmoWeaponDefinition.registerAll();
+        // Register vanilla handlers directly
+        register(ItemBow.class, new SimpleAmmoHandler(Items.arrow));
+
+        // Register mod compatibility handlers safely
+        if (Mods.Tconstruct.isLoaded()) {
+            TConstructCompat.register();
+        }
     }
 }
