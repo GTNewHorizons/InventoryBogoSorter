@@ -9,7 +9,6 @@ import com.cleanroommc.bogosorter.client.usageticker.Arrow.ArrowHandlerRegistry;
 import tconstruct.library.weaponry.ProjectileWeapon;
 import tconstruct.weaponry.TinkerWeaponry;
 
-// todo : fix bauble expanded not updating client nbt when in bauble slot
 /**
  * A dedicated compatibility class for Tinker's Construct.
  * This class is only loaded if TConstruct is present, preventing crashes.
