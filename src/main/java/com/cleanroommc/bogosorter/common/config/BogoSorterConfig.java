@@ -65,6 +65,10 @@ public class BogoSorterConfig {
     @Config.LangKey("bogosorter.config.usage_ticker")
     public static class UsageTicker {
 
+        @Config.Comment("Arrow Configuration")
+        @Config.LangKey("bogosorter.config.usage_ticker.arrow")
+        public final Arrow arrow = new Arrow();
+
         @Config.DefaultBoolean(true)
         @Config.Comment("Enable usage ticker module.")
         @Config.LangKey("bogosorter.config.usage_ticker.enable")
@@ -84,6 +88,31 @@ public class BogoSorterConfig {
         @Config.Comment("Show usage ticker for armor.")
         @Config.LangKey("bogosorter.config.usage_ticker.armor")
         public boolean enableArmor;
+
+        public static class Arrow {
+
+            @Config.DefaultBoolean(true)
+            @Config.Comment("Show usage ticker for arrow.")
+            @Config.LangKey("bogosorter.config.usage_ticker.arrow.enable")
+            public boolean enableArrow;
+
+            @Config.DefaultStringList({ "Thaumcraft:PrimalArrow", "etfuturum:tipped_arrow" })
+            @Config.Comment("List of item IDs to consider as valid arrows for the usage ticker. The order matters; the first match is used.")
+            @Config.LangKey("bogosorter.config.usage_ticker.arrow.arrowItems")
+            public String[] arrowItems;
+
+            @Config.DefaultStringList({ "minecraft:bow", "Botania:crystalBow", "Botania:livingwoodBow",
+                "DraconicEvolution:draconicBow", "DraconicEvolution:wyvernBow", "BloodArsenal:bound_bow",
+                "EnderZoo:guardiansBow", "GalaxySpace:item.QuantBow", "Natura:natura.bow.ghostwood",
+                "Natura:natura.bow.bloodwood", "Natura:natura.bow.darkwood", "Natura:natura.bow.fusewood",
+                "battlegear2:bow.iron", "battlegear2:bow.diamond", "Thaumcraft:ItemBowBone",
+                "TwilightForest:item.tripleBow", "TwilightForest:item.seekerBow", "TwilightForest:item.iceBow",
+                "TwilightForest:item.enderBow" })
+            @Config.Comment("List of bow item IDs to enable arrow ticker for. Add modded bows here.")
+            @Config.LangKey("bogosorter.config.usage_ticker.arrow.bowItems")
+            public String[] bowItems;
+
+        }
     }
 
     @Config.LangKey("bogosorter.config.dropoff")
