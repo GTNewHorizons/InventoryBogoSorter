@@ -18,6 +18,8 @@ public enum Mixins implements IMixins {
             "minecraft.SlotAccessor")
         .addClientMixins(
             "minecraft.CreativeSlotMixin",
+            "minecraft.MixinGuiKeyBindingList",
+            "minecraft.GuiKeyBindingListKeyEntryAccessor",
             "minecraft.GuiScreenAccessor",
             "minecraft.GuiContainerAccessor",
             "minecraft.GuiEditSignMixin",
