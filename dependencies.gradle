@@ -93,5 +93,5 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:compact-storage-223703:2276736')
     compileOnly rfg.deobf('curse.maven:actually-additions-228404:2274681')
 
-    api files('libs/betterstorage-0.14.0.0-dev.jar')
+    compileOnly files('libs/betterstorage-0.14.0.0-dev.jar')
 }

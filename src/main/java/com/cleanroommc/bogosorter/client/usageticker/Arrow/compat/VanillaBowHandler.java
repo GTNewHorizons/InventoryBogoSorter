@@ -1,7 +1,7 @@
 package com.cleanroommc.bogosorter.client.usageticker.Arrow.compat;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +19,7 @@ import com.cleanroommc.bogosorter.client.usageticker.Arrow.ArrowHandlerRegistry;
  */
 public class VanillaBowHandler extends ArrowHandlerRegistry.ArrowHandler {
 
-    private final Set<Item> displayPriority = new HashSet<>();
+    private final List<Item> displayPriority = new ArrayList<>();
 
     public VanillaBowHandler() {}
 

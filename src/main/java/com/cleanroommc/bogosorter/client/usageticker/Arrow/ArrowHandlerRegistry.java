@@ -44,10 +44,7 @@ public class ArrowHandlerRegistry {
             return null;
         }
         ArrowHandler handler = HANDLERS.get(stack.getItem());
-        if (handler != null) {
-            return handler;
-        }
-        return null;
+        return handler;
     }
 
     /**
