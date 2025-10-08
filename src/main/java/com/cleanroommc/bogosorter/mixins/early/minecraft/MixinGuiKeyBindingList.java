@@ -40,10 +40,7 @@ public abstract class MixinGuiKeyBindingList extends GuiListExtended {
                 KeyBinding keybinding = ((GuiKeyBindingListKeyEntryAccessor) entry).getKeybinding();
                 if (keybinding == BSKeybinds.BOGO_SORTER_CONTROLS_BUTTON) {
                     // Replace the entry in the list with our custom button.
-                    this.field_148190_m[i] = new BSButtonEntry(
-                        this.mc,
-                        (GuiKeyBindingList.KeyEntry) entry,
-                        this.field_148188_n);
+                    this.field_148190_m[i] = new BSButtonEntry(this.mc, entry, this.field_148188_n);
                     break;
                 }
             }

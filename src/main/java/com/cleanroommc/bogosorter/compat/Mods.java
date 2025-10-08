@@ -44,6 +44,7 @@ public enum Mods {
     Terrafirmacraft("terrafirmacraft"),
     Thebetweenlands("thebetweenlands"),
     ActuallyAdditions("ActuallyAdditions"),
+    Controlling("controlling"),
 
     ;
     //spotless:on

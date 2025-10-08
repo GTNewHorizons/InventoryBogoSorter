@@ -8,7 +8,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 
+import com.blamejared.controlling.client.gui.GuiNewKeyBindingList;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiKeyBindingListKeyEntryAccessor;
+import com.cleanroommc.bogosorter.mixins.late.controlling.GuiNewKeyBindingListKeyEntryAccessor;
 
 /**
  * A custom list entry that renders as a button to open the BogoSorter controls screen.
@@ -20,11 +23,24 @@ public class BSButtonEntry implements GuiListExtended.IGuiListEntry {
     private final String keyDesc;
     private final int maxListLabelWidth;
 
-    public BSButtonEntry(Minecraft mc, GuiKeyBindingList.KeyEntry originalEntry, int maxListLabelWidth) {
+    public BSButtonEntry(Minecraft mc, GuiListExtended.IGuiListEntry originalEntry, int maxListLabelWidth) {
         this.mc = mc;
-        this.button = new GuiButton(0, 0, 0, 136, 20, "Configure Multi-Keybinds");
-        KeyBinding keybinding = ((GuiKeyBindingListKeyEntryAccessor) originalEntry).getKeybinding();
-        this.keyDesc = I18n.format(keybinding.getKeyDescription());
+        int y = Mods.Controlling.isLoaded() ? 20 : 0; // y position will be set during rendering
+        this.button = new GuiButton(0, 0, 0, 136 + y, 20, "Configure Multi-Keybinds");
+        KeyBinding keybinding = null;
+
+        if (Mods.Controlling.isLoaded() && originalEntry instanceof GuiNewKeyBindingList.KeyEntry) {
+            keybinding = ((GuiNewKeyBindingListKeyEntryAccessor) originalEntry).getKeybinding();
+        } else if (originalEntry instanceof GuiKeyBindingList.KeyEntry) {
+            keybinding = ((GuiKeyBindingListKeyEntryAccessor) originalEntry).getKeybinding();
+        }
+
+        if (keybinding == null) {
+            System.err.println("Failed to get keybinding from list entry!");
+            this.keyDesc = "ERROR";
+        } else {
+            this.keyDesc = I18n.format(keybinding.getKeyDescription());
+        }
         this.maxListLabelWidth = maxListLabelWidth;
     }
 

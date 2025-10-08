@@ -16,7 +16,8 @@ public enum TargetedMod implements ITargetMod {
     GALACTICRAFTCORE("micdoodle8.mods.galacticraft.core.asm.GCLoadingPlugin", "GalacticraftCore"),
     IRONCHEST(null, "IronChest"),
     NEI("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
-    THERMALEXPANSION(null, "ThermalExpansion");
+    THERMALEXPANSION(null, "ThermalExpansion"),
+    CONTROLLING(null, "controlling");
 
     private final TargetModBuilder builder;
 
