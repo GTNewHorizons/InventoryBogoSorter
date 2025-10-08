@@ -28,6 +28,8 @@ import org.lwjgl.input.Mouse;
 
 import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.SortRule;
+import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
+import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
 import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
@@ -57,67 +59,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 public class ClientEventHandler {
 
     public static final List<ItemStack> allItems = new ArrayList<>();
-    public static final KeyBinding configGuiKey = new KeyBinding(
-        "key.sort_config",
-        Keyboard.KEY_NONE,
-        "key.categories.bogosorter");
-    public static final KeyBinding sortKeyInGUI = new KeyBinding("key.sort_gui", -98, "key.categories.bogosorter");
-    public static final KeyBinding sortKeyOutsideGUI = new KeyBinding("key.sort_nogui", 0, "key.categories.bogosorter");
-    public static final KeyBinding dropoffKey = new KeyBinding(
-        "key.dropoff",
-        Keyboard.KEY_NONE,
-        "key.categories.bogosorter");
     public static final boolean isDeobfuscatedEnvironment = (boolean) Launch.blackboard
         .get("fml.deobfuscatedEnvironment");
-
-    public static final KeyBind moveAllSame = KeyBind.builder("move_all_same")
-        .lmb(true)
-        .rmb(false)
-        .shift(false)
-        .ctrl(false)
-        .alt(true)
-        .space(false)
-        .build();
-    public static final KeyBind moveAll = KeyBind.builder("move_all")
-        .lmb(true)
-        .rmb(false)
-        .shift(false)
-        .ctrl(false)
-        .alt(false)
-        .space(true)
-        .build();
-    public static final KeyBind moveSingle = KeyBind.builder("move_single")
-        .lmb(true)
-        .rmb(false)
-        .shift(false)
-        .ctrl(true)
-        .alt(false)
-        .build();
-    public static final KeyBind moveSingleEmpty = KeyBind.builder("move_single_empty")
-        .lmb(false)
-        .rmb(true)
-        .shift(false)
-        .ctrl(true)
-        .alt(false)
-        .build();
-    public static final KeyBind throwAllSame = KeyBind.builder("throw_all_same")
-        .lmb(false)
-        .rmb(false)
-        .shift(false)
-        .ctrl(false)
-        .alt(true)
-        .space(false)
-        .validator(() -> isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop))
-        .build();
-    public static final KeyBind throwAll = KeyBind.builder("throw_all")
-        .lmb(false)
-        .rmb(false)
-        .shift(false)
-        .ctrl(false)
-        .alt(false)
-        .space(true)
-        .validator(() -> isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop))
-        .build();
 
     private static long timeConfigGui = 0;
     private static long timeSort = 0;
@@ -175,7 +118,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (Keypress(configGuiKey)) {
+        if (Keypress(BSKeybinds.configGuiKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeConfigGui > 500) {
                 if (!ConfigGui.closeCurrent()) {
@@ -184,7 +127,7 @@ public class ClientEventHandler {
                 timeConfigGui = t;
             }
         }
-        if (Keypress(dropoffKey)) {
+        if (Keypress(BSKeybinds.dropoffKey)) {
             long t = Minecraft.getSystemTime();
             if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
                 if (BogoSorterConfig.dropOff.enableDropOff) {
@@ -257,33 +200,39 @@ public class ClientEventHandler {
     public static boolean handleInput(@Nullable GuiContainer container) {
 
         if (container != null && canDoShortcutAction()) {
-            if (moveAll.isFirstPress() && ShortcutHandler.moveAllItems(container, false)) {
+            if (BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_ALL)
+                .isFirstPress() && ShortcutHandler.moveAllItems(container, false)) {
                 shortcutAction();
                 return true;
             }
-            if (moveAllSame.isFirstPress() && ShortcutHandler.moveAllItems(container, true)) {
+            if (BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_ALL_SAME)
+                .isFirstPress() && ShortcutHandler.moveAllItems(container, true)) {
                 shortcutAction();
                 return true;
             }
-            if (moveSingle.isFirstPressOrHeldLong(15) && ShortcutHandler.moveSingleItem(container, false)) {
+            if (BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_SINGLE)
+                .isFirstPressOrHeldLong(15) && ShortcutHandler.moveSingleItem(container, false)) {
                 shortcutAction();
                 return true;
             }
-            if (moveSingleEmpty.isFirstPressOrHeldLong(15) && ShortcutHandler.moveSingleItem(container, true)) {
+            if (BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_SINGLE_EMPTY)
+                .isFirstPressOrHeldLong(15) && ShortcutHandler.moveSingleItem(container, true)) {
                 shortcutAction();
                 return true;
             }
-            if (throwAll.isFirstPress() && ShortcutHandler.dropItems(container, false)) {
+            if (BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL)
+                .isFirstPress() && ShortcutHandler.dropItems(container, false)) {
                 shortcutAction();
                 return true;
             }
-            if (throwAllSame.isFirstPress() && ShortcutHandler.dropItems(container, true)) {
+            if (BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL_SAME)
+                .isFirstPress() && ShortcutHandler.dropItems(container, true)) {
                 shortcutAction();
                 return true;
             }
             SetCanTakeStack = true;
         }
-        if (isKeyDown(sortKeyOutsideGUI)) {
+        if (isKeyDown(BSKeybinds.sortKeyOutsideGUI)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
@@ -293,7 +242,7 @@ public class ClientEventHandler {
                 return true;
             }
         }
-        if (isKeyDown(sortKeyInGUI)) {
+        if (isKeyDown(BSKeybinds.sortKeyInGUI)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 if (container != null) {

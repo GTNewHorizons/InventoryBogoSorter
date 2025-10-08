@@ -13,7 +13,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.cleanroommc.bogosorter.BogoSorter;
-import com.cleanroommc.bogosorter.ClientEventHandler;
+import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
@@ -129,7 +129,7 @@ public class DropOffInvButton extends GuiButton {
             tooltipLines.add(
                 EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
                     + " : "
-                    + GameSettings.getKeyDisplayString(ClientEventHandler.dropoffKey.getKeyCode()));
+                    + GameSettings.getKeyDisplayString(BSKeybinds.dropoffKey.getKeyCode()));
             if (Minecraft.getMinecraft().currentScreen instanceof GuiScreenAccessor accessor) {
                 accessor.drawHoveringText(tooltipLines, mouseX, mouseY);
             }
