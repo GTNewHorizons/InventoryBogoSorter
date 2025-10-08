@@ -16,6 +16,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.cleanroommc.bogosorter.client.usageticker.Arrow.ArrowHandlerRegistry;
 import com.cleanroommc.bogosorter.common.ReadableNumberConverter;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
@@ -204,6 +205,14 @@ public class UsageTicker {
 
         public ItemStack getDisplayedStack(ItemStack stack, int count) {
             if (stack == null) return null;
+
+            if (BogoSorterConfig.usageTicker.arrow.enableArrow) {
+                ArrowHandlerRegistry.ArrowHandler handler = ArrowHandlerRegistry.getHandler(stack);
+                if (handler != null) {
+                    return count > 0 ? handler.getDisplayStack(Minecraft.getMinecraft().thePlayer, stack) : null;
+                }
+            }
+
             if (slot == EquipmentSlotType.MAINHAND && !stack.isStackable()) return null;
             if (slot == EquipmentSlotType.OFFHAND && !stack.isStackable()) return null;
             if (count == stack.stackSize) return null;
@@ -213,6 +222,13 @@ public class UsageTicker {
 
         private int getStackCount(EntityClientPlayerMP player, ItemStack stack) {
             if (stack == null) return 0;
+
+            if (BogoSorterConfig.usageTicker.arrow.enableArrow) {
+                ArrowHandlerRegistry.ArrowHandler handler = ArrowHandlerRegistry.getHandler(stack);
+                if (handler != null) {
+                    return handler.getAmmoCount(player, stack);
+                }
+            }
 
             int total = 0;
             for (int i = 0; i < player.inventory.mainInventory.length; i++) {
