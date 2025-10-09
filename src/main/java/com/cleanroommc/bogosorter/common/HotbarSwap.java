@@ -58,7 +58,7 @@ public class HotbarSwap {
                     0,
                     22,
                     24,
-                    22);
+                    24);
             }
 
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
