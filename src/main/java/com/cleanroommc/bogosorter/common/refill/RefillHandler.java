@@ -67,7 +67,7 @@ public class RefillHandler {
         if (event.original.getItem() != null && shouldHandleRefill(event.entityPlayer, event.original, true)) {
             int index = event.entityPlayer.inventory.currentItem;
             if (index < 9) {
-                NetworkHandler.sendToServer(new CRefill(event.original, index));
+                NetworkHandler.sendToServer(new CRefill(event.original, index, false));
             }
         }
     }

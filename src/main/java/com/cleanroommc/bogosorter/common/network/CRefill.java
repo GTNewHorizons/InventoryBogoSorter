@@ -12,10 +12,12 @@ public class CRefill implements IPacket {
 
     private ItemStack stack;
     private int index;
+    private boolean swap;
 
-    public CRefill(ItemStack _stack, int _index) {
+    public CRefill(ItemStack _stack, int _index, boolean _swap) {
         this.stack = _stack;
         this.index = _index;
+        this.swap = _swap;
     }
 
     public CRefill() {}
@@ -24,18 +26,20 @@ public class CRefill implements IPacket {
     public void encode(PacketBuffer buf) throws IOException {
         buf.writeItemStackToBuffer(stack);
         buf.writeInt(index);
+        buf.writeBoolean(swap);
     }
 
     @Override
     public void decode(PacketBuffer buf) throws IOException {
         this.stack = buf.readItemStackFromBuffer();
         this.index = buf.readInt();
+        this.swap = buf.readBoolean();
     }
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         if (stack != null && this.index < 9) {
-            new RefillHandler(this.index, this.stack, handler.playerEntity, true).handleRefill();
+            new RefillHandler(this.index, this.stack, handler.playerEntity, this.swap).handleRefill();
         }
         return null;
     }
