@@ -1,4 +1,4 @@
-package com.cleanroommc.bogosorter;
+package com.cleanroommc.bogosorter.client.keybinds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
+import com.cleanroommc.bogosorter.ClientEventHandler;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 

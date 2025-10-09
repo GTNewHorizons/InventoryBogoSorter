@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.ClientEventHandler;
+import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.api.widget.Interactable;
@@ -175,13 +176,13 @@ public class ButtonHandler {
                     tooltipLines.add(
                         EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
                             + " : "
-                            + GameSettings.getKeyDisplayString(ClientEventHandler.sortKeyInGUI.getKeyCode()));
+                            + GameSettings.getKeyDisplayString(BSKeybinds.sortKeyInGUI.getKeyCode()));
                 } else {
                     tooltipLines.add(I18n.format("key.sort_config"));
                     tooltipLines.add(
                         EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
                             + " : "
-                            + GameSettings.getKeyDisplayString(ClientEventHandler.configGuiKey.getKeyCode()));
+                            + GameSettings.getKeyDisplayString(BSKeybinds.configGuiKey.getKeyCode()));
                 }
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiScreenAccessor accessor) {
                     accessor.drawHoveringText(tooltipLines, mouseX, mouseY);
