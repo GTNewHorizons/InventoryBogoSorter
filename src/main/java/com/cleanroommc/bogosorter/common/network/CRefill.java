@@ -35,7 +35,7 @@ public class CRefill implements IPacket {
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         if (stack != null && this.index < 9) {
-            new RefillHandler(this.index, this.stack, handler.playerEntity, true).handleRefill();
+            new RefillHandler(this.index, this.stack, handler.playerEntity, false).handleRefill();
         }
         return null;
     }

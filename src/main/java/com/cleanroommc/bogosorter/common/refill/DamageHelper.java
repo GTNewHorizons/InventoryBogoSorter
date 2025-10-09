@@ -10,7 +10,7 @@ import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 public class DamageHelper {
 
     public static boolean damageItemHook(EntityPlayer player, ItemStack itemStack) {
-        if (player == null || player.worldObj == null || !player.worldObj.isRemote) return false;
+        if (player == null || player.worldObj == null) return false;
 
         if (!BogoSorterConfig.enableAutoRefill_server || !BogoSorterConfig.enableAutoRefill
             || BogoSorterConfig.autoRefillDamageThreshold <= 0) return false;
