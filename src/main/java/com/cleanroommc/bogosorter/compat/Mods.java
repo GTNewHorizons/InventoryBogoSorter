@@ -4,6 +4,9 @@ import java.util.function.Predicate;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.versioning.ArtifactVersion;
+import cpw.mods.fml.common.versioning.VersionParser;
+import cpw.mods.fml.common.versioning.VersionRange;
 
 public enum Mods {
 
@@ -13,8 +16,8 @@ public enum Mods {
     AvaritiaAddons("avaritiaddons"),
     Backhand("backhand"),
     Backpack("Backpack"),
-    BetterStorage("betterstorage", mod -> mod.getVersion().startsWith("0.13")),
-    BetterStorageFixed("betterstorage", mod -> mod.getVersion().startsWith("0.14")),
+    BetterStorage("betterstorage", versionMatches("(,0.14)")),
+    BetterStorageFixed("betterstorage", versionMatches("[0.14,)")),
     Bibliocraft("BiblioCraft"),
     Botania("Botania"),
     Buildcraft("BuildCraft|Core"),
@@ -69,5 +72,27 @@ public enum Mods {
             .get(modid);
         if (mod == null) return loaded = false;
         return loaded = Loader.isModLoaded(modid) && modPredicate.test(mod);
+    }
+
+    /**
+     * Creates a predicate that checks if a mod's version matches a given version range string.
+     *
+     * @param range A standard Maven version range string. Examples:
+     *              <ul>
+     *              <li>{@code "[2.2,)"} - Version 2.2 or higher</li>
+     *              <li>{@code "(,2.1]"} - Version 2.1 or lower</li>
+     *              <li>{@code "[2.0,3.0]"} - Version 2.0 up to and including 3.0</li>
+     *              <li>{@code "[2.0,3.0)"} - Version 2.0 up to, but excluding, 3.0</li>
+     *              <li>{@code "(,3.0)"} - Any version up to, but excluding, 3.0</li>
+     *              <li>{@code "(2.0,3.0)"} - Any version between 2.0 and 3.0, exclusive</li>
+     *              </ul>
+     * @return A predicate for use in the enum constructor.
+     */
+    public static Predicate<ModContainer> versionMatches(String range) {
+        VersionRange versionRange = VersionParser.parseRange(range);
+        return mod -> {
+            ArtifactVersion modVersion = mod.getProcessedVersion();
+            return versionRange.containsVersion(modVersion);
+        };
     }
 }

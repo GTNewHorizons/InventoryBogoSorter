@@ -118,24 +118,6 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (Keypress(BSKeybinds.configGuiKey)) {
-            long t = Minecraft.getSystemTime();
-            if (t - timeConfigGui > 500) {
-                if (!ConfigGui.closeCurrent()) {
-                    BogoSortAPI.INSTANCE.openConfigGui(Minecraft.getMinecraft().currentScreen);
-                }
-                timeConfigGui = t;
-            }
-        }
-        if (Keypress(BSKeybinds.dropoffKey)) {
-            long t = Minecraft.getSystemTime();
-            if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
-                if (BogoSorterConfig.dropOff.enableDropOff) {
-                    NetworkHandler.sendToServer(new CDropOff());
-                }
-                timeDropoff = t;
-            }
-        }
         handleInput(null);
     }
 
@@ -169,7 +151,7 @@ public class ClientEventHandler {
                         Item item = (Item) Item.itemRegistry.getObject(key); // Get the actual Item using the key
                         List<ItemStack> subItems = Lists.newArrayList();
                         item.getSubItems(item, CreativeTabs.tabAllSearch, subItems); // Get sub-items based on the
-                                                                                     // creative tab
+                        // creative tab
                         allItems.addAll(subItems);
                     }
                 }
@@ -232,7 +214,7 @@ public class ClientEventHandler {
             }
             SetCanTakeStack = true;
         }
-        if (isKeyDown(BSKeybinds.sortKeyOutsideGUI)) {
+        if (Keypress(sortKeyOutsideGUI)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
@@ -242,7 +224,7 @@ public class ClientEventHandler {
                 return true;
             }
         }
-        if (isKeyDown(BSKeybinds.sortKeyInGUI)) {
+        if (Keypress(sortKeyInGUI)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 if (container != null) {
@@ -253,6 +235,24 @@ public class ClientEventHandler {
                     timeSort = t;
                     return true;
                 }
+            }
+        }
+        if (Keypress(configGuiKey)) {
+            long t = Minecraft.getSystemTime();
+            if (t - timeConfigGui > 500) {
+                if (!ConfigGui.closeCurrent()) {
+                    BogoSortAPI.INSTANCE.openConfigGui(Minecraft.getMinecraft().currentScreen);
+                }
+                timeConfigGui = t;
+            }
+        }
+        if (Keypress(dropoffKey)) {
+            long t = Minecraft.getSystemTime();
+            if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
+                if (BogoSorterConfig.dropOff.enableDropOff) {
+                    NetworkHandler.sendToServer(new CDropOff());
+                }
+                timeDropoff = t;
             }
         }
         return false;
@@ -362,8 +362,9 @@ public class ClientEventHandler {
 
     private static boolean Keypress(KeyBinding key) {
         int keyCode = key.getKeyCode();
+        if (keyCode == 0) return false;
         if (keyCode > 0) {
-            return key.isPressed();
+            return key.isPressed() || Keyboard.isKeyDown(keyCode);
         } else {
             return Mouse.isButtonDown(100 + keyCode);
         }
