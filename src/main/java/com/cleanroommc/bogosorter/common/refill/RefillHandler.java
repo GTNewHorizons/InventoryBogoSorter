@@ -14,6 +14,7 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.network.CRefill;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.network.SRefillSound;
@@ -54,7 +55,7 @@ public class RefillHandler {
     @SubscribeEvent
     public void onDestroyItem(PlayerDestroyItemEvent event) {
         if (event.entityPlayer == null || event.entityPlayer.worldObj == null
-            || event.entityPlayer.worldObj.isRemote
+            || !event.entityPlayer.worldObj.isRemote
             || !BogoSorterConfig.enableAutoRefill_server
             || !BogoSorterConfig.enableAutoRefill) return;
 
@@ -63,10 +64,10 @@ public class RefillHandler {
             return;
         }
 
-        if (event.original.getItem() != null && shouldHandleRefill(event.entityPlayer, event.original)) {
+        if (event.original.getItem() != null && shouldHandleRefill(event.entityPlayer, event.original, true)) {
             int index = event.entityPlayer.inventory.currentItem;
             if (index < 9) {
-                handle(index, event.original, event.entityPlayer, false);
+                NetworkHandler.sendToServer(new CRefill(event.original, index));
             }
         }
     }

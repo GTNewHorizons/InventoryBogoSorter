@@ -12,7 +12,6 @@ public enum Mixins implements IMixins {
         .setPhase(Phase.EARLY)
         .addCommonMixins(
             "minecraft.ContainerHorseInventoryMixin",
-            "minecraft.MixinEntityPlayer",
             "minecraft.MixinItemStack",
             "minecraft.SlotMixin",
             "minecraft.SlotAccessor")
