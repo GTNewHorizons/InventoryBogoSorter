@@ -30,6 +30,7 @@ public class NetworkHandler {
         registerC2S(CDropOff.class);
         registerS2C(SDropOffMessage.class);
         registerS2C(SDropOffThrottled.class);
+        registerC2S(CRefill.class);
     }
 
     private static void registerC2S(Class<? extends IPacket> clazz) {
