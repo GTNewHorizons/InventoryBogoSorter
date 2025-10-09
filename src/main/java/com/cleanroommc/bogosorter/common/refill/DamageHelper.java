@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ISpecialArmor;
 
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.network.CRefill;
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 
 public class DamageHelper {
 
@@ -15,7 +17,7 @@ public class DamageHelper {
         if (!BogoSorterConfig.enableAutoRefill_server || !BogoSorterConfig.enableAutoRefill
             || BogoSorterConfig.autoRefillDamageThreshold <= 0) return false;
 
-        if (RefillHandler.shouldHandleRefill(player, itemStack) && isNotArmor(itemStack)
+        if (RefillHandler.shouldHandleRefill(player, itemStack, true) && isNotArmor(itemStack)
             && (player.inventory.currentItem < 9)) {
             ItemStack handItem = player.getHeldItem();
             if (handItem != itemStack) {
@@ -23,7 +25,8 @@ public class DamageHelper {
             }
             int durabilityLeft = itemStack.getMaxDamage() - itemStack.getItemDamage();
             if (durabilityLeft >= 0 && durabilityLeft < BogoSorterConfig.autoRefillDamageThreshold) {
-                return RefillHandler.handle(player.inventory.currentItem, itemStack, player, true);
+                NetworkHandler.sendToServer(new CRefill(itemStack, player.inventory.currentItem, true));
+                return true;
             }
         }
         return false;
