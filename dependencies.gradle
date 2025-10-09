@@ -65,6 +65,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:StorageDrawers:2.1.8-GTNH:dev")
     compileOnly("com.github.GTNewHorizons:BuildCraft:7.1.44:dev")
     compileOnly("com.github.GTNewHorizons:Backhand:1.7.6:dev")
+    compileOnly("com.github.GTNewHorizons:Controlling:2.1.2:dev")
 
     //for Tinkers Construct arrows
     compileOnly("com.github.GTNewHorizons:Battlegear2:1.4.3:dev") { transitive = false }

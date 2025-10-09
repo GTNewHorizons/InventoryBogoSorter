@@ -18,6 +18,8 @@ public enum Mixins implements IMixins {
             "minecraft.SlotAccessor")
         .addClientMixins(
             "minecraft.CreativeSlotMixin",
+            "minecraft.MixinGuiKeyBindingList",
+            "minecraft.GuiKeyBindingListKeyEntryAccessor",
             "minecraft.GuiScreenAccessor",
             "minecraft.GuiContainerAccessor",
             "minecraft.GuiEditSignMixin",
@@ -72,7 +74,13 @@ public enum Mixins implements IMixins {
         .addCommonMixins("etfuturum.MixinContainerChestGeneric")),
     CraftingTweaks(new MixinBuilder()
         .setPhase(Phase.EARLY)
-        .addClientMixins("minecraft.MixinGuiScreen_CraftingTweaks")
+        .addClientMixins("minecraft.MixinGuiScreen_CraftingTweaks")),
+    Controlling(new MixinBuilder()
+        .addRequiredMod(TargetedMod.CONTROLLING)
+        .setPhase(Phase.LATE)
+        .addClientMixins(
+            "controlling.MixinGuiNewKeyBindingList",
+            "controlling.GuiNewKeyBindingListKeyEntryAccessor")
     );
     // spotless:on
 

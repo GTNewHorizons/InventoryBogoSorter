@@ -10,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
@@ -73,16 +74,18 @@ public class BogoSorter {
                 .bus()
                 .register(new HotbarSwap());
             MinecraftForge.EVENT_BUS.register(new HotbarSwap());
+            BSKeybinds.init(event.getSuggestedConfigurationFile());
         }
     }
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
         if (NetworkUtils.isDedicatedClient()) {
-            ClientRegistry.registerKeyBinding(configGuiKey);
-            ClientRegistry.registerKeyBinding(sortKeyOutsideGUI);
-            ClientRegistry.registerKeyBinding(sortKeyInGUI);
-            ClientRegistry.registerKeyBinding(dropoffKey);
+            ClientRegistry.registerKeyBinding(BSKeybinds.configGuiKey);
+            ClientRegistry.registerKeyBinding(BSKeybinds.sortKeyOutsideGUI);
+            ClientRegistry.registerKeyBinding(BSKeybinds.sortKeyInGUI);
+            ClientRegistry.registerKeyBinding(BSKeybinds.dropoffKey);
+            ClientRegistry.registerKeyBinding(BSKeybinds.BOGO_SORTER_CONTROLS_BUTTON);
         }
     }
 
