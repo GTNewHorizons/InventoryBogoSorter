@@ -3,9 +3,6 @@ package com.cleanroommc.bogosorter.common.config;
 import java.util.List;
 import java.util.Map;
 
-import com.cleanroommc.modularui.api.IThemeApi;
-import com.cleanroommc.modularui.drawable.ColorType;
-import com.cleanroommc.modularui.widgets.layout.Column;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +17,7 @@ import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.modularui.api.IPanelHandler;
+import com.cleanroommc.modularui.api.IThemeApi;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.api.widget.IWidget;
@@ -31,7 +29,6 @@ import com.cleanroommc.modularui.screen.CustomModularScreen;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
-import com.cleanroommc.modularui.theme.Theme;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.BoolValue;
 import com.cleanroommc.modularui.value.IntValue;
@@ -151,9 +148,8 @@ public class ConfigGui extends CustomModularScreen {
                     BogoSorterConfig.buttonColor,
                     true).setDraggable(true),
             true);
-        return new ListWidget<>()
-            .sizeRel(1)
-            .padding(5,5,2,2)
+        return new ListWidget<>().sizeRel(1)
+            .padding(5, 5, 2, 2)
             .child(
                 new Rectangle().setColor(0xFF606060)
                     .asWidget()
