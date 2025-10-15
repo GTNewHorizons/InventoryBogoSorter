@@ -3,6 +3,9 @@ package com.cleanroommc.bogosorter.common.config;
 import java.util.List;
 import java.util.Map;
 
+import com.cleanroommc.modularui.api.IThemeApi;
+import com.cleanroommc.modularui.drawable.ColorType;
+import com.cleanroommc.modularui.widgets.layout.Column;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -54,8 +57,14 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 public class ConfigGui extends CustomModularScreen {
 
     public static boolean wasOpened = false;
-    public static final UITexture TOGGLE_BUTTON = UITexture.fullImage("bogosorter:gui/toggle_config", false);
-    public static final UITexture ARROW_DOWN_UP = UITexture.fullImage("bogosorter:gui/arrow_down_up", false);
+    public static final UITexture TOGGLE_BUTTON = UITexture.builder()
+        .location("bogosorter:gui/toggle_config")
+        .colorType(null)
+        .build();
+    public static final UITexture ARROW_DOWN_UP = UITexture.builder()
+        .location("bogosorter:gui/arrow_down_up")
+        .colorType(null)
+        .build();
     private static final int DARK_GREY = 0xFF404040;
 
     public static boolean closeCurrent() {
@@ -99,7 +108,7 @@ public class ConfigGui extends CustomModularScreen {
         PagedWidget.Controller controller = new PagedWidget.Controller();
 
         panel.child(
-            new TextWidget(IKey.lang("bogosort.gui.title")).leftRel(0.5f)
+            new TextWidget<>(IKey.lang("bogosort.gui.title")).leftRel(0.5f)
                 .top(5))
             .child(
                 new Rectangle().setColor(DARK_GREY)
@@ -142,16 +151,15 @@ public class ConfigGui extends CustomModularScreen {
                     BogoSorterConfig.buttonColor,
                     true).setDraggable(true),
             true);
-        return new ListWidget<>().left(5)
-            .right(5)
-            .top(2)
-            .bottom(2)
+        return new ListWidget<>()
+            .sizeRel(1)
+            .padding(5,5,2,2)
             .child(
                 new Rectangle().setColor(0xFF606060)
                     .asWidget()
-                    .top(1)
+                    .top(3)
                     .left(32)
-                    .size(1, 250))
+                    .size(1, 267))
             .child(
                 new Row().widthRel(1f)
                     .height(14)
@@ -212,6 +220,7 @@ public class ConfigGui extends CustomModularScreen {
                             .setTextAlignment(Alignment.Center)
                             .setTextColor(IKey.TEXT_COLOR)
                             .background(new Rectangle().setColor(0xFFb1b1b1))
+                            .disableHoverBackground()
                             .size(30, 14))
                     .child(
                         IKey.lang("bogosort.gui.refill_threshold")
@@ -480,6 +489,7 @@ public class ConfigGui extends CustomModularScreen {
                             .height(14)
                             .marginLeft(10)
                             .expanded()));
+
     }
 
     public IWidget createProfilesConfig(ModularPanel mainPanel, ModularGuiContext context) {
@@ -541,7 +551,7 @@ public class ConfigGui extends CustomModularScreen {
                         item -> new Row()
                             .child(
                                 new Widget<>().addTooltipLine(IKey.lang(sortRule.getDescriptionLangKey()))
-                                    .widgetTheme(Theme.BUTTON)
+                                    .widgetTheme(IThemeApi.BUTTON)
                                     // .background(GuiTextures.BUTTON_CLEAN)
                                     .overlay(IKey.lang(sortRule.getNameLangKey()))
                                     .expanded()
