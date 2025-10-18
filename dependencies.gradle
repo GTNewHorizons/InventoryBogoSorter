@@ -41,6 +41,7 @@ dependencies {
     api("com.github.GTNewHorizons:ModularUI2:2.2.18-1.7.10:dev")
     api("com.github.GTNewHorizons:ModularUI:1.2.20:dev")
     api("com.github.GTNewHorizons:GTNHLib:0.6.40:dev")
+    api "com.github.GTNewHorizons:BetterStorage:0.14.0.0:dev"
 
     // used for chunk claim checking
     compileOnly("com.github.GTNewHorizons:ServerUtilities:2.1.61:dev")
@@ -90,5 +91,4 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:compact-storage-223703:2276736')
     compileOnly rfg.deobf('curse.maven:actually-additions-228404:2274681')
 
-    api files('libs/betterstorage-0.14.0.0-dev.jar')
 }
