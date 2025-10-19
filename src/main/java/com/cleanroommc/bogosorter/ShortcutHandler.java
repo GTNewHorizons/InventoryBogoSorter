@@ -44,7 +44,10 @@ public class ShortcutHandler {
     public static void moveItemStack(EntityPlayer player, Container container, SlotAccessor slot, boolean emptySlot,
         int amount) {
         if (slot == null || slot.callGetStack() == null) return;
+
         ItemStack stack = slot.callGetStack();
+        if (stack.stackSize <= 0) return;
+
         Slot currentSlot = container.getSlot(slot.getSlotNumber());
         if (currentSlot == null) return;
         if (SlotDummyOrCrafting(currentSlot)) {
