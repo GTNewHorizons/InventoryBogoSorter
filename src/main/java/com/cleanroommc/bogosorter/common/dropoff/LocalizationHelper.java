@@ -24,6 +24,9 @@ public class LocalizationHelper {
      * Gets the English translation (name) for an ItemStack, checking mod translations first.
      */
     public static String getDisplayNameEnglish(ItemStack itemStack) {
+        if (itemStack == null || itemStack.field_151002_e == null) {
+            return "Unknown";
+        }
         String unlocalizedName = itemStack.getUnlocalizedName() + ".name";
 
         // Check each mod's language file for the translation
