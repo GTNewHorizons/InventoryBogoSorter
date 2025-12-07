@@ -51,6 +51,7 @@ import tconstruct.armor.inventory.KnapsackContainer;
 import tconstruct.tools.inventory.CraftingStationContainer;
 import tconstruct.tools.inventory.PartCrafterChestContainer;
 import tconstruct.tools.inventory.PatternChestContainer;
+import team.chisel.inventory.ContainerPresent;
 import thebetweenlands.inventory.container.ContainerLurkerSkinPouch;
 import wanion.avaritiaddons.block.chest.compressed.ContainerCompressedChest;
 
@@ -361,6 +362,10 @@ public class DefaultCompat {
                         .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
                 });
             api.addPlayerSortButtonPosition(ContainerCommonDefault.class, IPosSetter.TOP_RIGHT_VERTICAL);
+        }
+
+        if (Chisel.isLoaded()) {
+            api.addGenericCompat(ContainerPresent.class);
         }
     }
 
