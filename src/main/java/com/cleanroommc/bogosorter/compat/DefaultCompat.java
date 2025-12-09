@@ -51,6 +51,7 @@ import tconstruct.armor.inventory.KnapsackContainer;
 import tconstruct.tools.inventory.CraftingStationContainer;
 import tconstruct.tools.inventory.PartCrafterChestContainer;
 import tconstruct.tools.inventory.PatternChestContainer;
+import team.chisel.inventory.ContainerPresent;
 import thebetweenlands.inventory.container.ContainerLurkerSkinPouch;
 import wanion.avaritiaddons.block.chest.compressed.ContainerCompressedChest;
 
@@ -69,17 +70,15 @@ public class DefaultCompat {
                 IPosSetter.TOP_RIGHT_HORIZONTAL.setButtonPos(slotGroup, buttonPos);
             }
         });
-        api.addCompat(ContainerChest.class, (container, builder) -> {
-            // quark adds a search bar
-            builder.addGenericSlotGroup();
-        });
+        api.addGenericCompat(ContainerChest.class);
+
         api.addCompat(
             ContainerDispenser.class,
             (container, builder) -> {
                 builder.addGenericSlotGroup()
                     .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
             });
-        api.addCompat(ContainerHopper.class, (container, builder) -> { builder.addGenericSlotGroup(); });
+        api.addGenericCompat(ContainerHopper.class);
 
         if (EnderStorage.isLoaded()) {
             api.addCompat(ContainerEnderItemStorage.class, (container, builder) -> {
@@ -355,7 +354,7 @@ public class DefaultCompat {
         }
 
         if (GT6.isLoaded()) {
-            api.addCompat(ContainerCommonChest.class, (container, builder) -> { builder.addGenericSlotGroup(); });
+            api.addGenericCompat(ContainerCommonChest.class);
             api.addCompat(
                 ContainerCommonDefault.class,
                 (container, builder) -> {
@@ -363,6 +362,10 @@ public class DefaultCompat {
                         .buttonPosSetter(IPosSetter.TOP_RIGHT_VERTICAL);
                 });
             api.addPlayerSortButtonPosition(ContainerCommonDefault.class, IPosSetter.TOP_RIGHT_VERTICAL);
+        }
+
+        if (Chisel.isLoaded()) {
+            api.addGenericCompat(ContainerPresent.class);
         }
     }
 
