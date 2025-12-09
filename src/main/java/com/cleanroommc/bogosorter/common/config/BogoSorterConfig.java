@@ -153,7 +153,8 @@ public class BogoSorterConfig {
         @Config.LangKey("bogosorter.config.dropoff.throttle")
         public int dropoffPacketThrottleInMS;
 
-        @Config.DefaultStringList({ "Chest", "Barrel", "Drawer", "Crate", "Present" })
+        @Config.DefaultStringList({ "Chest", "Barrel", "Drawer", "Crate", "Present", "Cabinet", "Counter", "Fridge",
+            "Filing", "Compartment", "Shulker" })
         @Config.Comment("Valid inventory names for drop-off targeting (substring match).")
         @Config.LangKey("bogosorter.config.dropoff.targets")
         public String[] dropoffTargetNames;

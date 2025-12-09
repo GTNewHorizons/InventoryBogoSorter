@@ -7,13 +7,13 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class LocalizationHelper {
 
@@ -24,21 +24,34 @@ public class LocalizationHelper {
      * Gets the English translation (name) for an ItemStack, checking mod translations first.
      */
     public static String getDisplayNameEnglish(ItemStack itemStack) {
+        if (itemStack == null || itemStack.field_151002_e == null) {
+            return "Unknown";
+        }
         String unlocalizedName = itemStack.getUnlocalizedName() + ".name";
-
-        // Check each mod's language file for the translation
-        for (ModContainer mod : Loader.instance()
-            .getModList()) {
-            String modId = mod.getModId();
-
-            // Try to get the cached translations for the mod
-            Map<String, String> modTranslations = fetchModTranslation(modId);
-            if (modTranslations.containsKey(unlocalizedName)) {
-                return modTranslations.get(unlocalizedName); // Return the cached translation
-            }
+        String modId = getModIdFromItemStack(itemStack);
+        // Try to get the cached translations for the mod
+        Map<String, String> modTranslations = fetchModTranslation(modId);
+        if (modTranslations.containsKey(unlocalizedName)) {
+            return modTranslations.get(unlocalizedName); // Return the cached translation
         }
 
         return StatCollector.translateToFallback(unlocalizedName); // Fallback to default translation
+    }
+
+    /**
+     * Get the mod ID that registered the item
+     */
+    private static String getModIdFromItemStack(ItemStack stack) {
+        if (stack == null) return "minecraft";
+        Item item = stack.getItem();
+        if (item == null) return "minecraft";
+
+        // Use GameRegistry to get the mod domain
+        if (GameRegistry.findUniqueIdentifierFor(item) != null) {
+            return GameRegistry.findUniqueIdentifierFor(item).modId;
+        }
+
+        return "minecraft";
     }
 
     /**
