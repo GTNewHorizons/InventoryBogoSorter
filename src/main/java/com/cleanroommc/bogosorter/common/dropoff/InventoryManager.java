@@ -5,7 +5,6 @@ import static com.cleanroommc.bogosorter.common.dropoff.LocalizationHelper.getDi
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,11 +18,13 @@ import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
+import com.gtnewhorizon.gtnhlib.datastructs.space.ArrayProximityMap4D;
+import com.gtnewhorizon.gtnhlib.datastructs.space.VolumeShape;
 
 import serverutils.data.ClaimedChunks;
 
@@ -31,6 +32,9 @@ public class InventoryManager {
 
     private final EntityPlayerMP player;
     private final World world;
+
+    // Map of nearby tile entities with quick proximity lookup
+    private final ArrayProximityMap4D<TileEntity> NEARBY_INV_MAP = new ArrayProximityMap4D<>(VolumeShape.CUBE);
 
     public InventoryManager(EntityPlayerMP player) {
         this.player = player;
@@ -41,82 +45,87 @@ public class InventoryManager {
         return player;
     }
 
-    public <T extends TileEntity & IInventory> List<InventoryData> getNearbyInventories() {
-        int minX = (int) (player.posX - BogoSorterConfig.dropOff.dropoffRadius);
-        int maxX = (int) (player.posX + BogoSorterConfig.dropOff.dropoffRadius);
+    public List<InventoryData> getNearbyInventories() {
+        int radius = BogoSorterConfig.dropOff.dropoffRadius;
+        int dim = player.dimension;
+        double radiusSq = radius * radius;
 
-        int minY = (int) (player.posY - BogoSorterConfig.dropOff.dropoffRadius);
-        int maxY = (int) (player.posY + BogoSorterConfig.dropOff.dropoffRadius);
+        // Player's current chunk coordinates
+        int playerChunkX = (int) player.posX >> 4;
+        int playerChunkZ = (int) player.posZ >> 4;
 
-        int minZ = (int) (player.posZ - BogoSorterConfig.dropOff.dropoffRadius);
-        int maxZ = (int) (player.posZ + BogoSorterConfig.dropOff.dropoffRadius);
+        // Number of chunks to scan around player (+1 for edges)
+        int chunkRadius = Math.max((radius - 1) / 16, 0) + 1;
 
-        List<InventoryData> inventoryDataList = new ArrayList<>();
+        // Iterate chunks in range
+        for (int cx = playerChunkX - chunkRadius; cx <= playerChunkX + chunkRadius; cx++) {
+            for (int cz = playerChunkZ - chunkRadius; cz <= playerChunkZ + chunkRadius; cz++) {
+                if (!world.getChunkProvider()
+                    .chunkExists(cx, cz)) continue; // skip unloaded chunks
 
-        // start the direction the player is facing
-        Vec3 lookVec = player.getLookVec();
-        int lookX = (int) Math.signum(lookVec.xCoord);
-        int lookY = (int) Math.signum(lookVec.yCoord);
-        int lookZ = (int) Math.signum(lookVec.zCoord);
+                Chunk chunk = world.getChunkFromChunkCoords(cx, cz);
+                for (TileEntity te : chunk.chunkTileEntityMap.values()) {
+                    if (te == null || te.isInvalid()) continue;
+                    // Only consider inventories
+                    if (!(te instanceof IInventory || te instanceof TileEntityEnderChest)) continue;
 
-        int[] xOrder = (lookX >= 0) ? range(minX, maxX + 1) : reverseRange(minX, maxX + 1);
-        int[] yOrder = (lookY >= 0) ? range(minY, maxY + 1) : reverseRange(minY, maxY + 1);
-        int[] zOrder = (lookZ >= 0) ? range(minZ, maxZ + 1) : reverseRange(minZ, maxZ + 1);
+                    // Only in same dimension
+                    if (te.getWorldObj().provider.dimensionId != dim) continue;
 
-        for (int x : xOrder) {
-            for (int y : yOrder) {
-                for (int z : zOrder) {
-                    TileEntity currentEntity = world.getTileEntity(x, y, z);
-
-                    InventoryData currentInvData;
-
-                    if (currentEntity instanceof IInventory) {
-                        if (Mods.ServerUtilities.isLoaded()) {
-                            if (ClaimedChunks.blockBlockInteractions(player, x, y, z, 0)) continue;
-                        }
-                        // noinspection unchecked
-                        currentInvData = getInventoryData((T) currentEntity);
-                    } else if (currentEntity instanceof TileEntityEnderChest) {
-                        if (Mods.ServerUtilities.isLoaded()) {
-                            if (ClaimedChunks.blockBlockInteractions(player, x, y, z, 0)) continue;
-                        }
-                        currentInvData = getInventoryData((TileEntityEnderChest) currentEntity);
-                    } else {
+                    // Respect claimed-chunk restrictions (if ServerUtilities is present)
+                    if (Mods.ServerUtilities.isLoaded()
+                        && ClaimedChunks.blockBlockInteractions(player, te.xCoord, te.yCoord, te.zCoord, 0)) {
                         continue;
                     }
 
-                    int listSize = inventoryDataList.size();
+                    // Quick spherical radius check
+                    double dx = te.xCoord - player.posX;
+                    double dy = te.yCoord - player.posY;
+                    double dz = te.zCoord - player.posZ;
+                    double distSq = dx * dx + dy * dy + dz * dz;
 
-                    if (listSize > 0) {
-                        InventoryData previousInvData = inventoryDataList.get(listSize - 1);
+                    if (distSq > radiusSq) continue;
 
-                        // Check for duplicates generated from double chests.
-                        if (previousInvData.getEntities()
-                            .contains(currentEntity)) {
-                            continue;
-                        }
-                    }
-
-                    if (currentInvData.getInventory()
-                        .isUseableByPlayer(player) && isInventoryValid(currentInvData)) {
-                        inventoryDataList.add(currentInvData);
-                    }
+                    // Add tile entity to proximity map
+                    NEARBY_INV_MAP.put(te, dim, te.xCoord, te.yCoord, te.zCoord, radius);
                 }
             }
         }
 
-        return inventoryDataList;
-    }
+        List<InventoryData> result = new ArrayList<>();
 
-    private int[] range(int start, int end) {
-        return IntStream.range(start, end)
-            .toArray();
-    }
+        // Iterate through all inventories that fall inside the search radius
+        NEARBY_INV_MAP.forEachInRange(dim, player.posX, player.posY, player.posZ, te -> {
 
-    private int[] reverseRange(int start, int end) {
-        return IntStream.range(start, end)
-            .map(i -> end - 1 - (i - start))
-            .toArray();
+            if (te == null) {
+                return;
+            }
+
+            InventoryData data;
+
+            if (te instanceof IInventory) {
+                data = getInventoryData((TileEntity & IInventory) te);
+            } else if (te instanceof TileEntityEnderChest) {
+                data = getInventoryData((TileEntityEnderChest) te);
+            } else {
+                return;
+            }
+
+            // Avoid duplicates (double chest halves)
+            if (!result.isEmpty()) {
+                InventoryData last = result.get(result.size() - 1);
+                if (last.getEntities()
+                    .contains(te)) {
+                    return;
+                }
+            }
+
+            if (isInventoryValid(data)) {
+                result.add(data);
+            }
+        });
+
+        return result;
     }
 
     boolean isStacksEqual(ItemStack left, ItemStack right) {

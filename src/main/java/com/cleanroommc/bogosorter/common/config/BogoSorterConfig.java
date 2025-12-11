@@ -1,6 +1,7 @@
 package com.cleanroommc.bogosorter.common.config;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = BogoSorter.ID)
@@ -138,6 +139,15 @@ public class BogoSorterConfig {
         @Config.LangKey("bogosorter.config.dropoff.render")
         public boolean dropoffRender;
 
+        @Config.Comment("The style of the render highlight (CUBE or BRACE).")
+        @Config.LangKey("bogosorter.config.dropoff.render_style")
+        public RendererCube.RenderStyle dropoffRenderStyle = RendererCube.RenderStyle.CUBE;
+
+        @Config.DefaultBoolean(true)
+        @Config.Comment("Enable fading out animation for the highlight.")
+        @Config.LangKey("bogosorter.config.dropoff.render_fade_out")
+        public boolean dropoffRenderFadeOut;
+
         @Config.DefaultBoolean(true)
         @Config.Comment("Show a chat message after dropping off items.")
         @Config.LangKey("bogosorter.config.dropoff.chat_message")
@@ -153,7 +163,8 @@ public class BogoSorterConfig {
         @Config.LangKey("bogosorter.config.dropoff.throttle")
         public int dropoffPacketThrottleInMS;
 
-        @Config.DefaultStringList({ "Chest", "Barrel", "Drawer", "Crate" })
+        @Config.DefaultStringList({ "Chest", "Barrel", "Drawer", "Crate", "Present", "Cabinet", "Counter", "Fridge",
+            "Filing", "Compartment", "Shulker" })
         @Config.Comment("Valid inventory names for drop-off targeting (substring match).")
         @Config.LangKey("bogosorter.config.dropoff.targets")
         public String[] dropoffTargetNames;
