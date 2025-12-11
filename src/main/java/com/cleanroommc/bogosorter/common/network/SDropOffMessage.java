@@ -28,17 +28,17 @@ public class SDropOffMessage implements IPacket {
     private int affectedContainers;
     private int totalContainers;
     private List<RendererCubeTarget> rendererCubeTargets = new ArrayList<>();
-    private boolean timeQuotaReached;
+    private int quotaReachedCount;
 
     public SDropOffMessage() {}
 
     public SDropOffMessage(int itemsCounter, int affectedContainers, int totalContainers,
-        List<RendererCubeTarget> rendererCubeTargets, boolean timeQuotaReached) {
+        List<RendererCubeTarget> rendererCubeTargets, int quotaReachedCount) {
         this.itemsCounter = itemsCounter;
         this.affectedContainers = affectedContainers;
         this.totalContainers = totalContainers;
         this.rendererCubeTargets = rendererCubeTargets;
-        this.timeQuotaReached = timeQuotaReached;
+        this.quotaReachedCount = quotaReachedCount;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SDropOffMessage implements IPacket {
         buf.writeInt(itemsCounter);
         buf.writeInt(affectedContainers);
         buf.writeInt(totalContainers);
-        buf.writeBoolean(timeQuotaReached);
+        buf.writeInt(quotaReachedCount);
 
         buf.writeInt(rendererCubeTargets.size());
         for (RendererCubeTarget target : rendererCubeTargets) {
@@ -77,7 +77,7 @@ public class SDropOffMessage implements IPacket {
         itemsCounter = buf.readInt();
         affectedContainers = buf.readInt();
         totalContainers = buf.readInt();
-        timeQuotaReached = buf.readBoolean();
+        quotaReachedCount = buf.readInt();
 
         int targetsLen = buf.readInt();
         for (int i = 0; i < targetsLen; i++) {
@@ -95,36 +95,35 @@ public class SDropOffMessage implements IPacket {
             RendererCube.INSTANCE.draw(rendererCubeTargets);
         }
 
-        if (timeQuotaReached) {
-            String message = "[" + EnumChatFormatting.BLUE
-                + BogoSorter.NAME
-                + EnumChatFormatting.RESET
-                + "]: "
-                + EnumChatFormatting.RED
-                + "Quota Time Limit Reached; Stopped Early";
-
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
-        }
-
         if (BogoSorterConfig.dropOff.dropoffChatMessage) {
-            String message = "[" + EnumChatFormatting.BLUE
-                + BogoSorter.NAME
-                + EnumChatFormatting.RESET
-                + "]: "
-                + EnumChatFormatting.RED
-                + itemsCounter
-                + EnumChatFormatting.RESET
-                + " items moved to "
-                + EnumChatFormatting.RED
-                + affectedContainers
-                + EnumChatFormatting.RESET
-                + " containers of "
-                + EnumChatFormatting.RED
-                + totalContainers
-                + EnumChatFormatting.RESET
-                + " checked in total.";
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder.append("[")
+                .append(EnumChatFormatting.BLUE)
+                .append(BogoSorter.NAME)
+                .append(EnumChatFormatting.RESET)
+                .append("]: ")
+                .append(EnumChatFormatting.RED)
+                .append(itemsCounter)
+                .append(EnumChatFormatting.RESET)
+                .append(" items moved to ")
+                .append(EnumChatFormatting.RED)
+                .append(affectedContainers)
+                .append(EnumChatFormatting.RESET)
+                .append(" containers of ")
+                .append(EnumChatFormatting.RED)
+                .append(totalContainers)
+                .append(EnumChatFormatting.RESET)
+                .append(" checked in total.");
 
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
+            // Append the quota warning if it happened at least once
+            if (quotaReachedCount > 0) {
+                messageBuilder.append(EnumChatFormatting.RED)
+                    .append(" (Quota reached ")
+                    .append(quotaReachedCount)
+                    .append(" times)");
+            }
+
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(messageBuilder.toString()));
         }
 
         Minecraft.getMinecraft()

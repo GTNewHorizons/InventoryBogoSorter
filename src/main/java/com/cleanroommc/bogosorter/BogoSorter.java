@@ -1,7 +1,5 @@
 package com.cleanroommc.bogosorter;
 
-import static com.cleanroommc.bogosorter.ClientEventHandler.*;
-
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -18,6 +16,7 @@ import com.cleanroommc.bogosorter.common.XSTR;
 import com.cleanroommc.bogosorter.common.config.BogoSortCommandTree;
 import com.cleanroommc.bogosorter.common.config.Serializer;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffButtonHandler;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffService;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.refill.RefillHandler;
@@ -54,7 +53,6 @@ public class BogoSorter {
         FMLCommonHandler.instance()
             .bus()
             .register(this);
-        MinecraftForge.EVENT_BUS.register(this);
         NetworkHandler.init();
         OreDictHelper.init();
         BogoSortAPI.INSTANCE.remapSortRule("is_block", "block_type");
@@ -62,6 +60,9 @@ public class BogoSorter {
         DefaultCompat.init(BogoSortAPI.INSTANCE);
         Serializer.loadConfig();
         MinecraftForge.EVENT_BUS.register(new RefillHandler());
+        FMLCommonHandler.instance()
+            .bus()
+            .register(DropOffService.getInstance());
         if (NetworkUtils.isDedicatedClient()) {
             MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
             FMLCommonHandler.instance()
