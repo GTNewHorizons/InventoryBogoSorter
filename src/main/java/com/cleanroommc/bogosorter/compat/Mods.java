@@ -23,6 +23,7 @@ public enum Mods {
     Buildcraft("BuildCraft|Core"),
     CodeChickenCore("CodeChickenCore"),
     CookingForBlockheads("cookingforblockheads"),
+    Chisel("chisel"),
     DraconicEvolution("DraconicEvolution"),
     EnderStorage("EnderStorage"),
     Energycontrol("energycontrol"),
