@@ -140,6 +140,6 @@ public class DropOffTask implements Runnable {
 
         NetworkHandler.sendToPlayer(finalPacket, player);
         // Remove this job from the service so it stops running
-        DropOffService.getInstance().activeTasks.remove(player.getPersistentID());
+        DropOffService.INSTANCE.activeTasks.remove(player.getPersistentID());
     }
 }

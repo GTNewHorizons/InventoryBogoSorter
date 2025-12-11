@@ -17,14 +17,10 @@ import cpw.mods.fml.common.gameevent.TickEvent;
  */
 public class DropOffService {
 
-    private static final DropOffService INSTANCE = new DropOffService();
+    public static final DropOffService INSTANCE = new DropOffService();
 
     // ConcurrentHashMap allows safe modification (adding/removing jobs) while iterating in the tick loop.
     public final Map<UUID, DropOffTask> activeTasks = new ConcurrentHashMap<>();
-
-    public static DropOffService getInstance() {
-        return INSTANCE;
-    }
 
     /**
      * Initiates a new drop-off job for a player.
@@ -59,17 +55,16 @@ public class DropOffService {
         if (event.phase != TickEvent.Phase.END) return;
         if (activeTasks.isEmpty()) return;
 
-        activeTasks.values()
-            .forEach(task -> {
-                // Verify the player is still online before processing
-                if (task.player.playerNetServerHandler.func_147362_b()
-                    .isChannelOpen()) {
-                    // Execute the next time-slice of the job
-                    task.run();
-                } else {
-                    // If player disconnected, cancel the job to free memory
-                    activeTasks.remove(task.player.getPersistentID());
-                }
-            });
+        for (DropOffTask task : activeTasks.values()) {
+            // Verify the player is still online before processing
+            if (task.player.playerNetServerHandler.func_147362_b()
+                .isChannelOpen()) {
+                // Execute the next time-slice of the job
+                task.run();
+            } else {
+                // If player disconnected, cancel the job to free memory
+                activeTasks.remove(task.player.getPersistentID());
+            }
+        }
     }
 }

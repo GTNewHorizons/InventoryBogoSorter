@@ -43,7 +43,7 @@ public class CDropOff implements IPacket {
             playerThrottles.replace(playerID, throttleTime);
         }
 
-        DropOffService service = DropOffService.getInstance();
+        DropOffService service = DropOffService.INSTANCE;
 
         // Check for active job
         if (service.isJobActive(playerID)) {

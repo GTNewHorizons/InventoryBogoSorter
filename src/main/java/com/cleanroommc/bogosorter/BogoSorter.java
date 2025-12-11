@@ -62,7 +62,7 @@ public class BogoSorter {
         MinecraftForge.EVENT_BUS.register(new RefillHandler());
         FMLCommonHandler.instance()
             .bus()
-            .register(DropOffService.getInstance());
+            .register(DropOffService.INSTANCE);
         if (NetworkUtils.isDedicatedClient()) {
             MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
             FMLCommonHandler.instance()
