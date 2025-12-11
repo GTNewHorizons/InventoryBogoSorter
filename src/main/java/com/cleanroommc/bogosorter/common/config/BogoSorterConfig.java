@@ -1,6 +1,7 @@
 package com.cleanroommc.bogosorter.common.config;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.gtnewhorizon.gtnhlib.config.Config;
 
 @Config(modid = BogoSorter.ID)
@@ -137,6 +138,15 @@ public class BogoSorterConfig {
         @Config.Comment("Render a highlight on eligible drop-off containers.")
         @Config.LangKey("bogosorter.config.dropoff.render")
         public boolean dropoffRender;
+
+        @Config.Comment("The style of the render highlight (CUBE or BRACE).")
+        @Config.LangKey("bogosorter.config.dropoff.render_style")
+        public RendererCube.RenderStyle dropoffRenderStyle = RendererCube.RenderStyle.CUBE;
+
+        @Config.DefaultBoolean(true)
+        @Config.Comment("Enable fading out animation for the highlight.")
+        @Config.LangKey("bogosorter.config.dropoff.render_fade_out")
+        public boolean dropoffRenderFadeOut;
 
         @Config.DefaultBoolean(true)
         @Config.Comment("Show a chat message after dropping off items.")
