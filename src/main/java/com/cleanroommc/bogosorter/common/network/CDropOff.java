@@ -11,7 +11,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
 
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import com.cleanroommc.bogosorter.common.dropoff.DropOffService;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffScheduler;
 
 public class CDropOff implements IPacket {
 
@@ -42,16 +42,13 @@ public class CDropOff implements IPacket {
             }
             playerThrottles.replace(playerID, throttleTime);
         }
+        DropOffScheduler scheduler = DropOffScheduler.INSTANCE;
 
-        DropOffService service = DropOffService.INSTANCE;
-
-        // Check for active job
-        if (service.isJobActive(playerID)) {
+        if (scheduler.isPlayerTaskActive(player)) {
             return new SDropOffThrottled();
         }
 
-        // Start the multi-tick job
-        service.startJob(player);
+        scheduler.startTask(player);
 
         return null;
     }

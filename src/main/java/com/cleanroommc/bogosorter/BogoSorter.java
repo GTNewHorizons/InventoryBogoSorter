@@ -16,7 +16,7 @@ import com.cleanroommc.bogosorter.common.XSTR;
 import com.cleanroommc.bogosorter.common.config.BogoSortCommandTree;
 import com.cleanroommc.bogosorter.common.config.Serializer;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffButtonHandler;
-import com.cleanroommc.bogosorter.common.dropoff.DropOffService;
+import com.cleanroommc.bogosorter.common.dropoff.DropOffScheduler;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
 import com.cleanroommc.bogosorter.common.refill.RefillHandler;
@@ -62,7 +62,7 @@ public class BogoSorter {
         MinecraftForge.EVENT_BUS.register(new RefillHandler());
         FMLCommonHandler.instance()
             .bus()
-            .register(DropOffService.INSTANCE);
+            .register(DropOffScheduler.INSTANCE);
         if (NetworkUtils.isDedicatedClient()) {
             MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
             FMLCommonHandler.instance()

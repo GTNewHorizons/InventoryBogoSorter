@@ -33,6 +33,8 @@ public class DropOffTask implements Runnable {
     // The visual outlines to send to the client when the job finishes
     private final List<RendererCubeTarget> targets;
 
+    private boolean isFinished = false;
+
     public DropOffTask(EntityPlayerMP player, List<InventoryData> list) {
         this.player = player;
         this.inventoryDataList = list;
@@ -41,11 +43,6 @@ public class DropOffTask implements Runnable {
         this.targets = new ArrayList<>();
     }
 
-    /**
-     * Executes a "slice" of work.
-     * This method runs for a limited time (Quota) and then returns.
-     * It is called repeatedly by DropOffService until currentContainerIndex reaches the end.
-     */
     @Override
     public void run() {
         long startTime = System.nanoTime();
@@ -122,6 +119,10 @@ public class DropOffTask implements Runnable {
         finishJob();
     }
 
+    public boolean isFinished() {
+        return isFinished;
+    }
+
     /**
      * Clean up and notify client.
      */
@@ -129,7 +130,7 @@ public class DropOffTask implements Runnable {
         // Sync player inventory changes to client
         player.inventory.markDirty();
         player.inventoryContainer.detectAndSendChanges();
-
+        isFinished = true;
         // Send the final result packet with all collected data (items moved, visual targets)
         SDropOffMessage finalPacket = new SDropOffMessage(
             itemsMoved,
@@ -139,7 +140,6 @@ public class DropOffTask implements Runnable {
             quotaReachedCount);
 
         NetworkHandler.sendToPlayer(finalPacket, player);
-        // Remove this job from the service so it stops running
-        DropOffService.INSTANCE.activeTasks.remove(player.getPersistentID());
+        DropOffScheduler.INSTANCE.dropOffTasks.remove(this);
     }
 }
