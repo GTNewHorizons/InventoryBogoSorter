@@ -113,10 +113,12 @@ public class InventoryManager {
 
             // Avoid duplicates (double chest halves)
             if (!result.isEmpty()) {
-                InventoryData last = result.get(result.size() - 1);
-                if (last.getEntities()
-                    .contains(te)) {
-                    return;
+                for (int i = 0; i < result.size(); i++) {
+                    InventoryData existingData = result.get(i);
+                    if (existingData.getEntities()
+                        .contains(te)) {
+                        return;
+                    }
                 }
             }
 
