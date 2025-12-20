@@ -36,10 +36,6 @@ public class DropOffHandler {
         return itemsCounter;
     }
 
-    public void setItemsCounter(int value) {
-        itemsCounter = Math.max(value, 0);
-    }
-
     public void dropOff(InventoryData toInventoryData) {
         IInventory toInventory = toInventoryData.getInventory();
 
