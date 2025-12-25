@@ -18,6 +18,7 @@ import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.cleanroommc.modularui.utils.item.ItemHandlerHelper;
 
+import appeng.container.slot.AppEngCraftingSlot;
 import buildcraft.factory.gui.SlotWorkbench;
 import codechicken.lib.inventory.SlotDummy;
 import cpw.mods.fml.relauncher.Side;
@@ -215,6 +216,9 @@ public class ShortcutHandler {
             return true;
         }
         if (Mods.Buildcraft.isLoaded() && slot instanceof SlotWorkbench) {
+            return true;
+        }
+        if (Mods.Ae2.isLoaded() && slot instanceof AppEngCraftingSlot) {
             return true;
         }
 
