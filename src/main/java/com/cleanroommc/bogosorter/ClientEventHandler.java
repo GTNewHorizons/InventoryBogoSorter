@@ -182,33 +182,40 @@ public class ClientEventHandler {
     public static boolean handleInput(@Nullable GuiContainer container) {
 
         if (container != null && canDoShortcutAction()) {
-            if (BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_ALL)
-                .isFirstPress() && ShortcutHandler.moveAllItems(container, false)) {
+            KeyBind key;
+
+            key = BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_ALL);
+            if (key != null && key.isFirstPress() && ShortcutHandler.moveAllItems(container, false)) {
                 shortcutAction();
                 return true;
             }
-            if (BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_ALL_SAME)
-                .isFirstPress() && ShortcutHandler.moveAllItems(container, true)) {
+
+            key = BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_ALL_SAME);
+            if (key != null && key.isFirstPress() && ShortcutHandler.moveAllItems(container, true)) {
                 shortcutAction();
                 return true;
             }
-            if (BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_SINGLE)
-                .isFirstPressOrHeldLong(15) && ShortcutHandler.moveSingleItem(container, false)) {
+
+            key = BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_SINGLE);
+            if (key != null && key.isFirstPressOrHeldLong(15) && ShortcutHandler.moveSingleItem(container, false)) {
                 shortcutAction();
                 return true;
             }
-            if (BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_SINGLE_EMPTY)
-                .isFirstPressOrHeldLong(15) && ShortcutHandler.moveSingleItem(container, true)) {
+
+            key = BSKeybinds.getActiveKeyBind(BSKeybinds.MOVE_SINGLE_EMPTY);
+            if (key != null && key.isFirstPressOrHeldLong(15) && ShortcutHandler.moveSingleItem(container, true)) {
                 shortcutAction();
                 return true;
             }
-            if (BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL)
-                .isFirstPress() && ShortcutHandler.dropItems(container, false)) {
+
+            key = BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL);
+            if (key != null && key.isFirstPress() && ShortcutHandler.dropItems(container, false)) {
                 shortcutAction();
                 return true;
             }
-            if (BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL_SAME)
-                .isFirstPress() && ShortcutHandler.dropItems(container, true)) {
+
+            key = BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL_SAME);
+            if (key != null && key.isFirstPress() && ShortcutHandler.dropItems(container, true)) {
                 shortcutAction();
                 return true;
             }

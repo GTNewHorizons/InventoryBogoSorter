@@ -123,6 +123,10 @@ public class BSKeybinds {
                 .mapToInt(i -> i)
                 .toArray();
 
+            if (keyCodes.length == 0) {
+                continue;
+            }
+
             KeyBind.Builder builder = KeyBind.builder(keySetting.getName())
                 .mustPress(keyCodes);
             if (keySetting.getValidator() != null) {
