@@ -38,35 +38,35 @@
  * For more details, see https://docs.gradle.org/8.4/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    api("com.github.GTNewHorizons:ModularUI2:2.3.21-1.7.10:dev")
+    api("com.github.GTNewHorizons:ModularUI2:2.3.25-1.7.10:dev")
     api("com.github.GTNewHorizons:ModularUI:1.3.1:dev")
-    api("com.github.GTNewHorizons:GTNHLib:0.8.21:dev")
+    api("com.github.GTNewHorizons:GTNHLib:0.9.0:dev")
 
     // used for chunk claim checking
-    compileOnly("com.github.GTNewHorizons:ServerUtilities:2.2.6:dev")
-    compileOnly("com.github.GTNewHorizons:ProjectRed:4.12.5-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:AdventureBackpack2:1.4.4-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.6.6-GTNH:dev") {transitive = false}
-    compileOnly("com.github.GTNewHorizons:Galacticraft:3.4.11-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:EnderIO:2.10.6:dev")
-    compileOnly("com.github.GTNewHorizons:ironchest:6.1.6:dev")
+    compileOnly("com.github.GTNewHorizons:ServerUtilities:2.2.13:dev")
+    compileOnly("com.github.GTNewHorizons:ProjectRed:4.12.8-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:AdventureBackpack2:1.4.9-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.6.7-GTNH:dev") {transitive = false}
+    compileOnly("com.github.GTNewHorizons:Galacticraft:3.4.15-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:EnderIO:2.10.12:dev")
+    compileOnly("com.github.GTNewHorizons:ironchest:6.1.7:dev")
     compileOnly("com.github.GTNewHorizons:Avaritiaddons:1.9.3-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:CookingForBlockheads:1.4.4-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:ForestryMC:4.11.2:dev")
-    compileOnly("com.github.GTNewHorizons:Draconic-Evolution:1.5.4-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-751-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:EnderStorage:1.8.0:dev")
-    compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.14-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:CodeChickenCore:1.4.9:dev")
-    compileOnly("com.github.GTNewHorizons:NotEnoughItems:2.8.40-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.133:dev")
-    compileOnly("com.github.GTNewHorizons:Botania:1.13.6-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:StorageDrawers:2.2.4-GTNH:dev")
-    compileOnly("com.github.GTNewHorizons:BuildCraft:7.1.47:dev")
-    compileOnly("com.github.GTNewHorizons:Backhand:1.8.0:dev")
+    compileOnly("com.github.GTNewHorizons:CookingForBlockheads:1.4.5-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:ForestryMC:4.11.4:dev")
+    compileOnly("com.github.GTNewHorizons:Draconic-Evolution:1.5.8-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-779-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:EnderStorage:1.8.2:dev")
+    compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.17-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:CodeChickenCore:1.4.10:dev")
+    compileOnly("com.github.GTNewHorizons:NotEnoughItems:2.8.48-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.197:dev")
+    compileOnly("com.github.GTNewHorizons:Botania:1.13.10-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:StorageDrawers:2.2.5-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:BuildCraft:7.1.48:dev")
+    compileOnly("com.github.GTNewHorizons:Backhand:1.8.2:dev")
     compileOnly("com.github.GTNewHorizons:Controlling:2.1.2:dev")
     compileOnly("com.github.GTNewHorizons:BetterStorage:0.14.0.0:dev")
-    compileOnly("com.github.GTNewHorizons:Chisel:2.16.15-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Chisel:2.17.11-GTNH:dev")
 
     //for Tinkers Construct arrows
     compileOnly("com.github.GTNewHorizons:Battlegear2:1.4.3:dev") { transitive = false }
