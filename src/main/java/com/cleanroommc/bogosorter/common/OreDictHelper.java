@@ -109,7 +109,7 @@ public class OreDictHelper {
     @Optional.Method(modid = "gregtech")
     @NotNull
     public static String getGtToolMaterial(ItemStack itemStack) {
-        if(itemStack.stackTagCompound == null) {
+        if (itemStack.stackTagCompound == null) {
             return "";
         }
         NBTTagCompound statsTag = itemStack.stackTagCompound.getCompoundTag("GT.ToolStats");
