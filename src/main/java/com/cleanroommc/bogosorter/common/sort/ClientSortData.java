@@ -26,7 +26,7 @@ public class ClientSortData {
 
     public static ClientSortData readFromPacket(PacketBuffer buf) throws IOException {
         int color = buf.readVarIntFromBuffer();
-        String name = buf.readStringFromBuffer(64);
+        String name = buf.readStringFromBuffer(32767);
         ClientSortData sortData = new ClientSortData(color, name);
         for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
             sortData.getSlotNumbers()
