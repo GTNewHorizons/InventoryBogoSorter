@@ -183,7 +183,21 @@ public class InventoryManager {
 
         String inventoryName = getItemStackName(inventoryData.getInventory());
 
-        return isInventoryNameValid(inventoryName);
+        if (isInventoryNameValid(inventoryName)) {
+            return true;
+        }
+
+        // Fallback: check the inventory's own name for mods that use shared block types
+        // (e.g. GT6 multi-tile entities) where ItemStack-based name resolution doesn't work
+        IInventory inv = inventoryData.getInventory();
+        if (inv != null) {
+            String invName = inv.getInventoryName();
+            if (invName != null && isInventoryNameValid(invName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean isInventoryNameValid(String name) {
