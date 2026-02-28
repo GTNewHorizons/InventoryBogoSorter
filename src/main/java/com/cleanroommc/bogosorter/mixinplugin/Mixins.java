@@ -45,22 +45,6 @@ public enum Mixins implements IMixins {
         .addCommonMixins(
             "thermal.MixinContainerSatchel",
             "thermal.MixinContainerStrongbox")),
-    Forestry(new MixinBuilder()
-        .addRequiredMod(TargetedMod.FORESTRY)
-        .setPhase(Phase.LATE)
-        .addClientMixins("forestry.MixinGuiForestry")),
-    CodeChickenCore(new MixinBuilder()
-        .addRequiredMod(TargetedMod.CODECHICKENCORE)
-        .setPhase(Phase.LATE)
-        .addClientMixins("codechicken.core.MixinGuiContainerWidget")),
-    NEI(new MixinBuilder()
-        .addRequiredMod(TargetedMod.NEI)
-        .setPhase(Phase.LATE)
-        .addClientMixins("codechicken.nei.MixinGuiEnchantmentModifier", "codechicken.nei.MixinGuiRecipe")),
-    AE2(new MixinBuilder()
-        .addRequiredMod(TargetedMod.AE2)
-        .setPhase(Phase.LATE)
-        .addClientMixins("appliedenergistics.MixinAEBaseGui")),
     CompactStorage(new MixinBuilder()
         .addRequiredMod(TargetedMod.COMPACTSTORAGE)
         .setPhase(Phase.LATE)
@@ -71,9 +55,6 @@ public enum Mixins implements IMixins {
         .addRequiredMod(TargetedMod.ETFUTURUM)
         .setPhase(Phase.LATE)
         .addCommonMixins("etfuturum.MixinContainerChestGeneric")),
-    CraftingTweaks(new MixinBuilder()
-        .setPhase(Phase.EARLY)
-        .addClientMixins("minecraft.MixinGuiScreen_CraftingTweaks")),
     Controlling(new MixinBuilder()
         .addRequiredMod(TargetedMod.CONTROLLING)
         .setPhase(Phase.LATE)
