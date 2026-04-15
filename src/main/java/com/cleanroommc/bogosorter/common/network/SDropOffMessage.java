@@ -12,6 +12,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
@@ -102,25 +103,20 @@ public class SDropOffMessage implements IPacket {
                 .append(BogoSorter.NAME)
                 .append(EnumChatFormatting.RESET)
                 .append("]: ")
-                .append(EnumChatFormatting.RED)
-                .append(itemsCounter)
-                .append(EnumChatFormatting.RESET)
-                .append(" items moved to ")
-                .append(EnumChatFormatting.RED)
-                .append(affectedContainers)
-                .append(EnumChatFormatting.RESET)
-                .append(" containers of ")
-                .append(EnumChatFormatting.RED)
-                .append(totalContainers)
-                .append(EnumChatFormatting.RESET)
-                .append(" checked in total.");
+                .append(
+                    StatCollector.translateToLocalFormatted(
+                        "bogosort.message.dropoff.items_moved",
+                        EnumChatFormatting.RED + Integer.toString(itemsCounter) + EnumChatFormatting.RESET,
+                        EnumChatFormatting.RED + Integer.toString(affectedContainers) + EnumChatFormatting.RESET,
+                        EnumChatFormatting.RED + Integer.toString(totalContainers) + EnumChatFormatting.RESET));
 
             // Append the quota warning if it happened at least once
             if (quotaReachedCount > 0) {
                 messageBuilder.append(EnumChatFormatting.RED)
-                    .append(" (Quota reached ")
-                    .append(quotaReachedCount)
-                    .append(" times)");
+                    .append(
+                        StatCollector.translateToLocalFormatted(
+                            "bogosort.message.dropoff.quota_reached_times",
+                            Integer.toString(quotaReachedCount)));
             }
 
             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(messageBuilder.toString()));
