@@ -45,7 +45,6 @@ import com.cleanroommc.modularui.widgets.SortableListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
-import com.cleanroommc.modularui.widgets.layout.Row;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
@@ -100,7 +99,7 @@ public class ConfigGui extends CustomModularScreen {
                 MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
             }
         }.size(300, 250)
-            .align(Alignment.Center);
+            .center();
 
         PagedWidget.Controller controller = new PagedWidget.Controller();
 
@@ -108,7 +107,7 @@ public class ConfigGui extends CustomModularScreen {
             new TextWidget<>(IKey.lang("bogosort.gui.title")).leftRel(0.5f)
                 .top(5))
             .child(
-                new Rectangle().setColor(DARK_GREY)
+                new Rectangle().color(DARK_GREY)
                     .asWidget()
                     .left(4)
                     .right(4)
@@ -123,7 +122,8 @@ public class ConfigGui extends CustomModularScreen {
                     .addPage(createGeneralConfigUI(panel, context))
                     .addPage(createProfilesConfig(panel, context)))
             .child(
-                new Row().left(4)
+                Flow.row()
+                    .left(4)
                     .right(4)
                     .height(16)
                     .top(18)
@@ -139,7 +139,7 @@ public class ConfigGui extends CustomModularScreen {
     }
 
     public IWidget createGeneralConfigUI(ModularPanel mainPanel, ModularGuiContext context) {
-        Row row = new Row();
+        Flow row = Flow.row();
         IPanelHandler colorPicker = IPanelHandler.simple(
             mainPanel,
             (parent,
@@ -151,13 +151,14 @@ public class ConfigGui extends CustomModularScreen {
         return new ListWidget<>().sizeRel(1)
             .padding(5, 5, 2, 2)
             .child(
-                new Rectangle().setColor(0xFF606060)
+                new Rectangle().color(0xFF606060)
                     .asWidget()
                     .top(3)
                     .left(32)
                     .size(1, 267))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -178,7 +179,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -203,7 +205,8 @@ public class ConfigGui extends CustomModularScreen {
             // .size(14)
             // .tooltip(tooltip -> tooltip.addLine(IKey.lang("bogosort.gui.refill_comment")))))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -215,7 +218,7 @@ public class ConfigGui extends CustomModularScreen {
                             .setNumbers(0, Short.MAX_VALUE)
                             .setTextAlignment(Alignment.Center)
                             .setTextColor(IKey.TEXT_COLOR)
-                            .background(new Rectangle().setColor(0xFFb1b1b1))
+                            .background(new Rectangle().color(0xFFb1b1b1))
                             .disableHoverBackground()
                             .size(30, 14))
                     .child(
@@ -297,7 +300,8 @@ public class ConfigGui extends CustomModularScreen {
                             .addTooltipLine(IKey.lang("bogosort.gui.button.color"))
                             .tooltipShowUpTimer(10)))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -318,7 +322,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -339,7 +344,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -360,7 +366,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -381,7 +388,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -402,7 +410,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -423,7 +432,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -444,7 +454,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -465,7 +476,8 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(
-                new Row().widthRel(1f)
+                Flow.row()
+                    .widthRel(1f)
                     .height(14)
                     .margin(0, 2)
                     .child(
@@ -494,7 +506,7 @@ public class ConfigGui extends CustomModularScreen {
             .top(2)
             .bottom(0)
             .child(
-                new Rectangle().setColor(DARK_GREY)
+                new Rectangle().color(DARK_GREY)
                     .asWidget()
                     .top(0)
                     .bottom(4)
@@ -515,7 +527,8 @@ public class ConfigGui extends CustomModularScreen {
                             .top(20)
                             .width(81)))
             .child(
-                new Row().left(92)
+                Flow.row()
+                    .left(92)
                     .right(2)
                     .height(16)
                     .top(2)
@@ -540,33 +553,32 @@ public class ConfigGui extends CustomModularScreen {
     private static <T extends SortRule<?>> Map<T, SortableListWidget.Item<T>> getSortListItemMap(Iterable<T> it) {
         final Map<T, SortableListWidget.Item<T>> items = new Object2ObjectOpenHashMap<>();
         for (T sortRule : it) {
-            items
-                .put(
-                    sortRule,
-                    new SortableListWidget.Item<>(sortRule).child(
-                        item -> new Row()
-                            .child(
-                                new Widget<>().addTooltipLine(IKey.lang(sortRule.getDescriptionLangKey()))
-                                    .widgetTheme(IThemeApi.BUTTON)
-                                    // .background(GuiTextures.BUTTON_CLEAN)
-                                    .overlay(IKey.lang(sortRule.getNameLangKey()))
-                                    .expanded()
-                                    .heightRel(1f))
-                            .child(
-                                new CycleButtonWidget()
-                                    .value(new BoolValue.Dynamic(sortRule::isInverted, sortRule::setInverted))
-                                    .stateOverlay(ARROW_DOWN_UP)
-                                    .addTooltip(0, IKey.lang("bogosort.gui.descending"))
-                                    .addTooltip(1, IKey.lang("bogosort.gui.ascending"))
-                                    .heightRel(1f)
-                                    .width(14))
-                            .child(
-                                new ButtonWidget<>().onMousePressed(button -> item.removeSelfFromList())
-                                    .overlay(
-                                        GuiTextures.CROSS_TINY.asIcon()
-                                            .size(10))
-                                    .width(10)
-                                    .heightRel(1f))));
+            items.put(
+                sortRule,
+                new SortableListWidget.Item<>(sortRule).child(
+                    item -> Flow.row()
+                        .child(
+                            new Widget<>().addTooltipLine(IKey.lang(sortRule.getDescriptionLangKey()))
+                                .widgetTheme(IThemeApi.BUTTON)
+                                // .background(GuiTextures.BUTTON_CLEAN)
+                                .overlay(IKey.lang(sortRule.getNameLangKey()))
+                                .expanded()
+                                .heightRel(1f))
+                        .child(
+                            new CycleButtonWidget()
+                                .value(new BoolValue.Dynamic(sortRule::isInverted, sortRule::setInverted))
+                                .stateOverlay(ARROW_DOWN_UP)
+                                .addTooltip(0, IKey.lang("bogosort.gui.descending"))
+                                .addTooltip(1, IKey.lang("bogosort.gui.ascending"))
+                                .heightRel(1f)
+                                .width(14))
+                        .child(
+                            new ButtonWidget<>().onMousePressed(button -> item.removeSelfFromList())
+                                .overlay(
+                                    GuiTextures.CROSS_TINY.asIcon()
+                                        .size(10))
+                                .width(10)
+                                .heightRel(1f))));
         }
         return items;
     }
@@ -577,24 +589,25 @@ public class ConfigGui extends CustomModularScreen {
             allValues);
         SortableListWidget<SortRule<ItemStack>> sortableListWidget = new SortableListWidget<SortRule<ItemStack>>()
             .children(SortRulesConfig.sortRules, items::get)
-            .debugName("sortable item list");
-        List<List<AvailableElement>> availableMatrix = Grid.mapToMatrix(2, allValues, (index, value) -> {
-            AvailableElement availableElement = new AvailableElement().overlay(IKey.lang(value.getNameLangKey()))
-                .tooltip(
-                    tooltip -> tooltip.addLine(IKey.lang(value.getDescriptionLangKey()))
-                        .showUpTimer(4))
-                .size(80, 14)
-                .margin(2, 2, 2, 2)
-                .onMousePressed(mouseButton1 -> {
-                    if (this.availableElements.get(value).available) {
-                        sortableListWidget.child(items.get(value));
-                        this.availableElements.get(value).available = false;
-                    }
-                    return true;
-                });
-            this.availableElements.put(value, availableElement);
-            return availableElement;
-        });
+            .name("sortable item list");
+        List<List<AvailableElement>> availableMatrix = Grid
+            .createGridOfWidthElements(2, allValues, (xIndex, yIndex, index, value) -> {
+                AvailableElement availableElement = new AvailableElement().overlay(IKey.lang(value.getNameLangKey()))
+                    .tooltip(
+                        tooltip -> tooltip.addLine(IKey.lang(value.getDescriptionLangKey()))
+                            .showUpTimer(4))
+                    .size(80, 14)
+                    .margin(2, 2, 2, 2)
+                    .onMousePressed(mouseButton1 -> {
+                        if (this.availableElements.get(value).available) {
+                            sortableListWidget.child(items.get(value));
+                            this.availableElements.get(value).available = false;
+                        }
+                        return true;
+                    });
+                this.availableElements.put(value, availableElement);
+                return availableElement;
+            });
         for (SortRule<ItemStack> value : allValues) {
             this.availableElements.get(value).available = !SortRulesConfig.sortRules.contains(value);
         }
@@ -604,7 +617,7 @@ public class ConfigGui extends CustomModularScreen {
                 .size(200, 140);
             return panel.child(ButtonWidget.panelCloseButton())
                 .child(
-                    new Grid().matrix(availableMatrix)
+                    new Grid().grid(availableMatrix)
                         .scrollable()
                         .pos(7, 7)
                         .right(17)
@@ -640,25 +653,26 @@ public class ConfigGui extends CustomModularScreen {
         final Map<NbtSortRule, SortableListWidget.Item<NbtSortRule>> items = getSortListItemMap(allValues);
         SortableListWidget<NbtSortRule> sortableListWidget = new SortableListWidget<NbtSortRule>()
             .children(SortRulesConfig.nbtSortRules, items::get)
-            .debugName("sortable nbt list");
+            .name("sortable nbt list");
 
-        List<List<AvailableElement>> availableMatrix = Grid.mapToMatrix(2, allValues, (index, value) -> {
-            AvailableElement availableElement = new AvailableElement().overlay(IKey.lang(value.getNameLangKey()))
-                .tooltip(
-                    tooltip -> tooltip.addLine(IKey.lang(value.getDescriptionLangKey()))
-                        .showUpTimer(4))
-                .size(80, 14)
-                .margin(2, 2, 2, 2)
-                .onMousePressed(mouseButton1 -> {
-                    if (this.availableElementsNbt.get(value).available) {
-                        sortableListWidget.child(items.get(value));
-                        this.availableElementsNbt.get(value).available = false;
-                    }
-                    return true;
-                });
-            this.availableElementsNbt.put(value, availableElement);
-            return availableElement;
-        });
+        List<List<AvailableElement>> availableMatrix = Grid
+            .createGridOfWidthElements(2, allValues, (xIndex, yIndex, index, value) -> {
+                AvailableElement availableElement = new AvailableElement().overlay(IKey.lang(value.getNameLangKey()))
+                    .tooltip(
+                        tooltip -> tooltip.addLine(IKey.lang(value.getDescriptionLangKey()))
+                            .showUpTimer(4))
+                    .size(80, 14)
+                    .margin(2, 2, 2, 2)
+                    .onMousePressed(mouseButton1 -> {
+                        if (this.availableElementsNbt.get(value).available) {
+                            sortableListWidget.child(items.get(value));
+                            this.availableElementsNbt.get(value).available = false;
+                        }
+                        return true;
+                    });
+                this.availableElementsNbt.put(value, availableElement);
+                return availableElement;
+            });
         for (NbtSortRule value : allValues) {
             this.availableElementsNbt.get(value).available = !SortRulesConfig.nbtSortRules.contains(value);
         }
@@ -669,7 +683,7 @@ public class ConfigGui extends CustomModularScreen {
                 .size(200, 140);
             return panel.child(ButtonWidget.panelCloseButton())
                 .child(
-                    new Grid().matrix(availableMatrix)
+                    new Grid().grid(availableMatrix)
                         .scrollable()
                         .pos(7, 7)
                         .right(17)
