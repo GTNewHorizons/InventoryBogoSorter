@@ -7,6 +7,7 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 
@@ -33,7 +34,7 @@ public class SDropOffThrottled implements IPacket {
             + EnumChatFormatting.RESET
             + "]: "
             + EnumChatFormatting.RED
-            + "Dropoff throttled";
+            + StatCollector.translateToLocal("bogosort.message.dropoff.throttled");
 
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
         return null;
