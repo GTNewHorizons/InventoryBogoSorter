@@ -13,6 +13,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 import org.jetbrains.annotations.NotNull;
@@ -129,6 +130,13 @@ public class ButtonHandler {
                 Interactable.playButtonClickSound();
             }
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onGuiClose(GuiOpenEvent event) {
+        if (event.gui == null || ClientEventHandler.isSortableContainer(Minecraft.getMinecraft().currentScreen)) {
+            GuiSortingContext.cleanup();
         }
     }
 

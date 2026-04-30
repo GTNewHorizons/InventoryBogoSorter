@@ -44,6 +44,11 @@ public class GuiSortingContext {
         return builder.build();
     }
 
+    public static void cleanup() {
+        currentContainer = null;
+        currentSortingContext = null;
+    }
+
     private final Container container;
     private final List<SlotGroup> slotGroups;
     private final boolean hasPlayer;
