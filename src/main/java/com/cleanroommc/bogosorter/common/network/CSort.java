@@ -80,16 +80,14 @@ public class CSort implements IPacket {
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        SortHandler.cacheItemSortRules.put(handler.playerEntity, sortRules);
-        SortHandler.cacheNbtSortRules.put(handler.playerEntity, nbtSortRules);
         Int2ObjectOpenHashMap<ClientSortData> map = new Int2ObjectOpenHashMap<>();
         for (ClientSortData sortData : clientSortDataList) {
             for (int i : sortData.getSlotNumbers()) {
                 map.put(i, sortData);
             }
         }
-        SortHandler sortHandler = new SortHandler(handler.playerEntity, handler.playerEntity.openContainer, map);
-        sortHandler.sort(hover);
+        new SortHandler(handler.playerEntity, handler.playerEntity.openContainer, sortRules, nbtSortRules, map)
+            .sort(hover);
         return null;
     }
 }

@@ -9,11 +9,8 @@ import com.cleanroommc.bogosorter.api.SortRule;
 
 public class NbtSortRule extends SortRule<NBTBase> {
 
-    private final String tagPath;
-
     public NbtSortRule(String key, String tagPath, Comparator<NBTBase> comparator) {
         super(key, createComparator(tagPath, comparator));
-        this.tagPath = tagPath;
     }
 
     public NbtSortRule(String key, String tagPath, int expectedType) {

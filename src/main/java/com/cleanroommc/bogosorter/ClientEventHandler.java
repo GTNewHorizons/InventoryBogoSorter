@@ -362,7 +362,12 @@ public class ClientEventHandler {
 
             if (!player && !isSortableContainer(guiScreen)) return null;
 
-            return new SortHandler(Minecraft.getMinecraft().thePlayer, container, Int2ObjectMaps.emptyMap());
+            return new SortHandler(
+                Minecraft.getMinecraft().thePlayer,
+                container,
+                SortRulesConfig.sortRules,
+                SortRulesConfig.nbtSortRules,
+                Int2ObjectMaps.emptyMap());
         }
         return null;
     }

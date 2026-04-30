@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,7 +19,6 @@ import net.minecraft.util.ResourceLocation;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
@@ -37,18 +35,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public class SortHandler {
 
-    public static final Map<EntityPlayer, List<SortRule<ItemStack>>> cacheItemSortRules = new Object2ObjectOpenHashMap<>();
-    public static final Map<EntityPlayer, List<NbtSortRule>> cacheNbtSortRules = new Object2ObjectOpenHashMap<>();
     public static final AtomicReference<List<NbtSortRule>> currentNbtSortRules = new AtomicReference<>(
         Collections.emptyList());
 
-    @Nullable
-    private static ResourceLocation sortSound = new ResourceLocation(BogoSorterConfig.sortSound);
-    private static ResourceLocation FallbacksortSound = new ResourceLocation("gui.button.press");
+    private static final ResourceLocation sortSound = new ResourceLocation(BogoSorterConfig.sortSound);
+    private static final ResourceLocation FallbacksortSound = new ResourceLocation("gui.button.press");
     private static List<ResourceLocation> foolsSounds = null;
     private static int foolsSortCounter = 0;
 
@@ -99,20 +93,18 @@ public class SortHandler {
     private final Comparator<ItemSortContainer> containerComparator;
     private final Int2ObjectMap<ClientSortData> clientSortData;
     private final List<SortRule<ItemStack>> itemSortRules;
+    private final List<NbtSortRule> nbtSortRules;
 
-    public SortHandler(EntityPlayer entityPlayer, Container container, Int2ObjectMap<ClientSortData> clientSortData) {
-        this(entityPlayer, container, GuiSortingContext.getOrCreate(container), clientSortData);
-    }
-
-    public SortHandler(EntityPlayer player, Container container, GuiSortingContext sortingContext,
-        Int2ObjectMap<ClientSortData> clientSortData) {
+    public SortHandler(EntityPlayer player, Container container, List<SortRule<ItemStack>> itemSortRules,
+        List<NbtSortRule> nbtSortRules, Int2ObjectMap<ClientSortData> clientSortData) {
         this.player = player;
         this.container = container;
-        this.context = sortingContext;
-        this.itemSortRules = cacheItemSortRules.getOrDefault(player, Collections.emptyList());
+        this.context = GuiSortingContext.getOrCreate(container);
+        this.itemSortRules = itemSortRules;
+        this.nbtSortRules = nbtSortRules;
         this.containerComparator = (container1, container2) -> {
             int result;
-            for (SortRule<ItemStack> sortRule : itemSortRules) {
+            for (SortRule<ItemStack> sortRule : this.itemSortRules) {
                 result = sortRule instanceof ClientItemSortRule
                     ? ((ClientItemSortRule) sortRule).compareServer(container1, container2)
                     : sortRule.compare(container1.getItemStack(), container2.getItemStack());
@@ -153,7 +145,7 @@ public class SortHandler {
         LinkedList<ItemSortContainer> itemList = gatherItems(slotGroup);
         if (itemList.isEmpty()) return;
 
-        currentNbtSortRules.set(cacheNbtSortRules.getOrDefault(player, Collections.emptyList()));
+        currentNbtSortRules.set(this.nbtSortRules);
         itemList.sort(containerComparator);
         currentNbtSortRules.set(Collections.emptyList());
 

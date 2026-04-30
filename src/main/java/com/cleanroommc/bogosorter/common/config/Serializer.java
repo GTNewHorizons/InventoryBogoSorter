@@ -10,13 +10,10 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import net.minecraft.client.Minecraft;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
-import com.cleanroommc.bogosorter.common.sort.SortHandler;
 import com.cleanroommc.bogosorter.core.BogoSorterCore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -65,8 +62,6 @@ public class Serializer {
             } else {
                 SortRulesConfig.load(jsonElement.getAsJsonObject());
                 UsageTicker.reloadElements();
-                SortHandler.cacheItemSortRules.put(Minecraft.getMinecraft().thePlayer, SortRulesConfig.sortRules);
-                SortHandler.cacheNbtSortRules.put(Minecraft.getMinecraft().thePlayer, SortRulesConfig.nbtSortRules);
             }
         }
 
