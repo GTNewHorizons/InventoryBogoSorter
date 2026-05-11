@@ -56,6 +56,10 @@ public class BSKeybinds {
         "key.dropoff",
         Keyboard.KEY_NONE,
         "key.categories.bogosorter");
+    public static final KeyBinding favouriteHoverKey = new KeyBinding(
+        "key.favourite_hover",
+        Keyboard.KEY_NONE,
+        "key.categories.bogosorter");
     /**
      * A "dummy" keybinding that will be found and replaced with a button.
      */
@@ -94,13 +98,18 @@ public class BSKeybinds {
         "key.bogosorter.throw_all",
         () -> isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop),
         Keyboard.KEY_SPACE);
+    public static final KeybindDefinition FAVOURITE_TOGGLE = new KeybindDefinition(
+        "favourite_toggle",
+        "key.bogosorter.favourite_toggle",
+        MOUSE_LEFT,
+        Keyboard.KEY_RMENU);
 
     // --- Internal Storage ---
     private static final Map<KeybindDefinition, List<Integer>> keyCombos = new HashMap<>();
     private static final Map<KeybindDefinition, KeyBind> activeKeyBinds = new HashMap<>();
 
     private static final KeybindDefinition[] ALL_KEYBINDS = new KeybindDefinition[] { MOVE_ALL_SAME, MOVE_ALL,
-        MOVE_SINGLE, MOVE_SINGLE_EMPTY, THROW_ALL_SAME, THROW_ALL };
+        MOVE_SINGLE, MOVE_SINGLE_EMPTY, THROW_ALL_SAME, THROW_ALL, FAVOURITE_TOGGLE };
     private static File configFile;
 
     /**

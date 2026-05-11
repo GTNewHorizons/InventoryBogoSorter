@@ -5,6 +5,7 @@ key.sort_gui=Sort Inventory In GUIs
 key.dropoff=Dropoff
 key.dropoff.tooltip1=Dropoff To Nearby Inventories
 key.dropoff.tooltip2=Control + Drag To Move
+key.favourite_hover=Favourite Hovered Stack
 key.tooltip.keybind=Keybind
 key.bogosorter.controls_button=A Shortcuts Settings
 key.bogosorter.move_all_same=Move All Same
@@ -13,6 +14,7 @@ key.bogosorter.move_single=Move Single
 key.bogosorter.move_single_empty=Move Single To Empty Slot
 key.bogosorter.throw_all_same=Throw All Same
 key.bogosorter.throw_all=Throw All
+key.bogosorter.favourite_toggle=Toggle Favourite
 
 bogosort.gui.title=Sort Config
 bogosort.gui.tab.general.name=General

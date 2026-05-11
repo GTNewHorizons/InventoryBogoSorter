@@ -31,6 +31,7 @@ public class NetworkHandler {
         registerS2C(SDropOffMessage.class);
         registerS2C(SDropOffThrottled.class);
         registerC2S(CRefill.class);
+        registerC2S(CFavouriteToggle.class);
     }
 
     private static void registerC2S(Class<? extends IPacket> clazz) {

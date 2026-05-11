@@ -27,6 +27,7 @@ import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.McUtils;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
+import com.cleanroommc.bogosorter.common.favourite.FavouriteHelper;
 import com.cleanroommc.bogosorter.common.network.CSlotSync;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
@@ -336,6 +337,10 @@ public class SortHandler {
              * empty.
              * The slot should only be marked as inaccessible if all three conditions return false.
              */
+            // Favourites are pinned in place: skipping them here removes them from both the
+            // gather pass and the placement pass, so the surrounding stacks sort around them.
+            if (slotGroup.isPlayerInventory() && FavouriteHelper.isFavourite(slot.callGetStack())) continue;
+
             boolean canTake = slot.callCanTakeStack(player);
             boolean canInsert = (slot.callGetStack() != null) && slot.callIsItemValid(
                 slot.callGetStack()

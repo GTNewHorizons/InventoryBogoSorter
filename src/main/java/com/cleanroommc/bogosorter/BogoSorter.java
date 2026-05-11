@@ -8,6 +8,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.cleanroommc.bogosorter.client.favourite.FavouriteRenderer;
 import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
@@ -71,6 +72,7 @@ public class BogoSorter {
             MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
             MinecraftForge.EVENT_BUS.register(new DropOffButtonHandler());
             MinecraftForge.EVENT_BUS.register(new ButtonHandler());
+            MinecraftForge.EVENT_BUS.register(new FavouriteRenderer());
             FMLCommonHandler.instance()
                 .bus()
                 .register(new HotbarSwap());
@@ -86,6 +88,7 @@ public class BogoSorter {
             ClientRegistry.registerKeyBinding(BSKeybinds.sortKeyOutsideGUI);
             ClientRegistry.registerKeyBinding(BSKeybinds.sortKeyInGUI);
             ClientRegistry.registerKeyBinding(BSKeybinds.dropoffKey);
+            ClientRegistry.registerKeyBinding(BSKeybinds.favouriteHoverKey);
             ClientRegistry.registerKeyBinding(BSKeybinds.BOGO_SORTER_CONTROLS_BUTTON);
         }
     }

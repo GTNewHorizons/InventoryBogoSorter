@@ -35,6 +35,7 @@ import com.cleanroommc.bogosorter.common.config.ConfigGui;
 import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
+import com.cleanroommc.bogosorter.common.network.CFavouriteToggle;
 import com.cleanroommc.bogosorter.common.network.CSort;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.sort.ClientSortData;
@@ -219,6 +220,12 @@ public class ClientEventHandler {
                 shortcutAction();
                 return true;
             }
+
+            key = BSKeybinds.getActiveKeyBind(BSKeybinds.FAVOURITE_TOGGLE);
+            if (key != null && key.isFirstPress() && handleFavouriteToggle(container)) {
+                shortcutAction();
+                return true;
+            }
             SetCanTakeStack = true;
         }
         if (Keypress(BSKeybinds.sortKeyOutsideGUI)) {
@@ -262,7 +269,30 @@ public class ClientEventHandler {
                 timeDropoff = t;
             }
         }
+        if (container != null && Keypress(BSKeybinds.favouriteHoverKey) && handleFavouriteToggle(container)) {
+            return true;
+        }
         return false;
+    }
+
+    /**
+     * Sends a favourite toggle for the slot the cursor is over, when it's a player-inventory slot.
+     * Returns true when the action was consumed so callers can cancel the source event.
+     */
+    private static boolean handleFavouriteToggle(GuiContainer container) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.thePlayer == null) return false;
+
+        net.minecraft.inventory.Slot slot = container.theSlot;
+        if (slot == null || slot.inventory != mc.thePlayer.inventory) return false;
+
+        int invIndex = slot.getSlotIndex();
+        if (invIndex < 0 || invIndex >= mc.thePlayer.inventory.mainInventory.length) return false;
+
+        if (slot.getStack() == null) return false;
+
+        NetworkHandler.sendToServer(new CFavouriteToggle(invIndex));
+        return true;
     }
 
     private static boolean canSort(@Nullable SlotAccessor slot) {
