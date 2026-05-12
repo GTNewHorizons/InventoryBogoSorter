@@ -23,9 +23,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  * (gold for the local player, red for other players' favourites) and appends
  * a "Favourited" line to the item's tooltip.
  *
- * The frame texture is a stacked 18x36 PNG with both colours baked in, picked
- * via subAreaXYWH instead of GL-tinting a white sprite, so no GL state has to
- * be touched at draw time.
+ * The frame texture is a stacked 18x36 PNG with both colours baked in, with
+ * each half exposed as its own UITexture sub-view via getSubArea so a single
+ * source sprite covers both states.
  *
  * The in-GUI overlay pass is invoked from {@code GuiContainerFavouriteMixin},
  * which injects right after {@code drawGuiContainerForegroundLayer} inside
@@ -35,17 +35,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FavouriteRenderer {
 
-    private static final UITexture OVERLAY_OWNED = UITexture.builder()
+    private static final UITexture OVERLAY_SHEET = UITexture.builder()
         .location(BogoSorter.ID, "gui/favourite_overlay")
         .imageSize(18, 36)
-        .subAreaXYWH(0, 0, 18, 18)
+        .fullImage()
         .build();
 
-    private static final UITexture OVERLAY_OTHER = UITexture.builder()
-        .location(BogoSorter.ID, "gui/favourite_overlay")
-        .imageSize(18, 36)
-        .subAreaXYWH(0, 18, 18, 18)
-        .build();
+    private static final UITexture OVERLAY_OWNED = OVERLAY_SHEET.getSubArea(0f, 0f, 1f, 0.5f);
+    private static final UITexture OVERLAY_OTHER = OVERLAY_SHEET.getSubArea(0f, 0.5f, 1f, 1f);
 
     @SubscribeEvent
     public void onHotbarRender(RenderGameOverlayEvent.Post event) {
@@ -57,12 +54,11 @@ public class FavouriteRenderer {
         ScaledResolution res = event.resolution;
         for (int slot = 0; slot < 9; slot++) {
             ItemStack stack = mc.thePlayer.inventory.mainInventory[slot];
-            UITexture overlay = overlayFor(stack);
-            if (overlay == null) continue;
+            if (!FavouriteHelper.isFavourite(stack)) continue;
 
             int x = res.getScaledWidth() / 2 - 90 + slot * 20 + 2;
             int y = res.getScaledHeight() - 20 + 1;
-            drawSlotOverlay(x, y, overlay);
+            drawSlotOverlay(x, y, FavouriteHelper.isOwnedByLocalPlayer(stack));
         }
     }
 
@@ -96,24 +92,19 @@ public class FavouriteRenderer {
         for (Object o : container.inventorySlots.inventorySlots) {
             if (!(o instanceof Slot)) continue;
             Slot s = (Slot) o;
-            UITexture overlay = overlayFor(s.getStack());
-            if (overlay == null) continue;
+            ItemStack stack = s.getStack();
+            if (!FavouriteHelper.isFavourite(stack)) continue;
 
-            drawSlotOverlay(s.xDisplayPosition, s.yDisplayPosition, overlay);
+            drawSlotOverlay(s.xDisplayPosition, s.yDisplayPosition, FavouriteHelper.isOwnedByLocalPlayer(stack));
         }
     }
 
     /**
-     * Draws an 18x18 frame just outside the slot. Texture is pre-coloured, so no
-     * Color.setGlColor / reset wrapper is needed.
+     * Draws an 18x18 frame just outside the slot, picking the gold or red sub-view
+     * of the stacked texture. Texture is pre-coloured, so no Color.setGlColor / reset
+     * wrapper is needed.
      */
-    private static void drawSlotOverlay(int x, int y, UITexture overlay) {
-        overlay.draw(x - 1, y - 1, 18, 18);
-    }
-
-    /** Returns null (no overlay), {@link #OVERLAY_OWNED}, or {@link #OVERLAY_OTHER}. */
-    private static UITexture overlayFor(ItemStack stack) {
-        if (!FavouriteHelper.isFavourite(stack)) return null;
-        return FavouriteHelper.isOwnedByLocalPlayer(stack) ? OVERLAY_OWNED : OVERLAY_OTHER;
+    private static void drawSlotOverlay(int x, int y, boolean owned) {
+        (owned ? OVERLAY_OWNED : OVERLAY_OTHER).draw(x - 1, y - 1, 18, 18);
     }
 }

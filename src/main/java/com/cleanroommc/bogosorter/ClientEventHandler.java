@@ -68,6 +68,7 @@ public class ClientEventHandler {
     private static long timeShortcut = 0;
     private static long timeDropoff = 0;
     private static long ticks = 0;
+    private static boolean favouriteHoverKeyWasDown = false;
 
     private static GuiScreen nextGui = null;
 
@@ -269,10 +270,26 @@ public class ClientEventHandler {
                 timeDropoff = t;
             }
         }
-        if (container != null && Keypress(BSKeybinds.favouriteHoverKey) && handleFavouriteToggle(container)) {
+        if (container != null && favouriteHoverKeyPressed() && handleFavouriteToggle(container)) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Edge-triggered read of the favourite hover keybind: returns true only on the
+     * frame the key transitions from up to down, so the toggle doesn't spam while held.
+     */
+    private static boolean favouriteHoverKeyPressed() {
+        int keyCode = BSKeybinds.favouriteHoverKey.getKeyCode();
+        if (keyCode == 0) {
+            favouriteHoverKeyWasDown = false;
+            return false;
+        }
+        boolean down = keyCode > 0 ? Keyboard.isKeyDown(keyCode) : Mouse.isButtonDown(100 + keyCode);
+        boolean edge = down && !favouriteHoverKeyWasDown;
+        favouriteHoverKeyWasDown = down;
+        return edge;
     }
 
     /**
