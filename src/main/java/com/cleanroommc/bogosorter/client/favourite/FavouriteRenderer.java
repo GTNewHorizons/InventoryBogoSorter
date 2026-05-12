@@ -54,7 +54,7 @@ public class FavouriteRenderer {
             if (tint == 0) continue;
 
             int x = res.getScaledWidth() / 2 - 90 + slot * 20 + 2;
-            int y = res.getScaledHeight() - 20 + 2;
+            int y = res.getScaledHeight() - 20 + 1;
             drawSlotOverlay(x, y, tint);
         }
     }
