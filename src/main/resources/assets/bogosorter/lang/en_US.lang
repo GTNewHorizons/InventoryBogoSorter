@@ -16,6 +16,10 @@ key.bogosorter.throw_all_same=Throw All Same
 key.bogosorter.throw_all=Throw All
 key.bogosorter.favourite_toggle=Toggle Favourite
 
+bogosort.tooltip.favourited=Favourited
+bogosort.tooltip.favourited_by=%s Favourited
+bogosort.tooltip.favourited_by_unknown=Someone
+
 bogosort.gui.title=Sort Config
 bogosort.gui.tab.general.name=General
 bogosort.gui.tab.profiles.name=Profiles
