@@ -13,7 +13,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.favourite.FavouriteHelper;
 import com.cleanroommc.modularui.drawable.UITexture;
-import com.cleanroommc.modularui.utils.Color;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -21,8 +20,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Highlights favourited stacks with a coloured frame drawn around the slot
- * (gold for the local player, coral for other players' favourites) and appends
+ * (gold for the local player, red for other players' favourites) and appends
  * a "Favourited" line to the item's tooltip.
+ *
+ * The frame texture is a stacked 18x36 PNG with both colours baked in, picked
+ * via subAreaXYWH instead of GL-tinting a white sprite, so no GL state has to
+ * be touched at draw time.
  *
  * The in-GUI overlay pass is invoked from {@code GuiContainerFavouriteMixin},
  * which injects right after {@code drawGuiContainerForegroundLayer} inside
@@ -32,12 +35,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FavouriteRenderer {
 
-    private static final int COL_OWNED = 0xFFFFCC33; // warm gold
-    private static final int COL_OTHER = 0xFFE03B3B; // coral red
-
-    private static final UITexture OVERLAY = UITexture.builder()
+    private static final UITexture OVERLAY_OWNED = UITexture.builder()
         .location(BogoSorter.ID, "gui/favourite_overlay")
-        .fullImage()
+        .imageSize(18, 36)
+        .subAreaXYWH(0, 0, 18, 18)
+        .build();
+
+    private static final UITexture OVERLAY_OTHER = UITexture.builder()
+        .location(BogoSorter.ID, "gui/favourite_overlay")
+        .imageSize(18, 36)
+        .subAreaXYWH(0, 18, 18, 18)
         .build();
 
     @SubscribeEvent
@@ -50,12 +57,12 @@ public class FavouriteRenderer {
         ScaledResolution res = event.resolution;
         for (int slot = 0; slot < 9; slot++) {
             ItemStack stack = mc.thePlayer.inventory.mainInventory[slot];
-            int tint = colourFor(stack);
-            if (tint == 0) continue;
+            UITexture overlay = overlayFor(stack);
+            if (overlay == null) continue;
 
             int x = res.getScaledWidth() / 2 - 90 + slot * 20 + 2;
             int y = res.getScaledHeight() - 20 + 1;
-            drawSlotOverlay(x, y, tint);
+            drawSlotOverlay(x, y, overlay);
         }
     }
 
@@ -89,27 +96,24 @@ public class FavouriteRenderer {
         for (Object o : container.inventorySlots.inventorySlots) {
             if (!(o instanceof Slot)) continue;
             Slot s = (Slot) o;
-            int tint = colourFor(s.getStack());
-            if (tint == 0) continue;
+            UITexture overlay = overlayFor(s.getStack());
+            if (overlay == null) continue;
 
-            drawSlotOverlay(s.xDisplayPosition, s.yDisplayPosition, tint);
+            drawSlotOverlay(s.xDisplayPosition, s.yDisplayPosition, overlay);
         }
     }
 
     /**
-     * Draws a 1px frame around the slot using the favourite_overlay texture, tinted
-     * via Color.setGlColor. Sized 18x18 and offset -1 so the frame sits just outside
-     * the 16x16 slot, clear of the item icon and stack-count numerals.
+     * Draws an 18x18 frame just outside the slot. Texture is pre-coloured, so no
+     * Color.setGlColor / reset wrapper is needed.
      */
-    private static void drawSlotOverlay(int x, int y, int colourARGB) {
-        Color.setGlColor(colourARGB);
-        OVERLAY.draw(x - 1, y - 1, 18, 18);
-        Color.resetGlColor();
+    private static void drawSlotOverlay(int x, int y, UITexture overlay) {
+        overlay.draw(x - 1, y - 1, 18, 18);
     }
 
-    /** Returns 0 (no overlay), {@link #COL_OWNED}, or {@link #COL_OTHER}. */
-    private static int colourFor(ItemStack stack) {
-        if (!FavouriteHelper.isFavourite(stack)) return 0;
-        return FavouriteHelper.isOwnedByLocalPlayer(stack) ? COL_OWNED : COL_OTHER;
+    /** Returns null (no overlay), {@link #OVERLAY_OWNED}, or {@link #OVERLAY_OTHER}. */
+    private static UITexture overlayFor(ItemStack stack) {
+        if (!FavouriteHelper.isFavourite(stack)) return null;
+        return FavouriteHelper.isOwnedByLocalPlayer(stack) ? OVERLAY_OWNED : OVERLAY_OTHER;
     }
 }
