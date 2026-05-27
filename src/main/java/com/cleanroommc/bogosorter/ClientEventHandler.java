@@ -13,11 +13,8 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -46,7 +43,6 @@ import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
 import com.cleanroommc.modularui.api.event.MouseInputEvent;
 import com.cleanroommc.modularui.factory.ClientGUI;
-import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -57,10 +53,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 
 public class ClientEventHandler {
-
-    public static final List<ItemStack> allItems = new ArrayList<>();
-    public static final boolean isDeobfuscatedEnvironment = (boolean) Launch.blackboard
-        .get("fml.deobfuscatedEnvironment");
 
     private static long timeConfigGui = 0;
     private static long timeSort = 0;
@@ -135,7 +127,9 @@ public class ClientEventHandler {
             return;
         }
 
-        if (isDeobfuscatedEnvironment) {
+        // Debug clear/randomize tools. The trigger follows the server-synced toggle; the server still
+        // re-checks the toggle and operator status authoritatively before acting.
+        if (BogoSorterConfig.enableDebugTools) {
             // clear
             if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1)) {
                 SlotAccessor slot = getSlot(event.gui);
@@ -146,15 +140,6 @@ public class ClientEventHandler {
             }
             // random
             if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2)) {
-                if (allItems.isEmpty()) {
-                    for (Object key : Item.itemRegistry.getKeys()) { // Iterate over the registry keys
-                        Item item = (Item) Item.itemRegistry.getObject(key); // Get the actual Item using the key
-                        List<ItemStack> subItems = Lists.newArrayList();
-                        item.getSubItems(item, CreativeTabs.tabAllSearch, subItems); // Get sub-items based on the
-                        // creative tab
-                        allItems.addAll(subItems);
-                    }
-                }
                 SlotAccessor slot = getSlot(event.gui);
                 SortHandler sortHandler = createSortHandler(event.gui, slot);
                 if (sortHandler == null) return;

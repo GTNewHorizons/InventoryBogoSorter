@@ -36,8 +36,10 @@ public class CShortcut implements IPacket {
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
+        if (type == null) return null;
         Container container = handler.playerEntity.openContainer;
         if (container == null) throw new IllegalStateException("Expected open container on server");
+        if (slotNumber < 0 || slotNumber >= container.inventorySlots.size()) return null;
         SlotAccessor slot = BogoSortAPI.getSlot(container, slotNumber);// container.getSlot(slotNumber);
 
         switch (type) {

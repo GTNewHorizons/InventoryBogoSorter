@@ -2,61 +2,80 @@ package com.cleanroommc.bogosorter.common.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.MinecraftServer;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.sort.ClientSortData;
+import com.cleanroommc.bogosorter.common.sort.SortHandler;
 
-import com.cleanroommc.bogosorter.BogoSortAPI;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+/**
+ * Debug packets; requires config + op permisison
+ */
 public class CSlotSync implements IPacket {
 
-    private final List<Pair<ItemStack, Integer>> content;
+    private Operation operation;
+    private int slotNumber;
 
-    public CSlotSync() {
-        content = new ArrayList<>();
-    }
+    public CSlotSync() {}
 
-    public CSlotSync(List<Pair<ItemStack, Integer>> content) {
-        this.content = content;
+    public CSlotSync(Operation operation, int slotNumber) {
+        this.operation = operation;
+        this.slotNumber = slotNumber;
     }
 
     @Override
     public void encode(PacketBuffer buf) throws IOException {
-        buf.writeVarIntToBuffer(content.size());
-        for (Pair<ItemStack, Integer> pair : content) {
-            buf.writeItemStackToBuffer(pair.getKey());
-            buf.writeNBTTagCompoundToBuffer(
-                pair.getKey() == null ? null
-                    : pair.getKey()
-                        .getTagCompound());
-            buf.writeVarIntToBuffer(pair.getValue());
-        }
+        NetworkUtils.writeEnumValue(buf, operation);
+        buf.writeVarIntToBuffer(slotNumber);
     }
 
     @Override
     public void decode(PacketBuffer buf) throws IOException {
-        for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
-            ItemStack stack = buf.readItemStackFromBuffer();
-            NBTTagCompound nbt = buf.readNBTTagCompoundFromBuffer();
-            if (stack != null && nbt != null) {
-                stack.setTagCompound(nbt);
-            }
-            content.add(Pair.of(stack, buf.readVarIntFromBuffer()));
-        }
+        operation = NetworkUtils.readEnumValue(buf, Operation.class);
+        slotNumber = buf.readVarIntFromBuffer();
     }
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        for (Pair<ItemStack, Integer> pair : content) {
-            BogoSortAPI.getSlot(handler.playerEntity.openContainer, pair.getValue())
-                .callPutStack(pair.getKey());
+        if (operation == null) return null;
+        if (!BogoSorterConfig.enableDebugTools) return null;
+        EntityPlayerMP player = handler.playerEntity;
+        if (!MinecraftServer.getServer()
+            .getConfigurationManager()
+            .func_152596_g(player.getGameProfile())) {
+            return null;
         }
-        handler.playerEntity.openContainer.detectAndSendChanges();
+        Container container = player.openContainer;
+        if (container == null) return null;
+        if (slotNumber < 0 || slotNumber >= container.inventorySlots.size()) return null;
+
+        SortHandler sortHandler = new SortHandler(
+            player,
+            container,
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new Int2ObjectOpenHashMap<ClientSortData>());
+
+        switch (operation) {
+            case CLEAR:
+                sortHandler.clearGroup(slotNumber);
+                break;
+            case RANDOMIZE:
+                sortHandler.randomizeGroup(slotNumber);
+                break;
+        }
         return null;
+    }
+
+    public enum Operation {
+        CLEAR,
+        RANDOMIZE
     }
 }

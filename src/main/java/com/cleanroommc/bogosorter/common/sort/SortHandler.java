@@ -13,16 +13,15 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
-import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.McUtils;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
@@ -286,37 +285,58 @@ public class SortHandler {
         };
     }
 
+    // Debug tools: the client only asks the server to act on the slot group containing slot1. The server
+    // performs the operation authoritatively in clearGroup/randomizeGroup and syncs the result back.
+    @SideOnly(Side.CLIENT)
     public void clearAllItems(SlotAccessor slot1) {
-        SlotGroup slotGroup = context.getSlotGroup(slot1.getSlotNumber());
-        if (slotGroup != null) {
-            List<Pair<ItemStack, Integer>> slots = new ArrayList<>();
-            for (SlotAccessor slot : getSortableSlots(slotGroup)) {
-                if (slot.callGetStack() != null) {
-                    slot.callPutStack(null);
-                    slots.add(Pair.of(null, slot.getSlotNumber()));
-                }
-            }
-            NetworkHandler.sendToServer(new CSlotSync(slots));
-        }
+        NetworkHandler.sendToServer(new CSlotSync(CSlotSync.Operation.CLEAR, slot1.getSlotNumber()));
     }
 
+    @SideOnly(Side.CLIENT)
     public void randomizeItems(SlotAccessor slot1) {
-        SlotGroup slotGroup = context.getSlotGroup(slot1.getSlotNumber());
-        if (slotGroup != null) {
-            List<Pair<ItemStack, Integer>> slots = new ArrayList<>();
-            Random random = new Random();
-            for (SlotAccessor slot : getSortableSlots(slotGroup)) {
-                if (random.nextFloat() < 0.3f) {
-                    ItemStack randomItem = ClientEventHandler.allItems
-                        .get(random.nextInt(ClientEventHandler.allItems.size()))
-                        .copy();
-                    slot.callPutStack(randomItem.copy());
-                    slots.add(Pair.of(randomItem, slot.getSlotNumber()));
-                }
+        NetworkHandler.sendToServer(new CSlotSync(CSlotSync.Operation.RANDOMIZE, slot1.getSlotNumber()));
+    }
 
+    public void clearGroup(int slotNumber) {
+        SlotGroup slotGroup = context.getSlotGroup(slotNumber);
+        if (slotGroup == null) return;
+        for (SlotAccessor slot : getSortableSlots(slotGroup)) {
+            if (slot.callGetStack() != null) {
+                slot.callPutStack(null);
             }
-            NetworkHandler.sendToServer(new CSlotSync(slots));
         }
+        container.detectAndSendChanges();
+    }
+
+    public void randomizeGroup(int slotNumber) {
+        SlotGroup slotGroup = context.getSlotGroup(slotNumber);
+        if (slotGroup == null) return;
+        List<Item> allItems = getServerItems();
+        if (allItems.isEmpty()) return;
+        Random random = new Random();
+        for (SlotAccessor slot : getSortableSlots(slotGroup)) {
+            if (random.nextFloat() < 0.3f) {
+                slot.callPutStack(new ItemStack(allItems.get(random.nextInt(allItems.size()))));
+            }
+        }
+        container.detectAndSendChanges();
+    }
+
+    // Server-side item pool for the randomize tool, built lazily from the item registry. We use the
+    // registry directly (not Item#getSubItems, which is client-only and stripped on a dedicated server)
+    // so this is safe on both sides.
+    private static List<Item> serverItems;
+
+    private static List<Item> getServerItems() {
+        if (serverItems == null) {
+            List<Item> items = new ArrayList<>();
+            for (Object key : Item.itemRegistry.getKeys()) {
+                Item item = (Item) Item.itemRegistry.getObject(key);
+                if (item != null) items.add(item);
+            }
+            serverItems = items;
+        }
+        return serverItems;
     }
 
     public List<SlotAccessor> getSortableSlots(SlotGroup slotGroup) {

@@ -1,5 +1,8 @@
 package com.cleanroommc.bogosorter.common.network;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -7,6 +10,8 @@ import net.minecraft.world.World;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -17,10 +22,19 @@ import cpw.mods.fml.relauncher.Side;
  */
 public class NetworkHandler {
 
+    public static final NetworkHandler INSTANCE = new NetworkHandler();
     public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(BogoSorter.ID);
     private static int packetId = 0;
 
+    // C2S packets are decoded and handled on the netty thread. 1.7.10 has no IThreadListener, so we
+    // queue the server-side work here and drain it on the main thread during the server tick to avoid
+    // racing with the tick loop over inventory/container state.
+    private static final Queue<Runnable> mainThreadTasks = new ConcurrentLinkedQueue<>();
+
     public static void init() {
+        // CSlotSync backs the debug clear/randomize tools. It is fully server-authoritative and gated in
+        // executeServer by the enableDebugTools config plus an operator check, so it is safe to register
+        // unconditionally.
         registerC2S(CSlotSync.class);
         registerC2S(CShortcut.class);
         registerC2S(CSort.class);
@@ -59,6 +73,21 @@ public class NetworkHandler {
     };
     final static IMessageHandler<IPacket, IPacket> C2SHandler = (message, ctx) -> {
         NetHandlerPlayServer handler = ctx.getServerHandler();
-        return message.executeServer(handler);
+        mainThreadTasks.add(() -> {
+            IPacket reply = message.executeServer(handler);
+            if (reply != null) {
+                sendToPlayer(reply, handler.playerEntity);
+            }
+        });
+        return null;
     };
+
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        Runnable task;
+        while ((task = mainThreadTasks.poll()) != null) {
+            task.run();
+        }
+    }
 }

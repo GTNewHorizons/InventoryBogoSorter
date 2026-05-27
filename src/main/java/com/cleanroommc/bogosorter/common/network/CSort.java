@@ -15,6 +15,8 @@ import com.cleanroommc.bogosorter.common.sort.ClientSortData;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
 
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
+import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class CSort implements IPacket {
@@ -22,6 +24,10 @@ public class CSort implements IPacket {
     private Collection<ClientSortData> clientSortDataList;
     private List<SortRule<ItemStack>> sortRules;
     private List<NbtSortRule> nbtSortRules;
+    // Inversion flags parallel to the rule lists. Applied in executeServer rather than decode so the
+    // shared SortRule singletons are only mutated on the main thread (see executeServer).
+    private BooleanList sortRuleInverted;
+    private BooleanList nbtRuleInverted;
     private int hover;
     private boolean player;
 
@@ -65,21 +71,40 @@ public class CSort implements IPacket {
             clientSortDataList.add(ClientSortData.readFromPacket(buf));
         }
         sortRules = new ArrayList<>();
+        sortRuleInverted = new BooleanArrayList();
         for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
-            SortRule<ItemStack> sortRule = BogoSortAPI.INSTANCE.getItemSortRule(buf.readVarIntFromBuffer());
-            sortRule.setInverted(buf.readBoolean());
+            int syncId = buf.readVarIntFromBuffer();
+            boolean inverted = buf.readBoolean();
+            SortRule<ItemStack> sortRule = BogoSortAPI.INSTANCE.getItemSortRule(syncId);
+            if (sortRule == null) continue;
             sortRules.add(sortRule);
+            sortRuleInverted.add(inverted);
         }
         nbtSortRules = new ArrayList<>();
+        nbtRuleInverted = new BooleanArrayList();
         for (int i = 0, n = buf.readVarIntFromBuffer(); i < n; i++) {
-            NbtSortRule sortRule = BogoSortAPI.INSTANCE.getNbtSortRule(buf.readVarIntFromBuffer());
-            sortRule.setInverted(buf.readBoolean());
+            int syncId = buf.readVarIntFromBuffer();
+            boolean inverted = buf.readBoolean();
+            NbtSortRule sortRule = BogoSortAPI.INSTANCE.getNbtSortRule(syncId);
+            if (sortRule == null) continue;
             nbtSortRules.add(sortRule);
+            nbtRuleInverted.add(inverted);
         }
     }
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
+        // Apply inversion on the main thread (executeServer is scheduled there) right before sorting.
+        // The SortRule objects are server-wide singletons, so setting this in decode on the netty thread
+        // could be overwritten by another player's concurrent sort before this one runs.
+        for (int i = 0; i < sortRules.size(); i++) {
+            sortRules.get(i)
+                .setInverted(sortRuleInverted.getBoolean(i));
+        }
+        for (int i = 0; i < nbtSortRules.size(); i++) {
+            nbtSortRules.get(i)
+                .setInverted(nbtRuleInverted.getBoolean(i));
+        }
         Int2ObjectOpenHashMap<ClientSortData> map = new Int2ObjectOpenHashMap<>();
         for (ClientSortData sortData : clientSortDataList) {
             for (int i : sortData.getSlotNumbers()) {

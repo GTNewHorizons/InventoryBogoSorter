@@ -54,6 +54,9 @@ public class BogoSorter {
             .bus()
             .register(this);
         NetworkHandler.init();
+        FMLCommonHandler.instance()
+            .bus()
+            .register(NetworkHandler.INSTANCE);
         OreDictHelper.init();
         BogoSortAPI.INSTANCE.remapSortRule("is_block", "block_type");
         DefaultRules.init(BogoSortAPI.INSTANCE);

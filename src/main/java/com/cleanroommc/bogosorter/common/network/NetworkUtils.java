@@ -84,6 +84,9 @@ public class NetworkUtils {
 
     @SuppressWarnings("unchecked")
     public static <T extends Enum<T>> T readEnumValue(PacketBuffer buffer, Class<T> enumClass) {
-        return (T) ((Enum<T>[]) enumClass.getEnumConstants())[buffer.readVarIntFromBuffer()];
+        Enum<T>[] constants = (Enum<T>[]) enumClass.getEnumConstants();
+        int ordinal = buffer.readVarIntFromBuffer();
+        if (ordinal < 0 || ordinal >= constants.length) return null;
+        return (T) constants[ordinal];
     }
 }
