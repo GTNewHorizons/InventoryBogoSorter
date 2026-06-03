@@ -75,6 +75,8 @@ dependencies {
 
     compileOnly("com.gregoriust.gregtech:gregtech_1.7.10:6.17.05:dev") { transitive = false }
 
+    compileOnly("com.hbm:HBM-NTM:1.0.27_X5714:dev")
+
     compileOnly rfg.deobf('curse.maven:projecte-226410:2340786')
     compileOnly rfg.deobf('curse.maven:rftools-224641:2287287')
     compileOnly rfg.deobf("curse.maven:mcjtylib-233105:2272449")
@@ -91,7 +93,6 @@ dependencies {
     compileOnly rfg.deobf('curse.maven:industrial-craft-242638:2353971')
     compileOnly rfg.deobf('curse.maven:ic2-classic-242942:5230413')
     compileOnly rfg.deobf('curse.maven:extra-utilities-225561:2264383')
-    compileOnly rfg.deobf('curse.maven:hbms-nuclear-tech-mod-235439:6028711')
     compileOnly rfg.deobf('curse.maven:better-storage-232919:2248061')
     compileOnly rfg.deobf('curse.maven:compact-storage-223703:2276736')
     compileOnly rfg.deobf('curse.maven:actually-additions-228404:2274681')

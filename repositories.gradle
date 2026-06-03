@@ -1,4 +1,12 @@
 // Add any additional repositories for your dependencies here.
 
 repositories {
+    maven {
+        name "NTM Maven"
+        url "https://maven.ntmr.dev/releases"
+        mavenContent {
+            includeGroup("com.hbm")
+            includeGroupByRegex("com\\.hbm\\..+")
+        }
+    }
 }
