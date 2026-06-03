@@ -22,7 +22,6 @@ import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.hbm.inventory.container.ContainerCrateDesh;
 import com.hbm.inventory.container.ContainerCrateIron;
 import com.hbm.inventory.container.ContainerCrateSteel;
-import com.hbm.inventory.container.ContainerCrateTemplate;
 import com.hbm.inventory.container.ContainerCrateTungsten;
 import com.hbm.inventory.container.ContainerSafe;
 import com.rwtema.extrautils.gui.ContainerHoldingBag;
@@ -307,7 +306,6 @@ public class DefaultCompat {
             api.addCompat(ContainerCrateSteel.class, (container, builder) -> { builder.addSlotGroup(0, 54, 9); });
             api.addCompat(ContainerCrateIron.class, (container, builder) -> { builder.addSlotGroup(0, 36, 9); });
             api.addCompat(ContainerCrateTungsten.class, (container, builder) -> { builder.addSlotGroup(0, 27, 9); });
-            api.addCompat(ContainerCrateTemplate.class, (container, builder) -> { builder.addSlotGroup(0, 27, 9); });
             api.addCompat(ContainerSafe.class, (container, builder) -> { builder.addSlotGroup(0, 15, 5); });
 
         }
