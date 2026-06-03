@@ -19,6 +19,7 @@ import com.brandon3055.draconicevolution.common.container.ContainerDraconiumChes
 import com.cleanroommc.bogosorter.api.IBogoSortAPI;
 import com.cleanroommc.bogosorter.api.IPosSetter;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
+import com.hbm.inventory.container.ContainerCrateBase;
 import com.hbm.inventory.container.ContainerCrateDesh;
 import com.hbm.inventory.container.ContainerCrateIron;
 import com.hbm.inventory.container.ContainerCrateSteel;
@@ -307,7 +308,13 @@ public class DefaultCompat {
             api.addCompat(ContainerCrateIron.class, (container, builder) -> { builder.addSlotGroup(0, 36, 9); });
             api.addCompat(ContainerCrateTungsten.class, (container, builder) -> { builder.addSlotGroup(0, 27, 9); });
             api.addCompat(ContainerSafe.class, (container, builder) -> { builder.addSlotGroup(0, 15, 5); });
-
+            try {  // X5687 version or older
+                Class<ContainerCrateBase> crateTemplateClass = (Class<ContainerCrateBase>) Class
+                    .forName("com.hbm.inventory.container.ContainerCrateTemplate");
+                api.addCompat(crateTemplateClass, (container, builder) -> { builder.addSlotGroup(0, 27, 9); });
+            } catch (ClassNotFoundException e) {
+                // Version is X5714 or newer, ignore
+            }
         }
         if (BetterStorage.isLoaded()) {
             api.addCompat(
