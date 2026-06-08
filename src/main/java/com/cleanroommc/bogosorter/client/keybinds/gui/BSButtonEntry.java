@@ -36,7 +36,6 @@ public class BSButtonEntry implements GuiListExtended.IGuiListEntry {
         }
 
         if (keybinding == null) {
-            System.err.println("Failed to get keybinding from list entry!");
             this.keyDesc = "ERROR";
         } else {
             this.keyDesc = I18n.format(keybinding.getKeyDescription());

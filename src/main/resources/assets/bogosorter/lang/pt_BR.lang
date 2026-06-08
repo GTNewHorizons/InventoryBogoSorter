@@ -1,6 +1,7 @@
 key.categories.bogosorter=Classificador Bogo de Inventário
 key.sort_config=Abrir configuração de classificação
 key.sort=Classificação do Inventário
+key.ae2_terminal_search=Pesquisar no Terminal AE2 a partir do item sob o cursor
 
 bogosort.gui.title=Configuração da Classificação
 bogosort.gui.tab.general.name=Geral
@@ -17,6 +18,10 @@ bogosort.gui.hotbar_scrolling.tooltip=Percorra a coluna de inventário segurando
 bogosort.gui.enabled=Habilitado
 
 bogosort.command.config_relaod.success=Configuração de classificação recarregada
+
+bogosorter.command.tooltip.usage=/bogosorter tooltip <on|off>
+bogosorter.command.tooltip.enabled=A consulta de dicas do Bogo agora está ativada.
+bogosorter.command.tooltip.disabled=A consulta de dicas do Bogo agora está desativada.
 
 bogosort.sortrules.item.mod.name=Nome do Mod
 bogosort.sortrules.item.id.name=Nome do registro
@@ -69,3 +74,13 @@ bogosort.sortrules.nbt.enchantment.description=Classifica itens encantados por e
 bogosort.sortrules.nbt.enchantment_book.description=Classifica livros encantados por efeito e nível
 bogosort.sortrules.nbt.gt_circ_config.description=Classifica os circuitos programáveis GregTech por sua configuração
 bogosort.sortrules.nbt.gt_item_damage.description=Classifica as ferramentas GregTech por seu dano
+
+bogosorter.tooltip.amount_in_system=Valor no sistema: %s
+bogosorter.tooltip.amount_out_of_range=Valor no sistema: Fora de alcance!
+bogosorter.tooltip.amount_checking=Valor no sistema: Verificando...
+
+bogosorter.config.ae2=Integração com o AE2
+bogosorter.config.ae2.amount_tooltips=Dicas de ferramenta de quantidade do AE2
+bogosorter.config.ae2.thaumic_essentia=Dicas de ferramentas para a quantidade de essência Thaumic
+bogosorter.config.ae2.terminal_search=Pesquisa ao passar o rato no terminal do AE2
+bogosorter.config.ae2.debug_logging=Registo de depuração da integração com o AE2

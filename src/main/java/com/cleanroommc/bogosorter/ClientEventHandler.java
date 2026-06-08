@@ -23,10 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
 import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
+import com.cleanroommc.bogosorter.client.network.ClientNetworkHandler;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
 import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
@@ -38,6 +38,7 @@ import com.cleanroommc.bogosorter.common.sort.ClientSortData;
 import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
 import com.cleanroommc.bogosorter.common.sort.SlotGroup;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
+import com.cleanroommc.bogosorter.compat.ae2.Ae2TerminalSearchAdapter;
 import com.cleanroommc.bogosorter.compat.screen.WarningScreen;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
@@ -49,6 +50,7 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 
@@ -59,7 +61,6 @@ public class ClientEventHandler {
     private static long timeShortcut = 0;
     private static long timeDropoff = 0;
     private static long ticks = 0;
-
     private static GuiScreen nextGui = null;
 
     public static void openNextTick(GuiScreen screen) {
@@ -72,6 +73,10 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            ClientNetworkHandler.drainClientTasks();
+            Ae2TerminalSearchAdapter.applyPendingSearch();
+        }
         if (event.phase == TickEvent.Phase.START) {
             ticks++;
         }
@@ -79,6 +84,12 @@ public class ClientEventHandler {
             ClientGUI.open(ClientEventHandler.nextGui);
             ClientEventHandler.nextGui = null;
         }
+    }
+
+    @SubscribeEvent
+    public void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent ignored) {
+        Ae2TerminalSearchAdapter.clearPendingSearch();
+        com.cleanroommc.bogosorter.client.ae2.Ae2ClientBridge.resetConnectionState();
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -122,6 +133,10 @@ public class ClientEventHandler {
     public void onGuiKeyInput(KeyboardInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
         if (!(event.gui instanceof GuiContainer)) return;
+        if (Ae2TerminalSearchAdapter.handleSearchKey((GuiContainer) event.gui)) {
+            event.setCanceled(true);
+            return;
+        }
         if (handleInput((GuiContainer) event.gui)) {
             event.setCanceled(true);
             return;
@@ -271,10 +286,6 @@ public class ClientEventHandler {
 
     public static boolean isSortableContainer(GuiScreen screen) {
         return screen instanceof GuiContainer && BogoSortAPI.isValidSortable(((GuiContainer) screen).inventorySlots);
-    }
-
-    public static <T extends Container & ISortableContainer> T getSortableContainer(GuiScreen screen) {
-        return (T) ((GuiContainer) screen).inventorySlots;
     }
 
     @Nullable

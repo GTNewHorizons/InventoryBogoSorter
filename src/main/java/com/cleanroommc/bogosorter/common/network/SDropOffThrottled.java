@@ -28,7 +28,7 @@ public class SDropOffThrottled implements IPacket {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public IPacket executeClient(NetHandlerPlayClient handler) {
+    public void executeClient(NetHandlerPlayClient handler) {
         String message = "[" + EnumChatFormatting.BLUE
             + BogoSorter.NAME
             + EnumChatFormatting.RESET
@@ -37,6 +37,5 @@ public class SDropOffThrottled implements IPacket {
             + StatCollector.translateToLocal("bogosort.message.dropoff.throttled");
 
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
-        return null;
     }
 }

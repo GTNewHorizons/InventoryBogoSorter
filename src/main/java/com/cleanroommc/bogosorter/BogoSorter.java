@@ -3,11 +3,13 @@ package com.cleanroommc.bogosorter;
 import java.time.LocalDate;
 import java.time.Month;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.cleanroommc.bogosorter.client.ae2.Ae2ClientBridge;
 import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.common.HotbarSwap;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
@@ -15,14 +17,18 @@ import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
 import com.cleanroommc.bogosorter.common.XSTR;
 import com.cleanroommc.bogosorter.common.config.BogoSortCommandTree;
 import com.cleanroommc.bogosorter.common.config.Serializer;
+import com.cleanroommc.bogosorter.common.config.ae2.TooltipFeatureConfig;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffButtonHandler;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffScheduler;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.NetworkUtils;
+import com.cleanroommc.bogosorter.common.network.ae2.Ae2AmountService;
+import com.cleanroommc.bogosorter.common.network.ae2.STooltipFeatureState;
 import com.cleanroommc.bogosorter.common.refill.RefillHandler;
 import com.cleanroommc.bogosorter.common.sort.ButtonHandler;
 import com.cleanroommc.bogosorter.common.sort.DefaultRules;
 import com.cleanroommc.bogosorter.compat.DefaultCompat;
+import com.cleanroommc.bogosorter.compat.Mods;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -31,6 +37,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 @Mod(
@@ -54,6 +61,7 @@ public class BogoSorter {
             .bus()
             .register(this);
         NetworkHandler.init();
+
         FMLCommonHandler.instance()
             .bus()
             .register(NetworkHandler.INSTANCE);
@@ -63,22 +71,33 @@ public class BogoSorter {
         DefaultCompat.init(BogoSortAPI.INSTANCE);
         Serializer.loadConfig();
         MinecraftForge.EVENT_BUS.register(new RefillHandler());
+
         FMLCommonHandler.instance()
             .bus()
             .register(DropOffScheduler.INSTANCE);
+
         if (NetworkUtils.isDedicatedClient()) {
             MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
+
             FMLCommonHandler.instance()
                 .bus()
                 .register(new ClientEventHandler());
+
             MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
             MinecraftForge.EVENT_BUS.register(new DropOffButtonHandler());
             MinecraftForge.EVENT_BUS.register(new ButtonHandler());
+
             FMLCommonHandler.instance()
                 .bus()
                 .register(new HotbarSwap());
+
             MinecraftForge.EVENT_BUS.register(new HotbarSwap());
+
             BSKeybinds.init(event.getSuggestedConfigurationFile());
+
+            if (Mods.Nei.isLoaded() && Mods.CodeChickenCore.isLoaded()) {
+                Ae2ClientBridge.initializeOptionalNeiIntegration();
+            }
         }
     }
 
@@ -89,6 +108,7 @@ public class BogoSorter {
             ClientRegistry.registerKeyBinding(BSKeybinds.sortKeyOutsideGUI);
             ClientRegistry.registerKeyBinding(BSKeybinds.sortKeyInGUI);
             ClientRegistry.registerKeyBinding(BSKeybinds.dropoffKey);
+            ClientRegistry.registerKeyBinding(BSKeybinds.ae2TerminalSearchKey);
             ClientRegistry.registerKeyBinding(BSKeybinds.BOGO_SORTER_CONTROLS_BUTTON);
         }
     }
@@ -96,6 +116,25 @@ public class BogoSorter {
     @Mod.EventHandler
     public void onServerLoad(FMLServerStartingEvent event) {
         event.registerServerCommand(new BogoSortCommandTree());
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        // only send tooltip state on login when ae2 is loaded
+        if (Mods.Ae2.isLoaded() && event.player instanceof EntityPlayerMP) {
+            NetworkHandler.sendToPlayer(
+                new STooltipFeatureState(
+                    TooltipFeatureConfig.isAmountTooltipEnabled(),
+                    TooltipFeatureConfig.isThaumicEnabled()),
+                (EntityPlayerMP) event.player);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.player instanceof EntityPlayerMP) {
+            Ae2AmountService.clearPlayer((EntityPlayerMP) event.player);
+        }
     }
 
     @SubscribeEvent

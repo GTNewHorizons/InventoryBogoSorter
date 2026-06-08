@@ -56,6 +56,10 @@ public class BSKeybinds {
         "key.dropoff",
         Keyboard.KEY_NONE,
         "key.categories.bogosorter");
+    public static final KeyBinding ae2TerminalSearchKey = new KeyBinding(
+        "key.ae2_terminal_search",
+        Keyboard.KEY_T,
+        "key.categories.bogosorter");
     /**
      * A "dummy" keybinding that will be found and replaced with a button.
      */
@@ -156,16 +160,12 @@ public class BSKeybinds {
         return combo.stream()
             .map(keyCode -> {
                 if (keyCode < 0) { // Mouse buttons
-                    switch (keyCode) {
-                        case MOUSE_LEFT:
-                            return "LMB";
-                        case MOUSE_RIGHT:
-                            return "RMB";
-                        case MOUSE_MIDDLE:
-                            return "MMB";
-                        default:
-                            return "Mouse " + (keyCode + 100);
-                    }
+                    return switch (keyCode) {
+                        case MOUSE_LEFT -> "LMB";
+                        case MOUSE_RIGHT -> "RMB";
+                        case MOUSE_MIDDLE -> "MMB";
+                        default -> "Mouse " + (keyCode + 100);
+                    };
                 }
                 return Keyboard.getKeyName(keyCode); // Keyboard keys
             })

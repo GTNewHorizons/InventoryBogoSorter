@@ -19,7 +19,7 @@ public class ConfigReloadCommand extends CommandBase {
 
     @Override
     public @NotNull String getCommandUsage(@NotNull ICommandSender sender) {
-        return "/bogosort reload";
+        return "/bogosorter reload";
     }
 
     @Override

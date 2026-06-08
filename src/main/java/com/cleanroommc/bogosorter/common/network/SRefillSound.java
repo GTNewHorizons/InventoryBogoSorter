@@ -21,10 +21,9 @@ public class SRefillSound implements IPacket {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public IPacket executeClient(NetHandlerPlayClient handler) {
+    public void executeClient(NetHandlerPlayClient handler) {
         Minecraft.getMinecraft()
             .getSoundHandler()
             .playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("mob.chicken.plop")));
-        return null;
     }
 }

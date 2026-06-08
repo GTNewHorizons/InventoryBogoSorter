@@ -22,9 +22,8 @@ public class SReloadConfig implements IPacket {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public IPacket executeClient(NetHandlerPlayClient handler) {
+    public void executeClient(NetHandlerPlayClient handler) {
         Serializer.loadConfig();
         MinecraftForge.EVENT_BUS.post(new SortConfigChangeEvent());
-        return null;
     }
 }

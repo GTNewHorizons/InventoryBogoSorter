@@ -90,7 +90,6 @@ public class LocalizationHelper {
                 }
             } catch (IOException | NullPointerException e) {
                 BogoSorter.LOGGER.error("Failed to load en_US.lang for mod: {}", modId);
-                e.printStackTrace();
             }
         }
         return translations;

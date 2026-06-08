@@ -398,4 +398,5 @@ public class RendererCube {
         GL11.glVertex3f(minX, minY, maxZ);
         GL11.glVertex3f(minX, maxY, maxZ);
     }
+
 }

@@ -91,7 +91,7 @@ public class SDropOffMessage implements IPacket {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public IPacket executeClient(NetHandlerPlayClient handler) {
+    public void executeClient(NetHandlerPlayClient handler) {
         if (BogoSorterConfig.dropOff.dropoffRender) {
             RendererCube.INSTANCE.draw(rendererCubeTargets);
         }
@@ -126,6 +126,5 @@ public class SDropOffMessage implements IPacket {
             .getSoundHandler()
             .playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("gui.button.press")));
 
-        return null;
     }
 }

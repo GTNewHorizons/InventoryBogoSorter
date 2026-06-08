@@ -39,6 +39,7 @@ public enum Mods {
     ImmersiveEngineering("ImmersiveEngineering"),
     IronChest("IronChest"),
     Mekanism("Mekanism"),
+    Nei("NotEnoughItems"),
     Nutrition("nutrition"),
     ProjectE("ProjectE"),
     ProjectRed("ProjRed|Expansion"),
