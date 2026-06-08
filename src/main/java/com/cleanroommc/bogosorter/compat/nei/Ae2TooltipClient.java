@@ -226,14 +226,15 @@ public final class Ae2TooltipClient {
             nextRequestId = 1;
         }
 
+        // fixes essentia aspect tag
         ItemStack requestStack = null;
         FluidStack requestFluidStack = null;
-        if (fluidStack == null) {
-            requestStack = stack.copy();
-            requestStack.stackSize = SINGLE_STACK_SIZE;
-        } else {
+        if (fluidStack != null) {
             requestFluidStack = fluidStack.copy();
             requestFluidStack.amount = SINGLE_FLUID_AMOUNT;
+        } else if (essentiaAspectTag == null) {
+            requestStack = stack.copy();
+            requestStack.stackSize = SINGLE_STACK_SIZE;
         }
 
         REQUEST_KEYS.put(requestId, key);
