@@ -799,26 +799,27 @@ public final class Ae2AmountService {
 
     }
 
+    @Desugar
     private record BaublesAccessor(Method method) {
 
-            private static final BaublesAccessor UNAVAILABLE = new BaublesAccessor(null);
+        private static final BaublesAccessor UNAVAILABLE = new BaublesAccessor(null);
 
         private boolean available() {
-                return this.method != null;
-            }
+            return this.method != null;
+        }
 
-            private static BaublesAccessor resolve(String className, String methodName) {
-                try {
-                    Class<?> provider = Class.forName(className);
-                    return new BaublesAccessor(provider.getMethod(methodName, EntityPlayer.class));
-                } catch (ClassNotFoundException ignored) {
-                    return UNAVAILABLE;
-                } catch (ReflectiveOperationException | LinkageError e) {
-                    IntegrationDiagnostics.logCapabilityFailureOnce(className + '#' + methodName, e);
-                    return UNAVAILABLE;
-                }
+        private static BaublesAccessor resolve(String className, String methodName) {
+            try {
+                Class<?> provider = Class.forName(className);
+                return new BaublesAccessor(provider.getMethod(methodName, EntityPlayer.class));
+            } catch (ClassNotFoundException ignored) {
+                return UNAVAILABLE;
+            } catch (ReflectiveOperationException | LinkageError e) {
+                IntegrationDiagnostics.logCapabilityFailureOnce(className + '#' + methodName, e);
+                return UNAVAILABLE;
             }
         }
+    }
 
     private static final class RateLimit {
 
