@@ -28,7 +28,6 @@ The Inventory Tweaks code is very unpleasant to work with. I rather write my own
   - ALT + LMB: transfers all items of the same type
   - SPACE + Q: throws the whole inventory into the world
   - ALT + Q: throws all the items of the same type into the world
-  - SHIFT + LMB (Held-Down): Any slot hovered over will be shift clicked
 
 ## TODO's
 
