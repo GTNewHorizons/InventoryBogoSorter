@@ -27,18 +27,18 @@ public final class IntegrationDiagnostics {
         }
     }
 
-    static void recordContextResolution(boolean cacheHit) {
+    public static void recordContextResolution(boolean cacheHit) {
         CONTEXT_RESOLUTIONS.incrementAndGet();
         if (cacheHit) CONTEXT_CACHE_HITS.incrementAndGet();
         reportIfNeeded();
     }
 
-    static void recordLookupCacheHit() {
+    public static void recordLookupCacheHit() {
         LOOKUP_CACHE_HITS.incrementAndGet();
         reportIfNeeded();
     }
 
-    static void recordThrottle() {
+    public static void recordThrottle() {
         THROTTLES.incrementAndGet();
         reportIfNeeded();
     }
