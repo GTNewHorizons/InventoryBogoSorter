@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -63,6 +64,8 @@ public class ClientEventHandler {
     private static long ticks = 0;
     private static GuiScreen nextGui = null;
 
+    private static int lastDraggedSlot = -1;
+
     public static void openNextTick(GuiScreen screen) {
         ClientEventHandler.nextGui = screen;
     }
@@ -76,6 +79,7 @@ public class ClientEventHandler {
         if (event.phase == TickEvent.Phase.END) {
             ClientNetworkHandler.drainClientTasks();
             Ae2TerminalSearchAdapter.applyPendingSearch();
+            processShiftDrag();
         }
         if (event.phase == TickEvent.Phase.START) {
             ticks++;
@@ -263,6 +267,24 @@ public class ClientEventHandler {
             }
         }
         return false;
+    }
+
+    // Shift + Right-Click drag
+    private static void processShiftDrag() {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (!(mc.currentScreen instanceof GuiContainer gui) || !GuiScreen.isShiftKeyDown() || !Mouse.isButtonDown(0)) {
+            resetShiftDrag();
+            return;
+        }
+
+        Slot slot = gui.theSlot;
+        if (slot == null || slot.slotNumber == lastDraggedSlot || !slot.getHasStack()) return;
+        lastDraggedSlot = slot.slotNumber;
+        mc.playerController.windowClick(gui.inventorySlots.windowId, slot.slotNumber, 0, 1, mc.thePlayer);
+    }
+
+    private static void resetShiftDrag() {
+        lastDraggedSlot = -1;
     }
 
     private static boolean canSort(@Nullable SlotAccessor slot) {
