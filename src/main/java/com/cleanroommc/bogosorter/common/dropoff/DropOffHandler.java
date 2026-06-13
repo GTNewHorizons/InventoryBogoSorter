@@ -13,14 +13,16 @@ import xonin.backhand.api.core.BackhandUtils;
 public class DropOffHandler {
 
     private final InventoryManager inventoryManager;
+    private final boolean preferTeamWallet;
     private final InventoryPlayer playerInventory;
     private final ItemStack[] playerStacks;
     private int itemsCounter;
     private int startSlot;
     private int endSlot;
 
-    public DropOffHandler(InventoryManager inventoryManager) {
+    public DropOffHandler(InventoryManager inventoryManager, boolean preferTeamWallet) {
         this.inventoryManager = inventoryManager;
+        this.preferTeamWallet = preferTeamWallet;
         this.playerInventory = inventoryManager.getPlayer().inventory;
         this.playerStacks = playerInventory.mainInventory;
     }
@@ -51,7 +53,7 @@ public class DropOffHandler {
 
         if (Mods.VendingMachine.isLoaded() && VendingMachineCompat.isVendingMachine(toInventory)) {
             int itemsMoved = VendingMachineCompat
-                .depositCurrency(inventoryManager.getPlayer(), toInventory, offhandSlot);
+                .depositCurrency(inventoryManager.getPlayer(), toInventory, offhandSlot, preferTeamWallet);
             itemsCounter += itemsMoved;
             if (itemsMoved > 0) {
                 toInventoryData.setInteractionResult(InteractionResult.DROPOFF_SUCCESS);

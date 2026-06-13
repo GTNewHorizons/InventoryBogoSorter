@@ -21,6 +21,7 @@ import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Color;
+import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
 public class DropOffInvButton extends GuiButton {
 
@@ -85,7 +86,7 @@ public class DropOffInvButton extends GuiButton {
             } else {
                 long t = Minecraft.getSystemTime();
                 if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
-                    NetworkHandler.sendToServer(new CDropOff());
+                    NetworkHandler.sendToServer(CDropOff.fromClientPreference());
                     timeDropoff = t;
                 }
             }
@@ -116,6 +117,11 @@ public class DropOffInvButton extends GuiButton {
             && mouseY < this.yPosition + this.height;
     }
 
+    public void toggleCoinDepositDestination() {
+        BogoSorterConfig.dropOff.coinDepositDestination = BogoSorterConfig.dropOff.coinDepositDestination.toggle();
+        ConfigurationManager.save(BogoSorterConfig.class);
+    }
+
     @Override
     public void func_146113_a(SoundHandler soundHandlerIn) {
         // dont play click sound
@@ -123,9 +129,20 @@ public class DropOffInvButton extends GuiButton {
 
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.enabled && this.field_146123_n) {
-            final List<String> tooltipLines = new ArrayList<>(3);
+            final List<String> tooltipLines = new ArrayList<>(5);
             tooltipLines.add(I18n.format("key.dropoff.tooltip1"));
             tooltipLines.add(I18n.format("key.dropoff.tooltip2"));
+            tooltipLines.add(I18n.format("key.dropoff.tooltip.coin_destination_toggle"));
+            CoinDepositDestination destination = BogoSorterConfig.dropOff.coinDepositDestination;
+            tooltipLines.add(
+                I18n.format(
+                    "key.dropoff.tooltip.coin_destination",
+                    formatDestination(
+                        "key.dropoff.tooltip.coin_destination.user",
+                        destination == CoinDepositDestination.USER),
+                    formatDestination(
+                        "key.dropoff.tooltip.coin_destination.team",
+                        destination == CoinDepositDestination.TEAM)));
             tooltipLines.add(
                 EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
                     + " : "
@@ -134,5 +151,10 @@ public class DropOffInvButton extends GuiButton {
                 accessor.drawHoveringText(tooltipLines, mouseX, mouseY);
             }
         }
+    }
+
+    private static String formatDestination(String translationKey, boolean active) {
+        return (active ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + I18n.format(translationKey)
+            + EnumChatFormatting.RESET;
     }
 }
