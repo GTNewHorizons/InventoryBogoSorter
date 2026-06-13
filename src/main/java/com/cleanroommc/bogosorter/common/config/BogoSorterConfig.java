@@ -207,6 +207,7 @@ public class BogoSorterConfig {
         @Config.DefaultEnum("PERSONAL")
         @Config.Comment("Wallet used when dropping coins into a nearby Vending Machine.")
         @Config.LangKey("bogosorter.config.dropoff.coin_destination")
+        @Config.RequiresMod("vendingmachine")
         public CoinDepositDestination coinDepositDestination = CoinDepositDestination.PERSONAL;
 
         public static class DropOffButton {
