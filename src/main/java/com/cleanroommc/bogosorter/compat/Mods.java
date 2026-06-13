@@ -48,7 +48,7 @@ public enum Mods {
     Tconstruct("TConstruct"),
     Terrafirmacraft("terrafirmacraft"),
     Thebetweenlands("thebetweenlands"),
-    VendingMachine("vendingmachine"),
+    VendingMachine("vendingmachine", versionMatches("[0.4.89,0.5)")),
     ActuallyAdditions("ActuallyAdditions"),
     Controlling("controlling"),
 
