@@ -52,8 +52,10 @@ public class NetworkHandler {
         registerC2S(CShortcut.class);
         registerC2S(CSort.class);
         registerC2S(CHotbarSwap.class);
+        registerC2S(CCoinDepositDestination.class);
         registerS2C(SReloadConfig.class);
         registerS2C(SRefillSound.class);
+        registerS2C(SCoinDepositDestination.class);
         registerC2S(CDropOff.class);
         registerS2C(SDropOffMessage.class);
         registerS2C(SDropOffThrottled.class);

@@ -13,6 +13,8 @@ import net.minecraft.server.MinecraftServer;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.dropoff.CoinDepositDestination;
 import com.cleanroommc.bogosorter.common.dropoff.DropOffScheduler;
+import com.cleanroommc.bogosorter.compat.Mods;
+import com.cleanroommc.bogosorter.compat.VendingMachineCompat;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -66,8 +68,10 @@ public class CDropOff implements IPacket {
             return new SDropOffThrottled();
         }
 
-        scheduler.startTask(player, preferTeamWallet);
+        boolean useTeamWallet = preferTeamWallet && Mods.VendingMachine.isLoaded()
+            && VendingMachineCompat.canUseTeamWallet(player);
+        scheduler.startTask(player, useTeamWallet);
 
-        return null;
+        return preferTeamWallet != useTeamWallet ? new SCoinDepositDestination(useTeamWallet) : null;
     }
 }

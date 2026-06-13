@@ -16,6 +16,8 @@ import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
 import com.cleanroommc.bogosorter.common.dropoff.CoinDepositDestination;
+import com.cleanroommc.bogosorter.common.network.CCoinDepositDestination;
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
 import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.modularui.api.IPanelHandler;
@@ -504,6 +506,7 @@ public class ConfigGui extends CustomModularScreen {
     }
 
     private static IWidget createCoinDestinationSelector() {
+        requestCoinDestination(BogoSorterConfig.dropOff.coinDepositDestination);
         return Flow.row()
             .widthRel(1f)
             .height(16)
@@ -521,6 +524,10 @@ public class ConfigGui extends CustomModularScreen {
                 new CoinDestinationButton(CoinDepositDestination.TEAM, "bogosort.gui.coin_destination.team")
                     .size(42, 14)
                     .marginLeft(2));
+    }
+
+    private static void requestCoinDestination(CoinDepositDestination destination) {
+        NetworkHandler.sendToServer(new CCoinDepositDestination(destination == CoinDepositDestination.TEAM));
     }
 
     public IWidget createProfilesConfig(ModularPanel mainPanel, ModularGuiContext context) {
@@ -765,8 +772,7 @@ public class ConfigGui extends CustomModularScreen {
                 if (mouseButton != 0 || BogoSorterConfig.dropOff.coinDepositDestination == this.destination) {
                     return false;
                 }
-                BogoSorterConfig.dropOff.coinDepositDestination = this.destination;
-                saveForgeConfig();
+                requestCoinDestination(this.destination);
                 return true;
             });
         }

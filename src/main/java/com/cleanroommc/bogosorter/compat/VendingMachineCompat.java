@@ -37,6 +37,12 @@ public final class VendingMachineCompat {
         return false;
     }
 
+    public static boolean canUseTeamWallet(EntityPlayerMP player) {
+        Team team = TeamManager.getTeamByPlayer(player.getUniqueID());
+        return team != null && (VMConfig.team.soloTeam || team.getMembers()
+            .size() > 1);
+    }
+
     public static int depositCurrency(EntityPlayerMP player, IInventory inventory, int ignoredSlot,
         boolean preferTeamWallet) {
         MTEVendingMachine vendingMachine = getVendingMachine(inventory);
@@ -80,9 +86,7 @@ public final class VendingMachineCompat {
             return WalletMode.PERSONAL;
         }
 
-        Team team = TeamManager.getTeamByPlayer(player.getUniqueID());
-        return team != null && (VMConfig.team.soloTeam || team.getMembers()
-            .size() > 1) ? WalletMode.TEAM : WalletMode.PERSONAL;
+        return canUseTeamWallet(player) ? WalletMode.TEAM : WalletMode.PERSONAL;
     }
 
     private static CurrencyItem getAcceptedCurrency(ItemStack stack) {
