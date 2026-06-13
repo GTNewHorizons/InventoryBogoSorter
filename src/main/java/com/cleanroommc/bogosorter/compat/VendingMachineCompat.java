@@ -50,7 +50,11 @@ public final class VendingMachineCompat {
             return 0;
         }
 
-        WalletMode walletMode = getWalletMode(player, preferTeamWallet);
+        if (preferTeamWallet && !canUseTeamWallet(player)) {
+            return 0;
+        }
+
+        WalletMode walletMode = preferTeamWallet ? WalletMode.TEAM : WalletMode.PERSONAL;
         Wallet wallet = TradeManager.INSTANCE.getWallet(player.getUniqueID(), walletMode);
         if (wallet == null) {
             return 0;
@@ -79,14 +83,6 @@ public final class VendingMachineCompat {
             playDropOffSound(player, vendingMachine);
         }
         return itemsDeposited;
-    }
-
-    private static WalletMode getWalletMode(EntityPlayerMP player, boolean preferTeamWallet) {
-        if (!preferTeamWallet) {
-            return WalletMode.PERSONAL;
-        }
-
-        return canUseTeamWallet(player) ? WalletMode.TEAM : WalletMode.PERSONAL;
     }
 
     private static CurrencyItem getAcceptedCurrency(ItemStack stack) {
