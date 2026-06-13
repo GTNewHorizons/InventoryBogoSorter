@@ -23,8 +23,9 @@ public abstract class GuiContainerDropOffButtonMixin {
 
         for (GuiButton button : ((GuiScreenAccessor) this).getButtonList()) {
             if (button instanceof DropOffInvButton dropOffButton && dropOffButton.isMouseOver(mouseX, mouseY)) {
-                dropOffButton.toggleCoinDepositDestination();
-                ci.cancel();
+                if (dropOffButton.toggleCoinDepositDestination()) {
+                    ci.cancel();
+                }
                 return;
             }
         }

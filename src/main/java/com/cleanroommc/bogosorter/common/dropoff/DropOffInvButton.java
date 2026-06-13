@@ -17,6 +17,7 @@ import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.drawable.UITexture;
@@ -117,9 +118,14 @@ public class DropOffInvButton extends GuiButton {
             && mouseY < this.yPosition + this.height;
     }
 
-    public void toggleCoinDepositDestination() {
+    public boolean toggleCoinDepositDestination() {
+        if (!Mods.VendingMachine.isLoaded()) {
+            return false;
+        }
+
         BogoSorterConfig.dropOff.coinDepositDestination = BogoSorterConfig.dropOff.coinDepositDestination.toggle();
         ConfigurationManager.save(BogoSorterConfig.class);
+        return true;
     }
 
     @Override
@@ -129,20 +135,22 @@ public class DropOffInvButton extends GuiButton {
 
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.enabled && this.field_146123_n) {
-            final List<String> tooltipLines = new ArrayList<>(5);
+            final List<String> tooltipLines = new ArrayList<>(Mods.VendingMachine.isLoaded() ? 5 : 3);
             tooltipLines.add(I18n.format("key.dropoff.tooltip1"));
             tooltipLines.add(I18n.format("key.dropoff.tooltip2"));
-            tooltipLines.add(I18n.format("key.dropoff.tooltip.coin_destination_toggle"));
-            CoinDepositDestination destination = BogoSorterConfig.dropOff.coinDepositDestination;
-            tooltipLines.add(
-                I18n.format(
-                    "key.dropoff.tooltip.coin_destination",
-                    formatDestination(
-                        "key.dropoff.tooltip.coin_destination.user",
-                        destination == CoinDepositDestination.USER),
-                    formatDestination(
-                        "key.dropoff.tooltip.coin_destination.team",
-                        destination == CoinDepositDestination.TEAM)));
+            if (Mods.VendingMachine.isLoaded()) {
+                tooltipLines.add(I18n.format("key.dropoff.tooltip.coin_destination_toggle"));
+                CoinDepositDestination destination = BogoSorterConfig.dropOff.coinDepositDestination;
+                tooltipLines.add(
+                    I18n.format(
+                        "key.dropoff.tooltip.coin_destination",
+                        formatDestination(
+                            "key.dropoff.tooltip.coin_destination.user",
+                            destination == CoinDepositDestination.USER),
+                        formatDestination(
+                            "key.dropoff.tooltip.coin_destination.team",
+                            destination == CoinDepositDestination.TEAM)));
+            }
             tooltipLines.add(
                 EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
                     + " : "
