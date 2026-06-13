@@ -145,11 +145,8 @@ public class DropOffInvButton extends GuiButton {
                     I18n.format(
                         "key.dropoff.tooltip.coin_destination",
                         formatDestination(
-                            "key.dropoff.tooltip.coin_destination.user",
-                            destination == CoinDepositDestination.USER),
-                        formatDestination(
-                            "key.dropoff.tooltip.coin_destination.team",
-                            destination == CoinDepositDestination.TEAM)));
+                            destination == CoinDepositDestination.TEAM ? "key.dropoff.tooltip.coin_destination.team"
+                                : "key.dropoff.tooltip.coin_destination.user")));
             }
             tooltipLines.add(
                 EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
@@ -161,8 +158,7 @@ public class DropOffInvButton extends GuiButton {
         }
     }
 
-    private static String formatDestination(String translationKey, boolean active) {
-        return (active ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + I18n.format(translationKey)
-            + EnumChatFormatting.RESET;
+    private static String formatDestination(String translationKey) {
+        return EnumChatFormatting.GREEN + I18n.format(translationKey) + EnumChatFormatting.RESET;
     }
 }
