@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import com.cleanroommc.bogosorter.compat.Mods;
+import com.cleanroommc.bogosorter.compat.VendingMachineCompat;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
 
 import xonin.backhand.api.core.BackhandUtils;
@@ -46,6 +47,16 @@ public class DropOffHandler {
         int offhandSlot = -1;
         if (Mods.Backhand.isLoaded()) {
             offhandSlot = BackhandUtils.getOffhandSlot(inventoryManager.getPlayer());
+        }
+
+        if (Mods.VendingMachine.isLoaded() && VendingMachineCompat.isVendingMachine(toInventory)) {
+            int itemsMoved = VendingMachineCompat
+                .depositCurrency(inventoryManager.getPlayer(), toInventory, offhandSlot);
+            itemsCounter += itemsMoved;
+            if (itemsMoved > 0) {
+                toInventoryData.setInteractionResult(InteractionResult.DROPOFF_SUCCESS);
+            }
+            return;
         }
 
         for (int i = InventoryManager.Slots.PLAYER_INVENTORY_FIRST; i < playerStacks.length; ++i) {
