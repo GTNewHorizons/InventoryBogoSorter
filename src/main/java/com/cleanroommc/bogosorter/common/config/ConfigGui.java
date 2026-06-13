@@ -515,7 +515,7 @@ public class ConfigGui extends CustomModularScreen {
                 IKey.lang("bogosort.gui.coin_destination")
                     .asWidget()
                     .height(14)
-                    .marginLeft(8)
+                    .marginLeft(40)
                     .expanded())
             .child(
                 new CoinDestinationButton(CoinDepositDestination.PERSONAL, "bogosort.gui.coin_destination.personal")
