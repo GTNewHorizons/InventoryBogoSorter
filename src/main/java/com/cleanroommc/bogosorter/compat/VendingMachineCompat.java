@@ -46,9 +46,6 @@ public final class VendingMachineCompat {
 
         WalletMode walletMode = getWalletMode(player, preferTeamWallet);
         Wallet wallet = TradeManager.INSTANCE.getWallet(player.getUniqueID(), walletMode);
-        if (wallet == null && walletMode == WalletMode.TEAM) {
-            wallet = TradeManager.INSTANCE.getWallet(player.getUniqueID(), WalletMode.PERSONAL);
-        }
         if (wallet == null) {
             return 0;
         }

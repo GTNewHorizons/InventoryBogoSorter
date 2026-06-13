@@ -123,8 +123,10 @@ public class InventoryManager {
                 }
             }
 
-            if (isInventoryValid(data)) {
-                if (Mods.VendingMachine.isLoaded() && VendingMachineCompat.isVendingMachine(data.getInventory())) {
+            boolean isVendingMachine = Mods.VendingMachine.isLoaded()
+                && VendingMachineCompat.isVendingMachine(data.getInventory());
+            if (isVendingMachine || isInventoryValid(data)) {
+                if (isVendingMachine) {
                     result.add(0, data);
                 } else {
                     result.add(data);
@@ -179,10 +181,6 @@ public class InventoryManager {
     private boolean isInventoryValid(InventoryData inventoryData) {
         TileEntity entity = inventoryData.getEntities()
             .get(0);
-
-        if (Mods.VendingMachine.isLoaded() && VendingMachineCompat.isVendingMachine(inventoryData.getInventory())) {
-            return true;
-        }
 
         if (entity instanceof TileEntityChest) {
             return true;

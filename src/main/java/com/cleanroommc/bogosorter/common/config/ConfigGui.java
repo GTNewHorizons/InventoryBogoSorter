@@ -150,40 +150,37 @@ public class ConfigGui extends CustomModularScreen {
                     BogoSorterConfig.buttonColor,
                     true).setDraggable(true),
             true);
-        ListWidget<IWidget, ?> configList = new ListWidget<>();
-        configList.sizeRel(1)
+        return new ListWidget<>().sizeRel(1)
             .padding(5, 5, 2, 2)
             .child(
                 new Rectangle().color(0xFF606060)
                     .asWidget()
                     .top(3)
                     .left(32)
-                    .size(1, 267));
-        if (Mods.VendingMachine.isLoaded()) {
-            configList.child(createCoinDestinationSelector());
-        }
-        return configList.child(
-            Flow.row()
-                .widthRel(1f)
-                .height(14)
-                .margin(0, 2)
-                .child(
-                    new CycleButtonWidget()
-                        .value(
-                            new BoolValue.Dynamic(
-                                () -> BogoSorterConfig.enableHotbarSort,
-                                val -> BogoSorterConfig.enableHotbarSort = val))
-                        .stateOverlay(TOGGLE_BUTTON)
-                        .disableHoverBackground()
-                        .size(14, 14)
-                        .margin(8, 0)
-                        .background(IDrawable.EMPTY))
-                .child(
-                    IKey.lang("bogosort.gui.enable_hotbarSort")
-                        .asWidget()
-                        .height(14)
-                        .marginLeft(10)
-                        .expanded()))
+                    .size(1, 267))
+            .childIf(Mods.VendingMachine.isLoaded(), ConfigGui::createCoinDestinationSelector)
+            .child(
+                Flow.row()
+                    .widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(
+                        new CycleButtonWidget()
+                            .value(
+                                new BoolValue.Dynamic(
+                                    () -> BogoSorterConfig.enableHotbarSort,
+                                    val -> BogoSorterConfig.enableHotbarSort = val))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosort.gui.enable_hotbarSort")
+                            .asWidget()
+                            .height(14)
+                            .marginLeft(10)
+                            .expanded()))
             .child(
                 Flow.row()
                     .widthRel(1f)
