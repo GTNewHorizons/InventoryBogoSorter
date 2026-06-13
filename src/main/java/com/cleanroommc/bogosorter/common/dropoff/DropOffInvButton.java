@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.cleanroommc.bogosorter.BogoSorter;
@@ -18,11 +19,13 @@ import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.compat.Mods;
+import com.cleanroommc.bogosorter.compat.VendingMachineCompat;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiScreenAccessor;
 import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Color;
-import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
+
+import xonin.backhand.api.core.BackhandUtils;
 
 public class DropOffInvButton extends GuiButton {
 
@@ -118,16 +121,6 @@ public class DropOffInvButton extends GuiButton {
             && mouseY < this.yPosition + this.height;
     }
 
-    public boolean toggleCoinDepositDestination() {
-        if (!Mods.VendingMachine.isLoaded()) {
-            return false;
-        }
-
-        BogoSorterConfig.dropOff.coinDepositDestination = BogoSorterConfig.dropOff.coinDepositDestination.toggle();
-        ConfigurationManager.save(BogoSorterConfig.class);
-        return true;
-    }
-
     @Override
     public void func_146113_a(SoundHandler soundHandlerIn) {
         // dont play click sound
@@ -135,18 +128,18 @@ public class DropOffInvButton extends GuiButton {
 
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.enabled && this.field_146123_n) {
-            final List<String> tooltipLines = new ArrayList<>(Mods.VendingMachine.isLoaded() ? 5 : 3);
+            boolean hasDepositableCoins = hasDepositableCoins();
+            final List<String> tooltipLines = new ArrayList<>(hasDepositableCoins ? 4 : 3);
             tooltipLines.add(I18n.format("key.dropoff.tooltip1"));
             tooltipLines.add(I18n.format("key.dropoff.tooltip2"));
-            if (Mods.VendingMachine.isLoaded()) {
-                tooltipLines.add(I18n.format("key.dropoff.tooltip.coin_destination_toggle"));
+            if (hasDepositableCoins) {
                 CoinDepositDestination destination = BogoSorterConfig.dropOff.coinDepositDestination;
                 tooltipLines.add(
                     I18n.format(
                         "key.dropoff.tooltip.coin_destination",
                         formatDestination(
                             destination == CoinDepositDestination.TEAM ? "key.dropoff.tooltip.coin_destination.team"
-                                : "key.dropoff.tooltip.coin_destination.user")));
+                                : "key.dropoff.tooltip.coin_destination.personal")));
             }
             tooltipLines.add(
                 EnumChatFormatting.DARK_GRAY + I18n.format("key.tooltip.keybind")
@@ -156,6 +149,20 @@ public class DropOffInvButton extends GuiButton {
                 accessor.drawHoveringText(tooltipLines, mouseX, mouseY);
             }
         }
+    }
+
+    private static boolean hasDepositableCoins() {
+        if (!Mods.VendingMachine.isLoaded()) {
+            return false;
+        }
+
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        if (player == null) {
+            return false;
+        }
+
+        int ignoredSlot = Mods.Backhand.isLoaded() ? BackhandUtils.getOffhandSlot(player) : -1;
+        return VendingMachineCompat.hasDepositableCurrency(player.inventory.mainInventory, ignoredSlot);
     }
 
     private static String formatDestination(String translationKey) {

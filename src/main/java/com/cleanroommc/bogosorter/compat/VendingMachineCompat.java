@@ -28,6 +28,15 @@ public final class VendingMachineCompat {
         return getVendingMachine(inventory) != null;
     }
 
+    public static boolean hasDepositableCurrency(ItemStack[] playerStacks, int ignoredSlot) {
+        for (int slot = PLAYER_INVENTORY_FIRST; slot < playerStacks.length; slot++) {
+            if (slot != ignoredSlot && playerStacks[slot] != null && getAcceptedCurrency(playerStacks[slot]) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int depositCurrency(EntityPlayerMP player, IInventory inventory, int ignoredSlot,
         boolean preferTeamWallet) {
         MTEVendingMachine vendingMachine = getVendingMachine(inventory);

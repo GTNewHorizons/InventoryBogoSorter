@@ -15,7 +15,9 @@ import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
+import com.cleanroommc.bogosorter.common.dropoff.CoinDepositDestination;
 import com.cleanroommc.bogosorter.common.sort.NbtSortRule;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.IThemeApi;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
@@ -148,36 +150,40 @@ public class ConfigGui extends CustomModularScreen {
                     BogoSorterConfig.buttonColor,
                     true).setDraggable(true),
             true);
-        return new ListWidget<>().sizeRel(1)
+        ListWidget<IWidget, ?> configList = new ListWidget<>();
+        configList.sizeRel(1)
             .padding(5, 5, 2, 2)
             .child(
                 new Rectangle().color(0xFF606060)
                     .asWidget()
                     .top(3)
                     .left(32)
-                    .size(1, 267))
-            .child(
-                Flow.row()
-                    .widthRel(1f)
-                    .height(14)
-                    .margin(0, 2)
-                    .child(
-                        new CycleButtonWidget()
-                            .value(
-                                new BoolValue.Dynamic(
-                                    () -> BogoSorterConfig.enableHotbarSort,
-                                    val -> BogoSorterConfig.enableHotbarSort = val))
-                            .stateOverlay(TOGGLE_BUTTON)
-                            .disableHoverBackground()
-                            .size(14, 14)
-                            .margin(8, 0)
-                            .background(IDrawable.EMPTY))
-                    .child(
-                        IKey.lang("bogosort.gui.enable_hotbarSort")
-                            .asWidget()
-                            .height(14)
-                            .marginLeft(10)
-                            .expanded()))
+                    .size(1, 267));
+        if (Mods.VendingMachine.isLoaded()) {
+            configList.child(createCoinDestinationSelector());
+        }
+        return configList.child(
+            Flow.row()
+                .widthRel(1f)
+                .height(14)
+                .margin(0, 2)
+                .child(
+                    new CycleButtonWidget()
+                        .value(
+                            new BoolValue.Dynamic(
+                                () -> BogoSorterConfig.enableHotbarSort,
+                                val -> BogoSorterConfig.enableHotbarSort = val))
+                        .stateOverlay(TOGGLE_BUTTON)
+                        .disableHoverBackground()
+                        .size(14, 14)
+                        .margin(8, 0)
+                        .background(IDrawable.EMPTY))
+                .child(
+                    IKey.lang("bogosort.gui.enable_hotbarSort")
+                        .asWidget()
+                        .height(14)
+                        .marginLeft(10)
+                        .expanded()))
             .child(
                 Flow.row()
                     .widthRel(1f)
@@ -500,6 +506,26 @@ public class ConfigGui extends CustomModularScreen {
 
     }
 
+    private static IWidget createCoinDestinationSelector() {
+        return Flow.row()
+            .widthRel(1f)
+            .height(16)
+            .margin(0, 2)
+            .child(
+                IKey.lang("bogosort.gui.coin_destination")
+                    .asWidget()
+                    .height(14)
+                    .marginLeft(8)
+                    .expanded())
+            .child(
+                new CoinDestinationButton(CoinDepositDestination.PERSONAL, "bogosort.gui.coin_destination.personal")
+                    .size(58, 14))
+            .child(
+                new CoinDestinationButton(CoinDepositDestination.TEAM, "bogosort.gui.coin_destination.team")
+                    .size(42, 14)
+                    .marginLeft(2));
+    }
+
     public IWidget createProfilesConfig(ModularPanel mainPanel, ModularGuiContext context) {
         PagedWidget.Controller controller = new PagedWidget.Controller();
         return new ParentWidget<>().widthRel(1f)
@@ -728,6 +754,31 @@ public class ConfigGui extends CustomModularScreen {
 
     public static void saveForgeConfig() {
         ConfigurationManager.save(BogoSorterConfig.class);
+    }
+
+    private static class CoinDestinationButton extends ButtonWidget<CoinDestinationButton> {
+
+        private final CoinDepositDestination destination;
+
+        private CoinDestinationButton(CoinDepositDestination destination, String translationKey) {
+            this.destination = destination;
+            disableHoverBackground();
+            overlay(IKey.lang(translationKey));
+            onMousePressed(mouseButton -> {
+                if (mouseButton != 0 || BogoSorterConfig.dropOff.coinDepositDestination == this.destination) {
+                    return false;
+                }
+                BogoSorterConfig.dropOff.coinDepositDestination = this.destination;
+                saveForgeConfig();
+                return true;
+            });
+        }
+
+        @Override
+        public IDrawable getBackground() {
+            return BogoSorterConfig.dropOff.coinDepositDestination == this.destination ? GuiTextures.MC_BUTTON_DISABLED
+                : GuiTextures.MC_BUTTON;
+        }
     }
 
     private static class AvailableElement extends ButtonWidget<AvailableElement> {

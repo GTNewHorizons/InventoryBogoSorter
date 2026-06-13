@@ -204,10 +204,10 @@ public class BogoSorterConfig {
         @Config.LangKey("bogosorter.config.dropoff.targets")
         public String[] dropoffTargetNames;
 
-        @Config.DefaultEnum("USER")
+        @Config.DefaultEnum("PERSONAL")
         @Config.Comment("Wallet used when dropping coins into a nearby Vending Machine.")
         @Config.LangKey("bogosorter.config.dropoff.coin_destination")
-        public CoinDepositDestination coinDepositDestination = CoinDepositDestination.USER;
+        public CoinDepositDestination coinDepositDestination = CoinDepositDestination.PERSONAL;
 
         public static class DropOffButton {
 
