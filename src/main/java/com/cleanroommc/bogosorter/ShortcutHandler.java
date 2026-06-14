@@ -54,6 +54,7 @@ public class ShortcutHandler {
         if (SlotDummyOrCrafting(currentSlot)) {
             return;
         }
+        if (!currentSlot.getHasStack()) return;
         amount = Math.min(amount, stack.getMaxStackSize());
         ItemStack toInsert = stack.copy();
         toInsert.stackSize = (amount);
@@ -166,10 +167,18 @@ public class ShortcutHandler {
             .getSlotGroup(slot.getSlotNumber());
         if (slots == null) return;
         for (SlotAccessor slot1 : slots.getSlots()) {
+            Slot realSlot = container.getSlot(slot1.getSlotNumber());
+            if (realSlot == null || !realSlot.getHasStack()
+                || SlotDummyOrCrafting(realSlot)
+                || !slot1.callCanTakeStack(player)) {
+                continue;
+            }
             ItemStack stackInSlot = slot1.callGetStack();
             if (stackInSlot != null && (!onlySameType || stackInSlot.isItemEqual(stack))) {
                 slot1.callPutStack(null);
-                player.dropPlayerItemWithRandomChoice(stackInSlot, true);
+                if (slot1.callGetStack() == null) {
+                    player.dropPlayerItemWithRandomChoice(stackInSlot, true);
+                }
             }
         }
         return;
