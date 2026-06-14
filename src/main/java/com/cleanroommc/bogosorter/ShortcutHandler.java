@@ -257,7 +257,8 @@ public class ShortcutHandler {
             slot.callPutStack(newStack);
             return stack.stackSize == 0 ? null : stack;
         }
-        if (stackInSlot != null && ItemHandlerHelper.canItemStacksStack(stackInSlot, stack)) {
+        if (stackInSlot != null && ItemHandlerHelper.canItemStacksStack(stackInSlot, stack)
+            && slot.callIsItemValid(stack)) {
             int amount = Math.min(
                 slot.callGetSlotStackLimit(),
                 Math.min(stack.stackSize, stack.getMaxStackSize() - stackInSlot.stackSize));
