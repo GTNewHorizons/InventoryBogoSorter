@@ -398,7 +398,7 @@ public final class Ae2TooltipClient {
         FluidEntry entry = new FluidEntry();
         entry.createdAt = now;
         try {
-            FluidStack fluidStack = StackInfo.getFluid(stack);
+            FluidStack fluidStack = StackInfo.isFluidContainer(stack) ? null : StackInfo.getFluid(stack);
             entry.fluidStack = fluidStack == null ? null : fluidStack.copy();
         } catch (RuntimeException | LinkageError ignored) {}
 
