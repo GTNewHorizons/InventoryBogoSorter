@@ -55,6 +55,20 @@ public class BogoSorter {
     public static final XSTR RND = new XSTR();
     public static final Logger LOGGER = LogManager.getLogger();
 
+    private static final boolean AE2_PRESENT;
+
+    // checks if class is present to avoid NoClassDefFoundError when trying to access AE2 code on a server without AE2
+    static {
+        boolean present;
+        try {
+            Class.forName("appeng.api.storage.IStorageGrid");
+            present = true;
+        } catch (Throwable t) {
+            present = false;
+        }
+        AE2_PRESENT = present;
+    }
+
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         FMLCommonHandler.instance()
@@ -132,6 +146,9 @@ public class BogoSorter {
 
     @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        // if ae2 not detected, just return
+        if (!AE2_PRESENT) return;
+
         if (event.player instanceof EntityPlayerMP) {
             Ae2AmountService.clearPlayer((EntityPlayerMP) event.player);
         }

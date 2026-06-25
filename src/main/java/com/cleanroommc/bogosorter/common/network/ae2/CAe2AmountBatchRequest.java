@@ -107,10 +107,9 @@ public class CAe2AmountBatchRequest implements IPacket {
             addResponses(responses, Ae2Status.NO_SYSTEM, 1500);
             return new SAe2AmountBatchResponse(Ae2Status.NO_SYSTEM, responses);
         }
-        List<Ae2AmountService.BatchLookupEntry> batchEntries = new ArrayList<>(this.entries.size());
+        List<BatchLookupEntry> batchEntries = new ArrayList<>(this.entries.size());
         for (Entry entry : this.entries) {
-            batchEntries
-                .add(new Ae2AmountService.BatchLookupEntry(entry.stack, entry.fluidStack, entry.essentiaAspectTag));
+            batchEntries.add(new BatchLookupEntry(entry.stack, entry.fluidStack, entry.essentiaAspectTag));
         }
 
         int distinctLookups = Ae2AmountService.countDistinctLookupKeys(batchEntries);
@@ -123,17 +122,17 @@ public class CAe2AmountBatchRequest implements IPacket {
             return new SAe2AmountBatchResponse(Ae2Status.THROTTLED, responses);
         }
 
-        Ae2AmountService.ContextResult contextResult = Ae2AmountService.resolvePlayerContext(player, now);
+        ContextResult contextResult = Ae2AmountService.resolvePlayerContext(player, now);
         if (!contextResult.isAvailable()) {
             addResponses(responses, contextResult.getStatus(), contextResult.getRetryAfterMs());
             return new SAe2AmountBatchResponse(contextResult.getStatus(), responses);
         }
 
-        List<Ae2AmountService.AmountLookupResult> lookupResults = Ae2AmountService
+        List<AmountLookupResult> lookupResults = Ae2AmountService
             .lookupAmountBatch(contextResult.getContext(), batchEntries, now);
         for (int i = 0; i < this.entries.size(); i++) {
             Entry entry = this.entries.get(i);
-            Ae2AmountService.AmountLookupResult result = lookupResults.get(i);
+            AmountLookupResult result = lookupResults.get(i);
             responses.add(
                 new SAe2AmountBatchResponse.Entry(
                     entry.requestId,
