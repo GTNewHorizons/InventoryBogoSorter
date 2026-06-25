@@ -23,6 +23,7 @@ import net.minecraft.world.chunk.Chunk;
 
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
+import com.cleanroommc.bogosorter.compat.VendingMachineCompat;
 import com.gtnewhorizon.gtnhlib.datastructs.space.ArrayProximityMap4D;
 import com.gtnewhorizon.gtnhlib.datastructs.space.VolumeShape;
 
@@ -122,8 +123,14 @@ public class InventoryManager {
                 }
             }
 
-            if (isInventoryValid(data)) {
-                result.add(data);
+            boolean isVendingMachine = Mods.VendingMachine.isLoaded()
+                && VendingMachineCompat.isVendingMachine(data.getInventory());
+            if (isVendingMachine || isInventoryValid(data)) {
+                if (isVendingMachine) {
+                    result.add(0, data);
+                } else {
+                    result.add(data);
+                }
             }
         });
 

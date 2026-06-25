@@ -1,0 +1,11 @@
+{
+  "vending_dropoff": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "bogosorter:vending_dropoff",
+        "stream": false
+      }
+    ]
+  }
+}
