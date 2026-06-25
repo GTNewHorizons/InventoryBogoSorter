@@ -14,11 +14,11 @@ public class DropOffScheduler {
 
     public final List<DropOffTask> dropOffTasks = new ArrayList<>();
 
-    public void startTask(EntityPlayerMP playerMP) {
+    public void startTask(EntityPlayerMP playerMP, boolean preferTeamWallet) {
 
         List<InventoryData> dataList = new InventoryManager(playerMP).getNearbyInventories();
 
-        DropOffTask task = new DropOffTask(playerMP, dataList);
+        DropOffTask task = new DropOffTask(playerMP, dataList, preferTeamWallet);
         task.run();
 
         // the task did not finish so add it to the list, this will continue to ran on the server ticks

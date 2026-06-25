@@ -1,6 +1,7 @@
 package com.cleanroommc.bogosorter.common.config;
 
 import com.cleanroommc.bogosorter.BogoSorter;
+import com.cleanroommc.bogosorter.common.dropoff.CoinDepositDestination;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.gtnewhorizon.gtnhlib.config.Config;
 
@@ -202,6 +203,12 @@ public class BogoSorterConfig {
         @Config.Comment("Valid inventory names for drop-off targeting (substring match).")
         @Config.LangKey("bogosorter.config.dropoff.targets")
         public String[] dropoffTargetNames;
+
+        @Config.DefaultEnum("PERSONAL")
+        @Config.Comment("Wallet used when dropping coins into a nearby Vending Machine.")
+        @Config.LangKey("bogosorter.config.dropoff.coin_destination")
+        @Config.RequiresMod("vendingmachine")
+        public CoinDepositDestination coinDepositDestination = CoinDepositDestination.PERSONAL;
 
         public static class DropOffButton {
 

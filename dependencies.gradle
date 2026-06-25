@@ -67,6 +67,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:Controlling:2.1.7:dev")
     compileOnly("com.github.GTNewHorizons:BetterStorage:0.14.0.0:dev")
     compileOnly("com.github.GTNewHorizons:Chisel:2.17.26-GTNH:dev")
+    compileOnly("com.cubefury.vendingmachine:VendingMachine:0.4.89:dev") { transitive = false }
 
     //for Tinkers Construct arrows
     compileOnly("com.github.GTNewHorizons:Battlegear2:1.4.3:dev") { transitive = false }

@@ -1,4 +1,4 @@
-package com.cleanroommc.bogosorter.common.network.ae2;
+package com.cleanroommc.bogosorter.common.network.ae2.impl;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -8,13 +8,13 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.security.ISecurityGrid;
 
-final class Ae2AccessHelper {
+public final class Ae2AccessHelper {
 
     private static boolean loggedSecurityFailure;
 
     private Ae2AccessHelper() {}
 
-    static boolean canPlayerReadGrid(EntityPlayerMP player, IGrid grid) {
+    public static boolean canPlayerReadGrid(EntityPlayerMP player, IGrid grid) {
         if (player == null || grid == null) {
             return false;
         }
