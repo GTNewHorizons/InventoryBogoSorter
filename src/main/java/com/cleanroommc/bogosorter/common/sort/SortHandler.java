@@ -13,6 +13,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
@@ -356,6 +357,9 @@ public class SortHandler {
              * empty.
              * The slot should only be marked as inaccessible if all three conditions return false.
              */
+            Slot realSlot = container.getSlot(slot.getSlotNumber());
+            if (realSlot != null && !realSlot.getHasStack() && slot.callGetStack() != null) continue;
+
             boolean canTake = slot.callCanTakeStack(player);
             boolean canInsert = (slot.callGetStack() != null) && slot.callIsItemValid(
                 slot.callGetStack()
