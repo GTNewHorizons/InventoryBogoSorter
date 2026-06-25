@@ -151,9 +151,6 @@ public class ShortcutHandler {
         }
 
         for (SlotAccessor slot1 : sourceSlots) {
-            // Same lock-respect as dropItems: never drain a slot the container reports as having no
-            // accessible stack (e.g. Forestry's SlotLocked on an open bag) or a crafting/dummy slot - a raw
-            // putStack(null) bypasses the lock and dupes the item.
             Slot realSlot = container.getSlot(slot1.getSlotNumber());
             if (realSlot == null || !realSlot.getHasStack() || SlotDummyOrCrafting(realSlot)) continue;
             ItemStack stackInSlot = slot1.callGetStack();
@@ -235,10 +232,6 @@ public class ShortcutHandler {
             sourceSlots = slotGroup.getSlots();
         }
         for (SlotAccessor slot1 : sourceSlots) {
-            // Respect the container's own guards before draining a slot. Forestry locks an open backpack's
-            // own slot with SlotLocked (getHasStack()==false) so the bag can't be removed while open; a raw
-            // putStack(null)+drop bypasses that lock and dupes the bag. Skip slots that report no accessible
-            // stack, forbid extraction, or are crafting/dummy.
             Slot realSlot = container.getSlot(slot1.getSlotNumber());
             if (realSlot == null || !realSlot.getHasStack()
                 || SlotDummyOrCrafting(realSlot)
