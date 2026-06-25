@@ -44,10 +44,10 @@ public class CShortcut implements IPacket {
 
         switch (type) {
             case MOVE_ALL:
-                ShortcutHandler.moveAllItems(handler.playerEntity, container, slot, false);
+                ShortcutHandler.moveAllItems(container, slot, false);
                 break;
             case MOVE_ALL_SAME:
-                ShortcutHandler.moveAllItems(handler.playerEntity, container, slot, true);
+                ShortcutHandler.moveAllItems(container, slot, true);
                 break;
             case MOVE_SINGLE:
                 ShortcutHandler.moveSingleItem(handler.playerEntity, container, slot, false);

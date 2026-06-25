@@ -116,6 +116,20 @@ public class NetworkHandler {
         EntityPlayerMP player = handler == null ? null : handler.playerEntity;
         if (player == null) return null;
 
+        // Run GUI packets straight away so they don’t get out of sync from delayed or changing container state
+        // Only stuff like AE2 batching dropoff scanning and heavy background tasks can be queued
+        if (message instanceof CSort || message instanceof CShortcut || message instanceof CSlotSync) {
+            try {
+                IPacket reply = message.executeServer(handler);
+                if (reply != null) {
+                    sendToPlayer(reply, handler.playerEntity);
+                }
+            } finally {
+                message.acknowledge();
+            }
+            return null;
+        }
+
         String playerKey = player.getUniqueID()
             .toString();
         AtomicInteger playerQueueSize = playerQueueSizes.computeIfAbsent(playerKey, ignored -> new AtomicInteger());
