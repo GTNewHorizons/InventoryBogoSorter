@@ -52,8 +52,10 @@ public class NetworkHandler {
         registerC2S(CShortcut.class);
         registerC2S(CSort.class);
         registerC2S(CHotbarSwap.class);
+        registerC2S(CCoinDepositDestination.class);
         registerS2C(SReloadConfig.class);
         registerS2C(SRefillSound.class);
+        registerS2C(SCoinDepositDestination.class);
         registerC2S(CDropOff.class);
         registerS2C(SDropOffMessage.class);
         registerS2C(SDropOffThrottled.class);
@@ -113,6 +115,20 @@ public class NetworkHandler {
         NetHandlerPlayServer handler = ctx.getServerHandler();
         EntityPlayerMP player = handler == null ? null : handler.playerEntity;
         if (player == null) return null;
+
+        // Run GUI packets straight away so they don’t get out of sync from delayed or changing container state
+        // Only stuff like AE2 batching dropoff scanning and heavy background tasks can be queued
+        if (message instanceof CSort || message instanceof CShortcut || message instanceof CSlotSync) {
+            try {
+                IPacket reply = message.executeServer(handler);
+                if (reply != null) {
+                    sendToPlayer(reply, handler.playerEntity);
+                }
+            } finally {
+                message.acknowledge();
+            }
+            return null;
+        }
 
         String playerKey = player.getUniqueID()
             .toString();

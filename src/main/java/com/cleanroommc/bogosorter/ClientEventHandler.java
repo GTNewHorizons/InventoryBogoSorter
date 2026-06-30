@@ -260,7 +260,7 @@ public class ClientEventHandler {
             long t = Minecraft.getSystemTime();
             if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
                 if (BogoSorterConfig.dropOff.enableDropOff) {
-                    NetworkHandler.sendToServer(new CDropOff());
+                    NetworkHandler.sendToServer(CDropOff.fromClientPreference());
                 }
                 timeDropoff = t;
             }

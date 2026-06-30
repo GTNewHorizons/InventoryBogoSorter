@@ -35,11 +35,11 @@ public class DropOffTask implements Runnable {
 
     private boolean isFinished = false;
 
-    public DropOffTask(EntityPlayerMP player, List<InventoryData> list) {
+    public DropOffTask(EntityPlayerMP player, List<InventoryData> list, boolean preferTeamWallet) {
         this.player = player;
         this.inventoryDataList = list;
         this.inventoryManager = new InventoryManager(player);
-        this.dropOffHandler = new DropOffHandler(inventoryManager);
+        this.dropOffHandler = new DropOffHandler(inventoryManager, preferTeamWallet);
         this.targets = new ArrayList<>();
     }
 
