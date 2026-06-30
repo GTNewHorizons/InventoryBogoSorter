@@ -17,14 +17,13 @@ public class BSGuiKeybindList extends GuiListExtended {
     private final BSGuiControls controlsScreen;
     private final Minecraft mc;
     private final IGuiListEntry[] listEntries;
-    private final BSKeybinds.KeybindDefinition[] bogoSorterKeyBindings;
     private int maxListLabelWidth;
 
     public BSGuiKeybindList(BSGuiControls controls, Minecraft mc) {
         super(mc, controls.width, controls.height, 30, controls.height - 62, 20);
         this.controlsScreen = controls;
         this.mc = mc;
-        this.bogoSorterKeyBindings = BSKeybinds.getAllKeybinds();
+        BSKeybinds.KeybindDefinition[] bogoSorterKeyBindings = BSKeybinds.getAllKeybinds();
         this.listEntries = new IGuiListEntry[bogoSorterKeyBindings.length];
 
         for (int i = 0; i < bogoSorterKeyBindings.length; ++i) {
@@ -89,8 +88,9 @@ public class BSGuiKeybindList extends GuiListExtended {
                     combo.remove(combo.size() - 1);
                 }
             } else if (keyCode != Keyboard.KEY_NONE) {
-                if (!combo.contains(keyCode)) {
-                    combo.add(keyCode);
+                int k = keyCode & 0xFF;
+                if (!combo.contains(k)) {
+                    combo.add(k);
                 }
             }
             return true;
