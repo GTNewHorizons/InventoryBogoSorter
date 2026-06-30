@@ -26,6 +26,8 @@ import codechicken.lib.inventory.SlotDummy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.core.gui.slots.SlotCraftMatrix;
+import forestry.core.gui.slots.SlotCrafter;
+import forestry.factory.gui.ContainerWorktable;
 import tconstruct.tools.inventory.CraftingStationContainer;
 
 public class ShortcutHandler {
@@ -54,6 +56,10 @@ public class ShortcutHandler {
 
         Slot currentSlot = container.getSlot(slot.getSlotNumber());
         if (currentSlot == null) return;
+        if (isForestryWorktableOutput(container, currentSlot)) {
+            moveForestryWorktableOutput(player, container, currentSlot, emptySlot);
+            return;
+        }
         if (SlotDummyOrCrafting(currentSlot)) {
             return;
         }
@@ -112,10 +118,15 @@ public class ShortcutHandler {
         return true;
     }
 
-    public static void moveAllItems(Container container, SlotAccessor slot, boolean sameItemOnly) {
+    public static void moveAllItems(EntityPlayer player, Container container, SlotAccessor slot, boolean sameItemOnly) {
         if (slot == null || !BogoSortAPI.isValidSortable(container)) return;
         Slot currentSlot = container.getSlot(slot.getSlotNumber());
-        if (currentSlot == null || SlotDummyOrCrafting(currentSlot)) return;
+        if (currentSlot == null) return;
+        if (isForestryWorktableOutput(container, currentSlot)) {
+            moveForestryWorktableOutput(player, container, currentSlot, false);
+            return;
+        }
+        if (SlotDummyOrCrafting(currentSlot)) return;
         if (slot.callGetStack() == null) return;
 
         ItemStack stack = slot.callGetStack()
@@ -299,6 +310,41 @@ public class ShortcutHandler {
         // Prevent items from being moved into the output slot, which leads to them vanishing
         if (slot instanceof SlotCrafting) {
             return true;
+        }
+        return false;
+    }
+
+    private static boolean isForestryWorktableOutput(Container container, Slot slot) {
+        return Mods.Forestry.isLoaded() && container instanceof ContainerWorktable && slot instanceof SlotCrafter;
+    }
+
+    private static void moveForestryWorktableOutput(EntityPlayer player, Container container, Slot output,
+        boolean emptyOnly) {
+        ItemStack result = output.getStack();
+        if (result == null || !output.canTakeStack(player)) return;
+
+        SlotGroup playerSlots = GuiSortingContext.getOrCreate(container)
+            .getPlayerSlotGroup();
+        if (playerSlots == null || !canInsertFully(playerSlots.getSlots(), result, emptyOnly)) return;
+
+        ItemStack crafted = result.copy();
+        output.onPickupFromSlot(player, crafted);
+        BogoSortAPI.insert(container, playerSlots.getSlots(), crafted, emptyOnly);
+    }
+
+    private static boolean canInsertFully(List<SlotAccessor> slots, ItemStack stack, boolean emptyOnly) {
+        int remaining = stack.stackSize;
+        for (SlotAccessor slot : slots) {
+            if (!slot.callIsItemValid(stack)) continue;
+
+            ItemStack stackInSlot = slot.callGetStack();
+            if (stackInSlot == null) {
+                remaining -= Math.min(slot.callGetSlotStackLimit(), stack.getMaxStackSize());
+            } else if (!emptyOnly && ItemHandlerHelper.canItemStacksStack(stackInSlot, stack)) {
+                int limit = Math.min(slot.callGetSlotStackLimit(), stack.getMaxStackSize());
+                remaining -= Math.max(0, limit - stackInSlot.stackSize);
+            }
+            if (remaining <= 0) return true;
         }
         return false;
     }

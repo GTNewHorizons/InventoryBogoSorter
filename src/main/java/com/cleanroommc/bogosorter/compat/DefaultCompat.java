@@ -35,6 +35,7 @@ import de.ellpeck.actuallyadditions.mod.inventory.ContainerGiantChest;
 import de.eydamos.backpack.inventory.container.Boundaries;
 import de.eydamos.backpack.inventory.container.ContainerAdvanced;
 import forestry.core.gui.ContainerNaturalistInventory;
+import forestry.factory.gui.ContainerWorktable;
 import forestry.storage.gui.ContainerBackpack;
 import forestry.storage.gui.ContainerNaturalistBackpack;
 import gregapi.gui.ContainerCommonChest;
@@ -190,6 +191,7 @@ public class DefaultCompat {
             });
             api.addPlayerSortButtonPosition(ContainerNaturalistBackpack.class, IPosSetter.TOP_RIGHT_VERTICAL);
             api.addPlayerSortButtonPosition(ContainerNaturalistInventory.class, IPosSetter.TOP_RIGHT_VERTICAL);
+            api.addCompat(ContainerWorktable.class, (container, builder) -> { builder.addSlotGroup(36, 54, 9); });
         }
 
         if (IC2.isLoaded()) {
