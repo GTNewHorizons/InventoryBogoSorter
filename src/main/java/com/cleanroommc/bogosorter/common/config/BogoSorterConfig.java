@@ -169,6 +169,11 @@ public class BogoSorterConfig {
         @Config.LangKey("bogosorter.config.dropoff.enable")
         public boolean enableDropOff;
 
+        @Config.DefaultBoolean(false)
+        @Config.Comment("Enable drop-off from the hotbar.")
+        @Config.LangKey("bogosorter.config.dropoff.hotbar_enable")
+        public boolean enableHotbarDropOff;
+
         @Config.DefaultBoolean(true)
         @Config.Comment("Render a highlight on eligible drop-off containers.")
         @Config.LangKey("bogosorter.config.dropoff.render")
