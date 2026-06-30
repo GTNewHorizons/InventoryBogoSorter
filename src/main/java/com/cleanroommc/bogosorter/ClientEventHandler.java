@@ -2,6 +2,8 @@ package com.cleanroommc.bogosorter;
 
 import static com.cleanroommc.bogosorter.ShortcutHandler.SetCanTakeStack;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -253,7 +255,8 @@ public class ClientEventHandler {
                 timeConfigGui = t;
             }
         }
-        if (Keypress(BSKeybinds.dropoffKey)) {
+        // keybind press + filter out nei
+        if (Keypress(BSKeybinds.dropoffKey) && !isNeiRecipeSearchFocused()) {
             long t = Minecraft.getSystemTime();
             if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
                 if (BogoSorterConfig.dropOff.enableDropOff) {
@@ -263,6 +266,29 @@ public class ClientEventHandler {
             }
         }
         return false;
+    }
+
+    // check if nei filter search bar is active
+    private static boolean isNeiRecipeSearchFocused() {
+        if (!Loader.isModLoaded("NotEnoughItems")) return false;
+
+        try {
+            Class<?> guiRecipeClass = Class.forName("codechicken.nei.recipe.GuiRecipe");
+            GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+            if (!guiRecipeClass.isInstance(currentScreen)) return false;
+            Field searchFieldField = guiRecipeClass.getDeclaredField("searchField");
+            searchFieldField.setAccessible(true);
+            Object searchField = searchFieldField.get(null);
+            if (searchField == null) return false;
+            Method isVisible = searchField.getClass()
+                .getMethod("isVisible");
+            Method focused = searchField.getClass()
+                .getMethod("focused");
+            return Boolean.TRUE.equals(isVisible.invoke(searchField))
+                && Boolean.TRUE.equals(focused.invoke(searchField));
+        } catch (ReflectiveOperationException | LinkageError ignored) {
+            return false;
+        }
     }
 
     private static boolean canSort(@Nullable SlotAccessor slot) {
