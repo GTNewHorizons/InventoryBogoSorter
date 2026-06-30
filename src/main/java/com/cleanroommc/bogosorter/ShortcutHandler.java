@@ -188,13 +188,13 @@ public class ShortcutHandler {
     @Nullable
     private static List<SlotAccessor> getContainerShortcutSlots(Container container) {
         if (Mods.Tconstruct.isLoaded() && container instanceof CraftingStationContainer craftingStation) {
-            List<SlotAccessor> slots = new ArrayList<>(craftingStation.craftMatrix.getSizeInventory());
+            List<SlotAccessor> slots = new ArrayList<>();
             for (Slot slot : container.inventorySlots) {
-                if (slot.inventory == craftingStation.craftMatrix) {
+                if (!BogoSortAPI.isPlayerSlot(slot) && slot.inventory != craftingStation.craftMatrix) {
                     slots.add(BogoSortAPI.INSTANCE.getSlot(slot));
                 }
             }
-            return slots;
+            return slots.isEmpty() ? null : slots;
         }
         return null;
     }
