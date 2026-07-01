@@ -5,6 +5,7 @@ key.ae2_terminal_search=Pesquisar no Terminal AE2 a partir do item sob o cursor
 key.dropoff.tooltip.coin_destination=Depósito de moedas: %s
 key.dropoff.tooltip.coin_destination.personal=Pessoal
 key.dropoff.tooltip.coin_destination.team=Equipe
+bogosort.gui.dropoff_hotbar_enable=Ativar Depósito da Barra de Atalhos
 
 bogosort.gui.title=Configuração da Classificação
 bogosort.gui.tab.general.name=Geral
@@ -91,3 +92,4 @@ bogosorter.config.ae2.thaumic_essentia=Dicas de ferramentas para a quantidade de
 bogosorter.config.ae2.terminal_search=Pesquisa ao passar o rato no terminal do AE2
 bogosorter.config.ae2.debug_logging=Registo de depuração da integração com o AE2
 bogosorter.config.dropoff.coin_destination=Destino das moedas da máquina de vendas
+bogosorter.config.dropoff.hotbar_enable=Ativar Depósito da Barra de Atalhos

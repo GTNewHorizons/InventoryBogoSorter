@@ -22,6 +22,7 @@ bogosort.gui.ascending=升序
 bogosort.gui.descending=降序
 bogosort.gui.hotbar_scrolling=启用快捷栏纵列滚动
 bogosort.gui.hotbar_scrolling.tooltip=按住 ALT 键滚动选取物品栏对应列
+bogosort.gui.dropoff_hotbar_enable=启用快捷栏丢弃
 bogosort.gui.enabled=启用
 
 bogosort.command.config_relaod.success=重新加载排序配置
@@ -92,3 +93,4 @@ bogosorter.config.ae2.thaumic_essentia=神秘要素数量提示信息
 bogosorter.config.ae2.terminal_search=AE2 终端悬停搜索
 bogosorter.config.ae2.debug_logging=AE2 集成调试日志记录
 bogosorter.config.dropoff.coin_destination=自动售货机硬币存入钱包
+bogosorter.config.dropoff.hotbar_enable=启用快捷栏丢弃
