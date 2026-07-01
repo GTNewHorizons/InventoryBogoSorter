@@ -31,8 +31,7 @@ public abstract class MixinGuiNewKeyBindingList {
     private int maxListLabelWidth;
 
     @Shadow(remap = false)
-    @Final
-    private List<GuiListExtended.IGuiListEntry> displayedEntries;
+    public void setDisplayedEntries(List<GuiListExtended.IGuiListEntry> displayedEntries) {}
 
     public MixinGuiNewKeyBindingList() {
         super();
@@ -55,7 +54,6 @@ public abstract class MixinGuiNewKeyBindingList {
         }
 
         // After modifying the master list, we must update the displayed list to reflect the changes.
-        this.displayedEntries.clear();
-        this.displayedEntries.addAll(this.allEntries);
+        this.setDisplayedEntries(this.allEntries);
     }
 }
