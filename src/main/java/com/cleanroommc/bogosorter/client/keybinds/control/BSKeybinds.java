@@ -167,7 +167,11 @@ public class BSKeybinds {
                         default -> "Mouse " + (keyCode + 100);
                     };
                 }
-                return Keyboard.getKeyName(keyCode); // Keyboard keys
+                String name = Keyboard.getKeyName(keyCode);
+                if (name == null) {
+                    name = Keyboard.getKeyName(keyCode & 0xFF);
+                }
+                return name != null ? name : I18n.format("key.keyCode", keyCode);
             })
             .collect(Collectors.joining(" + "));
     }
