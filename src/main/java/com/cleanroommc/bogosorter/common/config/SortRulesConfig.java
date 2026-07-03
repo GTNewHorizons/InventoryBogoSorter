@@ -2,7 +2,9 @@ package com.cleanroommc.bogosorter.common.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,7 @@ public class SortRulesConfig {
 
     public static final Object2IntOpenHashMap<String> ORE_PREFIXES = new Object2IntOpenHashMap<>();
     public static final List<String> ORE_PREFIXES_LIST = new ArrayList<>();
+    public static final Set<Integer> lockedSlots = new HashSet<>();
 
     @SideOnly(Side.CLIENT)
     public static void save(JsonObject json) {
@@ -53,10 +56,25 @@ public class SortRulesConfig {
         }
         json.add("NbtSortRules", jsonRules);
 
+        JsonArray lockedSlotsJson = new JsonArray();
+        for (Integer slot : lockedSlots) {
+            lockedSlotsJson.add(new com.google.gson.JsonPrimitive(slot));
+        }
+        json.add("LockedSlots", lockedSlotsJson);
     }
 
     @SideOnly(Side.CLIENT)
     public static void load(JsonObject json) {
+        lockedSlots.clear();
+        if (json.has("LockedSlots")) {
+            JsonArray lockedSlotsJson = json.getAsJsonArray("LockedSlots");
+            for (JsonElement element : lockedSlotsJson) {
+                if (element.isJsonPrimitive()) {
+                    lockedSlots.add(element.getAsInt());
+                }
+            }
+        }
+
         sortRules.clear();
         if (json.has("ItemSortRules")) {
             JsonArray sortRules = json.getAsJsonArray("ItemSortRules");

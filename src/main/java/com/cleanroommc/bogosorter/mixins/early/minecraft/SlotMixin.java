@@ -8,6 +8,8 @@ import net.minecraft.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+import com.cleanroommc.bogosorter.BogoSortAPI;
+import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(Slot.class)
@@ -17,6 +19,11 @@ public class SlotMixin {
     @ModifyReturnValue(method = "canTakeStack", at = @At("RETURN"))
     private boolean bogo$modifyCanTakeStack(boolean original, EntityPlayer p_82869_1_) {
         if (p_82869_1_.worldObj.isRemote && !SetCanTakeStack) {
+            return false;
+        }
+        SlotAccessor accessor = (SlotAccessor) (Object) this;
+        int slotId = BogoSortAPI.isPlayerSlot(accessor) ? accessor.callGetSlotIndex() : accessor.getSlotNumber();
+        if (SortRulesConfig.lockedSlots.contains(slotId)) {
             return false;
         }
         return original;

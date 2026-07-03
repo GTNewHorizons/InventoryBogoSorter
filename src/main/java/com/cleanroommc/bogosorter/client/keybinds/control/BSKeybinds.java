@@ -60,6 +60,10 @@ public class BSKeybinds {
         "key.ae2_terminal_search",
         Keyboard.KEY_T,
         "key.categories.bogosorter");
+    public static final KeyBinding lockSlotKey = new KeyBinding(
+        "key.lock_slot",
+        Keyboard.KEY_NONE,
+        "key.categories.bogosorter");
     /**
      * A "dummy" keybinding that will be found and replaced with a button.
      */

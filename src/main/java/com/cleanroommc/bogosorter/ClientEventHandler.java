@@ -62,6 +62,7 @@ public class ClientEventHandler {
     private static long timeSort = 0;
     private static long timeShortcut = 0;
     private static long timeDropoff = 0;
+    private static long timeLockSlot = 0;
     private static long ticks = 0;
     private static GuiScreen nextGui = null;
 
@@ -274,6 +275,24 @@ public class ClientEventHandler {
                     BogoSortAPI.INSTANCE.openConfigGui(Minecraft.getMinecraft().currentScreen);
                 }
                 timeConfigGui = t;
+            }
+        }
+        if (Keypress(BSKeybinds.lockSlotKey)) {
+            long t = Minecraft.getSystemTime();
+            if (t - timeLockSlot > 500) {
+                if (container != null) {
+                    SlotAccessor slot = getSlot(container);
+                    if (slot != null) {
+                        int slotId = BogoSortAPI.isPlayerSlot(slot) ? slot.callGetSlotIndex() : slot.getSlotNumber();
+                        if (SortRulesConfig.lockedSlots.contains(slotId)) {
+                            SortRulesConfig.lockedSlots.remove(slotId);
+                        } else {
+                            SortRulesConfig.lockedSlots.add(slotId);
+                        }
+                    }
+                }
+                timeLockSlot = t;
+                return true;
             }
         }
         // keybind press + filter out nei

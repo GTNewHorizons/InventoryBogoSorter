@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.common.network.CShortcut;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
@@ -36,6 +37,13 @@ public class ShortcutHandler {
     public static boolean moveSingleItem(GuiContainer guiContainer, boolean emptySlot) {
         Slot slot = guiContainer.theSlot;
         if (slot == null || slot.getStack() == null) return false;
+
+        SlotAccessor accessor = BogoSortAPI.INSTANCE.getSlot(slot);
+        int slotId = BogoSortAPI.isPlayerSlot(accessor) ? accessor.callGetSlotIndex() : accessor.getSlotNumber();
+        if (SortRulesConfig.lockedSlots.contains(slotId)) {
+            return false;
+        }
+
         NetworkHandler.sendToServer(
             new CShortcut(emptySlot ? CShortcut.Type.MOVE_SINGLE_EMPTY : CShortcut.Type.MOVE_SINGLE, slot.slotNumber));
         return true;
@@ -48,6 +56,10 @@ public class ShortcutHandler {
     public static void moveItemStack(EntityPlayer player, Container container, SlotAccessor slot, boolean emptySlot,
         int amount) {
         if (slot == null || slot.callGetStack() == null) return;
+        int slotId = BogoSortAPI.isPlayerSlot(slot) ? slot.callGetSlotIndex() : slot.getSlotNumber();
+        if (SortRulesConfig.lockedSlots.contains(slotId)) {
+            return;
+        }
 
         ItemStack stack = slot.callGetStack();
         if (stack.stackSize <= 0) return;
@@ -151,6 +163,10 @@ public class ShortcutHandler {
         }
 
         for (SlotAccessor slot1 : sourceSlots) {
+            int slotId = BogoSortAPI.isPlayerSlot(slot1) ? slot1.callGetSlotIndex() : slot1.getSlotNumber();
+            if (SortRulesConfig.lockedSlots.contains(slotId)) {
+                continue;
+            }
             Slot realSlot = container.getSlot(slot1.getSlotNumber());
             if (realSlot == null || !realSlot.getHasStack() || SlotDummyOrCrafting(realSlot)) continue;
             ItemStack stackInSlot = slot1.callGetStack();

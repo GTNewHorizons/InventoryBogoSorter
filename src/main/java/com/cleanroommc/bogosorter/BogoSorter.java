@@ -123,6 +123,7 @@ public class BogoSorter {
             ClientRegistry.registerKeyBinding(BSKeybinds.sortKeyInGUI);
             ClientRegistry.registerKeyBinding(BSKeybinds.dropoffKey);
             ClientRegistry.registerKeyBinding(BSKeybinds.ae2TerminalSearchKey);
+            ClientRegistry.registerKeyBinding(BSKeybinds.lockSlotKey);
             ClientRegistry.registerKeyBinding(BSKeybinds.BOGO_SORTER_CONTROLS_BUTTON);
         }
     }

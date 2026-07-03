@@ -365,7 +365,11 @@ public class SortHandler {
                 slot.callGetStack()
                     .copy());
             boolean isEmpty = slot.callGetStack() == null;
-            if (canTake || canInsert || isEmpty) result.add(slot);
+            int slotIdToCheck = BogoSortAPI.isPlayerSlot(slot) ? slot.callGetSlotIndex() : slot.getSlotNumber();
+            if ((canTake || canInsert || isEmpty)
+                && !com.cleanroommc.bogosorter.common.config.SortRulesConfig.lockedSlots.contains(slotIdToCheck)) {
+                result.add(slot);
+            }
         }
         return result;
 
