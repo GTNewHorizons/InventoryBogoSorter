@@ -340,7 +340,7 @@ public final class Ae2TooltipClient {
         tooltip.add(
             EnumChatFormatting.GRAY + StatCollector.translateToLocalFormatted(
                 "bogosorter.tooltip.amount_in_system",
-                EnumChatFormatting.AQUA + ReadableNumberConverter.INSTANCE.toWideReadableForm(amount)
+                EnumChatFormatting.GOLD + ReadableNumberConverter.INSTANCE.toWideReadableForm(amount)
                     + suffixFor(amountKind)));
     }
 

@@ -2,6 +2,8 @@ package com.cleanroommc.bogosorter;
 
 import static com.cleanroommc.bogosorter.ShortcutHandler.SetCanTakeStack;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,6 +64,27 @@ public class ClientEventHandler {
     private static long timeDropoff = 0;
     private static long ticks = 0;
     private static GuiScreen nextGui = null;
+
+    private static Class<?> NEI_GUI_RECIPE_CLASS;
+    private static Field NEI_SEARCH_FIELD;
+    private static Method NEI_SEARCH_FIELD_IS_VISIBLE;
+    private static Method NEI_SEARCH_FIELD_FOCUSED;
+
+    static {
+        try {
+            if (Loader.isModLoaded("NotEnoughItems")) {
+                NEI_GUI_RECIPE_CLASS = Class.forName("codechicken.nei.recipe.GuiRecipe");
+                NEI_SEARCH_FIELD = NEI_GUI_RECIPE_CLASS.getDeclaredField("searchField");
+                NEI_SEARCH_FIELD.setAccessible(true);
+                NEI_SEARCH_FIELD_IS_VISIBLE = NEI_SEARCH_FIELD.getType()
+                    .getMethod("isVisible");
+                NEI_SEARCH_FIELD_FOCUSED = NEI_SEARCH_FIELD.getType()
+                    .getMethod("focused");
+            }
+        } catch (ReflectiveOperationException | LinkageError e) {
+            NEI_GUI_RECIPE_CLASS = null;
+        }
+    }
 
     public static void openNextTick(GuiScreen screen) {
         ClientEventHandler.nextGui = screen;
@@ -253,7 +276,8 @@ public class ClientEventHandler {
                 timeConfigGui = t;
             }
         }
-        if (Keypress(BSKeybinds.dropoffKey)) {
+        // keybind press + filter out nei
+        if (Keypress(BSKeybinds.dropoffKey) && !isNeiRecipeSearchFocused()) {
             long t = Minecraft.getSystemTime();
             if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
                 if (BogoSorterConfig.dropOff.enableDropOff) {
@@ -263,6 +287,21 @@ public class ClientEventHandler {
             }
         }
         return false;
+    }
+
+    // check if nei filter search bar is active
+    private static boolean isNeiRecipeSearchFocused() {
+        if (NEI_GUI_RECIPE_CLASS == null) return false;
+
+        try {
+            GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+            if (!NEI_GUI_RECIPE_CLASS.isInstance(currentScreen)) return false;
+            Object searchField = NEI_SEARCH_FIELD.get(null);
+            return searchField != null && Boolean.TRUE.equals(NEI_SEARCH_FIELD_IS_VISIBLE.invoke(searchField))
+                && Boolean.TRUE.equals(NEI_SEARCH_FIELD_FOCUSED.invoke(searchField));
+        } catch (ReflectiveOperationException | LinkageError ignored) {
+            return false;
+        }
     }
 
     private static boolean canSort(@Nullable SlotAccessor slot) {
