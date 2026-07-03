@@ -335,6 +335,28 @@ public class ConfigGui extends CustomModularScreen {
                         new CycleButtonWidget()
                             .value(
                                 new BoolValue.Dynamic(
+                                    () -> BogoSorterConfig.dropOff.enableHotbarDropOff,
+                                    val -> BogoSorterConfig.dropOff.enableHotbarDropOff = val))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosort.gui.dropoff_hotbar_enable")
+                            .asWidget()
+                            .height(14)
+                            .marginLeft(10)
+                            .expanded()))
+            .child(
+                Flow.row()
+                    .widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(
+                        new CycleButtonWidget()
+                            .value(
+                                new BoolValue.Dynamic(
                                     () -> BogoSorterConfig.dropOff.button.showButton,
                                     val -> BogoSorterConfig.dropOff.button.showButton = val))
                             .stateOverlay(TOGGLE_BUTTON)

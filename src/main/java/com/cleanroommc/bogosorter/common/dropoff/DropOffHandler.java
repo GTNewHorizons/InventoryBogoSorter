@@ -4,6 +4,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.bogosorter.compat.VendingMachineCompat;
 import com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers;
@@ -61,7 +62,9 @@ public class DropOffHandler {
             return;
         }
 
-        for (int i = InventoryManager.Slots.PLAYER_INVENTORY_FIRST; i < playerStacks.length; ++i) {
+        int startIndex = BogoSorterConfig.dropOff.enableHotbarDropOff ? InventoryManager.Slots.FIRST
+            : InventoryManager.Slots.PLAYER_INVENTORY_FIRST;
+        for (int i = startIndex; i < playerStacks.length; ++i) {
             if (Mods.Backhand.isLoaded() && i == offhandSlot) {
                 // Dont take the offhand item
                 continue;
