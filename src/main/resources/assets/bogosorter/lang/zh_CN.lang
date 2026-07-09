@@ -83,9 +83,9 @@ bogosort.sortrules.nbt.enchantment_book.description=根据效果和等级对附�
 bogosort.sortrules.nbt.gt_circ_config.description=根据配置对格雷科技的编程电路排序
 bogosort.sortrules.nbt.gt_item_damage.description=根据耐久对格雷科技的工具排序
 
-bogosorter.tooltip.amount_in_system=系统中金额: %s
-bogosorter.tooltip.amount_out_of_range=系统中金额: 超出范围!
-bogosorter.tooltip.amount_checking=系统中金额: 检查...
+bogosorter.tooltip.amount_in_system=网络中数量：%s
+bogosorter.tooltip.amount_out_of_range=网络中数量：超出网络范围！
+bogosorter.tooltip.amount_checking=网络中数量：正在检查……
 
 bogosorter.config.ae2=AE2 集成
 bogosorter.config.ae2.amount_tooltips=AE2 数量提示信息
