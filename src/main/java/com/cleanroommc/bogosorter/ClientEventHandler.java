@@ -3,7 +3,6 @@ package com.cleanroommc.bogosorter;
 import static com.cleanroommc.bogosorter.ShortcutHandler.SetCanTakeStack;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,20 +65,17 @@ public class ClientEventHandler {
     private static GuiScreen nextGui = null;
 
     private static Class<?> NEI_GUI_RECIPE_CLASS;
-    private static Field NEI_SEARCH_FIELD;
-    private static Method NEI_SEARCH_FIELD_IS_VISIBLE;
-    private static Method NEI_SEARCH_FIELD_FOCUSED;
+    private static Field NEI_RECIPE_SEARCH_FIELD;
+    private static Field NEI_INVENTORY_SEARCH_FIELD;
 
     static {
         try {
             if (Loader.isModLoaded("NotEnoughItems")) {
                 NEI_GUI_RECIPE_CLASS = Class.forName("codechicken.nei.recipe.GuiRecipe");
-                NEI_SEARCH_FIELD = NEI_GUI_RECIPE_CLASS.getDeclaredField("searchField");
-                NEI_SEARCH_FIELD.setAccessible(true);
-                NEI_SEARCH_FIELD_IS_VISIBLE = NEI_SEARCH_FIELD.getType()
-                    .getMethod("isVisible");
-                NEI_SEARCH_FIELD_FOCUSED = NEI_SEARCH_FIELD.getType()
-                    .getMethod("focused");
+                NEI_RECIPE_SEARCH_FIELD = NEI_GUI_RECIPE_CLASS.getDeclaredField("searchField");
+                NEI_RECIPE_SEARCH_FIELD.setAccessible(true);
+                NEI_INVENTORY_SEARCH_FIELD = Class.forName("codechicken.nei.LayoutManager")
+                    .getField("searchField");
             }
         } catch (ReflectiveOperationException | LinkageError e) {
             NEI_GUI_RECIPE_CLASS = null;
@@ -276,8 +272,9 @@ public class ClientEventHandler {
                 timeConfigGui = t;
             }
         }
-        // keybind press + filter out nei
-        if (Keypress(BSKeybinds.dropoffKey) && !isNeiRecipeSearchFocused()) {
+        // Ignore the global input event while a GUI is open; GUI input is handled above with its actual context.
+        if (Keypress(BSKeybinds.dropoffKey) && (Minecraft.getMinecraft().currentScreen == null || container != null)
+            && !isNeiSearchFocused()) {
             long t = Minecraft.getSystemTime();
             if (t - timeDropoff > BogoSorterConfig.dropOff.dropoffPacketThrottleInMS) {
                 if (BogoSorterConfig.dropOff.enableDropOff) {
@@ -289,19 +286,30 @@ public class ClientEventHandler {
         return false;
     }
 
-    // check if nei filter search bar is active
-    private static boolean isNeiRecipeSearchFocused() {
+    private static boolean isNeiSearchFocused() {
         if (NEI_GUI_RECIPE_CLASS == null) return false;
 
         try {
+            Object searchField = NEI_INVENTORY_SEARCH_FIELD.get(null);
+            if (isNeiSearchFocused(searchField)) return true;
+
             GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
             if (!NEI_GUI_RECIPE_CLASS.isInstance(currentScreen)) return false;
-            Object searchField = NEI_SEARCH_FIELD.get(null);
-            return searchField != null && Boolean.TRUE.equals(NEI_SEARCH_FIELD_IS_VISIBLE.invoke(searchField))
-                && Boolean.TRUE.equals(NEI_SEARCH_FIELD_FOCUSED.invoke(searchField));
+            return isNeiSearchFocused(NEI_RECIPE_SEARCH_FIELD.get(null));
         } catch (ReflectiveOperationException | LinkageError ignored) {
             return false;
         }
+    }
+
+    private static boolean isNeiSearchFocused(@Nullable Object searchField) throws ReflectiveOperationException {
+        return searchField != null && Boolean.TRUE.equals(
+            searchField.getClass()
+                .getMethod("isVisible")
+                .invoke(searchField))
+            && Boolean.TRUE.equals(
+                searchField.getClass()
+                    .getMethod("focused")
+                    .invoke(searchField));
     }
 
     private static boolean canSort(@Nullable SlotAccessor slot) {
@@ -408,12 +416,6 @@ public class ClientEventHandler {
     }
 
     private static boolean Keypress(KeyBinding key) {
-        int keyCode = key.getKeyCode();
-        if (keyCode == 0) return false;
-        if (keyCode > 0) {
-            return key.isPressed() || Keyboard.isKeyDown(keyCode);
-        } else {
-            return Mouse.isButtonDown(100 + keyCode);
-        }
+        return key.getKeyCode() != 0 && (key.isPressed() || key.getIsKeyPressed());
     }
 }
