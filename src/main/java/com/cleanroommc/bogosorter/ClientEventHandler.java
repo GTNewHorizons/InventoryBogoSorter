@@ -240,7 +240,8 @@ public class ClientEventHandler {
             }
             SetCanTakeStack = true;
         }
-        if (Keypress(BSKeybinds.sortKeyOutsideGUI)) {
+        if (Keypress(BSKeybinds.sortKeyOutsideGUI)
+            && (Minecraft.getMinecraft().currentScreen == null || container != null)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
