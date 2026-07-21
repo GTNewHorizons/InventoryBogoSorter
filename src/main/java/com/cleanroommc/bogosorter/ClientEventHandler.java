@@ -135,7 +135,7 @@ public class ClientEventHandler {
         return Minecraft.getSystemTime() - timeShortcut > 50;
     }
 
-    // i have to subscribe to 4 events to catch all inputs
+    // Subscribe to 4 events to catch all inputs
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
