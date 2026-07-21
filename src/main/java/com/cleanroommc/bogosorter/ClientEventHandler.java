@@ -22,7 +22,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
@@ -317,19 +316,6 @@ public class ClientEventHandler {
         return !Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode
             || (Minecraft.getMinecraft().thePlayer.inventory.getItemStack() == null
                 && (slot == null || slot.callGetStack() == null));
-    }
-
-    private static boolean isButtonPressed(int button) {
-        return Mouse.getEventButtonState() && Mouse.getEventButton() == button;
-    }
-
-    private static boolean isKeyDown(KeyBinding key) {
-        if (key.getKeyCode() == 0) return false;
-
-        if (key.getKeyCode() < 0) {
-            return isButtonPressed(key.getKeyCode() + 100);
-        }
-        return Keyboard.getEventKeyState() && Keyboard.getEventKey() == key.getKeyCode();
     }
 
     public static boolean isSortableContainer(GuiScreen screen) {
