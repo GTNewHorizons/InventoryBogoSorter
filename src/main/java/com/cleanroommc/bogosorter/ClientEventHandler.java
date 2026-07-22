@@ -22,6 +22,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
@@ -38,7 +39,9 @@ import com.cleanroommc.bogosorter.common.sort.ClientSortData;
 import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
 import com.cleanroommc.bogosorter.common.sort.SlotGroup;
 import com.cleanroommc.bogosorter.common.sort.SortHandler;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.bogosorter.compat.ae2.Ae2TerminalSearchAdapter;
+import com.cleanroommc.bogosorter.compat.controlling.ControllingCompat;
 import com.cleanroommc.bogosorter.compat.screen.WarningScreen;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
@@ -403,6 +406,14 @@ public class ClientEventHandler {
     }
 
     private static boolean Keypress(KeyBinding key) {
-        return key.getKeyCode() != 0 && (key.isPressed() || key.getIsKeyPressed());
+        int keyCode = key.getKeyCode();
+        if (keyCode == 0) return false;
+        if (key.isPressed() || key.getIsKeyPressed()) return true;
+
+        boolean eventPressed = keyCode > 0 ? Keyboard.getEventKeyState() && Keyboard.getEventKey() == keyCode
+            : Mouse.getEventButtonState() && Mouse.getEventButton() == keyCode + 100;
+        if (!eventPressed) return false;
+
+        return !Mods.Controlling.isLoaded() || ControllingCompat.isModifierActive(key);
     }
 }
