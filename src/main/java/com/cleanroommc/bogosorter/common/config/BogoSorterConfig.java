@@ -11,6 +11,9 @@ public class BogoSorterConfig {
     @Config.Comment("DropOff Configuration")
     public static final DropOff dropOff = new DropOff();
 
+    @Config.Comment("Drop Key Repeat Configuration")
+    public static final DropKeyRepeat dropKeyRepeat = new DropKeyRepeat();
+
     @Config.Comment("Usage Ticker Configuration")
     public static final UsageTicker usageTicker = new UsageTicker();
 
@@ -73,6 +76,27 @@ public class BogoSorterConfig {
     @Config.LangKey("bogosorter.config.debug_tools.enable")
     @Config.Sync
     public static boolean enableDebugTools;
+
+    @Config.LangKey("bogosorter.config.dropkeyrepeat")
+    public static class DropKeyRepeat {
+
+        @Config.DefaultBoolean(true)
+        @Config.Comment("Hold the vanilla drop key to keep dropping items (world and container GUIs).")
+        @Config.LangKey("bogosorter.config.dropkeyrepeat.enable")
+        public boolean enableDropKeyRepeat;
+
+        @Config.DefaultInt(5)
+        @Config.RangeInt(min = 0, max = 100)
+        @Config.Comment("Ticks the drop key must stay held before the first repeat.")
+        @Config.LangKey("bogosorter.config.dropkeyrepeat.initial_delay")
+        public int initialDelayTicks;
+
+        @Config.DefaultInt(1)
+        @Config.RangeInt(min = 1, max = 100)
+        @Config.Comment("Ticks between repeated drops while the key is held.")
+        @Config.LangKey("bogosorter.config.dropkeyrepeat.interval")
+        public int repeatIntervalTicks;
+    }
 
     @Config.LangKey("bogosorter.config.ae2")
     public static class Ae2Integration {
