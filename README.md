@@ -20,6 +20,7 @@ The Inventory Tweaks code is very unpleasant to work with. I rather write my own
 - configuring of sort rules (open config with K by default)
 - automatically switching out tools wich are about to break
 - automatically refill broken tools or used up items
+- holding the vanilla drop key keeps dropping items, in the world and over a slot in a GUI (configurable delay/interval, toggle in the config)
 - scroll through vertical slots above a hotbar slots while holding ALT
 - several key shortcuts to move items:
   - CTRL + LMB: transfers a single item

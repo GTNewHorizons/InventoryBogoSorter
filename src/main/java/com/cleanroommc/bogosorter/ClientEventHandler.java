@@ -25,6 +25,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.cleanroommc.bogosorter.api.SortRule;
+import com.cleanroommc.bogosorter.client.drop.DropKeyRepeatHandler;
 import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
 import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.client.network.ClientNetworkHandler;
@@ -97,6 +98,7 @@ public class ClientEventHandler {
         if (event.phase == TickEvent.Phase.END) {
             ClientNetworkHandler.drainClientTasks();
             Ae2TerminalSearchAdapter.applyPendingSearch();
+            DropKeyRepeatHandler.onClientTick();
         }
         if (event.phase == TickEvent.Phase.START) {
             ticks++;

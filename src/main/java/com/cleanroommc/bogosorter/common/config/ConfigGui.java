@@ -421,6 +421,28 @@ public class ConfigGui extends CustomModularScreen {
                     .margin(0, 2)
                     .child(
                         new CycleButtonWidget()
+                            .value(
+                                new BoolValue.Dynamic(
+                                    () -> BogoSorterConfig.dropKeyRepeat.enableDropKeyRepeat,
+                                    val -> BogoSorterConfig.dropKeyRepeat.enableDropKeyRepeat = val))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosort.gui.dropkeyrepeat_enable")
+                            .asWidget()
+                            .height(14)
+                            .marginLeft(10)
+                            .expanded()))
+            .child(
+                Flow.row()
+                    .widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(
+                        new CycleButtonWidget()
                             .value(new BoolValue.Dynamic(() -> BogoSorterConfig.usageTicker.enableModule, val -> {
                                 BogoSorterConfig.usageTicker.enableModule = val;
                                 UsageTicker.reloadElements();
