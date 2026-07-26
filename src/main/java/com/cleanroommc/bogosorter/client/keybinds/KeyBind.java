@@ -87,6 +87,11 @@ public class KeyBind {
         return this.pressedTick >= 0;
     }
 
+    /** Raw key state, ignoring the event based validator and tick bookkeeping. */
+    public boolean areKeysHeld() {
+        return areAllPressed(this.keys) && areAllNotPressed(this.notKeys);
+    }
+
     public int getTicksPressed() {
         return this.pressedTick < 0 ? -1 : (int) (ClientEventHandler.getTicks() - this.pressedTick);
     }

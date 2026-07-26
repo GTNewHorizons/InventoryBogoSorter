@@ -3,10 +3,14 @@ package com.cleanroommc.bogosorter.client.drop;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.inventory.Slot;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.bogosorter.ShortcutHandler;
 import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
+import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.GuiContainerAccessor;
 
@@ -34,6 +38,16 @@ public class DropKeyRepeatHandler {
         if (!guiArmed || armedScreen != Minecraft.getMinecraft().currentScreen) heldTicks = 0;
         guiArmed = true;
         armedScreen = Minecraft.getMinecraft().currentScreen;
+    }
+
+    /** Bogosorter's throw-all shortcuts take priority over the repeat while their combo is held. */
+    public static boolean isThrowShortcutHeld() {
+        return isHeld(BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL))
+            || isHeld(BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL_SAME));
+    }
+
+    private static boolean isHeld(@Nullable KeyBind keyBind) {
+        return keyBind != null && keyBind.areKeysHeld();
     }
 
     public static void onClientTick() {
@@ -82,7 +96,10 @@ public class DropKeyRepeatHandler {
             if (!worldArmed || !mc.inGameHasFocus) return Context.NONE;
             return Context.WORLD;
         }
-        if (guiArmed && mc.currentScreen == armedScreen && mc.currentScreen instanceof GuiContainer) return Context.GUI;
+        // A throw-all shortcut disarms the repeat; the drop key must be re-pressed to resume.
+        if (guiArmed && mc.currentScreen == armedScreen
+            && mc.currentScreen instanceof GuiContainer
+            && !isThrowShortcutHeld()) return Context.GUI;
         guiArmed = false;
         armedScreen = null;
         return Context.NONE;
@@ -97,8 +114,8 @@ public class DropKeyRepeatHandler {
         Slot slot = gui.theSlot;
         // Nothing to drop, but keep counting so drops resume if the slot refills.
         if (slot == null || !slot.getHasStack()) return;
-        // Mode-4 clicks require an empty cursor; a held stack would be a guaranteed no-op.
-        if (mc.thePlayer.inventory.getItemStack() != null) return;
+        // Mode-4 clicks require an empty cursor, except GuiContainerCreative which drops with a full one.
+        if (mc.thePlayer.inventory.getItemStack() != null && !(gui instanceof GuiContainerCreative)) return;
         // Runs from the tick loop, not keyTyped, so SetCanTakeStack may still be stale false from a shortcut;
         // set it true like ClientEventHandler.handleInput does so SlotMixin lets the client-side click match the
         // packet we're about to send.

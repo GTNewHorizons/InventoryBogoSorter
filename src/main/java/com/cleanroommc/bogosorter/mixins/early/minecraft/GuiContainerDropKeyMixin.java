@@ -11,8 +11,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.cleanroommc.bogosorter.client.drop.DropKeyRepeatHandler;
-import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
-import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 
 /** Arms drop key repeats only when vanilla itself drops from the hovered slot. */
 @Mixin(GuiContainer.class)
@@ -29,9 +27,7 @@ public abstract class GuiContainerDropKeyMixin {
         // pick-block bound to the same key wins in vanilla, so no drop happens.
         if (dropKey == mc.gameSettings.keyBindPickBlock.getKeyCode()) return;
         // bogosorter's own throw-all shortcuts take priority while held.
-        KeyBind throwAll = BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL);
-        KeyBind throwAllSame = BSKeybinds.getActiveKeyBind(BSKeybinds.THROW_ALL_SAME);
-        if ((throwAll != null && throwAll.isPressed()) || (throwAllSame != null && throwAllSame.isPressed())) return;
+        if (DropKeyRepeatHandler.isThrowShortcutHeld()) return;
         DropKeyRepeatHandler.armGui();
     }
 }
