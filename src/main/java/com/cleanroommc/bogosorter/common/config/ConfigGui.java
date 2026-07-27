@@ -205,6 +205,28 @@ public class ConfigGui extends CustomModularScreen {
                             .height(14)
                             .marginLeft(10)
                             .expanded()))
+            .child(
+                Flow.row()
+                    .widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(
+                        new CycleButtonWidget()
+                            .value(
+                                new BoolValue.Dynamic(
+                                    () -> BogoSorterConfig.autoRefillFromPinnedSlots,
+                                    val -> BogoSorterConfig.autoRefillFromPinnedSlots = val))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosorter.config.autorefill.from_pinned")
+                            .asWidget()
+                            .height(14)
+                            .marginLeft(10)
+                            .expanded()))
             // .childIf(BogoSorter.isQuarkLoaded(), () -> new ColoredIcon(GuiTextures.EXCLAMATION,
             // Color.RED.main).asWidget()
             // .size(14)

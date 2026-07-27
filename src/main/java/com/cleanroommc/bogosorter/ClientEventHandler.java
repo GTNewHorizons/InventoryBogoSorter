@@ -18,6 +18,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.jetbrains.annotations.Nullable;
@@ -25,15 +26,18 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.cleanroommc.bogosorter.api.SortRule;
+import com.cleanroommc.bogosorter.client.PinnedSlotClient;
 import com.cleanroommc.bogosorter.client.drop.DropKeyRepeatHandler;
 import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
 import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.client.network.ClientNetworkHandler;
+import com.cleanroommc.bogosorter.common.PinnedSlots;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
 import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
 import com.cleanroommc.bogosorter.common.network.CDropOff;
+import com.cleanroommc.bogosorter.common.network.CPlayerPins;
 import com.cleanroommc.bogosorter.common.network.CSort;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.sort.ClientSortData;
@@ -113,6 +117,7 @@ public class ClientEventHandler {
     public void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent ignored) {
         Ae2TerminalSearchAdapter.clearPendingSearch();
         com.cleanroommc.bogosorter.client.ae2.Ae2ClientBridge.resetConnectionState();
+        PinnedSlotClient.clear();
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -129,6 +134,13 @@ public class ClientEventHandler {
                 warnings.add(1, "");
                 event.gui = new WarningScreen(warnings);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (event.gui instanceof GuiContainer gui) {
+            NetworkHandler.sendToServer(CPlayerPins.get(gui.inventorySlots.windowId));
         }
     }
 
@@ -203,6 +215,15 @@ public class ClientEventHandler {
 
     // handle all inputs in one method
     public static boolean handleInput(@Nullable GuiContainer container) {
+
+        if (container != null && pinSlotPressed()) {
+            SlotAccessor slot = getSlot(container);
+            if (PinnedSlots.isPinnable(slot)) {
+                NetworkHandler
+                    .sendToServer(CPlayerPins.toggle(container.inventorySlots.windowId, slot.getSlotNumber()));
+                return true;
+            }
+        }
 
         if (container != null && canDoShortcutAction()) {
             KeyBind key;
@@ -289,6 +310,12 @@ public class ClientEventHandler {
             }
         }
         return false;
+    }
+
+    private static boolean pinSlotPressed() {
+        if (Mods.Controlling.isLoaded()) return Keypress(BSKeybinds.pinSlotKey);
+        KeyBind key = BSKeybinds.getActiveKeyBind(BSKeybinds.PIN_SLOT);
+        return key != null && key.isFirstPress();
     }
 
     private static boolean isNeiSearchFocused() {

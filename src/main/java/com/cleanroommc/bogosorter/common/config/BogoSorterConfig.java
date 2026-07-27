@@ -41,6 +41,11 @@ public class BogoSorterConfig {
     @Config.Sync
     public static boolean enableAutoRefill_server;
 
+    @Config.DefaultBoolean(false)
+    @Config.Comment("Allow auto-refill to take items from pinned player inventory slots.")
+    @Config.LangKey("bogosorter.config.autorefill.from_pinned")
+    public static boolean autoRefillFromPinnedSlots;
+
     @Config.DefaultInt(1)
     @Config.Comment("The damage threshold for auto-refill. If the item has less than this amount of durability, it will be refilled.")
     @Config.LangKey("bogosorter.config.autorefill.damage_threshold")

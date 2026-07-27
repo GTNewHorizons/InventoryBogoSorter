@@ -13,11 +13,13 @@ public class CRefill implements IPacket {
     private ItemStack stack;
     private int index;
     private boolean swap;
+    private boolean allowPinnedSlots;
 
-    public CRefill(ItemStack _stack, int _index, boolean _swap) {
+    public CRefill(ItemStack _stack, int _index, boolean _swap, boolean _allowPinnedSlots) {
         this.stack = _stack;
         this.index = _index;
         this.swap = _swap;
+        this.allowPinnedSlots = _allowPinnedSlots;
     }
 
     public CRefill() {}
@@ -27,6 +29,7 @@ public class CRefill implements IPacket {
         buf.writeItemStackToBuffer(stack);
         buf.writeInt(index);
         buf.writeBoolean(swap);
+        buf.writeBoolean(allowPinnedSlots);
     }
 
     @Override
@@ -34,12 +37,14 @@ public class CRefill implements IPacket {
         this.stack = buf.readItemStackFromBuffer();
         this.index = buf.readInt();
         this.swap = buf.readBoolean();
+        this.allowPinnedSlots = buf.readBoolean();
     }
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         if (stack != null && this.index >= 0 && this.index < 9) {
-            new RefillHandler(this.index, this.stack, handler.playerEntity, this.swap).handleRefill();
+            new RefillHandler(this.index, this.stack, handler.playerEntity, this.swap, this.allowPinnedSlots)
+                .handleRefill();
         }
         return null;
     }

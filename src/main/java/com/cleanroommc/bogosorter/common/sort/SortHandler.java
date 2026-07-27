@@ -25,6 +25,7 @@ import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.common.McUtils;
+import com.cleanroommc.bogosorter.common.PinnedSlots;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.config.SortRulesConfig;
 import com.cleanroommc.bogosorter.common.network.CSlotSync;
@@ -344,6 +345,7 @@ public class SortHandler {
         List<SlotAccessor> result = new ArrayList<>();
 
         for (SlotAccessor slot : slotGroup.getSlots()) {
+            if (PinnedSlots.isPinned(player, slot)) continue;
             /*
              * Logic being used to check if we cannot access the slot:
              * 1. Can the player take the stack?

@@ -22,6 +22,7 @@ public enum Mixins implements IMixins {
             "minecraft.GuiScreenAccessor",
             "minecraft.GuiContainerAccessor",
             "minecraft.GuiContainerDropKeyMixin",
+            "minecraft.GuiContainerPinnedSlotMixin",
             "minecraft.GuiEditSignMixin",
             "minecraft.MinecraftMixin")),
     IronChest(new MixinBuilder()
