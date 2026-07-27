@@ -1,9 +1,12 @@
 package com.cleanroommc.bogosorter.common;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
+import com.cleanroommc.bogosorter.compat.Mods;
+import com.cleanroommc.bogosorter.compat.backpack.BackpackPinnedSlots;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 
 public final class PinnedSlots {
@@ -20,8 +23,30 @@ public final class PinnedSlots {
         return BogoSortAPI.isPlayerSlot(slot) && bitForIndex(slot.callGetSlotIndex()) != 0;
     }
 
+    public static boolean isPinnable(EntityPlayer player, Container container, SlotAccessor slot) {
+        return isPinnable(slot)
+            || (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isPinnable(player, container, slot));
+    }
+
     public static boolean isPinned(EntityPlayer player, SlotAccessor slot) {
         return isPinnable(slot) && isPinned(player, slot.callGetSlotIndex());
+    }
+
+    public static boolean isPinned(EntityPlayer player, Container container, SlotAccessor slot, int[] backpackMask) {
+        return isPinned(player, slot)
+            || (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isPinned(backpackMask, container, slot));
+    }
+
+    public static boolean isBackpackPinned(int[] mask, Container container, SlotAccessor slot) {
+        return Mods.Backpack.isLoaded() && BackpackPinnedSlots.isPinned(mask, container, slot);
+    }
+
+    public static int[] getBackpackMask(EntityPlayer player, Container container) {
+        return Mods.Backpack.isLoaded() ? BackpackPinnedSlots.getMask(player, container) : new int[0];
+    }
+
+    public static int[] toggleBackpack(EntityPlayer player, Container container, SlotAccessor slot) {
+        return Mods.Backpack.isLoaded() ? BackpackPinnedSlots.toggle(player, container, slot) : new int[0];
     }
 
     public static boolean isPinned(EntityPlayer player, int inventoryIndex) {

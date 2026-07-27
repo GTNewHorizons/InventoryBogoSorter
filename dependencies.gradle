@@ -74,6 +74,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:Battlegear2:1.4.3:dev") { transitive = false }
 
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:waila:1.19.31:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.6.15-GTNH:dev") { transitive = false }
 
     compileOnly("com.gregoriust.gregtech:gregtech_1.7.10:6.17.05:dev") { transitive = false }
 

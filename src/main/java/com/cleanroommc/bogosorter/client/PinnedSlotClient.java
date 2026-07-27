@@ -20,24 +20,38 @@ public final class PinnedSlotClient extends Gui {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(BogoSorter.ID, "textures/gui/pinned_slot.png");
 
-    private static int mask;
+    private static int playerMask;
+    private static int backpackWindowId = -1;
+    private static int[] backpackMask = new int[0];
 
     private PinnedSlotClient() {}
 
-    public static void sync(int newWindowId, int newMask) {
-        mask = newMask;
+    public static void sync(int newWindowId, int newPlayerMask, int[] newBackpackMask) {
+        playerMask = newPlayerMask;
+        backpackWindowId = newWindowId;
+        backpackMask = newBackpackMask;
     }
 
     public static void clear() {
-        mask = 0;
+        playerMask = 0;
+        clearContainer();
+    }
+
+    public static void clearContainer() {
+        backpackWindowId = -1;
+        backpackMask = new int[0];
     }
 
     public static void draw(GuiContainer gui, Slot slot) {
-        if (mask == 0) return;
+        if (playerMask == 0 && backpackMask.length == 0) return;
 
         SlotAccessor slotAccessor = (SlotAccessor) slot;
         int index = slotAccessor.callGetSlotIndex();
-        if (!PinnedSlots.isPinnable(slotAccessor) || (mask & 1 << index - PinnedSlots.FIRST_PLAYER_SLOT) == 0) return;
+        boolean playerPinned = PinnedSlots.isPinnable(slotAccessor)
+            && (playerMask & 1 << index - PinnedSlots.FIRST_PLAYER_SLOT) != 0;
+        boolean backpackPinned = gui.inventorySlots.windowId == backpackWindowId
+            && PinnedSlots.isBackpackPinned(backpackMask, gui.inventorySlots, slotAccessor);
+        if (!playerPinned && !backpackPinned) return;
 
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_BLEND);

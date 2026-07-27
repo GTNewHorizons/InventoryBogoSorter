@@ -54,13 +54,20 @@ public class CPlayerPins implements IPacket {
         Container container = player.openContainer;
         if (container == null || container.windowId != windowId) return null;
 
+        int[] backpackMask = null;
         if (operation == Operation.TOGGLE) {
             if (slotNumber < 0 || slotNumber >= container.inventorySlots.size()) return null;
             SlotAccessor slot = BogoSortAPI.getSlot(container, slotNumber);
-            if (!PinnedSlots.isPinnable(slot)) return null;
-            PinnedSlots.toggle(player, slot.callGetSlotIndex());
+            if (PinnedSlots.isPinnable(slot)) {
+                PinnedSlots.toggle(player, slot.callGetSlotIndex());
+            } else {
+                backpackMask = PinnedSlots.toggleBackpack(player, container, slot);
+                if (backpackMask.length == 0) return null;
+                container.detectAndSendChanges();
+            }
         }
-        return new SPlayerPins(windowId, PinnedSlots.getMask(player));
+        if (backpackMask == null) backpackMask = PinnedSlots.getBackpackMask(player, container);
+        return new SPlayerPins(windowId, PinnedSlots.getMask(player), backpackMask);
     }
 
     private enum Operation {

@@ -69,7 +69,8 @@ public class ShortcutHandler {
             List<SlotAccessor> shortcutSlots = getContainerShortcutSlots(container);
             List<SlotAccessor> targetSlots = getShortcutTargetSlots(slot, sortingContext, shortcutSlots);
             if (targetSlots == null || containsSlot(targetSlots, slot)) return;
-            targetSlots = withoutPinned(player, targetSlots);
+            int[] backpackPins = PinnedSlots.getBackpackMask(player, container);
+            targetSlots = withoutPinned(player, container, targetSlots, backpackPins);
 
             toInsert = emptySlot ? BogoSortAPI.insert(container, targetSlots, toInsert, true)
                 : BogoSortAPI.insert(container, targetSlots, toInsert);
@@ -81,7 +82,8 @@ public class ShortcutHandler {
                     otherSlots.add(BogoSortAPI.INSTANCE.getSlot(slot1));
                 }
             }
-            otherSlots = withoutPinned(player, otherSlots);
+            int[] backpackPins = PinnedSlots.getBackpackMask(player, container);
+            otherSlots = withoutPinned(player, container, otherSlots, backpackPins);
             toInsert = emptySlot ? BogoSortAPI.insert(container, otherSlots, toInsert, true)
                 : BogoSortAPI.insert(container, otherSlots, toInsert);
         }
@@ -152,10 +154,12 @@ public class ShortcutHandler {
                 }
             }
         }
-        targetSlots = withoutPinned(player, targetSlots);
+        int[] backpackPins = PinnedSlots.getBackpackMask(player, container);
+        targetSlots = withoutPinned(player, container, targetSlots, backpackPins);
 
         for (SlotAccessor slot1 : sourceSlots) {
-            if (PinnedSlots.isPinned(player, slot1) && slot1.getSlotNumber() != slot.getSlotNumber()) continue;
+            if (PinnedSlots.isPinned(player, container, slot1, backpackPins)
+                && slot1.getSlotNumber() != slot.getSlotNumber()) continue;
             Slot realSlot = container.getSlot(slot1.getSlotNumber());
             if (realSlot == null || !realSlot.getHasStack() || SlotDummyOrCrafting(realSlot)) continue;
             ItemStack stackInSlot = slot1.callGetStack();
@@ -236,8 +240,10 @@ public class ShortcutHandler {
             if (slotGroup == null) return;
             sourceSlots = slotGroup.getSlots();
         }
+        int[] backpackPins = PinnedSlots.getBackpackMask(player, container);
         for (SlotAccessor slot1 : sourceSlots) {
-            if (PinnedSlots.isPinned(player, slot1) && slot1.getSlotNumber() != slot.getSlotNumber()) continue;
+            if (PinnedSlots.isPinned(player, container, slot1, backpackPins)
+                && slot1.getSlotNumber() != slot.getSlotNumber()) continue;
             Slot realSlot = container.getSlot(slot1.getSlotNumber());
             if (realSlot == null || !realSlot.getHasStack()
                 || SlotDummyOrCrafting(realSlot)
@@ -254,10 +260,11 @@ public class ShortcutHandler {
         }
     }
 
-    private static List<SlotAccessor> withoutPinned(EntityPlayer player, List<SlotAccessor> slots) {
+    private static List<SlotAccessor> withoutPinned(EntityPlayer player, Container container, List<SlotAccessor> slots,
+        int[] backpackPins) {
         List<SlotAccessor> result = new ArrayList<>(slots.size());
         for (SlotAccessor slot : slots) {
-            if (!PinnedSlots.isPinned(player, slot)) result.add(slot);
+            if (!PinnedSlots.isPinned(player, container, slot, backpackPins)) result.add(slot);
         }
         return result;
     }

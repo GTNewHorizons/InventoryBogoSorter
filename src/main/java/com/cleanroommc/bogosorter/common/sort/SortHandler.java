@@ -95,6 +95,7 @@ public class SortHandler {
     private final Int2ObjectMap<ClientSortData> clientSortData;
     private final List<SortRule<ItemStack>> itemSortRules;
     private final List<NbtSortRule> nbtSortRules;
+    private final int[] backpackPins;
 
     public SortHandler(EntityPlayer player, Container container, List<SortRule<ItemStack>> itemSortRules,
         List<NbtSortRule> nbtSortRules, Int2ObjectMap<ClientSortData> clientSortData) {
@@ -103,6 +104,7 @@ public class SortHandler {
         this.context = GuiSortingContext.getOrCreate(container);
         this.itemSortRules = itemSortRules;
         this.nbtSortRules = nbtSortRules;
+        this.backpackPins = PinnedSlots.getBackpackMask(player, container);
         this.containerComparator = (container1, container2) -> {
             int result;
             for (SortRule<ItemStack> sortRule : this.itemSortRules) {
@@ -345,7 +347,7 @@ public class SortHandler {
         List<SlotAccessor> result = new ArrayList<>();
 
         for (SlotAccessor slot : slotGroup.getSlots()) {
-            if (PinnedSlots.isPinned(player, slot)) continue;
+            if (PinnedSlots.isPinned(player, container, slot, backpackPins)) continue;
             /*
              * Logic being used to check if we cannot access the slot:
              * 1. Can the player take the stack?

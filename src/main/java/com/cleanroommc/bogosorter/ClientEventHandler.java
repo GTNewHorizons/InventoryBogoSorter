@@ -70,6 +70,7 @@ public class ClientEventHandler {
     private static long timeDropoff = 0;
     private static long ticks = 0;
     private static GuiScreen nextGui = null;
+    private static boolean pinSyncPending;
 
     private static Class<?> NEI_GUI_RECIPE_CLASS;
     private static Field NEI_RECIPE_SEARCH_FIELD;
@@ -103,6 +104,12 @@ public class ClientEventHandler {
             ClientNetworkHandler.drainClientTasks();
             Ae2TerminalSearchAdapter.applyPendingSearch();
             DropKeyRepeatHandler.onClientTick();
+            if (pinSyncPending) {
+                if (Minecraft.getMinecraft().currentScreen instanceof GuiContainer gui) {
+                    NetworkHandler.sendToServer(CPlayerPins.get(gui.inventorySlots.windowId));
+                }
+                pinSyncPending = false;
+            }
         }
         if (event.phase == TickEvent.Phase.START) {
             ticks++;
@@ -122,6 +129,8 @@ public class ClientEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onGuiOpen(GuiOpenEvent event) {
+        PinnedSlotClient.clearContainer();
+        pinSyncPending = false;
         if (event.gui instanceof GuiMainMenu && !WarningScreen.wasOpened) {
             WarningScreen.wasOpened = true;
             List<String> warnings = new ArrayList<>();
@@ -139,8 +148,8 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.gui instanceof GuiContainer gui) {
-            NetworkHandler.sendToServer(CPlayerPins.get(gui.inventorySlots.windowId));
+        if (event.gui instanceof GuiContainer) {
+            pinSyncPending = true;
         }
     }
 
@@ -218,7 +227,7 @@ public class ClientEventHandler {
 
         if (container != null && pinSlotPressed()) {
             SlotAccessor slot = getSlot(container);
-            if (PinnedSlots.isPinnable(slot)) {
+            if (PinnedSlots.isPinnable(Minecraft.getMinecraft().thePlayer, container.inventorySlots, slot)) {
                 NetworkHandler
                     .sendToServer(CPlayerPins.toggle(container.inventorySlots.windowId, slot.getSlotNumber()));
                 return true;

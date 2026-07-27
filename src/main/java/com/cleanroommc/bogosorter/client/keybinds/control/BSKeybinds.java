@@ -134,6 +134,7 @@ public class BSKeybinds {
         activeKeyBinds.clear();
         for (Map.Entry<KeybindDefinition, List<Integer>> entry : keyCombos.entrySet()) {
             KeybindDefinition keySetting = entry.getKey();
+            if (Mods.Controlling.isLoaded() && keySetting == PIN_SLOT) continue;
             List<Integer> keys = entry.getValue();
             int[] keyCodes = keys.stream()
                 .mapToInt(i -> i)
@@ -236,7 +237,7 @@ public class BSKeybinds {
         }
 
         boolean needsSave = !configFile.exists();
-        for (KeybindDefinition def : getAllKeybinds()) {
+        for (KeybindDefinition def : ALL_KEYBINDS_WITH_PIN) {
             List<Integer> combo = loadedCombos.get(def.getName());
             if (combo != null) {
                 keyCombos.put(def, combo);

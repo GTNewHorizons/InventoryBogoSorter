@@ -128,8 +128,9 @@ public class BogoSorter {
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP player) {
-            NetworkHandler
-                .sendToPlayer(new SPlayerPins(player.openContainer.windowId, PinnedSlots.getMask(player)), player);
+            NetworkHandler.sendToPlayer(
+                new SPlayerPins(player.openContainer.windowId, PinnedSlots.getMask(player), new int[0]),
+                player);
         }
         // only send tooltip state on login when ae2 is loaded
         if (Mods.Ae2.isLoaded() && event.player instanceof EntityPlayerMP) {
