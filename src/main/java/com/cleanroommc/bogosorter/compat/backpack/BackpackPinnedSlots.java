@@ -24,15 +24,19 @@ public final class BackpackPinnedSlots {
 
     private BackpackPinnedSlots() {}
 
+    public static boolean isContainer(Container container) {
+        return container instanceof ContainerAdvanced;
+    }
+
     public static int getSlotIndex(Container container, SlotAccessor slot) {
         if (slot == null || !(container instanceof ContainerAdvanced backpack)) return -1;
         int start = backpack.getBoundary(Boundaries.BACKPACK);
         int end = backpack.getBoundary(Boundaries.BACKPACK_END);
-        int index = slot.getSlotNumber() - start;
+        int index = slot.callGetSlotIndex();
         return start >= 0 && end > start
-            && slot.getSlotNumber() >= start
-            && slot.getSlotNumber() < end
-            && slot.callGetSlotIndex() == index ? index : -1;
+            && slot.getInventory() == backpack.getInventoryToSave()
+            && index >= 0
+            && index < end - start ? index : -1;
     }
 
     public static int[] getMask(EntityPlayer player, Container container) {
@@ -43,10 +47,6 @@ public final class BackpackPinnedSlots {
     public static boolean isPinnable(EntityPlayer player, Container container, SlotAccessor slot) {
         return getSlotIndex(container, slot) >= 0
             && (player.worldObj.isRemote || resolveOwner(player, container) != null);
-    }
-
-    public static boolean isPinned(int[] mask, Container container, SlotAccessor slot) {
-        return isSet(mask, getSlotIndex(container, slot));
     }
 
     public static int[] toggle(EntityPlayer player, Container container, SlotAccessor slot) {
@@ -108,10 +108,6 @@ public final class BackpackPinnedSlots {
         return itemTag == null ? EMPTY_MASK
             : itemTag.getCompoundTag(MOD_TAG)
                 .getIntArray(PINS_TAG);
-    }
-
-    private static boolean isSet(int[] mask, int index) {
-        return index >= 0 && (index >>> 5) < mask.length && (mask[index >>> 5] & 1 << (index & 31)) != 0;
     }
 
     private static final class Owner {

@@ -22,6 +22,10 @@ public final class AdventureBackpackPinnedSlots {
 
     private AdventureBackpackPinnedSlots() {}
 
+    public static boolean isContainer(Container container) {
+        return container instanceof ContainerBackpack;
+    }
+
     public static int getSlotIndex(Container container, SlotAccessor slot) {
         if (slot == null || !(container instanceof ContainerBackpack backpack)) return -1;
         IInventoryBackpack inventory = backpack.getInventoryBackpack();
@@ -38,11 +42,6 @@ public final class AdventureBackpackPinnedSlots {
     public static boolean isPinnable(EntityPlayer player, Container container, SlotAccessor slot) {
         return getSlotIndex(container, slot) >= 0
             && (player.worldObj.isRemote || resolveOwner(player, container) != null);
-    }
-
-    public static boolean isPinned(int[] mask, Container container, SlotAccessor slot) {
-        int index = getSlotIndex(container, slot);
-        return index >= 0 && (index >>> 5) < mask.length && (mask[index >>> 5] & 1 << (index & 31)) != 0;
     }
 
     public static int[] toggle(EntityPlayer player, Container container, SlotAccessor slot) {
@@ -62,11 +61,9 @@ public final class AdventureBackpackPinnedSlots {
         }
 
         ItemStack parent = owner.getParentItem();
-        if (parent == null) {
-            return toPacketMask(mask);
-        } else if (parent == Wearing.getWearingBackpack(player)) {
+        if (parent == Wearing.getWearingBackpack(player)) {
             BackpackProperty.sync(player);
-        } else {
+        } else if (parent != null) {
             player.inventory.markDirty();
         }
         return toPacketMask(mask);

@@ -15,7 +15,11 @@ public abstract class GuiContainerPinnedSlotMixin {
 
     @Inject(method = "func_146977_a", at = @At("HEAD"))
     private void bogosorter$drawPinnedSlot(Slot slot, CallbackInfo ci) {
-        PinnedSlotClient.drawOutline((GuiContainer) (Object) this, slot);
-        PinnedSlotClient.drawIcon((GuiContainer) (Object) this, slot);
+        PinnedSlotClient.beginSlot((GuiContainer) (Object) this, slot);
+    }
+
+    @Inject(method = "func_146977_a", at = @At("RETURN"))
+    private void bogosorter$finishPinnedSlot(Slot slot, CallbackInfo ci) {
+        PinnedSlotClient.endSlot((GuiContainer) (Object) this, slot);
     }
 }

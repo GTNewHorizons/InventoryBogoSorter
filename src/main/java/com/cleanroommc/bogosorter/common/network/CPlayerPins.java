@@ -56,14 +56,14 @@ public class CPlayerPins implements IPacket {
 
         int[] backpackMask = null;
         if (operation == Operation.TOGGLE) {
-            if (slotNumber < 0 || slotNumber >= container.inventorySlots.size()) return null;
-            SlotAccessor slot = BogoSortAPI.getSlot(container, slotNumber);
-            if (PinnedSlots.isPinnable(slot)) {
-                PinnedSlots.toggle(player, slot.callGetSlotIndex());
-            } else {
-                backpackMask = PinnedSlots.toggleBackpack(player, container, slot);
-                if (backpackMask.length == 0) return null;
-                container.detectAndSendChanges();
+            if (slotNumber >= 0 && slotNumber < container.inventorySlots.size()) {
+                SlotAccessor slot = BogoSortAPI.getSlot(container, slotNumber);
+                if (PinnedSlots.isPinnable(slot)) {
+                    PinnedSlots.toggle(player, slot.callGetSlotIndex());
+                } else {
+                    backpackMask = PinnedSlots.toggleBackpack(player, container, slot);
+                    if (backpackMask.length != 0) container.detectAndSendChanges();
+                }
             }
         }
         if (backpackMask == null) backpackMask = PinnedSlots.getBackpackMask(player, container);

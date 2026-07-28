@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter.client;
 
+import java.util.Arrays;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -28,6 +30,8 @@ public final class PinnedSlotClient extends Gui {
     private static int playerMask;
     private static int backpackWindowId = -1;
     private static int[] backpackMask = new int[0];
+    private static GuiContainer drawingGui;
+    private static Slot drawingSlot;
 
     private PinnedSlotClient() {}
 
@@ -45,14 +49,48 @@ public final class PinnedSlotClient extends Gui {
     public static void clearContainer() {
         backpackWindowId = -1;
         backpackMask = new int[0];
+        drawingGui = null;
+        drawingSlot = null;
     }
 
-    public static void drawOutline(GuiContainer gui, Slot slot) {
-        if (isPinned(gui, slot)) draw(OUTLINE, slot.xDisplayPosition - 1, slot.yDisplayPosition - 1, 18, false);
+    public static void toggle(GuiContainer gui, SlotAccessor slot) {
+        if (PinnedSlots.isPinnable(slot)) {
+            playerMask ^= 1 << slot.callGetSlotIndex() - PinnedSlots.FIRST_PLAYER_SLOT;
+            return;
+        }
+
+        int index = PinnedSlots.getBackpackSlotIndex(gui.inventorySlots, slot);
+        if (index < 0) return;
+        if (backpackWindowId != gui.inventorySlots.windowId) {
+            backpackWindowId = gui.inventorySlots.windowId;
+            backpackMask = new int[0];
+        }
+        int word = index >>> 5;
+        if (backpackMask.length <= word) backpackMask = Arrays.copyOf(backpackMask, word + 1);
+        backpackMask[word] ^= 1 << (index & 31);
     }
 
-    public static void drawIcon(GuiContainer gui, Slot slot) {
-        if (isPinned(gui, slot)) draw(ICON, slot.xDisplayPosition, slot.yDisplayPosition, 16, true);
+    public static void beginSlot(GuiContainer gui, Slot slot) {
+        drawingGui = null;
+        drawingSlot = null;
+        if (!isPinned(gui, slot)) return;
+        draw(OUTLINE, slot.xDisplayPosition - 1, slot.yDisplayPosition - 1, 18);
+        drawingGui = gui;
+        drawingSlot = slot;
+    }
+
+    public static void drawIconAfterItem(int x, int y) {
+        if (drawingSlot == null || drawingSlot.xDisplayPosition != x || drawingSlot.yDisplayPosition != y) return;
+        draw(ICON, x, y, 16);
+        drawingGui = null;
+        drawingSlot = null;
+    }
+
+    public static void endSlot(GuiContainer gui, Slot slot) {
+        if (drawingGui != gui || drawingSlot != slot) return;
+        draw(ICON, slot.xDisplayPosition, slot.yDisplayPosition, 16);
+        drawingGui = null;
+        drawingSlot = null;
     }
 
     private static boolean isPinned(GuiContainer gui, Slot slot) {
@@ -67,15 +105,10 @@ public final class PinnedSlotClient extends Gui {
         return playerPinned || backpackPinned;
     }
 
-    private static void draw(ResourceLocation texture, int x, int y, int size, boolean aboveItem) {
-        if (aboveItem) {
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0, 0, 200);
-        } else {
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
-        }
+    private static void draw(ResourceLocation texture, int x, int y, int size) {
+        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_ENABLE_BIT);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1, 1, 1, 1);
@@ -83,11 +116,6 @@ public final class PinnedSlotClient extends Gui {
             .getTextureManager()
             .bindTexture(texture);
         Gui.func_152125_a(x, y, 0, 0, 1, 1, size, size, 1, 1);
-        GL11.glDisable(GL11.GL_BLEND);
-        if (aboveItem) {
-            GL11.glPopMatrix();
-        } else {
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
-        }
+        GL11.glPopAttrib();
     }
 }

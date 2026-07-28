@@ -228,6 +228,7 @@ public class ClientEventHandler {
         if (container != null && pinSlotPressed()) {
             SlotAccessor slot = getSlot(container);
             if (PinnedSlots.isPinnable(Minecraft.getMinecraft().thePlayer, container.inventorySlots, slot)) {
+                PinnedSlotClient.toggle(container, slot);
                 NetworkHandler
                     .sendToServer(CPlayerPins.toggle(container.inventorySlots.windowId, slot.getSlotNumber()));
                 return true;
@@ -322,7 +323,13 @@ public class ClientEventHandler {
     }
 
     private static boolean pinSlotPressed() {
-        if (Mods.Controlling.isLoaded()) return Keypress(BSKeybinds.pinSlotKey);
+        if (Mods.Controlling.isLoaded()) {
+            KeyBinding key = BSKeybinds.pinSlotKey;
+            int keyCode = key.getKeyCode();
+            boolean pressed = keyCode > 0 ? Keyboard.getEventKeyState() && Keyboard.getEventKey() == keyCode
+                : Mouse.getEventButtonState() && Mouse.getEventButton() == keyCode + 100;
+            return keyCode != 0 && pressed && ControllingCompat.isModifierActive(key);
+        }
         KeyBind key = BSKeybinds.getActiveKeyBind(BSKeybinds.PIN_SLOT);
         return key != null && key.isFirstPress();
     }

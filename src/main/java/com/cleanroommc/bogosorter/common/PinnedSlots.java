@@ -17,6 +17,7 @@ public final class PinnedSlots {
 
     private static final String MOD_TAG = "bogosorter";
     private static final String PINS_TAG = "pinnedSlots";
+    private static final int[] EMPTY_MASK = new int[0];
 
     private PinnedSlots() {}
 
@@ -25,8 +26,12 @@ public final class PinnedSlots {
     }
 
     public static boolean isPinnable(EntityPlayer player, Container container, SlotAccessor slot) {
-        return isPinnable(slot) || (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isPinnable(player, container, slot))
-            || (Mods.AdventureBackpack2.isLoaded() && AdventureBackpackPinnedSlots.isPinnable(player, container, slot));
+        if (isPinnable(slot)) return true;
+        if (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isContainer(container)) {
+            return BackpackPinnedSlots.isPinnable(player, container, slot);
+        }
+        return Mods.AdventureBackpack2.isLoaded() && AdventureBackpackPinnedSlots.isContainer(container)
+            && AdventureBackpackPinnedSlots.isPinnable(player, container, slot);
     }
 
     public static boolean isPinned(EntityPlayer player, SlotAccessor slot) {
@@ -34,27 +39,38 @@ public final class PinnedSlots {
     }
 
     public static boolean isPinned(EntityPlayer player, Container container, SlotAccessor slot, int[] backpackMask) {
-        return isPinned(player, slot)
-            || (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isPinned(backpackMask, container, slot))
-            || (Mods.AdventureBackpack2.isLoaded()
-                && AdventureBackpackPinnedSlots.isPinned(backpackMask, container, slot));
+        return isPinned(player, slot) || isBackpackPinned(backpackMask, container, slot);
     }
 
     public static boolean isBackpackPinned(int[] mask, Container container, SlotAccessor slot) {
-        return (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isPinned(mask, container, slot))
-            || (Mods.AdventureBackpack2.isLoaded() && AdventureBackpackPinnedSlots.isPinned(mask, container, slot));
+        return isSet(mask, getBackpackSlotIndex(container, slot));
     }
 
     public static int[] getBackpackMask(EntityPlayer player, Container container) {
-        int[] mask = Mods.Backpack.isLoaded() ? BackpackPinnedSlots.getMask(player, container) : new int[0];
-        return mask.length != 0 || !Mods.AdventureBackpack2.isLoaded() ? mask
-            : AdventureBackpackPinnedSlots.getMask(player, container);
+        if (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isContainer(container)) {
+            return BackpackPinnedSlots.getMask(player, container);
+        }
+        return Mods.AdventureBackpack2.isLoaded() && AdventureBackpackPinnedSlots.isContainer(container)
+            ? AdventureBackpackPinnedSlots.getMask(player, container)
+            : EMPTY_MASK;
     }
 
     public static int[] toggleBackpack(EntityPlayer player, Container container, SlotAccessor slot) {
-        int[] mask = Mods.Backpack.isLoaded() ? BackpackPinnedSlots.toggle(player, container, slot) : new int[0];
-        return mask.length != 0 || !Mods.AdventureBackpack2.isLoaded() ? mask
-            : AdventureBackpackPinnedSlots.toggle(player, container, slot);
+        if (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isContainer(container)) {
+            return BackpackPinnedSlots.toggle(player, container, slot);
+        }
+        return Mods.AdventureBackpack2.isLoaded() && AdventureBackpackPinnedSlots.isContainer(container)
+            ? AdventureBackpackPinnedSlots.toggle(player, container, slot)
+            : EMPTY_MASK;
+    }
+
+    public static int getBackpackSlotIndex(Container container, SlotAccessor slot) {
+        if (Mods.Backpack.isLoaded() && BackpackPinnedSlots.isContainer(container)) {
+            return BackpackPinnedSlots.getSlotIndex(container, slot);
+        }
+        return Mods.AdventureBackpack2.isLoaded() && AdventureBackpackPinnedSlots.isContainer(container)
+            ? AdventureBackpackPinnedSlots.getSlotIndex(container, slot)
+            : -1;
     }
 
     public static boolean isPinned(EntityPlayer player, int inventoryIndex) {
@@ -87,5 +103,9 @@ public final class PinnedSlots {
         return inventoryIndex >= FIRST_PLAYER_SLOT && inventoryIndex <= LAST_PLAYER_SLOT
             ? 1 << inventoryIndex - FIRST_PLAYER_SLOT
             : 0;
+    }
+
+    public static boolean isSet(int[] mask, int index) {
+        return index >= 0 && (index >>> 5) < mask.length && (mask[index >>> 5] & 1 << (index & 31)) != 0;
     }
 }
