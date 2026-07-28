@@ -165,12 +165,12 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        handleInput(null);
+        handleInput(null, false);
     }
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.MouseInputEvent event) {
-        handleInput(null);
+        handleInput(null, true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -181,7 +181,7 @@ public class ClientEventHandler {
             event.setCanceled(true);
             return;
         }
-        if (handleInput((GuiContainer) event.gui)) {
+        if (handleInput((GuiContainer) event.gui, false)) {
             event.setCanceled(true);
             return;
         }
@@ -210,7 +210,7 @@ public class ClientEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onMouseInput(MouseInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
-        if (event.gui instanceof GuiContainer && handleInput((GuiContainer) event.gui)) {
+        if (event.gui instanceof GuiContainer && handleInput((GuiContainer) event.gui, true)) {
             event.setCanceled(true);
         }
     }
@@ -223,9 +223,9 @@ public class ClientEventHandler {
     }
 
     // handle all inputs in one method
-    public static boolean handleInput(@Nullable GuiContainer container) {
+    public static boolean handleInput(@Nullable GuiContainer container, boolean fromMouse) {
 
-        if (container != null && pinSlotPressed()) {
+        if (container != null && pinSlotPressed(fromMouse)) {
             SlotAccessor slot = getSlot(container);
             if (PinnedSlots.isPinnable(Minecraft.getMinecraft().thePlayer, container.inventorySlots, slot)) {
                 PinnedSlotClient.toggle(container, slot);
@@ -322,12 +322,13 @@ public class ClientEventHandler {
         return false;
     }
 
-    private static boolean pinSlotPressed() {
+    private static boolean pinSlotPressed(boolean fromMouse) {
         if (Mods.Controlling.isLoaded()) {
             KeyBinding key = BSKeybinds.pinSlotKey;
             int keyCode = key.getKeyCode();
-            boolean pressed = keyCode > 0 ? Keyboard.getEventKeyState() && Keyboard.getEventKey() == keyCode
-                : Mouse.getEventButtonState() && Mouse.getEventButton() == keyCode + 100;
+            boolean pressed = keyCode > 0
+                ? !fromMouse && Keyboard.getEventKeyState() && Keyboard.getEventKey() == keyCode
+                : fromMouse && Mouse.getEventButtonState() && Mouse.getEventButton() == keyCode + 100;
             return keyCode != 0 && pressed && ControllingCompat.isModifierActive(key);
         }
         KeyBind key = BSKeybinds.getActiveKeyBind(BSKeybinds.PIN_SLOT);

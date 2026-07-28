@@ -66,7 +66,9 @@ public class CPlayerPins implements IPacket {
                 }
             }
         }
-        if (backpackMask == null) backpackMask = PinnedSlots.getBackpackMask(player, container);
+        if (backpackMask == null || backpackMask.length == 0) {
+            backpackMask = PinnedSlots.getBackpackMask(player, container);
+        }
         return new SPlayerPins(windowId, PinnedSlots.getMask(player), backpackMask);
     }
 
