@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.PinnedSlots;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig.PinnedSlotStyle;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 
 import cpw.mods.fml.relauncher.Side;
@@ -20,12 +22,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class PinnedSlotClient extends Gui {
 
-    private static final ResourceLocation OUTLINE = new ResourceLocation(
-        BogoSorter.ID,
-        "textures/gui/pinned_slot_outline.png");
-    private static final ResourceLocation ICON = new ResourceLocation(
-        BogoSorter.ID,
-        "textures/gui/pinned_slot_icon.png");
+    private static final ResourceLocation[] OUTLINES = createTextures("outline");
+    private static final ResourceLocation[] ICONS = createTextures("icon");
 
     private static int playerMask;
     private static int backpackWindowId = -1;
@@ -74,21 +72,26 @@ public final class PinnedSlotClient extends Gui {
         drawingGui = null;
         drawingSlot = null;
         if (!isPinned(gui, slot)) return;
-        draw(OUTLINE, slot.xDisplayPosition - 1, slot.yDisplayPosition - 1, 18);
+        draw(
+            getTexture(OUTLINES, BogoSorterConfig.pinnedSlotStyle),
+            slot.xDisplayPosition - 1,
+            slot.yDisplayPosition - 1,
+            18);
+        if (!BogoSorterConfig.showPinnedSlotIcon) return;
         drawingGui = gui;
         drawingSlot = slot;
     }
 
     public static void drawIconAfterItem(int x, int y) {
         if (drawingSlot == null || drawingSlot.xDisplayPosition != x || drawingSlot.yDisplayPosition != y) return;
-        draw(ICON, x, y, 16);
+        draw(getTexture(ICONS, BogoSorterConfig.pinnedSlotStyle), x, y, 16);
         drawingGui = null;
         drawingSlot = null;
     }
 
     public static void endSlot(GuiContainer gui, Slot slot) {
         if (drawingGui != gui || drawingSlot != slot) return;
-        draw(ICON, slot.xDisplayPosition, slot.yDisplayPosition, 16);
+        draw(getTexture(ICONS, BogoSorterConfig.pinnedSlotStyle), slot.xDisplayPosition, slot.yDisplayPosition, 16);
         drawingGui = null;
         drawingSlot = null;
     }
@@ -103,6 +106,19 @@ public final class PinnedSlotClient extends Gui {
         boolean backpackPinned = gui.inventorySlots.windowId == backpackWindowId
             && PinnedSlots.isBackpackPinned(backpackMask, gui.inventorySlots, slotAccessor);
         return playerPinned || backpackPinned;
+    }
+
+    private static ResourceLocation[] createTextures(String part) {
+        PinnedSlotStyle[] styles = PinnedSlotStyle.values();
+        ResourceLocation[] textures = new ResourceLocation[styles.length];
+        for (PinnedSlotStyle style : styles) {
+            textures[style.ordinal()] = new ResourceLocation(BogoSorter.ID, style.getTexturePath(part));
+        }
+        return textures;
+    }
+
+    private static ResourceLocation getTexture(ResourceLocation[] textures, PinnedSlotStyle style) {
+        return textures[(style == null ? PinnedSlotStyle.STAR_1 : style).ordinal()];
     }
 
     private static void draw(ResourceLocation texture, int x, int y, int size) {

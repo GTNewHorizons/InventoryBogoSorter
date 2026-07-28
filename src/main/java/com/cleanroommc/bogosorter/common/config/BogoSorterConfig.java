@@ -46,6 +46,16 @@ public class BogoSorterConfig {
     @Config.LangKey("bogosorter.config.autorefill.from_pinned")
     public static boolean autoRefillFromPinnedSlots;
 
+    @Config.DefaultEnum("STAR_1")
+    @Config.Comment("Texture set used to mark pinned inventory slots.")
+    @Config.LangKey("bogosorter.config.pinned_slots.style")
+    public static PinnedSlotStyle pinnedSlotStyle = PinnedSlotStyle.STAR_1;
+
+    @Config.DefaultBoolean(true)
+    @Config.Comment("Render the icon over pinned inventory slots. The outline is always shown.")
+    @Config.LangKey("bogosorter.config.pinned_slots.show_icon")
+    public static boolean showPinnedSlotIcon;
+
     @Config.DefaultInt(1)
     @Config.Comment("The damage threshold for auto-refill. If the item has less than this amount of durability, it will be refilled.")
     @Config.LangKey("bogosorter.config.autorefill.damage_threshold")
@@ -81,6 +91,36 @@ public class BogoSorterConfig {
     @Config.LangKey("bogosorter.config.debug_tools.enable")
     @Config.Sync
     public static boolean enableDebugTools;
+
+    public enum PinnedSlotStyle {
+
+        STAR_0("star", 0, "star_outline.png"),
+        STAR_1("star", 1, "star_outline.png"),
+        STAR_2("star", 2, "star_outline.png"),
+        DOT_0("dot", 0, "dot_outline.png"),
+        DOT_1("dot", 1, "dot_outline.png"),
+        DOT_2("dot", 2, "dot_outline.png"),
+        LOCK_0("lock", 0, "lock_outline.png"),
+        LOCK_1("lock", 1, "lock_outline.png"),
+        LOCK_2("lock", 2, "lock_outline.png");
+
+        private final String iconTexturePath;
+        private final String outlineTexturePath;
+
+        PinnedSlotStyle(String shape, int variant, String outlineFile) {
+            String folder = "textures/gui/pins/" + shape + "/";
+            this.iconTexturePath = folder + shape + "_" + variant + ".png";
+            this.outlineTexturePath = folder + outlineFile;
+        }
+
+        public String getTexturePath(String part) {
+            return "outline".equals(part) ? outlineTexturePath : iconTexturePath;
+        }
+
+        public String getLangKey() {
+            return "bogosort.gui.pinned_slots.style." + name().toLowerCase();
+        }
+    }
 
     @Config.LangKey("bogosorter.config.dropkeyrepeat")
     public static class DropKeyRepeat {

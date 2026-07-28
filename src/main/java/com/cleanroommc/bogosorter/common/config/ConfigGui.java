@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,7 @@ import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig.PinnedSlotStyle;
 import com.cleanroommc.bogosorter.common.dropoff.CoinDepositDestination;
 import com.cleanroommc.bogosorter.common.network.CCoinDepositDestination;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
@@ -35,6 +37,7 @@ import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.BoolValue;
+import com.cleanroommc.modularui.value.EnumValue;
 import com.cleanroommc.modularui.value.IntValue;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widget.Widget;
@@ -49,6 +52,7 @@ import com.cleanroommc.modularui.widgets.SortableListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
+import com.cleanroommc.modularui.widgets.menu.DropdownWidget;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 
@@ -223,6 +227,29 @@ public class ConfigGui extends CustomModularScreen {
                             .background(IDrawable.EMPTY))
                     .child(
                         IKey.lang("bogosorter.config.autorefill.from_pinned")
+                            .asWidget()
+                            .height(14)
+                            .marginLeft(10)
+                            .expanded()))
+            .child(createPinnedSlotStyleSelector())
+            .child(
+                Flow.row()
+                    .widthRel(1f)
+                    .height(14)
+                    .margin(0, 2)
+                    .child(
+                        new CycleButtonWidget()
+                            .value(
+                                new BoolValue.Dynamic(
+                                    () -> BogoSorterConfig.showPinnedSlotIcon,
+                                    val -> BogoSorterConfig.showPinnedSlotIcon = val))
+                            .stateOverlay(TOGGLE_BUTTON)
+                            .disableHoverBackground()
+                            .size(14, 14)
+                            .margin(8, 0)
+                            .background(IDrawable.EMPTY))
+                    .child(
+                        IKey.lang("bogosort.gui.pinned_slots.show_icon")
                             .asWidget()
                             .height(14)
                             .marginLeft(10)
@@ -571,6 +598,65 @@ public class ConfigGui extends CustomModularScreen {
 
     }
 
+    private static IWidget createPinnedSlotStyleSelector() {
+        return Flow.row()
+            .widthRel(1f)
+            .height(20)
+            .margin(0, 2)
+            .child(
+                IKey.lang("bogosort.gui.pinned_slots.style")
+                    .asWidget()
+                    .height(18)
+                    .marginLeft(40)
+                    .expanded())
+            .child(
+                new PinnedSlotStyleDropdown()
+                    .value(
+                        new EnumValue.Dynamic<>(
+                            PinnedSlotStyle.class,
+                            () -> BogoSorterConfig.pinnedSlotStyle,
+                            value -> BogoSorterConfig.pinnedSlotStyle = value))
+                    .options(PinnedSlotStyle.values())
+                    .optionToWidget(
+                        (style, selected) -> Flow.row()
+                            .widthRel(1f)
+                            .height(18)
+                            .child(createPinnedSlotStylePreview(style))
+                            .child(
+                                IKey.lang(style.getLangKey())
+                                    .asWidget()
+                                    .height(18)
+                                    .marginLeft(3)
+                                    .expanded()))
+                    .maxVerticalMenuSize(162)
+                    .size(100, 18));
+    }
+
+    private static IWidget createPinnedSlotStylePreview(PinnedSlotStyle style) {
+        UITexture outline = new UITexture(
+            new ResourceLocation(BogoSorter.ID, style.getTexturePath("outline")),
+            0,
+            0,
+            1,
+            1,
+            null,
+            true);
+        UITexture icon = new UITexture(
+            new ResourceLocation(BogoSorter.ID, style.getTexturePath("icon")),
+            0,
+            0,
+            1,
+            1,
+            null,
+            true);
+        return new Widget<>().size(18)
+            .background((context, x, y, width, height, theme) -> {
+                GuiTextures.SLOT_ITEM.draw(context, 0, 0, 18, 18, theme);
+                outline.draw(context, 0, 0, 18, 18, theme);
+                if (BogoSorterConfig.showPinnedSlotIcon) icon.draw(context, 1, 1, 16, 16, theme);
+            });
+    }
+
     private static IWidget createCoinDestinationSelector() {
         requestCoinDestination(BogoSorterConfig.dropOff.coinDepositDestination);
         return Flow.row()
@@ -847,6 +933,14 @@ public class ConfigGui extends CustomModularScreen {
         public IDrawable getBackground() {
             return BogoSorterConfig.dropOff.coinDepositDestination == this.destination ? GuiTextures.MC_BUTTON_DISABLED
                 : GuiTextures.MC_BUTTON;
+        }
+    }
+
+    private static final class PinnedSlotStyleDropdown
+        extends DropdownWidget<PinnedSlotStyle, PinnedSlotStyleDropdown> {
+
+        private PinnedSlotStyleDropdown() {
+            super("pinned_slot_style", PinnedSlotStyle.class);
         }
     }
 
