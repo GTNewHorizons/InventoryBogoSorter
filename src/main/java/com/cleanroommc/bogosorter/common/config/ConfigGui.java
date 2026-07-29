@@ -27,6 +27,7 @@ import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.IThemeApi;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.widget.IGuiAction;
 import com.cleanroommc.modularui.api.widget.IWidget;
 import com.cleanroommc.modularui.drawable.GuiDraw;
 import com.cleanroommc.modularui.drawable.GuiTextures;
@@ -601,6 +602,7 @@ public class ConfigGui extends CustomModularScreen {
     }
 
     private static IWidget createPinnedSlotStyleSelector() {
+        PinnedSlotStylePreview selectedPreview = new PinnedSlotStylePreview(BogoSorterConfig.pinnedSlotStyle);
         return Flow.row()
             .widthRel(1f)
             .height(20)
@@ -611,55 +613,31 @@ public class ConfigGui extends CustomModularScreen {
                     .height(18)
                     .marginLeft(40)
                     .expanded())
+            .child(selectedPreview)
+            .child(new Widget<>().size(4, 1))
             .child(
-                new PinnedSlotStyleDropdown()
-                    .value(
-                        new EnumValue.Dynamic<>(
-                            PinnedSlotStyle.class,
-                            () -> BogoSorterConfig.pinnedSlotStyle,
-                            value -> BogoSorterConfig.pinnedSlotStyle = value))
+                new PinnedSlotStyleDropdown().value(
+                    new EnumValue.Dynamic<>(PinnedSlotStyle.class, () -> BogoSorterConfig.pinnedSlotStyle, value -> {
+                        BogoSorterConfig.pinnedSlotStyle = value;
+                        selectedPreview.setPinnedStyle(value);
+                    }))
                     .options(PinnedSlotStyle.values())
-                    .optionToWidget(
-                        (style, selected) -> Flow.row()
-                            .widthRel(1f)
-                            .height(18)
-                            .child(createPinnedSlotStylePreview(style))
-                            .child(
-                                IKey.lang(style.getLangKey())
-                                    .asWidget()
-                                    .height(18)
-                                    .marginLeft(3)
-                                    .expanded()))
-                    .maxVerticalMenuSize(162)
+                    .optionToWidget(ConfigGui::createPinnedSlotStyleOption)
+                    .maxVerticalMenuSize(108)
                     .size(100, 18));
     }
 
-    private static IWidget createPinnedSlotStylePreview(PinnedSlotStyle style) {
-        UITexture outline = new UITexture(
-            new ResourceLocation(BogoSorter.ID, style.getOutlinePath()),
-            0,
-            0,
-            1,
-            1,
-            null,
-            true);
-        UITexture icon = new UITexture(
-            new ResourceLocation(BogoSorter.ID, style.getIconPath()),
-            0,
-            0,
-            1,
-            1,
-            null,
-            true);
-        return new Widget<>().size(18)
-            .background((context, x, y, width, height, theme) -> {
-                GuiTextures.SLOT_ITEM.draw(context, 0, 0, 18, 18, theme);
-                outline.draw(context, 0, 0, 18, 18, theme);
-                if (BogoSorterConfig.showPinnedSlotIcon) {
-                    int offset = BogoSorterConfig.pinnedSlotIconOffset.getTextureOffsetFromOutline();
-                    icon.draw(context, offset, offset, 16, 16, theme);
-                }
-            });
+    private static IWidget createPinnedSlotStyleOption(PinnedSlotStyle style, boolean selected) {
+        Flow row = Flow.row()
+            .widthRel(1f)
+            .height(18);
+        if (!selected) row.child(new PinnedSlotStylePreview(style));
+        return row.child(
+            IKey.lang(style.getLangKey())
+                .asWidget()
+                .height(18)
+                .marginLeft(selected ? 4 : 3)
+                .expanded());
     }
 
     private static IWidget createPinnedSlotIconOffsetSelector() {
@@ -979,6 +957,42 @@ public class ConfigGui extends CustomModularScreen {
 
         private PinnedSlotStyleDropdown() {
             super("pinned_slot_style", PinnedSlotStyle.class);
+            closeWhenScrollingOutside();
+        }
+
+        private void closeWhenScrollingOutside() {
+            listenGuiAction((IGuiAction.MouseScroll) (direction, amount) -> {
+                if (isOpen() && !getMenu().isBelowMouse()) closeMenu(false);
+                return false;
+            });
+        }
+    }
+
+    private static final class PinnedSlotStylePreview extends Widget<PinnedSlotStylePreview> {
+
+        private UITexture outline;
+        private UITexture icon;
+
+        private PinnedSlotStylePreview(PinnedSlotStyle style) {
+            size(18);
+            setPinnedStyle(style);
+            background((context, x, y, width, height, theme) -> {
+                GuiTextures.SLOT_ITEM.draw(context, 0, 0, 18, 18, theme);
+                outline.draw(context, 0, 0, 18, 18, theme);
+                if (BogoSorterConfig.showPinnedSlotIcon) {
+                    int offset = BogoSorterConfig.pinnedSlotIconOffset.getTextureOffsetFromOutline();
+                    icon.draw(context, offset, offset, 16, 16, theme);
+                }
+            });
+        }
+
+        private void setPinnedStyle(PinnedSlotStyle style) {
+            this.outline = createTexture(style.getOutlinePath());
+            this.icon = createTexture(style.getIconPath());
+        }
+
+        private static UITexture createTexture(String path) {
+            return new UITexture(new ResourceLocation(BogoSorter.ID, path), 0, 0, 1, 1, null, true);
         }
     }
 
@@ -987,6 +1001,10 @@ public class ConfigGui extends CustomModularScreen {
 
         private PinnedSlotIconOffsetDropdown() {
             super("pinned_slot_icon_offset", PinnedSlotIconOffset.class);
+            listenGuiAction((IGuiAction.MouseScroll) (direction, amount) -> {
+                if (isOpen() && !getMenu().isBelowMouse()) closeMenu(false);
+                return false;
+            });
         }
     }
 
