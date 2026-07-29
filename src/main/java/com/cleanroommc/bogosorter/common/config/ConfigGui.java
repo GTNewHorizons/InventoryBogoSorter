@@ -634,7 +634,7 @@ public class ConfigGui extends CustomModularScreen {
 
     private static IWidget createPinnedSlotStylePreview(PinnedSlotStyle style) {
         UITexture outline = new UITexture(
-            new ResourceLocation(BogoSorter.ID, style.getTexturePath("outline")),
+            new ResourceLocation(BogoSorter.ID, style.getOutlinePath()),
             0,
             0,
             1,
@@ -642,7 +642,7 @@ public class ConfigGui extends CustomModularScreen {
             null,
             true);
         UITexture icon = new UITexture(
-            new ResourceLocation(BogoSorter.ID, style.getTexturePath("icon")),
+            new ResourceLocation(BogoSorter.ID, style.getIconPath()),
             0,
             0,
             1,

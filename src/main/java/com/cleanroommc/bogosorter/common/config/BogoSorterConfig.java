@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter.common.config;
 
+import java.util.Locale;
+
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.dropoff.CoinDepositDestination;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
@@ -94,31 +96,35 @@ public class BogoSorterConfig {
 
     public enum PinnedSlotStyle {
 
-        STAR_0("star", 0, "star_outline.png"),
-        STAR_1("star", 1, "star_outline.png"),
-        STAR_2("star", 2, "star_outline.png"),
-        DOT_0("dot", 0, "dot_outline.png"),
-        DOT_1("dot", 1, "dot_outline.png"),
-        DOT_2("dot", 2, "dot_outline.png"),
-        LOCK_0("lock", 0, "lock_outline.png"),
-        LOCK_1("lock", 1, "lock_outline.png"),
-        LOCK_2("lock", 2, "lock_outline.png");
+        STAR_0("star", 0),
+        STAR_1("star", 1),
+        STAR_2("star", 2),
+        DOT_0("dot", 0),
+        DOT_1("dot", 1),
+        DOT_2("dot", 2),
+        LOCK_0("lock", 0),
+        LOCK_1("lock", 1),
+        LOCK_2("lock", 2);
 
         private final String iconTexturePath;
         private final String outlineTexturePath;
 
-        PinnedSlotStyle(String shape, int variant, String outlineFile) {
+        PinnedSlotStyle(String shape, int variant) {
             String folder = "textures/gui/pins/" + shape + "/";
             this.iconTexturePath = folder + shape + "_" + variant + ".png";
-            this.outlineTexturePath = folder + outlineFile;
+            this.outlineTexturePath = folder + shape + "_outline.png";
         }
 
-        public String getTexturePath(String part) {
-            return "outline".equals(part) ? outlineTexturePath : iconTexturePath;
+        public String getOutlinePath() {
+            return outlineTexturePath;
+        }
+
+        public String getIconPath() {
+            return iconTexturePath;
         }
 
         public String getLangKey() {
-            return "bogosort.gui.pinned_slots.style." + name().toLowerCase();
+            return "bogosort.gui.pinned_slots.style." + name().toLowerCase(Locale.ROOT);
         }
     }
 

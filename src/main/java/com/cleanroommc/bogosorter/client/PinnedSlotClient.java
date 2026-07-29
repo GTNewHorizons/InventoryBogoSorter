@@ -1,6 +1,7 @@
 package com.cleanroommc.bogosorter.client;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -22,8 +23,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class PinnedSlotClient extends Gui {
 
-    private static final ResourceLocation[] OUTLINES = createTextures("outline");
-    private static final ResourceLocation[] ICONS = createTextures("icon");
+    private static final ResourceLocation[] OUTLINES = createTextures(PinnedSlotStyle::getOutlinePath);
+    private static final ResourceLocation[] ICONS = createTextures(PinnedSlotStyle::getIconPath);
 
     private static int playerMask;
     private static int backpackWindowId = -1;
@@ -108,17 +109,17 @@ public final class PinnedSlotClient extends Gui {
         return playerPinned || backpackPinned;
     }
 
-    private static ResourceLocation[] createTextures(String part) {
+    private static ResourceLocation[] createTextures(Function<PinnedSlotStyle, String> pathGetter) {
         PinnedSlotStyle[] styles = PinnedSlotStyle.values();
         ResourceLocation[] textures = new ResourceLocation[styles.length];
         for (PinnedSlotStyle style : styles) {
-            textures[style.ordinal()] = new ResourceLocation(BogoSorter.ID, style.getTexturePath(part));
+            textures[style.ordinal()] = new ResourceLocation(BogoSorter.ID, pathGetter.apply(style));
         }
         return textures;
     }
 
     private static ResourceLocation getTexture(ResourceLocation[] textures, PinnedSlotStyle style) {
-        return textures[(style == null ? PinnedSlotStyle.STAR_1 : style).ordinal()];
+        return textures[style.ordinal()];
     }
 
     private static void draw(ResourceLocation texture, int x, int y, int size) {
