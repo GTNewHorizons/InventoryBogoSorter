@@ -1,6 +1,9 @@
 package com.cleanroommc.bogosorter.common.network;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.TimeUnit;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -12,6 +15,9 @@ import com.cleanroommc.bogosorter.common.PinnedSlots;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
 
 public class CPlayerPins implements IPacket {
+
+    private static final long TOGGLE_THROTTLE_NS = TimeUnit.MILLISECONDS.toNanos(50);
+    private static final Map<EntityPlayerMP, Long> LAST_BACKPACK_TOGGLE = new WeakHashMap<>();
 
     private Operation operation;
     private int windowId;
@@ -60,7 +66,8 @@ public class CPlayerPins implements IPacket {
                 SlotAccessor slot = BogoSortAPI.getSlot(container, slotNumber);
                 if (PinnedSlots.isPinnable(slot)) {
                     PinnedSlots.toggle(player, slot.callGetSlotIndex());
-                } else {
+                    // Personal Minecraft Backpacks persist synchronously, so rate-limit all backpack pin toggles.
+                } else if (!isBackpackToggleThrottled(player)) {
                     backpackMask = PinnedSlots.toggleBackpack(player, container, slot);
                     if (backpackMask.length != 0) container.detectAndSendChanges();
                 }
@@ -70,6 +77,14 @@ public class CPlayerPins implements IPacket {
             backpackMask = PinnedSlots.getBackpackMask(player, container);
         }
         return new SPlayerPins(windowId, PinnedSlots.getMask(player), backpackMask);
+    }
+
+    private static boolean isBackpackToggleThrottled(EntityPlayerMP player) {
+        long now = System.nanoTime();
+        Long previous = LAST_BACKPACK_TOGGLE.get(player);
+        if (previous != null && now - previous < TOGGLE_THROTTLE_NS) return true;
+        LAST_BACKPACK_TOGGLE.put(player, now);
+        return false;
     }
 
     private enum Operation {
