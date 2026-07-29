@@ -85,16 +85,21 @@ public final class PinnedSlotClient extends Gui {
 
     public static void drawIconAfterItem(int x, int y) {
         if (drawingSlot == null || drawingSlot.xDisplayPosition != x || drawingSlot.yDisplayPosition != y) return;
-        draw(getTexture(ICONS, BogoSorterConfig.pinnedSlotStyle), x, y, 16);
+        drawIcon(x, y);
         drawingGui = null;
         drawingSlot = null;
     }
 
     public static void endSlot(GuiContainer gui, Slot slot) {
         if (drawingGui != gui || drawingSlot != slot) return;
-        draw(getTexture(ICONS, BogoSorterConfig.pinnedSlotStyle), slot.xDisplayPosition, slot.yDisplayPosition, 16);
+        drawIcon(slot.xDisplayPosition, slot.yDisplayPosition);
         drawingGui = null;
         drawingSlot = null;
+    }
+
+    private static void drawIcon(int x, int y) {
+        int offset = BogoSorterConfig.pinnedSlotIconOffset.getTextureOffsetFromSlot();
+        draw(getTexture(ICONS, BogoSorterConfig.pinnedSlotStyle), x + offset, y + offset, 16);
     }
 
     private static boolean isPinned(GuiContainer gui, Slot slot) {

@@ -53,6 +53,11 @@ public class BogoSorterConfig {
     @Config.LangKey("bogosorter.config.pinned_slots.style")
     public static PinnedSlotStyle pinnedSlotStyle = PinnedSlotStyle.STAR_1;
 
+    @Config.DefaultEnum("PX_1")
+    @Config.Comment("Offset of the pinned slot icon from the item's top-left corner.")
+    @Config.LangKey("bogosorter.config.pinned_slots.icon_offset")
+    public static PinnedSlotIconOffset pinnedSlotIconOffset = PinnedSlotIconOffset.PX_1;
+
     @Config.DefaultBoolean(true)
     @Config.Comment("Render the icon over pinned inventory slots. The outline is always shown.")
     @Config.LangKey("bogosorter.config.pinned_slots.show_icon")
@@ -125,6 +130,32 @@ public class BogoSorterConfig {
 
         public String getLangKey() {
             return "bogosort.gui.pinned_slots.style." + name().toLowerCase(Locale.ROOT);
+        }
+    }
+
+    public enum PinnedSlotIconOffset {
+
+        PX_0(0),
+        PX_1(1),
+        PX_2(2);
+
+        private final int textureOffsetFromOutline;
+
+        PinnedSlotIconOffset(int textureOffsetFromOutline) {
+            this.textureOffsetFromOutline = textureOffsetFromOutline;
+        }
+
+        public int getTextureOffsetFromOutline() {
+            return textureOffsetFromOutline;
+        }
+
+        public int getTextureOffsetFromSlot() {
+            // The slot origin is one pixel down and right from the 18x18 outline origin.
+            return textureOffsetFromOutline - 1;
+        }
+
+        public String getLangKey() {
+            return "bogosort.gui.pinned_slots.icon_offset." + name().toLowerCase(Locale.ROOT);
         }
     }
 

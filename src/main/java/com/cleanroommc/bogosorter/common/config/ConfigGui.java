@@ -16,6 +16,7 @@ import com.cleanroommc.bogosorter.ClientEventHandler;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.usageticker.UsageTicker;
 import com.cleanroommc.bogosorter.common.SortConfigChangeEvent;
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig.PinnedSlotIconOffset;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig.PinnedSlotStyle;
 import com.cleanroommc.bogosorter.common.dropoff.CoinDepositDestination;
 import com.cleanroommc.bogosorter.common.network.CCoinDepositDestination;
@@ -232,6 +233,7 @@ public class ConfigGui extends CustomModularScreen {
                             .marginLeft(10)
                             .expanded()))
             .child(createPinnedSlotStyleSelector())
+            .child(createPinnedSlotIconOffsetSelector())
             .child(
                 Flow.row()
                     .widthRel(1f)
@@ -653,8 +655,44 @@ public class ConfigGui extends CustomModularScreen {
             .background((context, x, y, width, height, theme) -> {
                 GuiTextures.SLOT_ITEM.draw(context, 0, 0, 18, 18, theme);
                 outline.draw(context, 0, 0, 18, 18, theme);
-                if (BogoSorterConfig.showPinnedSlotIcon) icon.draw(context, 1, 1, 16, 16, theme);
+                if (BogoSorterConfig.showPinnedSlotIcon) {
+                    int offset = BogoSorterConfig.pinnedSlotIconOffset.getTextureOffsetFromOutline();
+                    icon.draw(context, offset, offset, 16, 16, theme);
+                }
             });
+    }
+
+    private static IWidget createPinnedSlotIconOffsetSelector() {
+        return Flow.row()
+            .widthRel(1f)
+            .height(20)
+            .margin(0, 2)
+            .child(
+                IKey.lang("bogosort.gui.pinned_slots.icon_offset")
+                    .asWidget()
+                    .height(18)
+                    .marginLeft(40)
+                    .expanded())
+            .child(
+                new PinnedSlotIconOffsetDropdown()
+                    .value(
+                        new EnumValue.Dynamic<>(
+                            PinnedSlotIconOffset.class,
+                            () -> BogoSorterConfig.pinnedSlotIconOffset,
+                            value -> BogoSorterConfig.pinnedSlotIconOffset = value))
+                    .options(PinnedSlotIconOffset.values())
+                    .optionToWidget(
+                        (offset, selected) -> Flow.row()
+                            .widthRel(1f)
+                            .height(18)
+                            .child(
+                                IKey.lang(offset.getLangKey())
+                                    .asWidget()
+                                    .height(18)
+                                    .marginLeft(4)
+                                    .expanded()))
+                    .maxVerticalMenuSize(54)
+                    .size(100, 18));
     }
 
     private static IWidget createCoinDestinationSelector() {
@@ -941,6 +979,14 @@ public class ConfigGui extends CustomModularScreen {
 
         private PinnedSlotStyleDropdown() {
             super("pinned_slot_style", PinnedSlotStyle.class);
+        }
+    }
+
+    private static final class PinnedSlotIconOffsetDropdown
+        extends DropdownWidget<PinnedSlotIconOffset, PinnedSlotIconOffsetDropdown> {
+
+        private PinnedSlotIconOffsetDropdown() {
+            super("pinned_slot_icon_offset", PinnedSlotIconOffset.class);
         }
     }
 
