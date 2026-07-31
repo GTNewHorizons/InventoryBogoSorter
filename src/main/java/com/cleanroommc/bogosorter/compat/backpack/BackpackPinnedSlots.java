@@ -100,6 +100,7 @@ public final class BackpackPinnedSlots {
 
     private static int[] readMask(ItemStack stack, int slots) {
         int words = (slots + 31) >>> 5;
+        // Limit the returned array to the current backpack size; the stored array remains intact if it grows again.
         return Arrays.copyOf(readStoredMask(stack), words);
     }
 
