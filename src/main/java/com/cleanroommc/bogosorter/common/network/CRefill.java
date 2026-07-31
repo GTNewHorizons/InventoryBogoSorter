@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
 
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.refill.RefillHandler;
 
 public class CRefill implements IPacket {
@@ -42,9 +43,13 @@ public class CRefill implements IPacket {
 
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
-        if (stack != null && this.index >= 0 && this.index < 9) {
-            new RefillHandler(this.index, this.stack, handler.playerEntity, this.swap, this.allowPinnedSlots)
-                .handleRefill();
+        if (BogoSorterConfig.enableAutoRefill_server && stack != null && this.index >= 0 && this.index < 9) {
+            new RefillHandler(
+                this.index,
+                this.stack,
+                handler.playerEntity,
+                this.swap,
+                this.allowPinnedSlots && BogoSorterConfig.autoRefillFromPinnedSlots_server).handleRefill();
         }
         return null;
     }

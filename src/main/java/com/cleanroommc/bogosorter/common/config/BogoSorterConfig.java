@@ -44,9 +44,15 @@ public class BogoSorterConfig {
     public static boolean enableAutoRefill_server;
 
     @Config.DefaultBoolean(false)
-    @Config.Comment("Allow auto-refill to take items from pinned player inventory slots.")
+    @Config.Comment("Allow auto-refill to take items from pinned player inventory slots. (Client Side Toggle)")
     @Config.LangKey("bogosorter.config.autorefill.from_pinned")
     public static boolean autoRefillFromPinnedSlots;
+
+    @Config.DefaultBoolean(true)
+    @Config.Comment("Allow auto-refill to take items from pinned player inventory slots. (Server Side Toggle)")
+    @Config.LangKey("bogosorter.config.autorefill.from_pinned_server")
+    @Config.Sync
+    public static boolean autoRefillFromPinnedSlots_server;
 
     @Config.DefaultEnum("STAR_1")
     @Config.Comment("Texture set used to mark pinned inventory slots.")
