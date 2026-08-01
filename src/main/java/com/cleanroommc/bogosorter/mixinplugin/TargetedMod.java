@@ -17,7 +17,8 @@ public enum TargetedMod implements ITargetMod {
     IRONCHEST(null, "IronChest"),
     NEI("codechicken.nei.asm.NEICorePlugin", "NotEnoughItems"),
     THERMALEXPANSION(null, "ThermalExpansion"),
-    CONTROLLING(null, "controlling");
+    CONTROLLING(null, "controlling"),
+    WITCHINGGADGETS(null, "WitchingGadgets");
 
     private final TargetModBuilder builder;
 

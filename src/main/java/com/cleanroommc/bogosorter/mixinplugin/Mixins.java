@@ -62,6 +62,13 @@ public enum Mixins implements IMixins {
         .addClientMixins(
             "controlling.MixinGuiNewKeyBindingList",
             "controlling.GuiNewKeyBindingListKeyEntryAccessor")
+    ),
+    WitchingGadgets(new MixinBuilder()
+        .addRequiredMod(TargetedMod.WITCHINGGADGETS)
+        .setPhase(Phase.LATE)
+        .addCommonMixins(
+            "witchinggadgets.MixinContainerBag",
+            "witchinggadgets.MixinContainerCloak")
     );
     // spotless:on
 
