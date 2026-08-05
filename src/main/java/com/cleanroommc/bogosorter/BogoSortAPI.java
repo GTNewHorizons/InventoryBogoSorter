@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -29,6 +30,7 @@ import com.cleanroommc.bogosorter.api.IPosSetter;
 import com.cleanroommc.bogosorter.api.ISortableContainer;
 import com.cleanroommc.bogosorter.api.ISortingContextBuilder;
 import com.cleanroommc.bogosorter.api.SortRule;
+import com.cleanroommc.bogosorter.common.PinnedSlots;
 import com.cleanroommc.bogosorter.common.config.ConfigGui;
 import com.cleanroommc.bogosorter.common.sort.ClientItemSortRule;
 import com.cleanroommc.bogosorter.common.sort.ItemSortContainer;
@@ -250,6 +252,15 @@ public class BogoSortAPI implements IBogoSortAPI {
         List<SlotAccessor> slotAccessors = new ArrayList<>();
         for (Slot slot : slots) slotAccessors.add(getSlot(slot));
         return slotAccessors;
+    }
+
+    @Override
+    public boolean isPinned(EntityPlayer player, Container container, Slot slot) {
+        SlotAccessor slotAccessor = getSlot(slot);
+        if (isPlayerSlot(slotAccessor)) return PinnedSlots.isPinned(player, slotAccessor);
+
+        int[] backpackMask = PinnedSlots.getBackpackMask(player, container);
+        return backpackMask.length != 0 && PinnedSlots.isBackpackPinned(backpackMask, container, slotAccessor);
     }
 
     public static SlotAccessor getSlot(@NotNull Container container, int index) {
