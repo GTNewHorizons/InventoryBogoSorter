@@ -106,6 +106,7 @@ public class OreDictHelper {
         return false;
     }
 
+    // dont change to gregtech_nh, it exists in other gt vers
     @Optional.Method(modid = "gregtech")
     @NotNull
     public static String getGtToolMaterial(ItemStack itemStack) {
