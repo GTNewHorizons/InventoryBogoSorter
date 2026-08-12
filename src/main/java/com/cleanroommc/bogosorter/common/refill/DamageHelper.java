@@ -25,7 +25,12 @@ public class DamageHelper {
             }
             int durabilityLeft = itemStack.getMaxDamage() - itemStack.getItemDamage();
             if (durabilityLeft >= 0 && durabilityLeft < BogoSorterConfig.autoRefillDamageThreshold) {
-                NetworkHandler.sendToServer(new CRefill(itemStack, player.inventory.currentItem, true));
+                NetworkHandler.sendToServer(
+                    new CRefill(
+                        itemStack,
+                        player.inventory.currentItem,
+                        true,
+                        BogoSorterConfig.autoRefillFromPinnedSlots));
                 return true;
             }
         }

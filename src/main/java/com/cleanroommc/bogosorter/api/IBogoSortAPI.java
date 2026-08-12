@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -163,4 +164,14 @@ public interface IBogoSortAPI {
      * @return list of generic slots
      */
     List<SlotAccessor> getSlots(@NotNull List<Slot> slots);
+
+    /**
+     * Checks whether a slot is pinned. This method must be called on the logical server.
+     *
+     * @param player    player owning the pinned slots
+     * @param container container containing the slot
+     * @param slot      slot to check
+     * @return whether the slot is pinned
+     */
+    boolean isPinned(EntityPlayer player, Container container, Slot slot);
 }

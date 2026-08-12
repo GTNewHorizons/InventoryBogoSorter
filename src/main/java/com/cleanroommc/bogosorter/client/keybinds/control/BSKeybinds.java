@@ -21,6 +21,7 @@ import org.lwjgl.input.Mouse;
 
 import com.cleanroommc.bogosorter.client.keybinds.KeyBind;
 import com.cleanroommc.bogosorter.common.config.Serializer;
+import com.cleanroommc.bogosorter.compat.Mods;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
@@ -60,6 +61,10 @@ public class BSKeybinds {
         "key.ae2_terminal_search",
         Keyboard.KEY_T,
         "key.categories.bogosorter");
+    public static final KeyBinding pinSlotKey = new KeyBinding(
+        "key.bogosorter.pin_slot",
+        MOUSE_MIDDLE,
+        "key.categories.bogosorter");
     /**
      * A "dummy" keybinding that will be found and replaced with a button.
      */
@@ -98,6 +103,11 @@ public class BSKeybinds {
         "key.bogosorter.throw_all",
         () -> isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindDrop),
         Keyboard.KEY_SPACE);
+    public static final KeybindDefinition PIN_SLOT = new KeybindDefinition(
+        "pin_slot",
+        "key.bogosorter.pin_slot",
+        MOUSE_MIDDLE,
+        Keyboard.KEY_LCONTROL);
 
     // --- Internal Storage ---
     private static final Map<KeybindDefinition, List<Integer>> keyCombos = new HashMap<>();
@@ -105,6 +115,8 @@ public class BSKeybinds {
 
     private static final KeybindDefinition[] ALL_KEYBINDS = new KeybindDefinition[] { MOVE_ALL_SAME, MOVE_ALL,
         MOVE_SINGLE, MOVE_SINGLE_EMPTY, THROW_ALL_SAME, THROW_ALL };
+    private static final KeybindDefinition[] ALL_KEYBINDS_WITH_PIN = new KeybindDefinition[] { MOVE_ALL_SAME, MOVE_ALL,
+        MOVE_SINGLE, MOVE_SINGLE_EMPTY, THROW_ALL_SAME, THROW_ALL, PIN_SLOT };
     private static File configFile;
 
     /**
@@ -122,6 +134,7 @@ public class BSKeybinds {
         activeKeyBinds.clear();
         for (Map.Entry<KeybindDefinition, List<Integer>> entry : keyCombos.entrySet()) {
             KeybindDefinition keySetting = entry.getKey();
+            if (Mods.Controlling.isLoaded() && keySetting == PIN_SLOT) continue;
             List<Integer> keys = entry.getValue();
             int[] keyCodes = keys.stream()
                 .mapToInt(i -> i)
@@ -143,7 +156,7 @@ public class BSKeybinds {
     }
 
     public static KeybindDefinition[] getAllKeybinds() {
-        return ALL_KEYBINDS;
+        return Mods.Controlling.isLoaded() ? ALL_KEYBINDS : ALL_KEYBINDS_WITH_PIN;
     }
 
     // --- Public Accessor Methods (used by the GUI and for checking) ---
@@ -224,7 +237,7 @@ public class BSKeybinds {
         }
 
         boolean needsSave = !configFile.exists();
-        for (KeybindDefinition def : ALL_KEYBINDS) {
+        for (KeybindDefinition def : ALL_KEYBINDS_WITH_PIN) {
             List<Integer> combo = loadedCombos.get(def.getName());
             if (combo != null) {
                 keyCombos.put(def, combo);
