@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter.common.network;
 
+import static com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil.formatNumber;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -106,9 +108,9 @@ public class SDropOffMessage implements IPacket {
                 .append(
                     StatCollector.translateToLocalFormatted(
                         "bogosort.message.dropoff.items_moved",
-                        EnumChatFormatting.RED + Integer.toString(itemsCounter) + EnumChatFormatting.RESET,
-                        EnumChatFormatting.RED + Integer.toString(affectedContainers) + EnumChatFormatting.RESET,
-                        EnumChatFormatting.RED + Integer.toString(totalContainers) + EnumChatFormatting.RESET));
+                        EnumChatFormatting.RED + formatNumber(itemsCounter) + EnumChatFormatting.RESET,
+                        EnumChatFormatting.RED + formatNumber(affectedContainers) + EnumChatFormatting.RESET,
+                        EnumChatFormatting.RED + formatNumber(totalContainers) + EnumChatFormatting.RESET));
 
             // Append the quota warning if it happened at least once
             if (quotaReachedCount > 0) {
@@ -116,7 +118,7 @@ public class SDropOffMessage implements IPacket {
                     .append(
                         StatCollector.translateToLocalFormatted(
                             "bogosort.message.dropoff.quota_reached_times",
-                            Integer.toString(quotaReachedCount)));
+                            formatNumber(quotaReachedCount)));
             }
 
             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(messageBuilder.toString()));

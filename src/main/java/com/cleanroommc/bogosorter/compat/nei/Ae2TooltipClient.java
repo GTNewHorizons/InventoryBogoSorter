@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter.compat.nei;
 
+import static com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil.formatNumber;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,7 +20,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.cleanroommc.bogosorter.client.ae2.Ae2ClientBridge;
-import com.cleanroommc.bogosorter.common.ReadableNumberConverter;
 import com.cleanroommc.bogosorter.common.config.ae2.TooltipFeatureConfig;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.network.ae2.Ae2Status;
@@ -27,6 +28,7 @@ import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.bogosorter.compat.ThaumicEnergisticsHelper;
 import com.cleanroommc.bogosorter.compat.ae2.Ae2TerminalGuiDetector;
 import com.github.bsideup.jabel.Desugar;
+import com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil;
 
 import codechicken.nei.PositionedStack;
 import codechicken.nei.Widget;
@@ -340,8 +342,7 @@ public final class Ae2TooltipClient {
         tooltip.add(
             EnumChatFormatting.GRAY + StatCollector.translateToLocalFormatted(
                 "bogosorter.tooltip.amount_in_system",
-                EnumChatFormatting.GOLD + ReadableNumberConverter.INSTANCE.toWideReadableForm(amount)
-                    + suffixFor(amountKind)));
+                EnumChatFormatting.GOLD + formatNumber(amount) + suffixFor(amountKind)));
     }
 
     private static void addResponseLine(List<String> tooltip, Entry entry) {
@@ -383,7 +384,7 @@ public final class Ae2TooltipClient {
 
     private static String suffixFor(int amountKind) {
         if (amountKind == KIND_FLUID) {
-            return " mB";
+            return " " + NumberFormatUtil.getFluidUnit();
         }
         return "";
     }
