@@ -76,12 +76,16 @@ bogosort.sortrules.nbt.enchantment.name=魔咒
 bogosort.sortrules.nbt.enchantment_book.name=附魔书
 bogosort.sortrules.nbt.gt_circ_config.name=格雷科技编程电路
 bogosort.sortrules.nbt.gt_item_damage.name=格雷科技工具耐久
+bogosort.sortrules.nbt.tc_essentia.name=神秘时代要素
+bogosort.sortrules.nbt.forestry_genome.name=林业物种
 
 bogosort.sortrules.nbt.potion.description=根据效果和等级对药水排序
 bogosort.sortrules.nbt.enchantment.description=根据效果和等级对附魔物品排序
 bogosort.sortrules.nbt.enchantment_book.description=根据效果和等级对附魔书排序
 bogosort.sortrules.nbt.gt_circ_config.description=根据配置对格雷科技的编程电路排序
 bogosort.sortrules.nbt.gt_item_damage.description=根据耐久对格雷科技的工具排序
+bogosort.sortrules.nbt.tc_essentia.description=根据要素对神秘时代的要素容器排序（如精华瓶、虚空罐）
+bogosort.sortrules.nbt.forestry_genome.description=根据主要物种对林业的蜜蜂、幼虫、树木和蝴蝶排序
 
 bogosorter.tooltip.amount_in_system=网络中数量：%s
 bogosorter.tooltip.amount_out_of_range=网络中数量：超出网络范围！

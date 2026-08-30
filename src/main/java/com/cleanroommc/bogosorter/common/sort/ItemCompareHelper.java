@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
@@ -214,6 +215,21 @@ public class ItemCompareHelper {
         if (nbt1 instanceof NBTBase.NBTPrimitive) {
             return Double
                 .compare(((NBTBase.NBTPrimitive) nbt1).func_150286_g(), ((NBTBase.NBTPrimitive) nbt2).func_150286_g());
+        }
+        if (nbt1.getId() == Constants.NBT.TAG_STRING) {
+            return ((NBTTagString) nbt1).func_150285_a_()
+                .compareTo(((NBTTagString) nbt2).func_150285_a_());
+        }
+        if (nbt1.getId() == Constants.NBT.TAG_LIST) {
+            NBTTagList list1 = (NBTTagList) nbt1;
+            NBTTagList list2 = (NBTTagList) nbt2;
+            int result = Integer.compare(list1.tagCount(), list2.tagCount());
+            if (result != 0) return result;
+            int total = 0;
+            for (int i = 0; i < list1.tagCount(); i++) {
+                total += compareNbtBase(list1.getCompoundTagAt(i), list2.getCompoundTagAt(i));
+            }
+            return total;
         }
         if (nbt1.getId() == Constants.NBT.TAG_BYTE_ARRAY) {
             byte[] array1 = ((NBTTagByteArray) nbt1).func_150292_c();
