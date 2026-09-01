@@ -1,9 +1,14 @@
 package com.cleanroommc.bogosorter.common.sort;
 
+import java.util.Comparator;
+
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.bogosorter.BogoSortAPI;
 import com.cleanroommc.bogosorter.compat.Mods;
@@ -59,11 +64,56 @@ public class DefaultRules {
             api.registerNbtSortingRule("gt_circ_config", "Configuration", Constants.NBT.TAG_INT);
             api.registerNbtSortingRule("gt_item_damage", "GT.ToolStats/Dmg", Constants.NBT.TAG_INT);
         }
+        if (Mods.Thaumcraft.isLoaded()) {
+            // sorts essentia containers (phials, jars, ...) by their aspect
+            api.registerNbtSortingRule(
+                "tc_essentia",
+                "Aspects",
+                Constants.NBT.TAG_LIST,
+                Comparator.naturalOrder(),
+                DefaultRules::getEssentiaAspect);
+        }
+        if (Mods.Forestry.isLoaded()) {
+            // sorts genetic items (bees, larvae, trees, butterflies) by primary species
+            api.registerNbtSortingRule(
+                "forestry_genome",
+                "Genome/Chromosomes",
+                Constants.NBT.TAG_LIST,
+                Comparator.naturalOrder(),
+                DefaultRules::getForestrySpecies);
+        }
     }
 
     private static String getPotionId(NBTBase nbt) {
         String[] potion = ((NBTTagString) nbt).toString()
             .split(":");
         return potion[potion.length - 1];
+    }
+
+    /**
+     * Returns the aspect tag stored in a Thaumcraft {@code Aspects} list (e.g. {@code ignis}).
+     */
+    @Nullable
+    private static String getEssentiaAspect(NBTBase nbt) {
+        NBTTagList aspects = (NBTTagList) nbt;
+        if (aspects.tagCount() == 0) return null;
+        return aspects.getCompoundTagAt(0)
+            .getString("key");
+    }
+
+    /**
+     * Returns the primary species UID of a Forestry genome (chromosome at {@code Slot 0}, e.g.
+     * {@code forestry.speciesForest}).
+     */
+    @Nullable
+    private static String getForestrySpecies(NBTBase nbt) {
+        NBTTagList chromosomes = (NBTTagList) nbt;
+        for (int i = 0; i < chromosomes.tagCount(); i++) {
+            NBTTagCompound chromosome = chromosomes.getCompoundTagAt(i);
+            if (chromosome.getByte("Slot") == 0) {
+                return chromosome.getString("UID0");
+            }
+        }
+        return null;
     }
 }
