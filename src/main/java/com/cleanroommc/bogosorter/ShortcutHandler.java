@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.cleanroommc.bogosorter.common.PinnedSlots;
 import com.cleanroommc.bogosorter.common.network.CShortcut;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
 import com.cleanroommc.bogosorter.common.sort.GuiSortingContext;
@@ -68,6 +69,8 @@ public class ShortcutHandler {
             List<SlotAccessor> shortcutSlots = getContainerShortcutSlots(container);
             List<SlotAccessor> targetSlots = getShortcutTargetSlots(slot, sortingContext, shortcutSlots);
             if (targetSlots == null || containsSlot(targetSlots, slot)) return;
+            int[] backpackPins = PinnedSlots.getBackpackMask(player, container);
+            targetSlots = withoutPinned(player, container, targetSlots, backpackPins);
 
             toInsert = emptySlot ? BogoSortAPI.insert(container, targetSlots, toInsert, true)
                 : BogoSortAPI.insert(container, targetSlots, toInsert);
@@ -79,6 +82,8 @@ public class ShortcutHandler {
                     otherSlots.add(BogoSortAPI.INSTANCE.getSlot(slot1));
                 }
             }
+            int[] backpackPins = PinnedSlots.getBackpackMask(player, container);
+            otherSlots = withoutPinned(player, container, otherSlots, backpackPins);
             toInsert = emptySlot ? BogoSortAPI.insert(container, otherSlots, toInsert, true)
                 : BogoSortAPI.insert(container, otherSlots, toInsert);
         }
@@ -112,7 +117,7 @@ public class ShortcutHandler {
         return true;
     }
 
-    public static void moveAllItems(Container container, SlotAccessor slot, boolean sameItemOnly) {
+    public static void moveAllItems(EntityPlayer player, Container container, SlotAccessor slot, boolean sameItemOnly) {
         if (slot == null || !BogoSortAPI.isValidSortable(container)) return;
         Slot currentSlot = container.getSlot(slot.getSlotNumber());
         if (currentSlot == null || SlotDummyOrCrafting(currentSlot)) return;
@@ -149,8 +154,12 @@ public class ShortcutHandler {
                 }
             }
         }
+        int[] backpackPins = PinnedSlots.getBackpackMask(player, container);
+        targetSlots = withoutPinned(player, container, targetSlots, backpackPins);
 
         for (SlotAccessor slot1 : sourceSlots) {
+            if (PinnedSlots.isPinned(player, container, slot1, backpackPins)
+                && slot1.getSlotNumber() != slot.getSlotNumber()) continue;
             Slot realSlot = container.getSlot(slot1.getSlotNumber());
             if (realSlot == null || !realSlot.getHasStack() || SlotDummyOrCrafting(realSlot)) continue;
             ItemStack stackInSlot = slot1.callGetStack();
@@ -231,7 +240,10 @@ public class ShortcutHandler {
             if (slotGroup == null) return;
             sourceSlots = slotGroup.getSlots();
         }
+        int[] backpackPins = PinnedSlots.getBackpackMask(player, container);
         for (SlotAccessor slot1 : sourceSlots) {
+            if (PinnedSlots.isPinned(player, container, slot1, backpackPins)
+                && slot1.getSlotNumber() != slot.getSlotNumber()) continue;
             Slot realSlot = container.getSlot(slot1.getSlotNumber());
             if (realSlot == null || !realSlot.getHasStack()
                 || SlotDummyOrCrafting(realSlot)
@@ -246,6 +258,15 @@ public class ShortcutHandler {
                 }
             }
         }
+    }
+
+    private static List<SlotAccessor> withoutPinned(EntityPlayer player, Container container, List<SlotAccessor> slots,
+        int[] backpackPins) {
+        List<SlotAccessor> result = new ArrayList<>(slots.size());
+        for (SlotAccessor slot : slots) {
+            if (!PinnedSlots.isPinned(player, container, slot, backpackPins)) result.add(slot);
+        }
+        return result;
     }
 
     public static ItemStack insertToSlots(List<SlotAccessor> slots, ItemStack stack, boolean emptyOnly) {

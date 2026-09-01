@@ -34,6 +34,7 @@ import codechicken.enderstorage.storage.item.ContainerEnderItemStorage;
 import de.ellpeck.actuallyadditions.mod.inventory.ContainerGiantChest;
 import de.eydamos.backpack.inventory.container.Boundaries;
 import de.eydamos.backpack.inventory.container.ContainerAdvanced;
+import de.eydamos.backpack.inventory.container.ContainerWorkbenchBackpack;
 import forestry.core.gui.ContainerNaturalistInventory;
 import forestry.storage.gui.ContainerBackpack;
 import forestry.storage.gui.ContainerNaturalistBackpack;
@@ -115,11 +116,14 @@ public class DefaultCompat {
 
         if (Backpack.isLoaded()) {
             api.addCompat(ContainerAdvanced.class, (container, builder) -> {
-                int rowSize = getRowSize(container.getBoundary(Boundaries.BACKPACK_END));
-                builder.addSlotGroup(
-                    container.getBoundary(Boundaries.BACKPACK),
-                    container.getBoundary(Boundaries.BACKPACK_END),
-                    rowSize);
+                int start = container.getBoundary(Boundaries.BACKPACK);
+                int end = container.getBoundary(Boundaries.BACKPACK_END);
+                builder.addSlotGroup(start, end, getRowSize(end - start));
+            });
+            api.addCompat(ContainerWorkbenchBackpack.class, (container, builder) -> {
+                int start = container.getBoundary(Boundaries.BACKPACK);
+                int end = container.getBoundary(Boundaries.BACKPACK_END);
+                builder.addSlotGroup(start, end, getRowSize(end - start));
             });
         }
 

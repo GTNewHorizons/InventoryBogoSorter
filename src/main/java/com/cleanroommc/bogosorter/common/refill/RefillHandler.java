@@ -13,6 +13,7 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.OreDictHelper;
+import com.cleanroommc.bogosorter.common.PinnedSlots;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CRefill;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
@@ -67,7 +68,8 @@ public class RefillHandler {
         if (event.original.getItem() != null && shouldHandleRefill(event.entityPlayer, event.original, true)) {
             int index = event.entityPlayer.inventory.currentItem;
             if (index < 9) {
-                NetworkHandler.sendToServer(new CRefill(event.original, index, false));
+                NetworkHandler.sendToServer(
+                    new CRefill(event.original, index, false, BogoSorterConfig.autoRefillFromPinnedSlots));
             }
         }
     }
@@ -96,9 +98,11 @@ public class RefillHandler {
     private EntityPlayer player;
     private InventoryPlayer inventory;
     private boolean swapItems;
+    private boolean allowPinnedSlots;
     private boolean isDamageable;
 
-    public RefillHandler(int hotbarIndex, ItemStack brokenItem, EntityPlayer player, boolean swapItems) {
+    public RefillHandler(int hotbarIndex, ItemStack brokenItem, EntityPlayer player, boolean swapItems,
+        boolean allowPinnedSlots) {
         this.hotbarIndex = hotbarIndex;
         this.slots = new IntArrayList(
             INVENTORY_PROXIMITY_MAP[hotbarIndex == 40 ? player.inventory.currentItem : hotbarIndex]);
@@ -106,6 +110,11 @@ public class RefillHandler {
         this.player = player;
         this.inventory = player.inventory;
         this.swapItems = swapItems;
+        this.allowPinnedSlots = allowPinnedSlots;
+    }
+
+    public RefillHandler(int hotbarIndex, ItemStack brokenItem, EntityPlayer player, boolean swapItems) {
+        this(hotbarIndex, brokenItem, player, swapItems, false);
     }
 
     public RefillHandler(int hotbarIndex, ItemStack brokenItem, EntityPlayer player) {
@@ -150,8 +159,9 @@ public class RefillHandler {
         while (slotsIterator.hasNext()) {
             int slot = slotsIterator.next();
             ItemStack found = inventory.mainInventory[slot];
-            if (found == null || (this.swapItems && this.isDamageable
-                && DamageHelper.getDurability(found) <= BogoSorterConfig.autoRefillDamageThreshold)) {
+            if ((!allowPinnedSlots && PinnedSlots.isPinned(player, slot)) || found == null
+                || (this.swapItems && this.isDamageable
+                    && DamageHelper.getDurability(found) <= BogoSorterConfig.autoRefillDamageThreshold)) {
                 slotsIterator.remove();
                 continue;
             }

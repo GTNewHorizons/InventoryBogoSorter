@@ -49,6 +49,7 @@ public class NetworkHandler {
         // executeServer by the enableDebugTools config plus an operator check, so it is safe to register
         // unconditionally.
         registerC2S(CSlotSync.class);
+        registerC2S(CPlayerPins.class);
         registerC2S(CShortcut.class);
         registerC2S(CSort.class);
         registerC2S(CHotbarSwap.class);
@@ -59,6 +60,7 @@ public class NetworkHandler {
         registerC2S(CDropOff.class);
         registerS2C(SDropOffMessage.class);
         registerS2C(SDropOffThrottled.class);
+        registerS2C(SPlayerPins.class);
         registerC2S(CRefill.class);
         // only register ae2 packets when ae2 is loaded
         if (Mods.Ae2.isLoaded()) {
@@ -118,7 +120,9 @@ public class NetworkHandler {
 
         // Run GUI packets straight away so they don’t get out of sync from delayed or changing container state
         // Only stuff like AE2 batching dropoff scanning and heavy background tasks can be queued
-        if (message instanceof CSort || message instanceof CShortcut || message instanceof CSlotSync) {
+        if (message instanceof CSort || message instanceof CShortcut
+            || message instanceof CSlotSync
+            || message instanceof CPlayerPins) {
             try {
                 IPacket reply = message.executeServer(handler);
                 if (reply != null) {

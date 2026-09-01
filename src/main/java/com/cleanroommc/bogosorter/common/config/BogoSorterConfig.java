@@ -1,5 +1,7 @@
 package com.cleanroommc.bogosorter.common.config;
 
+import java.util.Locale;
+
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.dropoff.CoinDepositDestination;
 import com.cleanroommc.bogosorter.common.dropoff.render.RendererCube;
@@ -41,6 +43,32 @@ public class BogoSorterConfig {
     @Config.Sync
     public static boolean enableAutoRefill_server;
 
+    @Config.DefaultBoolean(false)
+    @Config.Comment("Allow auto-refill to take items from pinned player inventory slots. (Client Side Toggle)")
+    @Config.LangKey("bogosorter.config.autorefill.from_pinned")
+    public static boolean autoRefillFromPinnedSlots;
+
+    @Config.DefaultBoolean(true)
+    @Config.Comment("Allow auto-refill to take items from pinned player inventory slots. (Server Side Toggle)")
+    @Config.LangKey("bogosorter.config.autorefill.from_pinned_server")
+    @Config.Sync
+    public static boolean autoRefillFromPinnedSlots_server;
+
+    @Config.DefaultEnum("STAR_1")
+    @Config.Comment("Texture set used to mark pinned inventory slots.")
+    @Config.LangKey("bogosorter.config.pinned_slots.style")
+    public static PinnedSlotStyle pinnedSlotStyle = PinnedSlotStyle.STAR_1;
+
+    @Config.DefaultEnum("PX_1")
+    @Config.Comment("Offset of the pinned slot icon from the item's top-left corner.")
+    @Config.LangKey("bogosorter.config.pinned_slots.icon_offset")
+    public static PinnedSlotIconOffset pinnedSlotIconOffset = PinnedSlotIconOffset.PX_1;
+
+    @Config.DefaultBoolean(true)
+    @Config.Comment("Render the icon over pinned inventory slots. The outline is always shown.")
+    @Config.LangKey("bogosorter.config.pinned_slots.show_icon")
+    public static boolean showPinnedSlotIcon;
+
     @Config.DefaultInt(1)
     @Config.Comment("The damage threshold for auto-refill. If the item has less than this amount of durability, it will be refilled.")
     @Config.LangKey("bogosorter.config.autorefill.damage_threshold")
@@ -76,6 +104,66 @@ public class BogoSorterConfig {
     @Config.LangKey("bogosorter.config.debug_tools.enable")
     @Config.Sync
     public static boolean enableDebugTools;
+
+    public enum PinnedSlotStyle {
+
+        STAR_0("star", 0),
+        STAR_1("star", 1),
+        STAR_2("star", 2),
+        DOT_0("dot", 0),
+        DOT_1("dot", 1),
+        DOT_2("dot", 2),
+        LOCK_0("lock", 0),
+        LOCK_1("lock", 1),
+        LOCK_2("lock", 2);
+
+        private final String iconTexturePath;
+        private final String outlineTexturePath;
+
+        PinnedSlotStyle(String shape, int variant) {
+            String folder = "textures/gui/pins/" + shape + "/";
+            this.iconTexturePath = folder + shape + "_" + variant + ".png";
+            this.outlineTexturePath = folder + shape + "_outline.png";
+        }
+
+        public String getOutlinePath() {
+            return outlineTexturePath;
+        }
+
+        public String getIconPath() {
+            return iconTexturePath;
+        }
+
+        public String getLangKey() {
+            return "bogosort.gui.pinned_slots.style." + name().toLowerCase(Locale.ROOT);
+        }
+    }
+
+    public enum PinnedSlotIconOffset {
+
+        PX_0(0),
+        PX_1(1),
+        PX_2(2);
+
+        private final int textureOffsetFromOutline;
+
+        PinnedSlotIconOffset(int textureOffsetFromOutline) {
+            this.textureOffsetFromOutline = textureOffsetFromOutline;
+        }
+
+        public int getTextureOffsetFromOutline() {
+            return textureOffsetFromOutline;
+        }
+
+        public int getTextureOffsetFromSlot() {
+            // The slot origin is one pixel down and right from the 18x18 outline origin.
+            return textureOffsetFromOutline - 1;
+        }
+
+        public String getLangKey() {
+            return "bogosort.gui.pinned_slots.icon_offset." + name().toLowerCase(Locale.ROOT);
+        }
+    }
 
     @Config.LangKey("bogosorter.config.dropkeyrepeat")
     public static class DropKeyRepeat {

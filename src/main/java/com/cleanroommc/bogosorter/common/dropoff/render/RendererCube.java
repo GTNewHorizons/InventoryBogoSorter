@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.lwjgl.opengl.GL11;
@@ -50,7 +50,8 @@ public class RendererCube {
         int alphaByte = getAlphaByte(timeAlive, solidDuration, fadeDuration);
 
         // --- Render Setup ---
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
+        if (player == null) return;
         double playerX = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks;
         double playerY = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks;
         double playerZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks;

@@ -158,6 +158,7 @@ public class BSGuiKeybindList extends GuiListExtended {
             if (isEditing) {
                 if (this.btnDone.mousePressed(mc, mouseX, mouseY)) {
                     controlsScreen.selectedKeyBinding = null;
+                    BSKeybinds.saveKeyCombos();
                     return true;
                 }
             } else {
