@@ -94,7 +94,7 @@ public final class Ae2TooltipClient {
             .register(new Ae2GuiWatcher());
     }
 
-    public static void appendAmountTooltip(ItemStack stack, List<String> tooltip, boolean allowOpenTerminal) {
+    public static void appendAmountTooltip(ItemStack stack, List<String> tooltip, boolean isTerminalOpen) {
         if (!isAmountTooltipEnabled()) {
             return;
         }
@@ -107,7 +107,7 @@ public final class Ae2TooltipClient {
         }
 
         long now = Minecraft.getSystemTime();
-        if (!allowOpenTerminal && ae2ContextStatus == Ae2Status.OUT_OF_RANGE && now < nextContextRetryAt) {
+        if (!isTerminalOpen && ae2ContextStatus == Ae2Status.OUT_OF_RANGE && now < nextContextRetryAt) {
             addOutOfRangeLine(tooltip);
             return;
         }
@@ -140,7 +140,7 @@ public final class Ae2TooltipClient {
 
         if (entry.hasResponse) {
             addResponseLine(tooltip, entry);
-        } else {
+        } else if (isTerminalOpen || ae2ContextStatus != Ae2Status.NO_SYSTEM) {
             addCheckingLine(tooltip);
         }
     }
