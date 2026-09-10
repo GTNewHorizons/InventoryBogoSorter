@@ -14,17 +14,20 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.cleanroommc.bogosorter.api.BeforeSortEvent;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.PinnedSlotClient;
 import com.cleanroommc.bogosorter.client.drop.DropKeyRepeatHandler;
@@ -54,6 +57,7 @@ import com.cleanroommc.modularui.api.event.MouseInputEvent;
 import com.cleanroommc.modularui.factory.ClientGUI;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -279,8 +283,8 @@ public class ClientEventHandler {
             && (Minecraft.getMinecraft().currentScreen == null || container != null)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
-                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
-                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36); // hotbar
+                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9, BSKeybinds.sortKeyOutsideGUI); // main inventory
+                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36, BSKeybinds.sortKeyOutsideGUI); // hotbar
 
                 timeSort = t;
                 return true;
@@ -291,7 +295,7 @@ public class ClientEventHandler {
             if (t - timeSort > 500) {
                 if (container != null) {
                     SlotAccessor slot = getSlot(container);
-                    if (!canSort(slot) || !sort(container, slot)) {
+                    if (!canSort(slot) || !sort(container, slot, BSKeybinds.sortKeyInGUI)) {
                         return false;
                     }
                     timeSort = t;
@@ -379,14 +383,16 @@ public class ClientEventHandler {
         return null;
     }
 
-    public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot) {
+    public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot, @Nullable KeyBinding sortKey) {
         if (guiScreen instanceof GuiContainer) {
-            return sort(((GuiContainer) guiScreen).inventorySlots, slot, -1);
+            return sort(((GuiContainer) guiScreen).inventorySlots, slot, -1, sortKey);
         }
         return false;
     }
 
-    public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber) {
+    public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber,
+        @Nullable KeyBinding sortKey) {
+        boolean inGui = sortKey == null || BSKeybinds.sortKeyInGUI == sortKey;
         GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
         if (sortingContext.isEmpty()) return false;
         SlotGroup slotGroup = null;
@@ -403,6 +409,13 @@ public class ClientEventHandler {
             slotGroup = sortingContext.getSlotGroup(slot != null ? slot.getSlotNumber() : slotNumber);
             if (slotGroup == null || slotGroup.isEmpty()
                 || (slotGroup.isHotbar() && !BogoSorterConfig.enableHotbarSort)) return false;
+        }
+
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        Event event = inGui ? new BeforeSortEvent.BeforeSortInGuiEvent(player, container, sortKey)
+            : new BeforeSortEvent.BeforeSortOutOfGuiEvent(player, container, sortKey);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            return false;
         }
 
         List<SortRule<ItemStack>> sortRules = SortRulesConfig.sortRules;

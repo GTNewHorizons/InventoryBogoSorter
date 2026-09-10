@@ -124,7 +124,8 @@ public class ButtonHandler {
                 ClientEventHandler.sort(
                     event.gui,
                     sortButton.slotGroup.getSlots()
-                        .get(0));
+                        .get(0),
+                    null);
             } else {
                 BogoSortAPI.INSTANCE.openConfigGui(event.gui);
                 Interactable.playButtonClickSound();
