@@ -237,7 +237,7 @@ public class BogoSortAPI implements IBogoSortAPI {
     @SideOnly(Side.CLIENT)
     @Override
     public boolean sortSlotGroup(Slot slot) {
-        return ClientEventHandler.sort(Minecraft.getMinecraft().currentScreen, getSlot(slot), null);
+        return ClientEventHandler.sort(Minecraft.getMinecraft().currentScreen, getSlot(slot));
     }
 
     @NotNull

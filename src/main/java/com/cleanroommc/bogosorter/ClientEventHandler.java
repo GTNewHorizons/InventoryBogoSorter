@@ -283,9 +283,10 @@ public class ClientEventHandler {
             && (Minecraft.getMinecraft().currentScreen == null || container != null)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
-                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9, BSKeybinds.sortKeyOutsideGUI); // main
-                                                                                                                    // inventory
-                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36, BSKeybinds.sortKeyOutsideGUI); // hotbar
+                Container inventory = Minecraft.getMinecraft().thePlayer.inventoryContainer;
+                boolean sorted = sort(inventory, null, 9, true); // main inventory
+                sorted |= sort(inventory, null, 36, true); // hotbar
+                if (!sorted) return false;
 
                 timeSort = t;
                 return true;
@@ -296,7 +297,7 @@ public class ClientEventHandler {
             if (t - timeSort > 500) {
                 if (container != null) {
                     SlotAccessor slot = getSlot(container);
-                    if (!canSort(slot) || !sort(container, slot, BSKeybinds.sortKeyInGUI)) {
+                    if (!canSort(slot) || !sort(container, slot, true)) {
                         return false;
                     }
                     timeSort = t;
@@ -384,16 +385,22 @@ public class ClientEventHandler {
         return null;
     }
 
-    public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot, @Nullable KeyBinding sortKey) {
+    public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot) {
+        return sort(guiScreen, slot, false);
+    }
+
+    public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot, boolean fromKeybind) {
         if (guiScreen instanceof GuiContainer) {
-            return sort(((GuiContainer) guiScreen).inventorySlots, slot, -1, sortKey);
+            return sort(((GuiContainer) guiScreen).inventorySlots, slot, -1, fromKeybind);
         }
         return false;
     }
 
-    public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber,
-        @Nullable KeyBinding sortKey) {
-        boolean inGui = sortKey == null || BSKeybinds.sortKeyInGUI == sortKey;
+    public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber) {
+        return sort(container, slot, slotNumber, false);
+    }
+
+    public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber, boolean fromKeybind) {
         GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
         if (sortingContext.isEmpty()) return false;
         SlotGroup slotGroup = null;
@@ -413,8 +420,9 @@ public class ClientEventHandler {
         }
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        Event event = inGui ? new BeforeSortEvent.BeforeSortInGuiEvent(player, container, sortKey)
-            : new BeforeSortEvent.BeforeSortOutOfGuiEvent(player, container, sortKey);
+        boolean inGui = Minecraft.getMinecraft().currentScreen instanceof GuiContainer;
+        Event event = inGui ? new BeforeSortEvent.BeforeSortInGuiEvent(player, container, fromKeybind)
+            : new BeforeSortEvent.BeforeSortOutOfGuiEvent(player, container, fromKeybind);
         if (MinecraftForge.EVENT_BUS.post(event)) {
             return false;
         }
