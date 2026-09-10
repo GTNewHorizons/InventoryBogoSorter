@@ -283,7 +283,8 @@ public class ClientEventHandler {
             && (Minecraft.getMinecraft().currentScreen == null || container != null)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
-                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9, BSKeybinds.sortKeyOutsideGUI); // main inventory
+                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9, BSKeybinds.sortKeyOutsideGUI); // main
+                                                                                                                    // inventory
                 sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36, BSKeybinds.sortKeyOutsideGUI); // hotbar
 
                 timeSort = t;
