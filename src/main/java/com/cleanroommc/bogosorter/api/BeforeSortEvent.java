@@ -1,7 +1,11 @@
 package com.cleanroommc.bogosorter.api;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+
+import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
@@ -14,11 +18,9 @@ import cpw.mods.fml.common.eventhandler.Event;
  * {@link IBogoSortAPI#sortSlotGroup} call, so a handler that only wants to reclaim its keybind does not suppress
  * deliberate sorts.
  * <p>
- * The out of GUI variant is fired once per slot group (main inventory and hotbar), so a handler that wants to block
- * the whole sort must cancel both.
  */
 @Cancelable
-public abstract class BeforeSortEvent extends Event {
+public class BeforeSortEvent extends Event {
 
     private final EntityPlayer player;
     private final Container container;
@@ -34,6 +36,7 @@ public abstract class BeforeSortEvent extends Event {
         return player;
     }
 
+    /** Container to be sorted. */
     public Container getContainer() {
         return container;
     }
@@ -43,19 +46,11 @@ public abstract class BeforeSortEvent extends Event {
         return fromKeybind;
     }
 
-    /** Fired while a container GUI is open. */
-    public static class BeforeSortInGuiEvent extends BeforeSortEvent {
-
-        public BeforeSortInGuiEvent(EntityPlayer player, Container container, boolean fromKeybind) {
-            super(player, container, fromKeybind);
-        }
+    static public boolean isSortInGUI() {
+        return Minecraft.getMinecraft().currentScreen instanceof GuiContainer;
     }
 
-    /** Fired while no container GUI is open. */
-    public static class BeforeSortOutOfGuiEvent extends BeforeSortEvent {
-
-        public BeforeSortOutOfGuiEvent(EntityPlayer player, Container container, boolean fromKeybind) {
-            super(player, container, fromKeybind);
-        }
+    static public int getSortKeyCode(final boolean inGUI) {
+        return inGUI ? BSKeybinds.sortKeyInGUI.getKeyCode() : BSKeybinds.sortKeyOutsideGUI.getKeyCode();
     }
 }

@@ -14,7 +14,6 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -419,10 +418,7 @@ public class ClientEventHandler {
                 || (slotGroup.isHotbar() && !BogoSorterConfig.enableHotbarSort)) return false;
         }
 
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        boolean inGui = Minecraft.getMinecraft().currentScreen instanceof GuiContainer;
-        Event event = inGui ? new BeforeSortEvent.BeforeSortInGuiEvent(player, container, fromKeybind)
-            : new BeforeSortEvent.BeforeSortOutOfGuiEvent(player, container, fromKeybind);
+        Event event = new BeforeSortEvent(Minecraft.getMinecraft().thePlayer, container, fromKeybind);
         if (MinecraftForge.EVENT_BUS.post(event)) {
             return false;
         }
