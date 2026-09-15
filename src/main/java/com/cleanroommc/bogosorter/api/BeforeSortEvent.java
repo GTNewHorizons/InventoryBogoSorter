@@ -1,11 +1,7 @@
 package com.cleanroommc.bogosorter.api;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-
-import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
@@ -14,22 +10,30 @@ import cpw.mods.fml.common.eventhandler.Event;
  * Fired on the client before a sort is performed. Cancel to suppress the sort and let the triggering input fall
  * through to other handlers.
  * <p>
- * {@link #isFromKeybind()} distinguishes a sort key press from a sort button click or an
- * {@link IBogoSortAPI#sortSlotGroup} call, so a handler that only wants to reclaim its keybind does not suppress
- * deliberate sorts.
+ * {@link #getSortKeyCode()} returns the key that triggered the sort, or {@link #NO_KEY} for a sort button click or an
+ * {@link IBogoSortAPI#sortSlotGroup} call. A handler that only wants to reclaim its own keybind can compare against
+ * its key code and will therefore not suppress deliberate sorts.
  * <p>
  */
 @Cancelable
 public class BeforeSortEvent extends Event {
 
+    /**
+     * Value of {@link #getSortKeyCode()} when the sort was not triggered by a key press (same as
+     * {@code Keyboard.KEY_NONE}).
+     */
+    public static final int NO_KEY = 0;
+
     private final EntityPlayer player;
     private final Container container;
-    private final boolean fromKeybind;
+    private final boolean inGui;
+    private final int sortKeyCode;
 
-    public BeforeSortEvent(EntityPlayer player, Container container, boolean fromKeybind) {
+    public BeforeSortEvent(EntityPlayer player, Container container, boolean inGui, int sortKeyCode) {
         this.player = player;
         this.container = container;
-        this.fromKeybind = fromKeybind;
+        this.inGui = inGui;
+        this.sortKeyCode = sortKeyCode;
     }
 
     public EntityPlayer getPlayer() {
@@ -41,16 +45,19 @@ public class BeforeSortEvent extends Event {
         return container;
     }
 
+    /** True if the sort happens while a GUI is open. */
+    public boolean isInGui() {
+        return inGui;
+    }
+
+    /** Key code of the key press that triggered this sort, or {@link #NO_KEY} if it was not triggered by a key. */
+    public int getSortKeyCode() {
+        return sortKeyCode;
+    }
+
     /** True if a sort keybind triggered this, false for a sort button click or an API call. */
     public boolean isFromKeybind() {
-        return fromKeybind;
+        return sortKeyCode != NO_KEY;
     }
 
-    static public boolean isSortInGUI() {
-        return Minecraft.getMinecraft().currentScreen instanceof GuiContainer;
-    }
-
-    static public int getSortKeyCode(final boolean inGUI) {
-        return inGUI ? BSKeybinds.sortKeyInGUI.getKeyCode() : BSKeybinds.sortKeyOutsideGUI.getKeyCode();
-    }
 }

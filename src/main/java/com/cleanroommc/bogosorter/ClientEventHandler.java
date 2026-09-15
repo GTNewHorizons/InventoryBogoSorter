@@ -56,7 +56,6 @@ import com.cleanroommc.modularui.api.event.MouseInputEvent;
 import com.cleanroommc.modularui.factory.ClientGUI;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -283,8 +282,9 @@ public class ClientEventHandler {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
                 Container inventory = Minecraft.getMinecraft().thePlayer.inventoryContainer;
-                boolean sorted = sort(inventory, null, 9, true); // main inventory
-                sorted |= sort(inventory, null, 36, true); // hotbar
+                if (postBeforeSortEvent(inventory, BSKeybinds.sortKeyOutsideGUI)) return false;
+                boolean sorted = doSort(inventory, null, 9); // main inventory
+                sorted |= doSort(inventory, null, 36); // hotbar
                 if (!sorted) return false;
 
                 timeSort = t;
@@ -296,7 +296,8 @@ public class ClientEventHandler {
             if (t - timeSort > 500) {
                 if (container != null) {
                     SlotAccessor slot = getSlot(container);
-                    if (!canSort(slot) || !sort(container, slot, true)) {
+                    if (!canSort(slot) || postBeforeSortEvent(container.inventorySlots, BSKeybinds.sortKeyInGUI)
+                        || !doSort(container.inventorySlots, slot, -1)) {
                         return false;
                     }
                     timeSort = t;
@@ -385,21 +386,27 @@ public class ClientEventHandler {
     }
 
     public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot) {
-        return sort(guiScreen, slot, false);
-    }
-
-    public static boolean sort(GuiScreen guiScreen, @Nullable SlotAccessor slot, boolean fromKeybind) {
         if (guiScreen instanceof GuiContainer) {
-            return sort(((GuiContainer) guiScreen).inventorySlots, slot, -1, fromKeybind);
+            return sort(((GuiContainer) guiScreen).inventorySlots, slot, -1);
         }
         return false;
     }
 
     public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber) {
-        return sort(container, slot, slotNumber, false);
+        if (postBeforeSortEvent(container, null)) return false;
+        return doSort(container, slot, slotNumber);
     }
 
-    public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber, boolean fromKeybind) {
+    private static boolean postBeforeSortEvent(Container container, @Nullable KeyBinding trigger) {
+        return MinecraftForge.EVENT_BUS.post(
+            new BeforeSortEvent(
+                Minecraft.getMinecraft().thePlayer,
+                container,
+                Minecraft.getMinecraft().currentScreen instanceof GuiContainer,
+                trigger != null ? trigger.getKeyCode() : BeforeSortEvent.NO_KEY));
+    }
+
+    private static boolean doSort(Container container, @Nullable SlotAccessor slot, int slotNumber) {
         GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
         if (sortingContext.isEmpty()) return false;
         SlotGroup slotGroup = null;
@@ -416,11 +423,6 @@ public class ClientEventHandler {
             slotGroup = sortingContext.getSlotGroup(slot != null ? slot.getSlotNumber() : slotNumber);
             if (slotGroup == null || slotGroup.isEmpty()
                 || (slotGroup.isHotbar() && !BogoSorterConfig.enableHotbarSort)) return false;
-        }
-
-        Event event = new BeforeSortEvent(Minecraft.getMinecraft().thePlayer, container, fromKeybind);
-        if (MinecraftForge.EVENT_BUS.post(event)) {
-            return false;
         }
 
         List<SortRule<ItemStack>> sortRules = SortRulesConfig.sortRules;
