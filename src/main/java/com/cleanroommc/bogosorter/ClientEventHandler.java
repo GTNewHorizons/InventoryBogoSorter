@@ -20,11 +20,13 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.cleanroommc.bogosorter.api.BeforeSortEvent;
 import com.cleanroommc.bogosorter.api.SortRule;
 import com.cleanroommc.bogosorter.client.PinnedSlotClient;
 import com.cleanroommc.bogosorter.client.drop.DropKeyRepeatHandler;
@@ -279,8 +281,11 @@ public class ClientEventHandler {
             && (Minecraft.getMinecraft().currentScreen == null || container != null)) {
             long t = Minecraft.getSystemTime();
             if (t - timeSort > 500) {
-                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 9); // main inventory
-                sort(Minecraft.getMinecraft().thePlayer.inventoryContainer, null, 36); // hotbar
+                Container inventory = Minecraft.getMinecraft().thePlayer.inventoryContainer;
+                if (postBeforeSortEvent(inventory, BSKeybinds.sortKeyOutsideGUI)) return false;
+                boolean sorted = doSort(inventory, null, 9); // main inventory
+                sorted |= doSort(inventory, null, 36); // hotbar
+                if (!sorted) return false;
 
                 timeSort = t;
                 return true;
@@ -291,7 +296,8 @@ public class ClientEventHandler {
             if (t - timeSort > 500) {
                 if (container != null) {
                     SlotAccessor slot = getSlot(container);
-                    if (!canSort(slot) || !sort(container, slot)) {
+                    if (!canSort(slot) || postBeforeSortEvent(container.inventorySlots, BSKeybinds.sortKeyInGUI)
+                        || !doSort(container.inventorySlots, slot, -1)) {
                         return false;
                     }
                     timeSort = t;
@@ -387,6 +393,20 @@ public class ClientEventHandler {
     }
 
     public static boolean sort(Container container, @Nullable SlotAccessor slot, int slotNumber) {
+        if (postBeforeSortEvent(container, null)) return false;
+        return doSort(container, slot, slotNumber);
+    }
+
+    private static boolean postBeforeSortEvent(Container container, @Nullable KeyBinding trigger) {
+        return MinecraftForge.EVENT_BUS.post(
+            new BeforeSortEvent(
+                Minecraft.getMinecraft().thePlayer,
+                container,
+                Minecraft.getMinecraft().currentScreen instanceof GuiContainer,
+                trigger != null ? trigger.getKeyCode() : BeforeSortEvent.NO_KEY));
+    }
+
+    private static boolean doSort(Container container, @Nullable SlotAccessor slot, int slotNumber) {
         GuiSortingContext sortingContext = GuiSortingContext.getOrCreate(container);
         if (sortingContext.isEmpty()) return false;
         SlotGroup slotGroup = null;
