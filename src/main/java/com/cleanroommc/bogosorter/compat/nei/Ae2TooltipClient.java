@@ -2,7 +2,6 @@ package com.cleanroommc.bogosorter.compat.nei;
 
 import static com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil.formatNumber;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -30,13 +29,8 @@ import com.cleanroommc.bogosorter.compat.ae2.Ae2TerminalGuiDetector;
 import com.github.bsideup.jabel.Desugar;
 import com.gtnewhorizon.gtnhlib.util.numberformatting.NumberFormatUtil;
 
-import codechicken.nei.PositionedStack;
-import codechicken.nei.Widget;
-import codechicken.nei.WidgetContainer;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerTooltipHandler;
-import codechicken.nei.recipe.GuiRecipe;
-import codechicken.nei.recipe.NEIRecipeWidget;
 import codechicken.nei.recipe.StackInfo;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -600,23 +594,9 @@ public final class Ae2TooltipClient {
     private static final class RecipeTooltipHandler implements IContainerTooltipHandler {
 
         @Override
-        public List<String> handleTooltip(GuiContainer gui, int mousex, int mousey, List<String> currenttip) {
-            if (currenttip.isEmpty()) {
-                return currenttip;
-            }
-
-            appendForHoveredRecipeStack(gui, mousex, mousey, currenttip);
-            return currenttip;
-        }
-
-        @Override
         public List<String> handleItemTooltip(GuiContainer gui, ItemStack itemstack, int mousex, int mousey,
             List<String> currenttip) {
-            if (gui instanceof GuiRecipe) {
-                if (!appendForHoveredRecipeStack(gui, mousex, mousey, currenttip)) {
-                    appendAmountTooltip(itemstack, currenttip, isAe2TerminalContextGui(gui));
-                }
-            } else if (!isAe2TerminalStorageHover(gui)) {
+            if (!isAe2TerminalStorageHover(gui)) {
                 appendAmountTooltip(itemstack, currenttip, isAe2TerminalContextGui(gui));
             }
             return currenttip;
@@ -644,59 +624,6 @@ public final class Ae2TooltipClient {
                 current = current.getSuperclass();
             }
             return false;
-        }
-
-        private static boolean appendForHoveredRecipeStack(GuiContainer gui, int mousex, int mousey,
-            List<String> currenttip) {
-            if (!(gui instanceof GuiRecipe)) {
-                return false;
-            }
-
-            NEIRecipeWidget recipeWidget = getRecipeWidget((GuiRecipe<?>) gui, mousex, mousey);
-            if (recipeWidget == null) {
-                return false;
-            }
-
-            PositionedStack hovered = recipeWidget.getPositionedStackMouseOver(mousex, mousey);
-            if (hovered == null || hovered.item == null) {
-                return false;
-            }
-
-            appendAmountTooltip(hovered.item, currenttip, isAe2TerminalContextGui(gui));
-            return true;
-        }
-
-        private static NEIRecipeWidget getRecipeWidget(GuiRecipe<?> gui, int mousex, int mousey) {
-            try {
-                Field containerField = findField(gui.getClass());
-                if (containerField == null) {
-                    return null;
-                }
-
-                containerField.setAccessible(true);
-                Object container = containerField.get(gui);
-                if (!(container instanceof WidgetContainer)) {
-                    return null;
-                }
-
-                Widget widget = ((WidgetContainer) container).getWidgetUnderMouse(mousex, mousey);
-                return widget instanceof NEIRecipeWidget ? (NEIRecipeWidget) widget : null;
-            } catch (ReflectiveOperationException ignored) {
-                return null;
-            }
-        }
-
-        private static Field findField(Class<?> type) {
-            Class<?> current = type;
-            while (current != null) {
-                try {
-                    return current.getDeclaredField("container");
-                } catch (NoSuchFieldException ignored) {
-                    current = current.getSuperclass();
-                }
-            }
-
-            return null;
         }
 
         private static Object invokeMethod(Object instance) throws ReflectiveOperationException {

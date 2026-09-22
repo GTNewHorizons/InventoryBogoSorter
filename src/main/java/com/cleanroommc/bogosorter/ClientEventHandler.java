@@ -80,7 +80,7 @@ public class ClientEventHandler {
 
     static {
         try {
-            if (Loader.isModLoaded("NotEnoughItems")) {
+            if (Mods.Nei.isLoaded()) {
                 NEI_GUI_RECIPE_CLASS = Class.forName("codechicken.nei.recipe.GuiRecipe");
                 NEI_RECIPE_SEARCH_FIELD = NEI_GUI_RECIPE_CLASS.getDeclaredField("searchField");
                 NEI_RECIPE_SEARCH_FIELD.setAccessible(true);
