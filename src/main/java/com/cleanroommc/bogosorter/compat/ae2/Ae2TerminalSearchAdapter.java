@@ -11,19 +11,11 @@ import net.minecraft.item.ItemStack;
 
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.client.keybinds.control.BSKeybinds;
 import com.cleanroommc.bogosorter.common.config.ae2.TooltipFeatureConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
-
-import codechicken.nei.PositionedStack;
-import codechicken.nei.Widget;
-import codechicken.nei.WidgetContainer;
-import codechicken.nei.recipe.GuiRecipe;
-import codechicken.nei.recipe.NEIRecipeWidget;
-import cpw.mods.fml.common.Loader;
 
 public final class Ae2TerminalSearchAdapter {
 
@@ -155,12 +147,7 @@ public final class Ae2TerminalSearchAdapter {
 
     @Nullable
     private static ItemStack getHoveredStack(GuiContainer gui) {
-        if (Loader.isModLoaded("NotEnoughItems")) {
-            ItemStack recipeStack = getHoveredRecipeStack(gui);
-            if (recipeStack != null) {
-                return recipeStack;
-            }
-
+        if (Mods.Nei.isLoaded()) {
             try {
                 Class<?> manager = Class.forName(NEI_CONTAINER_MANAGER_CLASS);
                 Method method = manager.getMethod("getStackMouseOver", GuiContainer.class);
@@ -173,42 +160,6 @@ public final class Ae2TerminalSearchAdapter {
             }
         }
         return gui.theSlot == null ? null : gui.theSlot.getStack();
-    }
-
-    @Nullable
-    private static ItemStack getHoveredRecipeStack(GuiContainer gui) {
-        if (!(gui instanceof GuiRecipe)) {
-            return null;
-        }
-
-        try {
-            Object container = getFieldValue(gui, "container");
-            if (!(container instanceof WidgetContainer)) {
-                return null;
-            }
-
-            Minecraft mc = Minecraft.getMinecraft();
-            int mouseX = mc.currentScreen == null ? 0 : getMouseX(mc.currentScreen.width);
-            int mouseY = mc.currentScreen == null ? 0 : getMouseY(mc.currentScreen.height);
-            Widget widget = ((WidgetContainer) container).getWidgetUnderMouse(mouseX, mouseY);
-            if (!(widget instanceof NEIRecipeWidget)) {
-                return null;
-            }
-
-            PositionedStack hovered = ((NEIRecipeWidget) widget).getPositionedStackMouseOver(mouseX, mouseY);
-            return hovered == null ? null : hovered.item;
-        } catch (ReflectiveOperationException | LinkageError e) {
-            logFailureOnce("nei-recipe-hovered-stack", e);
-            return null;
-        }
-    }
-
-    private static int getMouseX(int screenWidth) {
-        return Mouse.getX() * screenWidth / Minecraft.getMinecraft().displayWidth;
-    }
-
-    private static int getMouseY(int screenHeight) {
-        return screenHeight - Mouse.getY() * screenHeight / Minecraft.getMinecraft().displayHeight - 1;
     }
 
     private static String getEscapedNeiSearchText(String text) {
