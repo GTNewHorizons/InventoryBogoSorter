@@ -40,8 +40,7 @@ public class ItemCompareHelper {
     private static final Pattern PIPE_PATTERN = Pattern.compile(".*Pipe([A-Z].*)?");
     private static final Pattern CABLE_PATTERN = Pattern.compile(".*Cable([A-Z].*)?");
     private static final Pattern WIRE_PATTERN = Pattern.compile(".*Wire([A-Z].*)?");
-    private static final Pattern FORMATTING_PATTERN = Pattern
-        .compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
+    private static final Pattern FORMATTING_PATTERN = Pattern.compile("(?s)" + String.valueOf('\u00a7') + ".");
 
     public static String getMod(ItemStack item) {
         String loc = item.getItem().delegate.name();
