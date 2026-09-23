@@ -8,6 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import org.apache.commons.lang3.StringUtils;
 
 import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
+import com.gtnewhorizon.gtnhlib.util.font.FontRendering;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,7 +20,9 @@ public class ClientSortData {
     @SideOnly(Side.CLIENT)
     public static ClientSortData of(ItemStack itemStack, boolean getColor, boolean getName) {
         int color = getColor ? ItemColorHelper.getItemColorHue(itemStack) : 0;
-        String name = getName ? (itemStack != null ? itemStack.getDisplayName() : StringUtils.EMPTY)
+        // & codes only convert on the client. the server strips the converted codes.
+        String name = getName
+            ? (itemStack != null ? FontRendering.preprocessText(itemStack.getDisplayName()) : StringUtils.EMPTY)
             : StringUtils.EMPTY;
         return new ClientSortData(color, name);
     }
