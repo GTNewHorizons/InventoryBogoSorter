@@ -8,6 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import org.apache.commons.lang3.StringUtils;
 
 import com.cleanroommc.bogosorter.common.sort.color.ItemColorHelper;
+import com.gtnewhorizon.gtnhlib.util.font.FontRendering;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,9 +20,27 @@ public class ClientSortData {
     @SideOnly(Side.CLIENT)
     public static ClientSortData of(ItemStack itemStack, boolean getColor, boolean getName) {
         int color = getColor ? ItemColorHelper.getItemColorHue(itemStack) : 0;
-        String name = getName ? (itemStack != null ? itemStack.getDisplayName() : StringUtils.EMPTY)
+        String name = getName ? (itemStack != null ? stripFormatting(itemStack.getDisplayName()) : StringUtils.EMPTY)
             : StringUtils.EMPTY;
         return new ClientSortData(color, name);
+    }
+
+    /** Display name without format codes, so &-styled or colored names sort by their visible text. */
+    @SideOnly(Side.CLIENT)
+    private static String stripFormatting(String name) {
+        name = FontRendering.preprocessText(name);
+        if (name == null || name.indexOf('\u00a7') == -1) return name;
+
+        StringBuilder sb = new StringBuilder(name.length());
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if (c == '\u00a7' && i + 1 < name.length()) {
+                i++;
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
     public static ClientSortData readFromPacket(PacketBuffer buf) throws IOException {
