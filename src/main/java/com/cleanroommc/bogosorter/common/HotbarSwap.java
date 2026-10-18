@@ -1,7 +1,11 @@
 package com.cleanroommc.bogosorter.common;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-
+import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
+import com.cleanroommc.bogosorter.common.network.CHotbarRowSwap;
+import com.cleanroommc.bogosorter.common.network.CHotbarSwap;
+import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiIngame;
@@ -9,23 +13,17 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
-import com.cleanroommc.bogosorter.common.network.CHotbarSwap;
-import com.cleanroommc.bogosorter.common.network.NetworkHandler;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
 
 public class HotbarSwap {
 
@@ -40,51 +38,78 @@ public class HotbarSwap {
 
     @SubscribeEvent
     public void render(RenderGameOverlayEvent.Post event) {
-        if (BogoSorterConfig.enableHotbarSwap && Minecraft.getMinecraft().thePlayer.inventory.currentItem < 9
-            && event.type == RenderGameOverlayEvent.ElementType.ALL
-            && show) {
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        if (!show || !BogoSorterConfig.enableHotbarSwap || event.type != RenderGameOverlayEvent.ElementType.ALL) {
+            return;
+        }
 
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-            GuiIngame gui = Minecraft.getMinecraft().ingameGUI;
-            int m = event.resolution.getScaledWidth() / 2;
-            if (verticalIndex != 0) {
-                Minecraft.getMinecraft()
-                    .getTextureManager()
-                    .bindTexture(WIDGETS_TEX_PATH);
+        InventoryPlayer inventory = Minecraft.getMinecraft().thePlayer.inventory;
+        int hotbarSlot = inventory.currentItem;
+        if (hotbarSlot >= 9) {
+            return;
+        }
+
+        boolean isWholeRowSwap = isShiftDown();
+
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        GuiIngame gui = Minecraft.getMinecraft().ingameGUI;
+        int m = event.resolution.getScaledWidth() / 2;
+        if (verticalIndex != 0) {
+            Minecraft.getMinecraft()
+                .getTextureManager()
+                .bindTexture(WIDGETS_TEX_PATH);
+
+            if (isWholeRowSwap) {
+                // The hotbar texture for whole row change
+                gui.drawTexturedModalRect(m - 91, event.resolution.getScaledHeight() - 22 - 16 - 18 * verticalIndex, 0, 0, 182, 22);
+            } else {
+                // The selected hotbar item texture for singular item change
                 gui.drawTexturedModalRect(
-                    m - 91 - 1 + player.inventory.currentItem * 20,
+                    m - 91 - 1 + hotbarSlot * 20,
                     event.resolution.getScaledHeight() - 22 - 17 - 18 * verticalIndex,
                     0,
                     22,
                     24,
                     24);
             }
+        }
 
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GL11.glEnable(GL_BLEND);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GL11.glEnable(GL_BLEND);
 
-            OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-            RenderHelper.enableGUIStandardItemLighting();
+        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        RenderHelper.enableGUIStandardItemLighting();
 
-            int x = m - 90 + player.inventory.currentItem * 20 + 2;
-            int y = event.resolution.getScaledHeight() - 16 - 3 - 70;
-            for (int i = 1; i < 4; i++) {
-                renderHotbarItem(
+        int x = isWholeRowSwap
+            ? m - 90 + 2                    // The position of the first slot in the hotbar
+            : m - 90 + hotbarSlot * 20 + 2; // The position of the item
+        int y = event.resolution.getScaledHeight() - 16 - 3 - 70;
+
+        for (int i = 1; i < 4; i++) {
+            if (isWholeRowSwap) {
+                renderInventoryRow(
                     Minecraft.getMinecraft().fontRenderer,
-                    Minecraft.getMinecraft()
-                        .getTextureManager(),
-                    player.inventory.getStackInSlot(player.inventory.currentItem + i * 9),
+                    Minecraft.getMinecraft().getTextureManager(),
+                    inventory,
+                    i,
                     x,
                     y,
                     event.partialTicks);
-                y += 18;
+            } else {
+                renderHotbarItem(
+                    Minecraft.getMinecraft().fontRenderer,
+                    Minecraft.getMinecraft().getTextureManager(),
+                    inventory.getStackInSlot(hotbarSlot + i * 9),
+                    x,
+                    y,
+                    event.partialTicks);
             }
-
-            RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-            GL11.glDisable(GL_BLEND);
+            y += 18;
         }
+
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GL11.glDisable(GL_BLEND);
     }
 
     @SubscribeEvent
@@ -94,20 +119,28 @@ public class HotbarSwap {
             || Minecraft.getMinecraft().thePlayer.inventory.currentItem > 8) {
             return;
         }
+
+        boolean swapKeyHeld = isAltKeyDown();
         if (show) {
-            if (!isAltKeyDown()) {
-                // swap items on server
+            if (!swapKeyHeld) {
+                // Swap items on server on key release
+
+                boolean isWholeRowSwap = isShiftDown();
                 if (verticalIndex != 0) {
-                    int index = 4 - verticalIndex;
-                    int current = Minecraft.getMinecraft().thePlayer.inventory.currentItem;
-                    NetworkHandler.sendToServer(new CHotbarSwap(current, current + index * 9));
+                    int index = 4 - verticalIndex; // Map our bottom-up index to a top-down index as minecraft inventory rows are top-down with the hotbar being last as the exception.
+                    if (isWholeRowSwap) {
+                        NetworkHandler.sendToServer(new CHotbarRowSwap(index));
+                    } else {
+                        int current = Minecraft.getMinecraft().thePlayer.inventory.currentItem;
+                        NetworkHandler.sendToServer(new CHotbarSwap(current, current + index * 9));
+                    }
                 }
 
                 show = false;
                 verticalIndex = 0;
             }
         } else {
-            if (isAltKeyDown()) {
+            if (swapKeyHeld) {
                 show = true;
                 verticalIndex = 0;
             }
@@ -128,6 +161,16 @@ public class HotbarSwap {
                     verticalIndex = 3;
                 }
             }
+        }
+    }
+
+    private static void renderInventoryRow(FontRenderer fontRenderer, TextureManager textureManager, InventoryPlayer playerInventory, int rowIndex, int x, int y, float partialTicks) {
+        ItemStack[] mainInventory = playerInventory.mainInventory;
+        for (int i = 0, itemIndex = i + rowIndex * 9;
+             i < 9 && itemIndex < mainInventory.length;
+             i++, itemIndex = i + rowIndex * 9) {
+            ItemStack stack = mainInventory[itemIndex];
+            renderHotbarItem(fontRenderer, textureManager, stack, x + i * 20, y, partialTicks);
         }
     }
 
@@ -156,5 +199,9 @@ public class HotbarSwap {
 
     public static boolean isAltKeyDown() {
         return Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU);
+    }
+
+    public static boolean isShiftDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
     }
 }
