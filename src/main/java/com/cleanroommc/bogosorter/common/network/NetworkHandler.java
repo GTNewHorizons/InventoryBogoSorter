@@ -1,21 +1,11 @@
 package com.cleanroommc.bogosorter.common.network;
 
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
-
 import com.cleanroommc.bogosorter.BogoSorter;
 import com.cleanroommc.bogosorter.common.network.ae2.CAe2AmountBatchRequest;
 import com.cleanroommc.bogosorter.common.network.ae2.SAe2AmountBatchResponse;
 import com.cleanroommc.bogosorter.common.network.ae2.STooltipFeatureState;
 import com.cleanroommc.bogosorter.compat.Mods;
 import com.github.bsideup.jabel.Desugar;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -23,6 +13,14 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
+
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Joinked from Multiblocked
@@ -53,6 +51,7 @@ public class NetworkHandler {
         registerC2S(CShortcut.class);
         registerC2S(CSort.class);
         registerC2S(CHotbarSwap.class);
+        registerC2S(CHotbarRowSwap.class);
         registerC2S(CCoinDepositDestination.class);
         registerS2C(SReloadConfig.class);
         registerS2C(SRefillSound.class);
