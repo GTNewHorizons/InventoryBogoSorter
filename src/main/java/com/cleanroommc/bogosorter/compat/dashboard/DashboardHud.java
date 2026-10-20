@@ -30,12 +30,11 @@ public final class DashboardHud {
 
     private static final HudElement USAGE_TICKER = new HudElement(
         "bogosorter:usage_ticker",
-        "bogosort.hud.usage_ticker",
         (screenWidth, screenHeight) -> new HudBounds(
             screenWidth / 2 - (Mods.Backhand.isLoaded() ? BACKHAND_SHIFT : 0) - ROW_LEFT,
             screenHeight - RAISED,
             ROW_WIDTH,
-            ITEM_SIZE)).setDescription("bogosort.hud.usage_ticker.description");
+            ITEM_SIZE));
 
     private static final String HOTBAR_ID = "minecraft:hotbar";
     private static final HudShift HOTBAR_SHIFT = new HudShift();

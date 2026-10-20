@@ -70,7 +70,7 @@ dependencies {
     compileOnly("com.cubefury.vendingmachine:VendingMachine:0.4.89:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:WitchingGadgets:1.8.48-GTNH:dev")
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.50-GTNH:dev") {transitive = false}
-    compileOnly("com.github.GTNewHorizons:Dashboard:1.0.1:api")
+    compileOnly("com.github.GTNewHorizons:Dashboard:1.0.2:api")
 
     //for Tinkers Construct arrows
     compileOnly("com.github.GTNewHorizons:Battlegear2:1.4.3:dev") { transitive = false }
@@ -78,7 +78,7 @@ dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:waila:1.19.31:dev")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Minecraft-Backpack-Mod:2.6.16-GTNH:dev") { transitive = false }
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:AdventureBackpack2:1.4.24-GTNH:dev")
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Dashboard:1.0.1:dev") // testing only. Delete me after
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Dashboard:1.0.2:dev") // testing only. Delete me after
 
     compileOnly("com.gregoriust.gregtech:gregtech_1.7.10:6.17.05:dev") { transitive = false }
 
