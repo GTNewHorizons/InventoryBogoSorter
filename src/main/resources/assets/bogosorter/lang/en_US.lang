@@ -68,6 +68,9 @@ bogosort.gui.usageticker_offhand=Enable Usage Ticker Offhand
 bogosort.gui.usageticker_armor=Enable Usage Ticker Armor
 bogosort.gui.usageticker_arrow=Enable Usage Ticker Arrows
 
+bogosort.hud.usage_ticker=Usage Ticker
+bogosort.hud.usage_ticker.description=Pops up for a moment when the held item or armor changes count
+
 
 bogosort.command.config_relaod.success=Reloaded sorting config
 

@@ -32,6 +32,7 @@ import com.cleanroommc.bogosorter.common.sort.DefaultRules;
 import com.cleanroommc.bogosorter.compat.DefaultCompat;
 import com.cleanroommc.bogosorter.compat.Mods;
 import com.cleanroommc.bogosorter.compat.controlling.ControllingCompat;
+import com.cleanroommc.bogosorter.compat.dashboard.DashboardHud;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -99,6 +100,10 @@ public class BogoSorter {
             MinecraftForge.EVENT_BUS.register(new HotbarSwap());
 
             BSKeybinds.init(event.getSuggestedConfigurationFile());
+
+            if (Mods.Dashboard.isLoaded()) {
+                DashboardHud.register();
+            }
 
             if (Mods.Nei.isLoaded() && Mods.CodeChickenCore.isLoaded()) {
                 Ae2ClientBridge.initializeOptionalNeiIntegration();
