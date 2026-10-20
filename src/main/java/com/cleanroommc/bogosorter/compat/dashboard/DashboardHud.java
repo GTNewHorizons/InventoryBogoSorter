@@ -10,6 +10,7 @@ import com.cleanroommc.bogosorter.compat.Mods;
 import com.gtnewhorizons.dashboard.api.HudBounds;
 import com.gtnewhorizons.dashboard.api.HudElement;
 import com.gtnewhorizons.dashboard.api.HudRegistry;
+import com.gtnewhorizons.dashboard.api.HudShift;
 
 /**
  * Lets players move, resize and hide the HUD in Dashboard's editor. The only class using Dashboard, so only call it
@@ -36,6 +37,9 @@ public final class DashboardHud {
             ROW_WIDTH,
             ITEM_SIZE)).setDescription("bogosort.hud.usage_ticker.description");
 
+    private static final String HOTBAR_ID = "minecraft:hotbar";
+    private static final HudShift HOTBAR_SHIFT = new HudShift();
+
     private static final ItemStack SAMPLE_HELMET = new ItemStack(Items.iron_helmet);
     private static final ItemStack SAMPLE_HELD = new ItemStack(Blocks.cobblestone, 48);
 
@@ -57,5 +61,18 @@ public final class DashboardHud {
 
     public static void endUsageTicker() {
         HudRegistry.endRender();
+    }
+
+    /**
+     * Moves the hotbar swap column with the hotbar, since it sits above the selected slot. False means the player hid
+     * the hotbar, so skip drawing. Call {@link #endHotbarSwap()} after drawing either way.
+     */
+    public static boolean beginHotbarSwap(ScaledResolution resolution) {
+        HudElement hotbar = HudRegistry.getElement(HOTBAR_ID);
+        return hotbar == null || HOTBAR_SHIFT.begin(hotbar, resolution);
+    }
+
+    public static void endHotbarSwap() {
+        HOTBAR_SHIFT.end();
     }
 }
