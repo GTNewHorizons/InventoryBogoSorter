@@ -49,7 +49,8 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
     name = BogoSorter.NAME,
     version = BogoSorter.VERSION,
     dependencies = "required-after:unimixins@[0.1.19,);" + "required-after:gtnhlib@[0.6.1,);"
-        + "required-after:modularui2@[2.2.2,);")
+        + "required-after:modularui2@[2.2.2,);"
+        + "after:dashboard@[1.0.0,);")
 public class BogoSorter {
 
     public static final String ID = "bogosorter";
