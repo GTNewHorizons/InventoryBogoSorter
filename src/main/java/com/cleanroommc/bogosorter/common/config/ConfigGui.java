@@ -795,7 +795,7 @@ public class ConfigGui extends CustomModularScreen {
                         tooltip -> tooltip.addLine(IKey.lang(value.getDescriptionLangKey()))
                             .showUpTimer(4))
                     .size(80, 14)
-                    .margin(2, 2, 2, 2)
+                    .margin(2, 0, 2, 0)
                     .onMousePressed(mouseButton1 -> {
                         if (this.availableElements.get(value).available) {
                             sortableListWidget.child(items.get(value));
@@ -816,6 +816,8 @@ public class ConfigGui extends CustomModularScreen {
             return panel.child(ButtonWidget.panelCloseButton())
                 .child(
                     new Grid().grid(availableMatrix)
+                        // gaps via the grid: an end margin on the buttons pulls rows below the visible area up
+                        .minElementMargin(0, 2, 0, 2)
                         .scrollable()
                         .pos(7, 7)
                         .right(17)
@@ -860,7 +862,7 @@ public class ConfigGui extends CustomModularScreen {
                         tooltip -> tooltip.addLine(IKey.lang(value.getDescriptionLangKey()))
                             .showUpTimer(4))
                     .size(80, 14)
-                    .margin(2, 2, 2, 2)
+                    .margin(2, 0, 2, 0)
                     .onMousePressed(mouseButton1 -> {
                         if (this.availableElementsNbt.get(value).available) {
                             sortableListWidget.child(items.get(value));
@@ -882,6 +884,8 @@ public class ConfigGui extends CustomModularScreen {
             return panel.child(ButtonWidget.panelCloseButton())
                 .child(
                     new Grid().grid(availableMatrix)
+                        // gaps via the grid: an end margin on the buttons pulls rows below the visible area up
+                        .minElementMargin(0, 2, 0, 2)
                         .scrollable()
                         .pos(7, 7)
                         .right(17)
