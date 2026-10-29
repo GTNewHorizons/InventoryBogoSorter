@@ -70,6 +70,7 @@ dependencies {
     compileOnly("com.cubefury.vendingmachine:VendingMachine:0.4.89:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:WitchingGadgets:1.8.48-GTNH:dev")
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.50-GTNH:dev") {transitive = false}
+    compileOnly("com.github.GTNewHorizons:Dashboard:1.0.2:api")
 
     //for Tinkers Construct arrows
     compileOnly("com.github.GTNewHorizons:Battlegear2:1.4.3:dev") { transitive = false }

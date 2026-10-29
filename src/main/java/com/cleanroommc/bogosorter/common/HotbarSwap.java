@@ -23,6 +23,8 @@ import org.lwjgl.opengl.GL12;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.common.network.CHotbarSwap;
 import com.cleanroommc.bogosorter.common.network.NetworkHandler;
+import com.cleanroommc.bogosorter.compat.Mods;
+import com.cleanroommc.bogosorter.compat.dashboard.DashboardHud;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -43,6 +45,8 @@ public class HotbarSwap {
         if (BogoSorterConfig.enableHotbarSwap && Minecraft.getMinecraft().thePlayer.inventory.currentItem < 9
             && event.type == RenderGameOverlayEvent.ElementType.ALL
             && show) {
+            boolean dashboard = Mods.Dashboard.isLoaded();
+            if (dashboard && !DashboardHud.beginHotbarSwap(event.resolution)) return;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -84,6 +88,7 @@ public class HotbarSwap {
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             GL11.glDisable(GL_BLEND);
+            if (dashboard) DashboardHud.endHotbarSwap();
         }
     }
 
