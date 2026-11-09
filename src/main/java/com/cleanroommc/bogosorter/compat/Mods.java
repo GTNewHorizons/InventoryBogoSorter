@@ -24,6 +24,7 @@ public enum Mods {
     CodeChickenCore("CodeChickenCore"),
     CookingForBlockheads("cookingforblockheads"),
     Chisel("chisel"),
+    Dashboard("dashboard"),
     DraconicEvolution("DraconicEvolution"),
     EnderStorage("EnderStorage"),
     Energycontrol("energycontrol"),

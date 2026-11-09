@@ -68,7 +68,6 @@ bogosort.gui.usageticker_offhand=Enable Usage Ticker Offhand
 bogosort.gui.usageticker_armor=Enable Usage Ticker Armor
 bogosort.gui.usageticker_arrow=Enable Usage Ticker Arrows
 
-
 bogosort.command.config_relaod.success=Reloaded sorting config
 
 bogosorter.command.tooltip.usage=/bogosorter tooltip <on|off>

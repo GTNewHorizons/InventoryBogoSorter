@@ -20,6 +20,7 @@ import com.cleanroommc.bogosorter.client.usageticker.Arrow.ArrowHandlerRegistry;
 import com.cleanroommc.bogosorter.common.ReadableNumberConverter;
 import com.cleanroommc.bogosorter.common.config.BogoSorterConfig;
 import com.cleanroommc.bogosorter.compat.Mods;
+import com.cleanroommc.bogosorter.compat.dashboard.DashboardHud;
 import com.gtnewhorizon.gtnhlib.eventbus.EventBusSubscriber;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -31,6 +32,7 @@ import xonin.backhand.api.core.BackhandUtils;
 @EventBusSubscriber(side = { Side.CLIENT })
 public class UsageTicker {
 
+    private static final RenderItem RENDER_ITEM = new RenderItem();
     private static List<Element> elements = new ArrayList<>();
 
     public static void reloadElements() {
@@ -68,6 +70,25 @@ public class UsageTicker {
                 elements.forEach(e -> e.tick(mc.thePlayer));
             }
         }
+    }
+
+    public static void drawStack(ItemStack stack, float x, float y) {
+        Minecraft mc = Minecraft.getMinecraft();
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 0);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.enableGUIStandardItemLighting();
+        RENDER_ITEM.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, stack, 0, 0);
+        RENDER_ITEM.renderItemOverlayIntoGUI(
+            mc.fontRenderer,
+            mc.renderEngine,
+            stack,
+            0,
+            0,
+            stack.stackSize > 1 ? ReadableNumberConverter.INSTANCE.toSlimReadableForm(stack.stackSize) : null);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GL11.glPopMatrix();
     }
 
     @SubscribeEvent
@@ -114,30 +135,16 @@ public class UsageTicker {
                     : (Mods.Backhand.isLoaded() && BogoSorterConfig.usageTicker.enableOffHand) ? 2 : 1;
                 int index = slots - slot.ordinal() - 1;
 
-                Minecraft mc = Minecraft.getMinecraft();
-
                 x -= (barWidth / 2f) - index * 22;
                 x -= slots * 20;
 
                 ItemStack stack = getRenderedStack(player);
                 if (stack == null) return;
 
-                RenderItem renderer = new RenderItem();
-                GL11.glPushMatrix();
-                GL11.glTranslatef(x, y, 0);
-                GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-                RenderHelper.enableGUIStandardItemLighting();
-                renderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, stack, 0, 0);
-                renderer.renderItemOverlayIntoGUI(
-                    mc.fontRenderer,
-                    mc.renderEngine,
-                    stack,
-                    0,
-                    0,
-                    stack.stackSize > 1 ? ReadableNumberConverter.INSTANCE.toSlimReadableForm(stack.stackSize) : null);
-                RenderHelper.disableStandardItemLighting();
-                GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-                GL11.glPopMatrix();
+                boolean dashboard = Mods.Dashboard.isLoaded();
+                if (dashboard && !DashboardHud.beginUsageTicker(resolution)) return;
+                drawStack(stack, x, y);
+                if (dashboard) DashboardHud.endUsageTicker();
             }
         }
 
