@@ -113,6 +113,7 @@ public class ShortcutHandler {
     public static boolean moveAllItems(GuiContainer guiContainer, boolean sameItemOnly) {
         Slot slot = guiContainer.theSlot;
         if (slot == null) return false;
+        if (!BogoSortAPI.isValidSortable(guiContainer.inventorySlots)) return false;
         SlotAccessor slotAccessor = BogoSortAPI.INSTANCE.getSlot(slot);
         if (sameItemOnly && slotAccessor.callGetStack() == null) return false;
         SetCanTakeStack = false;
