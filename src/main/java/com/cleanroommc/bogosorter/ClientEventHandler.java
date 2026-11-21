@@ -51,6 +51,7 @@ import com.cleanroommc.bogosorter.compat.ae2.Ae2TerminalSearchAdapter;
 import com.cleanroommc.bogosorter.compat.controlling.ControllingCompat;
 import com.cleanroommc.bogosorter.compat.screen.WarningScreen;
 import com.cleanroommc.bogosorter.mixins.early.minecraft.SlotAccessor;
+import com.cleanroommc.modularui.api.IMuiScreen;
 import com.cleanroommc.modularui.api.event.KeyboardInputEvent;
 import com.cleanroommc.modularui.api.event.MouseInputEvent;
 import com.cleanroommc.modularui.factory.ClientGUI;
@@ -209,8 +210,23 @@ public class ClientEventHandler {
         }
     }
 
+    // ModularUI 2 handles mouse input on its own screens at HIGH priority and cancels it,
+    // so on those screens we need to go first
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onMouseInputModularScreen(MouseInputEvent.Pre event) {
+        if (event.gui instanceof IMuiScreen) {
+            handleMouseInput(event);
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onMouseInput(MouseInputEvent.Pre event) {
+        if (!(event.gui instanceof IMuiScreen)) {
+            handleMouseInput(event);
+        }
+    }
+
+    private static void handleMouseInput(MouseInputEvent.Pre event) {
         KeyBind.checkKeys(getTicks());
         if (event.gui instanceof GuiContainer && handleInput((GuiContainer) event.gui, true)) {
             event.setCanceled(true);
